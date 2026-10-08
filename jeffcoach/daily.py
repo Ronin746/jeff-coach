@@ -24,6 +24,7 @@ from datetime import date, datetime, timedelta
 from . import config as C
 from . import data as D
 from . import engine as E
+from . import channel as CH
 from . import patterns as P
 from .calendar_us import ROME, is_session, prev_session, sessions_from, today_rome, last_sessions
 from .output import card_description, tv_txt, write_atomic
@@ -75,12 +76,45 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
               if m["adv"] and m["adv"] >= C.ADV_MIN and m["atr_pct"] >= C.ATR_PCT_MIN
               and (meta.get(s, {}).get("mcap") or C.MCAP_MIN + 1) > C.MCAP_MIN}
     cand = {s for s in num_ok if metrics[s]["above_sma200"] and (metrics[s]["rs"] or 0) >= C.STALK_RS_THEME_MIN}
+    for s in cand:           # lettura D (canale rialzista): solo sui candidati, ~0,04 s a titolo
+        add_channel(metrics[s], daily[s])
     info: dict = {}          # mcap/settore freschi: si scaricano in build() solo per i nomi che entrano in lista
     s65 = D.sma30_65m(cand, last_sessions(as_of, 6))
     doc = dict(session=session, as_of=as_of, meta=meta, metrics=metrics, info=info, sma65=s65, industry=industry,
                n_downloaded=len(daily) - 1, stale=stale, num_ok=sorted(num_ok), cand=sorted(cand))
     cache.write_bytes(pickle.dumps(doc))
     return doc
+
+
+def add_channel(m: dict, df) -> None:
+    try:
+        m.update(CH.read_channel(df, m["atr"]))
+    except Exception as e:                      # un canale illeggibile non toglie il titolo dai calcoli
+        log.warning("canale: %s", e)
+        m["d_ok_data"] = False
+    ok, why, _ = CH.reading_d(m)
+    m["pattern_d_ok"], m["pattern_d_why"] = ok, why
+    m.pop("d_lines", None)
+
+
+def channel_watch(rows: dict, s65: dict) -> list[dict]:
+    """Nomi nella parte bassa di un canale rialzista (lettura D) [RONIN 08/10]. Per ognuno: SMA30 65m e EMA9.
+    "Recupero SMA30 65m" = close sopra la SMA30 65m anche se ancora sotto la EMA9: si segnala lo stesso.
+    Chi ha chiuso SOTTO la SMA30 65m resta in osservazione: Sydney avvisa durante la seduta se la recupera."""
+    out = []
+    for t, r in rows.items():
+        m = r.m
+        hard_out = r.out_reason and not r.out_reason.startswith("stale")     # utili / universo: fuori anche qui
+        if not m.get("pattern_d_ok") or hard_out or (m.get("rs") or 0) < C.CHANNEL_RS_MIN:
+            continue
+        s30 = (s65.get(t) or {}).get("sma30_65m")
+        above = None if s30 is None else m["close"] > s30
+        out.append(dict(ticker=t, list=r.list, state=m["d_state"], rs=m["rs"], close=_r(m["close"]),
+                        lower_line_next=_r(m["d_lower_next"]), upper_line_next=_r(m["d_upper_next"]),
+                        pos=_r(m["d_pos"]), width_atr=_r(m["d_width_atr"], 1), sma30_65m=_r(s30),
+                        above_sma30_65m=above, ema9=_r(m["ema9"]), under_ema9=m["close"] <= m["ema9"],
+                        atr=_r(m["atr"]), industry=m.get("industry"), group_pctl=m.get("group_pctl")))
+    return sorted(out, key=lambda x: (-(x["rs"] or 0), x["ticker"]))
 
 
 def group_strength(doc: dict) -> tuple[dict, dict]:
@@ -154,7 +188,9 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
     def _near(r):   # numeri tutti ok ma nessun pattern: si mostrano a Ronin, non entrano in lista
         return (r.list == "Out" and r.m["above_sma200"] and (r.m["rs"] or 0) >= C.RS_FOCUS_MIN
                 and not [g for g in r.fails if g.code not in E.SOFT_GATES])
-    pre = [s for s, r in rows.items() if r.list != "Out" or _near(r)]
+    def _chan(r):   # lettura D: nome nella parte bassa di un canale (lista a parte, controllata come le altre)
+        return r.m.get("pattern_d_ok") and (r.m.get("rs") or 0) >= C.CHANNEL_RS_MIN
+    pre = [s for s, r in rows.items() if r.list != "Out" or _near(r) or _chan(r)]
     need = [s for s in pre if s not in info or "err" in info[s]]
     if need:
         info.update(D.fetch_info(need))
@@ -169,7 +205,7 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             rows[s].out_reason = why
 
     # utili: tutti i nomi che finirebbero in lista
-    listed = [s for s, r in rows.items() if r.list != "Out"]
+    listed = [s for s, r in rows.items() if r.list != "Out" or (_chan(r) and s not in out_universe)]
     window = sessions_from(session, C.EARNINGS_SESSIONS)
     lo, hi = window[0].isoformat(), window[-1].isoformat()
     earn = dict(earn or {})
@@ -194,6 +230,7 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
     for s in earn_out:
         rows[s].list = "Out"
         rows[s].out_reason = f"earnings {earn_out[s]}"
+    chan = channel_watch(rows, s65)
 
     # revisione a occhio del bot: può solo DECLASSARE (Focus -> Stalk) o cambiare il testo, mai promuovere
     review_applied = {}
@@ -220,6 +257,8 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             pattern_c=("tight" if m.get("pattern_c_ok") else "wide"), pattern_c_shape=m.get("c_shape"),
             trendline_next=_r(m.get("c_upper_next")), industry=m.get("industry"), group_pctl=m.get("group_pctl"),
             leader=m.get("leader") or [], carry_days=m.get("carry_days", 0),
+            channel=m.get("d_state") if m.get("d_found") else None, channel_buy_zone=bool(m.get("pattern_d_ok")),
+            channel_lower_next=_r(m.get("d_lower_next")),
         )
 
     focus = sorted([r for r in rows.values() if r.list == "Focus"], key=lambda r: (-(r.m["rs"] or 0), r.ticker))
@@ -269,6 +308,7 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
         pattern_mode=C.PATTERN_MODE, stale_stalk=stale_stalk,
         pattern_c_vs_decision=pattern_c_compare(rows),
         top_groups=top_groups(groups, rows),
+        channel_watch=chan,
     )
     detail = dict(agreed, funnel=dict(downloaded=doc["n_downloaded"], stale_last_bar=len(doc["stale"]),
                                       universe_numeric=len(doc["num_ok"]), candidates=len(doc["cand"]),
@@ -346,6 +386,23 @@ def summary_it(res: dict, doc: dict) -> str:
         if cc.get("focus_c_wide"):
             parts.append("Focus che le trendline non vedono stretti: " + "; ".join(f"{t} ({v})" for t, v in sorted(cc["focus_c_wide"].items())))
         L.append(f"Lettura C (modo {a.get('pattern_mode')}): " + " · ".join(parts))
+    cw = a.get("channel_watch") or []
+    if cw:
+        rec = [c for c in cw if c["above_sma30_65m"] and c["under_ema9"]]
+        ok = [c for c in cw if c["above_sma30_65m"] and not c["under_ema9"]]
+        wait = [c for c in cw if c["above_sma30_65m"] is False]
+        def f(c):
+            if c["state"] == "backtest of the broken line":
+                return f"{c['ticker']} (backtest della linea rotta {c['upper_line_next']})"
+            where = "bordo basso" if c["state"] == "lower part of the channel" else "sulla EMA21"
+            return f"{c['ticker']} ({where}, linea bassa {c['lower_line_next']})"
+        L.append(f"Canale rialzista, parte bassa ({len(cw)}):")
+        if rec:
+            L.append("  recuperata la SMA30 65m, ancora sotto la EMA9: " + "; ".join(f(c) for c in rec))
+        if ok:
+            L.append("  sopra SMA30 65m ed EMA9: " + "; ".join(f(c) for c in ok))
+        if wait:
+            L.append("  sotto la SMA30 65m (alert se la recupera): " + "; ".join(f(c) for c in wait))
     nm = res["detail"].get("near_misses") or {}
     if nm:
         L.append(f"Numeri ok ma senza pattern di continuation (fuori lista): {', '.join(sorted(nm))}")

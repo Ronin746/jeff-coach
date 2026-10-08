@@ -5,7 +5,10 @@ Regole [RONIN 30/09, 04/10, 05/10]:
   - RVOL: Focus e Stalk, una volta per nome, quando il volume RTH cumulato arriva al 30% della
     media a 50 giorni, solo nella prima ora. Non è un ingresso;
   - ingresso: SOLO Focus, dopo 30 minuti, prezzo >= massimo dei primi 30 minuti (ORH). Una volta per nome;
-  - il volume si mostra e non blocca; LoD 0,7 ATR si calcola e non blocca; niente PDH nei messaggi.
+  - il volume si mostra e non blocca; LoD 0,7 ATR si calcola e non blocca; niente PDH nei messaggi;
+  - canale [RONIN 08/10]: i nomi nella parte bassa di un canale rialzista (lettura D, "channel_watch" in today.json)
+    che hanno chiuso SOTTO la SMA30 65m: un alert, una volta per nome, quando il prezzo la recupera, anche se
+    è ancora sotto la EMA9 giornaliera. Non è un ingresso Focus: è un "guardalo".
 
 Correzioni rispetto al loop precedente:
   - orari calcolati in America/New_York: funziona anche nelle settimane in cui l'apertura è alle 14:30 di Roma
@@ -94,6 +97,44 @@ def load_rows(today: date) -> list[dict]:
     return rows
 
 
+def load_channel(today: date) -> list[dict]:
+    p = C.AGREED / "today.json"
+    if not C.CHANNEL_ALERT or not p.exists():
+        return []
+    d = json.loads(p.read_text(encoding="utf-8"))
+    if d.get("session_date") != today.isoformat():
+        return []
+    return [c for c in d.get("channel_watch") or [] if c.get("above_sma30_65m") is False and c.get("ticker")]
+
+
+_chan_cache: dict = {"ts": 0.0, "bars": {}}
+
+
+def live_sma30_65m(tickers: list[str], today: date) -> dict[str, dict]:
+    """SMA30 65m con il bucket in corso (come TradingView): ultimi 30 close di bucket, l'ultimo = prezzo attuale.
+    Un download 5m di 7 giorni per i soli nomi del canale, al massimo ogni CHANNEL_POLL_SEC."""
+    import yfinance as yf
+    from .data import buckets_65m
+    if time.time() - _chan_cache["ts"] >= C.CHANNEL_POLL_SEC or set(tickers) - set(_chan_cache["bars"]):
+        df = yf.download(tickers, period="7d", interval="5m", prepost=False, auto_adjust=False,
+                         group_by="ticker", progress=False, threads=True)
+        bars = {}
+        for t in tickers:
+            try:
+                sub = df[t] if isinstance(df.columns, pd.MultiIndex) else df
+                bars[t] = buckets_65m(sub)
+            except Exception:
+                pass
+        _chan_cache.update(ts=time.time(), bars=bars)
+    out = {}
+    for t, b in _chan_cache["bars"].items():
+        if len(b) < C.SMA65_LEN or b[-1][0] != today.isoformat():
+            continue
+        last = b[-C.SMA65_LEN:]
+        out[t] = dict(sma=sum(x[2] for x in last) / C.SMA65_LEN, price=b[-1][2], bucket=f"{b[-1][0]}#{b[-1][1]}")
+    return out
+
+
 def daily_refs(tickers: list[str], today: date) -> dict[str, dict]:
     """Media volume 50gg (= sma(volume[1],50) sulla barra di oggi) e ATR14 dalle barre completate. Cache giornaliera."""
     p = C.STATE / "alerts" / f"refs_{today}.json"
@@ -144,6 +185,15 @@ def fmt_entry(t, orh, price, rvol, rvol30):
         f"RVOL now: `{100 * rvol:.0f}%`", f"RVOL first 30m: `{'n/a' if rvol30 is None else f'{100 * rvol30:.0f}%'}`"])
 
 
+def fmt_channel(c, price, sma):
+    under = price <= (c.get("ema9") or 0)
+    return f"{c['ticker']} · Channel", "\n".join([
+        f"65m SMA30 reclaimed `{sma:.2f}`", f"Price: `{price:.2f}`",
+        f"Daily EMA9: `{c['ema9']:.2f}`" + (" (still under)" if under else ""),
+        (f"Broken line (backtest): `{c['upper_line_next']:.2f}`" if c["state"] == "backtest of the broken line"
+         else f"Channel lower line: `{c['lower_line_next']:.2f}`"), f"Position: {c['state']}"])
+
+
 def fmt_rvol(t, rvol, minutes, price):
     return f"{t} · RVOL", "\n".join([f"RVOL `{100 * rvol:.0f}%`", f"`{minutes:.0f}` minutes from the open", f"Price: `{price:.2f}`"])
 
@@ -154,11 +204,11 @@ def run_once(dry_run: bool = False) -> dict:
     today = now.date()
     mins = minutes_from_open(now)
     rows = load_rows(today)
-    if not rows or mins is None or mins < 0:
+    if (not rows and not load_channel(today)) or mins is None or mins < 0:
         return {"scanned": 0, "minutes": mins}
     tickers = [r["ticker"] for r in rows]
-    refs = daily_refs(tickers, today)
-    bars = intraday(tickers, today)
+    refs = daily_refs(tickers, today) if tickers else {}
+    bars = intraday(tickers, today) if tickers else {}
     state = json.loads(FIRED.read_text(encoding="utf-8")) if FIRED.exists() else {}
     day = state.setdefault(today.isoformat(), {})
     fired, scan = [], []
@@ -203,6 +253,26 @@ def run_once(dry_run: bool = False) -> dict:
             fired.append(k)
         else:
             log.warning("alert %s non inviato: %s", t, res.get("reason"))
+    # canale: recupero della SMA30 65m (una volta per nome)
+    chan = [c for c in load_channel(today) if f"{c['ticker']}|Channel|sma30-65m" not in day]
+    if chan and mins >= 0:
+        try:
+            live = live_sma30_65m([c["ticker"] for c in chan], today)
+        except Exception as e:
+            log.warning("canale 65m: %s", e)
+            live = {}
+        for c in chan:
+            t, lv = c["ticker"], live.get(c["ticker"])
+            if not lv:
+                continue
+            scan.append(dict(ticker=t, list="Channel", price=lv["price"], sma30_65m=round(lv["sma"], 2)))
+            if lv["price"] <= lv["sma"]:
+                continue
+            k = f"{t}|Channel|sma30-65m"
+            res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_channel(c, lv["price"], lv["sma"]))
+            if res.get("sent"):
+                day[k] = {"ts": datetime.now(ROME).isoformat(), "price": lv["price"], "sma30_65m": lv["sma"]}
+                fired.append(k)
     for d in [d for d in state if d < (today - timedelta(days=7)).isoformat()]:
         del state[d]
     if not dry_run:                       # una prova non deve "consumare" gli alert veri del giorno

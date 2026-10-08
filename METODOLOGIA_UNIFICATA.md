@@ -164,6 +164,17 @@ Sull'08/10:
 
 Si sceglie con Ronin dopo qualche settimana di confronto. Il riepilogo ogni giorno elenca dove C non è d'accordo con la decisione.
 
+### Lettura D: canale rialzista, si compra nella parte bassa (dal 09/10, lista a parte) [RONIN 08/10]
+
+Imparata dai grafici di Ronin dell'08/10 (XLK, NET, CRWD, FTNT, RNG, RBRK, SMCI). Codice: `jeffcoach/channel.py`, soglie in `config.CHANNEL`.
+
+- Canale = due linee **parallele** tracciate sui pivot (massimi/minimi su 3 barre per lato) in una finestra da 50 a 150 sedute. Ogni linea ha almeno 2 tocchi (6 in totale), i tocchi coprono almeno il 35% della durata, le barre possono bucare la linea di 0,75 ATR (al massimo 2 spike di più). Larghezza 1,8-8 ATR. Il prezzo è salito nel canale di almeno 1,2 volte la larghezza (scalini, non laterale), pendenza almeno 0,03 ATR per seduta.
+- Stati: **parte bassa** (sotto il 40% del range o a meno di 1,2 ATR dalla linea bassa), **pullback sulle EMA** (minimo sulla EMA21 e prezzo nella metà bassa), **backtest della linea rotta** (rotto il bordo alto, torna sulla linea); poi a metà, bordo alto (esteso, non si compra), breakout, esteso sopra, rottura fallita (XLK).
+- Zona d'acquisto = i primi tre stati, con EMA21 > SMA50 > SMA200, close sopra la SMA50 e RS >= 80.
+- **Lista canale** (`channel_watch` in `today.json`, riga "Canale rialzista" nel riepilogo): i nomi in zona d'acquisto con SMA30 65m ed EMA9. Si segnala anche chi ha **recuperato la SMA30 65m pur essendo ancora sotto la EMA9** [RONIN 08/10].
+- **Alert Sydney "· Channel"**: per i nomi della lista che hanno chiuso **sotto** la SMA30 65m, un alert (una volta per nome al giorno) quando in seduta il prezzo torna sopra la SMA30 65m calcolata con il bucket in corso, anche se è ancora sotto la EMA9. È un "guardalo", non un ingresso Focus. Spegnibile con `CHANNEL_ALERT = False`.
+- Non cambia Focus/Stalk: escono gli stessi nomi di prima. Gli utili e i gate di universo valgono anche per la lista canale; gli Stalk scaduti possono restarci (spesso sono proprio i pullback nel canale).
+
 ## 6b. Forza del gruppo (dal 09/10, per ora solo mostrata)
 
 - **Gruppo:** l'industria Yahoo, circa 145 gruppi. La mappa titolo → industria si rinnova una volta a settimana in `state/industry_map.json`, con uno screener per industria.

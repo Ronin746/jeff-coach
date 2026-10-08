@@ -10,7 +10,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Optional
 
 import pandas as pd
 
@@ -186,6 +186,21 @@ def download_daily(symbols: Iterable[str], start: str, end_inclusive: date, chun
 
 
 # ------------------------------------------------------------------ 65 minuti
+def buckets_65m(sub: pd.DataFrame, days: Optional[set] = None) -> list[tuple]:
+    """Barre 5m RTH -> bucket 65m (giorno, n. bucket, close, n. barre 5m). Il bucket in corso usa l'ultima 5m."""
+    sub = sub.dropna(subset=["Close"]).copy()
+    sub.index = sub.index.tz_convert(ET)
+    mins = sub.index.hour * 60 + sub.index.minute - (9 * 60 + 30)
+    keep = (mins >= 0) & (mins < 390)
+    if days is not None:
+        keep &= pd.Index([d.isoformat() in days for d in sub.index.date])
+    sub = sub[keep]
+    mins = sub.index.hour * 60 + sub.index.minute - (9 * 60 + 30)
+    sub["d"] = [d.isoformat() for d in sub.index.date]
+    sub["b"] = (mins // C.BUCKET_MIN).astype(int)
+    return [(d, b, float(g.Close.iloc[-1]), len(g)) for (d, b), g in sub.groupby(["d", "b"], sort=True)]
+
+
 def sma30_65m(symbols: Iterable[str], sessions: list[date], chunk: int = 60) -> dict[str, dict]:
     """SMA30 su barre a 65 minuti RTH costruite dai 5 minuti (prepost=False).
     6 bucket al giorno dalle 09:30 ET (09:30, 10:35, 11:40, 12:45, 13:50, 14:55); close del bucket =
@@ -215,14 +230,7 @@ def sma30_65m(symbols: Iterable[str], sessions: list[date], chunk: int = 60) -> 
             if sub is None or sub.empty:
                 out[s] = {"err": "no 5m data"}
                 continue
-            sub = sub.copy()
-            sub.index = sub.index.tz_convert(ET)
-            mins = sub.index.hour * 60 + sub.index.minute - (9 * 60 + 30)
-            sub = sub[(mins >= 0) & (mins < 390) & pd.Index([d.isoformat() in want for d in sub.index.date])]
-            mins = sub.index.hour * 60 + sub.index.minute - (9 * 60 + 30)
-            sub["d"] = [d.isoformat() for d in sub.index.date]
-            sub["b"] = (mins // C.BUCKET_MIN).astype(int)
-            buckets = [(d, b, float(g.Close.iloc[-1]), len(g)) for (d, b), g in sub.groupby(["d", "b"], sort=True)]
+            buckets = buckets_65m(sub, want)
             missing_days = sorted(want - {d for d, *_ in buckets})
             if len(buckets) < C.SMA65_LEN:
                 out[s] = {"err": f"solo {len(buckets)} bucket 65m", "missing_days": missing_days}
