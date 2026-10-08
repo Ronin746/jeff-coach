@@ -115,9 +115,7 @@ def pattern_metrics(df: pd.DataFrame, atr: float, adr: Optional[float]) -> dict:
         out["a_close5_adr"] = (c[-5:].max() - c[-5:].min()) / close * 100 / adr
     lo60, hi60 = l[-60:], h[-60:]
     out["a_thrust60_pct"] = max((hi60[i:].max() / lo60[i] - 1) * 100 for i in range(len(lo60) - 5))
-    out["a_off_high20_pct"] = (close / h[-20:].max() - 1) * 100      # solo informativo
-    if adr:
-        out["a_dist_hi10_adr"] = (h[-10:].max() - close) / close * 100 / adr
+    out["a_off_high20_pct"] = (close / h[-20:].max() - 1) * 100
     out["range10_lo"], out["range10_hi"] = float(l[-10:].min()), float(h[-10:].max())
     out["high20"] = float(h[-20:].max())
     # --- lettura B (Sydney): tutto in ATR
@@ -150,11 +148,8 @@ def reading_a(m: dict) -> tuple[bool, list[str], list[str]]:
         return False, ["ADR n/a"], ["ADR n/a"]
     if m["a_range10_adr"] > p["range10_adr_max"]:
         why.append(f"10-day range {m['a_range10_adr']:.1f}× ADR, wide"); sh.append(f"wide, 10d range {m['a_range10_adr']:.1f}× ADR")
-    d = m.get("a_dist_hi10_adr")
-    if d is None and m.get("range10_hi") and m.get("adr_pct"):
-        d = (m["range10_hi"] - m["close"]) / m["close"] * 100 / m["adr_pct"]
-    if d is not None and d > p["dist_hi10_max_adr"]:
-        why.append(f"{d:.1f} ADR under the base pivot (10-day high)"); sh.append(f"{d:.1f} ADR under the pivot")
+    if m["a_off_high20_pct"] < p["off_high20_min_pct"]:
+        why.append(f"{abs(m['a_off_high20_pct']):.1f}% under the 20-day high"); sh.append(f"{abs(m['a_off_high20_pct']):.0f}% off the 20d high")
     if (m.get("last_range_adr") or 0) > p["last_range_adr_max"]:
         why.append(f"last range {m['last_range_adr']:.1f}× ADR"); sh.append(f"last bar {m['last_range_adr']:.1f}× ADR")
     if m["a_close5_adr"] > p["close5_adr_max"]:

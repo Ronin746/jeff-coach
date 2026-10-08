@@ -77,9 +77,7 @@ STALK_CARRY_MAX_NUMERIC_OPEN = 2
 # se una dice largo -> Stalk [RONIN 04/10: "se non siete d'accordo lo mettete in stalk"].
 PATTERN_A = dict(            # lettura "Dua" (range vs ADR20)
     range10_adr_max=2.5,       # range 10 sedute (in % del close) / ADR20%
-    dist_hi10_max_adr=1.0,     # close entro 1 ADR dal massimo a 10 giorni = sul pivot della base [RONIN 08/10]
-                               # (sostituisce "entro 6% dal massimo a 20 giorni": misurava il vecchio massimo della
-                               #  spinta, non il pivot della base nuova; caso HPQ, Focus di Jeff l'08/10)
+    off_high20_min_pct=-30.0,  # close entro 30% dal massimo a 20 giorni [RONIN 08/10] (era 6%: tagliava HPQ, Focus di Jeff)
     last_range_adr_max=1.3,    # ultima barra <= 1.3 ADR
     close5_adr_max=1.3,        # escursione dei close a 5 giorni <= 1.3 ADR
     thrust60_min_pct=15.0,     # spinta >= 15% nelle ultime 60 barre (minimo -> massimo successivo)

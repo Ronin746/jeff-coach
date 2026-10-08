@@ -69,12 +69,12 @@ def test_base_dopo_ritracciamento_sul_pivot_e_stretta():
     """Caso HPQ 08/10 (Focus di Jeff, mini triangolo ascendente): base nuova dopo un ritracciamento,
     prezzo sul pivot della base ma oltre 10% sotto il vecchio massimo. A e B devono vederla stretta."""
     from jeffcoach import engine as E
-    m = dict(a_range10_adr=1.6, a_dist_hi10_adr=0.3, a_off_high20_pct=-10.5, last_range_adr=0.5,
+    m = dict(a_range10_adr=1.6, a_off_high20_pct=-10.5, last_range_adr=0.5,
              a_close5_adr=0.7, a_thrust60_pct=55.0, b_rally20_atr=4.6, b_pullback_atr=4.4, b_thrust_atr=7.5,
              c_retrace=0.39, b_slope_h8=0.13, b_slope_l8=0.13, b_last_range_atr=0.53, ret1_pct=0.6,
              b_range5_atr=1.35, b_dist_hi10_atr=0.32)
     assert E.reading_a(m)[0] and E.reading_b(m)[0]
     m2 = dict(m, c_retrace=0.7)               # ha restituito più di metà della spinta: non è più una base
     assert not E.reading_b(m2)[0]
-    m3 = dict(m, a_dist_hi10_adr=1.5)          # lontano dal pivot
+    m3 = dict(m, a_off_high20_pct=-31.0)       # oltre 30% sotto il massimo a 20 giorni
     assert not E.reading_a(m3)[0]
