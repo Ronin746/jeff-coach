@@ -296,7 +296,7 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             leader=m.get("leader") or [], carry_days=m.get("carry_days", 0),
             channel=m.get("d_state") if m.get("d_found") else None, channel_buy_zone=bool(m.get("pattern_d_ok")),
             channel_lower_next=_r(m.get("d_lower_next")),
-            gap_to_fill=_r(m.get("gap_top")) if m.get("gap_open") else None,
+            gap_to_fill=_r(m.get("gap_top")) if C.GAP_GATE_ON and m.get("gap_open") else None,
             triangle_top=_r(m.get("t_top")) if m.get("t_ok") else None,
         )
 

@@ -177,7 +177,7 @@ Imparata dai grafici di Ronin dell'08/10 (XLK, NET, CRWD, FTNT, RNG, RBRK, SMCI)
 
 ### Regole dai post per abbonati di Jeff (dal 09/10) [RONIN 08/10]
 
-- **Gap da riempire** (`gap` in `focus_gates`, gate "soft"): un gap al ribasso degli ultimi 60 giorni ancora aperto sopra il prezzo, entro 3 ATR, tiene il nome in **Stalk** finché un massimo non torna al minimo del giorno prima del gap (XLK, ESTC, NOW, FRSH). Nel riepilogo: "Gap al ribasso da riempire".
+- **Gap da riempire — SPENTO** (`GAP_GATE_ON = False`, [RONIN 08/10]: da rifare meglio prima di usarlo). Com'è scritto oggi (`gap` in `focus_gates`, gate "soft"): un gap al ribasso degli ultimi 60 giorni ancora aperto sopra il prezzo, entro 3 ATR, tiene il nome in **Stalk** finché un massimo non torna al minimo del giorno prima del gap (XLK, ESTC, NOW, FRSH). Nel riepilogo: "Gap al ribasso da riempire".
 - **Triangolo ascendente** (`patterns.read_triangle`): tetto piatto toccato almeno 2 volte (al massimo 2 spike sopra, nessun close sopra nelle ultime 3 sedute), supporto che sale (0,03–0,15 ATR a seduta) dalla prima metà del triangolo, larghezza che si stringe (≤ 75% di quella iniziale, ≤ 3,5 ATR), durata ≥ 15 sedute, close entro 1,5 ATR sotto il tetto, range 5 giorni ≤ 2,5 ATR, sopra una SMA50 che non scende. È **in più** alla lettura C: se la base non passa ma il triangolo sì, C è stretta; e il triangolo basta come pattern per lo Stalk. Nel riepilogo: "Triangoli ascendenti".
 - **Reazione ritardata agli utili** (`peg.py`, lista `peg_watch`): gap ≥ 4% (o 1 ATR) con volume ≥ 1,5× la media (o gap ≥ 8%) di 4–45 sedute fa, **confermato dalla data degli utili**; prezzo tornato nel range del PEG (dal close prima del gap al massimo del giorno del gap), base stretta, sopra la SMA200, RS ≥ 60. Lista a parte nel riepilogo, non cambia Focus/Stalk.
 
@@ -314,7 +314,7 @@ Stessi gate e stessa regola dello Stalk della daily, con queste differenze [RONI
 | Forza del gruppo | Calcolata e mostrata, gate spento |
 | Lettura C (trendline) | Calcolata e mostrata, modo `AB` finché Ronin non sceglie |
 | Canale rialzista (lettura D) | Lista a parte, alert Sydney sul recupero della SMA30 65m anche sotto la EMA9 |
-| Regole di Jeff dai post abbonati | RVOL e LoD bloccano l'alert d'ingresso; gap da riempire = Stalk; triangolo ascendente in più; lista PEG |
+| Regole di Jeff dai post abbonati | RVOL e LoD bloccano l'alert d'ingresso; gap da riempire spento (da rifare); triangolo ascendente in più; lista PEG |
 
 ## 14. Regole superate (per non riaprirle)
 

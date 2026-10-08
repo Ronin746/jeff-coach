@@ -57,3 +57,9 @@ def test_ingresso_rvol_e_lod():
     assert not A.entry_checks(10.5, 10.0, 0.10, 30, ref)[0]      # volume insufficiente
     assert not A.entry_checks(10.9, 10.0, 0.30, 30, ref)[0]      # LoD 90% ATR
     assert A.entry_checks(10.5, 10.0, 0.30, 30, ref)[0]
+
+
+
+def test_gap_spento():
+    from jeffcoach import config as C
+    assert C.GAP_GATE_ON is False          # [RONIN 08/10] da rifare prima di usarlo

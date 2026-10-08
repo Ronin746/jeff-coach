@@ -229,7 +229,7 @@ def focus_gates(m: dict, sma65: Optional[dict]) -> list[Gate]:
     g.append(Gate("comp", cd >= C.COMPRESSION_DAYS_MIN,
                   f"{cd} compression day{'s' if cd != 1 else ''} in the last {C.COMPRESSION_WINDOW}",
                   f"{cd} tight day{'s' if cd != 1 else ''}"))
-    if m.get("gap_open") is not None:
+    if C.GAP_GATE_ON and m.get("gap_open") is not None:
         g.append(Gate("gap", not m["gap_open"],
                       f"gap-down resistance to fill at {m.get('gap_top', 0):.2f} ({m.get('gap_date')})",
                       f"gap to fill {m.get('gap_top', 0):.2f}"))

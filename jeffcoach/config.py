@@ -146,7 +146,9 @@ CHANNEL_RS_MIN = 80              # lista "canale": solo RS >= 80 [RONIN 08/10]
 CHANNEL_ALERT = True             # Sydney: alert quando un nome del canale recupera la SMA30 65m in seduta
 CHANNEL_POLL_SEC = 300           # la SMA30 65m live dei nomi del canale si riscarica ogni 5 minuti
 
-# Gap al ribasso da riempire (Jeff: XLK, ESTC, NOW restano Stalk finché non riempiono il gap) [RONIN 08/10]
+# Gap al ribasso da riempire (Jeff: XLK, ESTC, NOW restano Stalk finché non riempiono il gap)
+# SPENTO [RONIN 08/10 21:16: "per il momento no, bisogna lavorarci su meglio"]: si calcola ma non tocca la lista né il riepilogo
+GAP_GATE_ON = False
 GAP_LOOKBACK = 60                # sedute in cui si cercano i gap al ribasso
 GAP_MIN_ATR = 0.10               # gap vero: massimo del giorno sotto il minimo del giorno prima, di almeno 0,1 ATR
 GAP_NEAR_ATR = 3.0               # conta solo se il bordo alto del gap è entro 3 ATR sopra il close
