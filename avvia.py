@@ -1,0 +1,258 @@
+"""Avvio locale (Windows o Linux): alert Jeff Coach + scanner di Remy + sync watchlist di Remy.
+
+Un solo processo, che può restare sempre acceso. Lavora solo durante la seduta NYSE, calcolata in ora
+di New York (festività, chiusure anticipate e settimane con l'apertura alle 14:30 di Roma comprese).
+
+  - Alert Jeff Coach: ogni 90 s legge la lista del giorno dal repo GitHub (coach-agreed/today.json).
+    Manda l'ingresso sul 30m ORH (solo Focus) e l'RVOL 30% nella prima ora (Focus e Stalk).
+  - Scanner di Remy: una scansione 20 s dopo la chiusura di ogni barra da 5 minuti (30m pivot crossback),
+    con il suo codice invariato.
+  - Watchlist di Remy: alle 15:00 di Roma dei giorni di borsa rilegge le due watchlist TradingView
+    pubbliche (Main e Focus) e aggiorna i file locali. Non le modifica mai su TradingView.
+
+Uso:
+  avvia.py               normale (manda su Discord)
+  avvia.py --dry-run     prova: calcola tutto ma non manda niente e non salva lo stato di Remy
+  avvia.py --once        un solo giro di tutto e poi esce (anche fuori seduta, per provare)
+
+In cloud (GitHub Actions, .github/workflows/alert.yml):
+  avvia.py --fino-chiusura --max-minuti 335
+      esce da solo 5 minuti dopo la chiusura (codice 0) oppure dopo 335 minuti se la seduta non è finita
+      (codice 3: il workflow fa partire il secondo turno, che riprende lo stato salvato).
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+import os
+import re
+import socket
+import subprocess
+import sys
+import threading
+import time
+import urllib.request
+from datetime import datetime, timedelta
+from logging.handlers import RotatingFileHandler
+from pathlib import Path
+
+BASE = Path(__file__).resolve().parent
+TV = BASE / "tv-scanner"
+REMY_WL = {"323848747": "pivot_wl_323848747.txt", "318147906": "pivot_wl_318147906.txt"}
+REPO_RAW = "https://raw.githubusercontent.com/Ronin746/jeff-coach/main/data/coach-agreed/today.json"
+
+
+def load_env() -> None:
+    """Legge .env (CHIAVE=valore) senza mai stamparne il contenuto."""
+    p = BASE / ".env"
+    if p.exists():
+        for line in p.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            v = v.strip().strip('"').strip("'")
+            if v:
+                os.environ.setdefault(k.strip(), v)
+    os.environ.setdefault("JEFF_COACH_HOME", str(BASE / "dati"))
+    os.environ.setdefault("JEFF_COACH_AGREED", str(BASE / "dati" / "coach-agreed"))
+    os.environ.setdefault("JEFF_COACH_AGREED_URL", REPO_RAW)
+    os.environ.setdefault("TV_SCANNER_HOME", str(TV))
+    os.environ.setdefault("PYTHONUTF8", "1")
+
+
+load_env()
+sys.path.insert(0, str(BASE))
+from jeffcoach import alerts, config as C  # noqa: E402  (dopo load_env: config legge le variabili)
+from jeffcoach.calendar_us import ET, ROME, close_et, is_session, now_et  # noqa: E402
+
+LOG_DIR = BASE / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+log = logging.getLogger("locale")
+
+
+def setup_logging() -> None:
+    h = RotatingFileHandler(LOG_DIR / "locale.log", maxBytes=5_000_000, backupCount=5, encoding="utf-8")
+    fmt = logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s")
+    h.setFormatter(fmt)
+    root = logging.getLogger()
+    root.setLevel(logging.INFO)
+    root.addHandler(h)
+    if (sys.stdout and sys.stdout.isatty()) or os.environ.get("AVVIA_LOG_STDOUT"):
+        s = logging.StreamHandler(sys.stdout)
+        s.setFormatter(fmt)
+        root.addHandler(s)
+
+
+def single_instance() -> socket.socket | None:
+    """Una sola copia attiva: se la porta è occupata c'è già un'altra istanza."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.bind(("127.0.0.1", 47391))
+        s.listen(1)
+        return s
+    except OSError:
+        return None
+
+
+# ------------------------------------------------------------------ alert Jeff Coach
+def coach_loop(dry: bool, stop: threading.Event) -> None:
+    lg = logging.getLogger("coach")
+    while not stop.is_set():
+        if alerts.in_window():
+            try:
+                lg.info(json.dumps(alerts.run_once(dry_run=dry), default=str))
+            except Exception as e:
+                lg.exception("giro alert: %s", e)
+            stop.wait(C.POLL_SEC)
+        else:
+            stop.wait(30)
+
+
+# ------------------------------------------------------------------ scanner di Remy
+def remy_scan(dry: bool) -> int:
+    cmd = [sys.executable, "refresh_yfinance.py", "--scan"] + (["--dry-run"] if dry else [])
+    with open(LOG_DIR / "remy.log", "a", encoding="utf-8") as f:
+        f.write(f"{datetime.now(ROME):%Y-%m-%d %H:%M:%S} START {' '.join(cmd[1:])}\n")
+        f.flush()
+        try:
+            rc = subprocess.run(cmd, cwd=TV, stdout=f, stderr=subprocess.STDOUT, timeout=280,
+                                env=os.environ.copy()).returncode
+        except subprocess.TimeoutExpired:
+            rc = -9
+        f.write(f"{datetime.now(ROME):%Y-%m-%d %H:%M:%S} END rc={rc}\n")
+    return rc
+
+
+def remy_loop(dry: bool, stop: threading.Event) -> None:
+    lg = logging.getLogger("remy")
+    offset = int(os.environ.get("RTH_SCAN_OFFSET_SEC", "20"))
+    while not stop.is_set():
+        now = time.time()
+        nxt = (int(now) // 300 + 1) * 300 + offset            # prossima chiusura 5m + 20 s
+        if (int(now) % 300) < offset:
+            nxt -= 300
+        stop.wait(max(1, nxt - now))
+        if stop.is_set():
+            break
+        if alerts.in_window():
+            try:
+                rc = remy_scan(dry)
+                if rc != 0:
+                    lg.warning("scan Remy rc=%s (vedi logs/remy.log)", rc)
+            except Exception as e:
+                lg.exception("scan Remy: %s", e)
+
+
+# ------------------------------------------------------------------ sync watchlist di Remy
+SYMS = re.compile(r'"symbols"\s*:\s*(\[[^\]]*\])')
+
+
+def fetch_tv_watchlist(wl_id: str) -> list[str]:
+    req = urllib.request.Request(f"https://www.tradingview.com/watchlists/{wl_id}/",
+                                 headers={"User-Agent": "Mozilla/5.0"})
+    html = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "replace")
+    m = SYMS.search(html)
+    if not m:
+        raise RuntimeError("lista simboli non trovata nella pagina")
+    return [s for s in json.loads(m.group(1)) if ":" in s and not s.startswith("###")]
+
+
+def remy_sync(dry: bool) -> None:
+    lg = logging.getLogger("remy-sync")
+    inbox = TV / "mcp_inbox"
+    inbox.mkdir(exist_ok=True)
+    for wl_id, fname in REMY_WL.items():
+        try:
+            syms = fetch_tv_watchlist(wl_id)
+        except Exception as e:
+            lg.warning("watchlist %s non letta (%s): tengo il file attuale", wl_id, e)
+            continue
+        if len(syms) < 10:
+            lg.warning("watchlist %s: solo %d simboli, sospetto: tengo il file attuale", wl_id, len(syms))
+            continue
+        dump = inbox / f"wl_{wl_id}.json"
+        dump.write_text(json.dumps({"id": wl_id, "symbols": syms}), encoding="utf-8")
+        cmd = [sys.executable, "sync_pivot_wl.py", "--from-file", str(dump), "--out", str(TV / fname)] + (["--dry-run"] if dry else [])
+        r = subprocess.run(cmd, cwd=TV, capture_output=True, text=True, env=os.environ.copy(), timeout=600)
+        lg.info("watchlist %s: %d simboli, sync rc=%s %s", wl_id, len(syms), r.returncode, (r.stdout or r.stderr)[-300:].replace("\n", " "))
+
+
+def sync_loop(dry: bool, stop: threading.Event) -> None:
+    """Una volta al giorno di borsa, alle 15:00 di Roma (o all'avvio se è già passata e non è stata fatta)."""
+    mark = BASE / "dati" / "remy_sync_ultimo.txt"
+    mark.parent.mkdir(parents=True, exist_ok=True)
+    while not stop.is_set():
+        now = datetime.now(ROME)
+        today = now.date().isoformat()
+        done = mark.exists() and mark.read_text(encoding="utf-8").strip() == today
+        if is_session(now_et().date()) and now.hour >= 15 and not done:
+            try:
+                remy_sync(dry)
+            except Exception as e:
+                logging.getLogger("remy-sync").exception("sync: %s", e)
+            if not dry:
+                mark.write_text(today, encoding="utf-8")
+        stop.wait(120)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--once", action="store_true")
+    ap.add_argument("--fino-chiusura", action="store_true", help="esce 5 minuti dopo la chiusura NYSE (o subito se oggi non c'è seduta)")
+    ap.add_argument("--max-minuti", type=int, default=0, help="esce con codice 3 dopo N minuti se la seduta non è finita")
+    a = ap.parse_args()
+    setup_logging()
+    lock = single_instance()
+    if lock is None:
+        log.info("già in esecuzione: esco")
+        return 0
+    log.info("avvio (dry_run=%s) — ora New York %s", a.dry_run, now_et().strftime("%Y-%m-%d %H:%M"))
+    if a.once:
+        log.info("alert: %s", json.dumps(alerts.run_once(dry_run=True), default=str))
+        log.info("Remy scan rc=%s", remy_scan(True))
+        remy_sync(True)
+        return 0
+    t_start = time.time()
+
+    def finito() -> int | None:
+        if not a.fino_chiusura:
+            return None
+        n = now_et()
+        if not is_session(n.date()) or n >= close_et(n.date()) + timedelta(minutes=5):
+            return 0
+        if a.max_minuti and time.time() - t_start >= a.max_minuti * 60:
+            return 3
+        return None
+
+    if finito() == 0:
+        log.info("oggi niente seduta o seduta già chiusa: esco")
+        return 0
+    stop = threading.Event()
+    ts = [threading.Thread(target=f, args=(a.dry_run, stop), daemon=True, name=f.__name__)
+          for f in (coach_loop, remy_loop, sync_loop)]
+    for t in ts:
+        t.start()
+    try:
+        while True:
+            time.sleep(30)
+            rc = finito()
+            if rc is not None:
+                log.info("fine turno (codice %s)", rc)
+                stop.set()
+                for t in ts:
+                    t.join(timeout=300)     # lascia finire la scansione in corso
+                return rc
+            for t in ts:
+                if not t.is_alive():
+                    log.error("thread %s fermo: riavvio il processo", t.name)
+                    return 1
+    except KeyboardInterrupt:
+        stop.set()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

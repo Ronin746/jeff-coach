@@ -5,3 +5,13 @@ __pycache__/
 data/state/**/compute.pkl
 data/logs/
 data/state/alerts/
+dati/
+logs/
+tv-scanner/cache/
+tv-scanner/results/
+tv-scanner/mcp_inbox/
+tv-scanner/signal_state.json
+tv-scanner/last_signals.md
+tv-scanner/last_scan_summary.json
+tv-scanner/*.bak_*
+cloud/sink_out.jsonl
