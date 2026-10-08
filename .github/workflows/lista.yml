@@ -1,0 +1,65 @@
+name: Lista Focus/Stalk del mattino
+
+# 07:00 e 08:00 UTC = 09:00/10:00 Roma con l'ora legale, 08:00/09:00 con l'ora solare.
+# Il primo dei due che parte fa la lista, il secondo esce subito (--skip-if-done).
+on:
+  schedule:
+    - cron: "0 6 * * 1-5"
+    - cron: "0 7 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      session:
+        description: "Seduta YYYY-MM-DD (vuoto = oggi)"
+        required: false
+      force:
+        description: "Rifare anche se esiste già"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeff-coach-data
+  cancel-in-progress: false
+
+env:
+  JEFF_COACH_HOME: ${{ github.workspace }}/data
+  JEFF_COACH_AGREED: ${{ github.workspace }}/data/coach-agreed
+  JEFF_COACH_REMY_FILE: ${{ github.workspace }}/data/remy/pivot30_list.txt
+  PYTHONUTF8: "1"
+
+jobs:
+  lista:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Calcolo lista
+        id: run
+        run: |
+          ARGS=""
+          if [ -n "${{ github.event.inputs.session }}" ]; then ARGS="--session ${{ github.event.inputs.session }}"; fi
+          if [ "${{ github.event.inputs.force }}" != "true" ]; then ARGS="$ARGS --skip-if-done"; fi
+          python -m jeffcoach.daily $ARGS | tee /tmp/out.txt
+          SESSION=$(python -c "import json,sys;d=json.load(open('data/coach-agreed/today.json',encoding='utf-8'));print(d['session_date'])" 2>/dev/null || echo none)
+          echo "session=$SESSION" >> "$GITHUB_OUTPUT"
+      - name: Salva i dati calcolati per la card (cache)
+        if: steps.run.outputs.session != 'none'
+        uses: actions/cache/save@v4
+        with:
+          path: data/state/daily_${{ steps.run.outputs.session }}/compute.pkl
+          key: compute-${{ steps.run.outputs.session }}-${{ github.run_id }}
+      - name: Commit
+        run: |
+          git config user.name "jeff-coach-bot"
+          git config user.email "jeff-coach-bot@users.noreply.github.com"
+          git add -A data
+          git diff --cached --quiet && exit 0
+          git commit -m "Lista ${{ steps.run.outputs.session }}"
+          git pull --rebase && git push

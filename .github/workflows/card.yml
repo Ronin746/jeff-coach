@@ -1,0 +1,74 @@
+name: Card Discord
+
+# Parte quando la revisione (attività programmata di Claude) fa push di review.json.
+# Se la revisione non arriva, i cron di riserva pubblicano la card comunque prima dell'apertura USA:
+# 10:30 e 11:30 UTC = 12:30/13:30 Roma (ora legale), 11:30/12:30 (ora solare).
+on:
+  push:
+    paths:
+      - "data/state/daily_*/review.json"
+  schedule:
+    - cron: "30 10 * * 1-5"
+    - cron: "30 11 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeff-coach-data
+  cancel-in-progress: false
+
+env:
+  JEFF_COACH_HOME: ${{ github.workspace }}/data
+  JEFF_COACH_AGREED: ${{ github.workspace }}/data/coach-agreed
+  JEFF_COACH_REMY_FILE: ${{ github.workspace }}/data/remy/pivot30_list.txt
+  COACH_CARD_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_CARD_DISCORD_WEBHOOK_URL }}
+  PYTHONUTF8: "1"
+
+jobs:
+  card:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Seduta di oggi
+        id: s
+        run: |
+          S=$(python -c "from jeffcoach.calendar_us import today_rome,is_session;d=today_rome();print(d if is_session(d) else 'none')")
+          if [ "$S" != "none" ] && [ ! -f "data/coach-agreed/$S.json" ]; then echo "Lista $S non ancora pronta"; S=none; fi
+          echo "session=$S" >> "$GITHUB_OUTPUT"
+      - name: Card già pubblicata senza nuova revisione?
+        id: chk
+        if: steps.s.outputs.session != 'none'
+        run: |
+          S=${{ steps.s.outputs.session }}
+          if [ "${{ github.event_name }}" = "schedule" ] && [ -f "data/state/daily_$S/discord_post.json" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"; echo "Card già pubblicata"; else echo "skip=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/cache/restore@v4
+        if: steps.s.outputs.session != 'none' && steps.chk.outputs.skip != 'true'
+        with:
+          path: data/state/daily_${{ steps.s.outputs.session }}/compute.pkl
+          key: compute-${{ steps.s.outputs.session }}-
+          restore-keys: compute-${{ steps.s.outputs.session }}-
+      - name: Applica la revisione e pubblica
+        if: steps.s.outputs.session != 'none' && steps.chk.outputs.skip != 'true'
+        run: |
+          S=${{ steps.s.outputs.session }}
+          python -m jeffcoach.daily --session $S --from-cache
+          python -m jeffcoach.discord card --session $S | tee /tmp/card.txt
+          grep -q '"ok": true' /tmp/card.txt || (echo "Card NON pubblicata"; exit 1)
+      - name: Commit
+        if: steps.s.outputs.session != 'none' && steps.chk.outputs.skip != 'true'
+        run: |
+          git config user.name "jeff-coach-bot"
+          git config user.email "jeff-coach-bot@users.noreply.github.com"
+          git add -A data
+          git diff --cached --quiet && exit 0
+          git commit -m "Card ${{ steps.s.outputs.session }}"
+          git pull --rebase && git push

@@ -1,0 +1,822 @@
+{
+  "session_date": "2026-10-08",
+  "as_of_close": "2026-10-07",
+  "ranking_bar": "2026-10-07",
+  "ranking_bar_status": "completed_rth_daily",
+  "timezone": "Europe/Rome",
+  "asof_rome": "2026-10-08 15:42 CEST",
+  "focus": [
+    "SIMO",
+    "PLTR",
+    "SIG"
+  ],
+  "stalk": [
+    "AXTI",
+    "DELL",
+    "MU",
+    "PBF",
+    "RNG",
+    "ALAB",
+    "ARM",
+    "BE",
+    "CAKE",
+    "CLMT",
+    "DDOG",
+    "FTNT",
+    "HNGE",
+    "NBIS",
+    "NSIT",
+    "PANW",
+    "PAYC",
+    "SN",
+    "XMTR",
+    "SNOW",
+    "ANF",
+    "APA",
+    "NET",
+    "SMCI",
+    "WT",
+    "CRGY",
+    "ANET",
+    "VEEV",
+    "ELF",
+    "SANM",
+    "VRNS",
+    "THC",
+    "SCCO",
+    "CLS",
+    "JXN",
+    "CVLT",
+    "BAX"
+  ],
+  "tickers": [
+    {
+      "ticker": "SIMO",
+      "list": "Focus",
+      "rs": 98,
+      "vcp": 11.95,
+      "sma5": 1.42,
+      "atr_ext": 2.02,
+      "reason_en": "box 265.0–295.0, 3.1% under the high, 3 tight days",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 289.72
+    },
+    {
+      "ticker": "PLTR",
+      "list": "Focus",
+      "rs": 91,
+      "vcp": 4.37,
+      "sma5": 1.7,
+      "atr_ext": 3.79,
+      "reason_en": "ascending base 184.8–194.8, 0.3% under the high, 3 tight days",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 194.7
+    },
+    {
+      "ticker": "SIG",
+      "list": "Focus",
+      "rs": 85,
+      "vcp": 6.48,
+      "sma5": 1.12,
+      "atr_ext": 2.68,
+      "reason_en": "box 99.68–106.6, 3.0% under the high, 3 tight days",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 104.3
+    },
+    {
+      "ticker": "AXTI",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 6.87,
+      "sma5": -4.6,
+      "atr_ext": 1.59,
+      "reason_en": "under 65m SMA30 (-4.9%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 83.22
+    },
+    {
+      "ticker": "DELL",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 30.47,
+      "sma5": 3.04,
+      "atr_ext": 3.33,
+      "reason_en": "loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 585.0
+    },
+    {
+      "ticker": "MU",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 24.66,
+      "sma5": 1.31,
+      "atr_ext": 2.96,
+      "reason_en": "pattern last bar 2.1× ADR, expansion bar +4.1%",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 1089.22
+    },
+    {
+      "ticker": "PBF",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 5.81,
+      "sma5": 1.1,
+      "atr_ext": 2.74,
+      "reason_en": "pattern wide, 10d range 3.0× ADR, still trending",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 85.75
+    },
+    {
+      "ticker": "RNG",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 3.25,
+      "sma5": -1.73,
+      "atr_ext": 2.44,
+      "reason_en": "under 65m SMA30 (-1.8%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 78.13
+    },
+    {
+      "ticker": "ALAB",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 27.69,
+      "sma5": 3.81,
+      "atr_ext": 3.5,
+      "reason_en": "loose VCP; 1 tight day",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 388.14
+    },
+    {
+      "ticker": "ARM",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 10.2,
+      "sma5": -1.85,
+      "atr_ext": 1.65,
+      "reason_en": "under 65m SMA30 (-2.3%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 300.6
+    },
+    {
+      "ticker": "BE",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 5.29,
+      "sma5": 1.11,
+      "atr_ext": 3.02,
+      "reason_en": "pattern wide, 10d range 2.8× ADR",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 296.83
+    },
+    {
+      "ticker": "CAKE",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 12.8,
+      "sma5": -1.27,
+      "atr_ext": 0.11,
+      "reason_en": "under 65m SMA30 (-0.9%)",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 107.84
+    },
+    {
+      "ticker": "CLMT",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 15.2,
+      "sma5": 1.41,
+      "atr_ext": 2.71,
+      "reason_en": "pattern base after a 3.8 ATR pullback",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 56.87
+    },
+    {
+      "ticker": "DDOG",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 2.33,
+      "sma5": -1.67,
+      "atr_ext": 2.46,
+      "reason_en": "under 65m SMA30 (-2.0%)",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 281.25
+    },
+    {
+      "ticker": "FTNT",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 47.04,
+      "sma5": 2.39,
+      "atr_ext": 4.3,
+      "reason_en": "extended; loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "ext",
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 192.23
+    },
+    {
+      "ticker": "HNGE",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 0.0,
+      "sma5": -0.18,
+      "atr_ext": 2.23,
+      "reason_en": "under 65m SMA30 (-0.2%)",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 99.79
+    },
+    {
+      "ticker": "NBIS",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 15.69,
+      "sma5": -0.75,
+      "atr_ext": 0.97,
+      "reason_en": "under 65m SMA30 (-0.9%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 243.62
+    },
+    {
+      "ticker": "NSIT",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 0.0,
+      "sma5": -0.04,
+      "atr_ext": 1.47,
+      "reason_en": "under 65m SMA30 (-0.2%)",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 161.86
+    },
+    {
+      "ticker": "PANW",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 35.83,
+      "sma5": -0.19,
+      "atr_ext": 2.47,
+      "reason_en": "under 65m SMA30 (-0.0%); loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 416.6
+    },
+    {
+      "ticker": "PAYC",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 4.02,
+      "sma5": -0.21,
+      "atr_ext": 0.86,
+      "reason_en": "under 65m SMA30 (-0.0%)",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 226.41
+    },
+    {
+      "ticker": "SN",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 7.96,
+      "sma5": 1.2,
+      "atr_ext": 1.43,
+      "reason_en": "pattern wide, 10d range 2.8× ADR",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 185.97
+    },
+    {
+      "ticker": "XMTR",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 39.11,
+      "sma5": 1.14,
+      "atr_ext": 3.14,
+      "reason_en": "loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 109.48
+    },
+    {
+      "ticker": "SNOW",
+      "list": "Stalk",
+      "rs": 97,
+      "vcp": 4.38,
+      "sma5": -1.57,
+      "atr_ext": 0.39,
+      "reason_en": "under 65m SMA30 (-1.9%); under 9 EMA",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 341.62
+    },
+    {
+      "ticker": "ANF",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 10.35,
+      "sma5": 0.39,
+      "atr_ext": 2.4,
+      "reason_en": "pattern wide, 10d range 2.6× ADR, base after a 4.5 ATR pullback",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 141.75
+    },
+    {
+      "ticker": "APA",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 3.04,
+      "sma5": 0.12,
+      "atr_ext": 1.16,
+      "reason_en": "1 tight day",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 45.17
+    },
+    {
+      "ticker": "NET",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 20.9,
+      "sma5": -2.43,
+      "atr_ext": 2.06,
+      "reason_en": "under 65m SMA30 (-2.9%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 353.04
+    },
+    {
+      "ticker": "SMCI",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 27.79,
+      "sma5": 3.45,
+      "atr_ext": 4.02,
+      "reason_en": "extended; loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "ext",
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 45.77
+    },
+    {
+      "ticker": "WT",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 19.81,
+      "sma5": -2.96,
+      "atr_ext": 0.24,
+      "reason_en": "under 65m SMA30 (-3.4%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 23.81
+    },
+    {
+      "ticker": "CRGY",
+      "list": "Stalk",
+      "rs": 94,
+      "vcp": 8.18,
+      "sma5": 0.06,
+      "atr_ext": 0.67,
+      "reason_en": "1 tight day",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 13.86
+    },
+    {
+      "ticker": "ANET",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp": 41.64,
+      "sma5": 2.78,
+      "atr_ext": 3.16,
+      "reason_en": "loose VCP; 1 tight day",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 217.32
+    },
+    {
+      "ticker": "VEEV",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp": 19.11,
+      "sma5": 0.55,
+      "atr_ext": 3.24,
+      "reason_en": "pattern base after a 4.3 ATR pullback",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 286.98
+    },
+    {
+      "ticker": "ELF",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp": 3.77,
+      "sma5": 0.92,
+      "atr_ext": 1.82,
+      "reason_en": "pattern no fresh thrust",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 106.97
+    },
+    {
+      "ticker": "SANM",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp": 10.73,
+      "sma5": -2.36,
+      "atr_ext": 1.66,
+      "reason_en": "under 65m SMA30 (-2.1%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 222.43
+    },
+    {
+      "ticker": "VRNS",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp": 19.22,
+      "sma5": 1.49,
+      "atr_ext": 2.55,
+      "reason_en": "pattern wide, 10d range 2.8× ADR",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 49.67
+    },
+    {
+      "ticker": "THC",
+      "list": "Stalk",
+      "rs": 89,
+      "vcp": 5.25,
+      "sma5": 0.68,
+      "atr_ext": -0.35,
+      "reason_en": "pattern no fresh thrust",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 261.58
+    },
+    {
+      "ticker": "SCCO",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp": 13.73,
+      "sma5": -1.19,
+      "atr_ext": 0.27,
+      "reason_en": "under 65m SMA30 (-1.0%); under 9 EMA",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 200.84
+    },
+    {
+      "ticker": "CLS",
+      "list": "Stalk",
+      "rs": 86,
+      "vcp": 12.91,
+      "sma5": -2.37,
+      "atr_ext": 2.19,
+      "reason_en": "under 65m SMA30 (-1.9%); under 9 EMA",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 380.42
+    },
+    {
+      "ticker": "JXN",
+      "list": "Stalk",
+      "rs": 86,
+      "vcp": 22.62,
+      "sma5": -1.0,
+      "atr_ext": -0.53,
+      "reason_en": "under 65m SMA30 (-1.1%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 132.77
+    },
+    {
+      "ticker": "CVLT",
+      "list": "Stalk",
+      "rs": 85,
+      "vcp": 9.99,
+      "sma5": -0.75,
+      "atr_ext": 2.12,
+      "reason_en": "under 65m SMA30 (-0.9%)",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 154.02
+    },
+    {
+      "ticker": "BAX",
+      "list": "Stalk",
+      "rs": 83,
+      "vcp": 16.71,
+      "sma5": 0.14,
+      "atr_ext": -1.75,
+      "reason_en": "1 tight day",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 24.6
+    }
+  ],
+  "notes": "Single deterministic engine. Focus = every closed gate passes and BOTH pattern readings call it tight; Stalk = universe + earnings + RS>=80, above the SMA200, new names with at most 1 numeric gate open and a tight pattern on at least one reading, names already listed while at most 2 numeric gates are open (or RS 70-79 with everything else closed). Alerts: entries on Focus only.",
+  "earnings_check": {
+    "window": "2026-10-08..2026-10-14",
+    "excluded": {},
+    "missing_dates": [],
+    "reported_on_reference_day": []
+  },
+  "info_not_verified": [],
+  "pattern_disagreements": {
+    "BE": {
+      "a": "10-day range 2.8× ADR, wide",
+      "b": "tight"
+    },
+    "CLMT": {
+      "a": "tight",
+      "b": "base after a 3.8 ATR pullback, not a continuation; 5-day range 2.2 ATR"
+    },
+    "SN": {
+      "a": "10-day range 2.8× ADR, wide",
+      "b": "tight"
+    },
+    "VEEV": {
+      "a": "tight",
+      "b": "base after a 4.3 ATR pullback, not a continuation; 5-day range 2.1 ATR"
+    },
+    "ELF": {
+      "a": "tight",
+      "b": "no real prior thrust (2.9 ATR); base after a 4.7 ATR pullback, not a continuation"
+    },
+    "VRNS": {
+      "a": "10-day range 2.8× ADR, wide",
+      "b": "tight"
+    },
+    "THC": {
+      "a": "tight",
+      "b": "no real prior thrust (1.4 ATR)"
+    }
+  },
+  "review": {},
+  "changes_vs_previous": {
+    "focus_before": [
+      "NET",
+      "PLTR",
+      "SIMO",
+      "SMCI"
+    ],
+    "focus_after": [
+      "SIMO",
+      "PLTR",
+      "SIG"
+    ],
+    "left_focus": [
+      "NET",
+      "SMCI"
+    ],
+    "joined_focus": [
+      "SIG"
+    ],
+    "left_list": [
+      "BAND",
+      "BB",
+      "CRWD",
+      "DOCN",
+      "ETN",
+      "IESC",
+      "META",
+      "MOG-A",
+      "MRVL",
+      "ZBRA"
+    ],
+    "joined_list": [
+      "BAX",
+      "PAYC",
+      "SIG",
+      "VEEV"
+    ],
+    "why_left": {
+      "NET": "under 65m SMA30 (-2.9%); under 9 EMA",
+      "SMCI": "extended; loose VCP",
+      "BAND": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "BB": "under 65m SMA30 (-5.0%); under 9 EMA; loose VCP",
+      "CRWD": "extended; under 65m SMA30 (-2.0%); under 9 EMA",
+      "DOCN": "over 5% from SMA5; under 65m SMA30 (-7.0%); under 9 EMA; loose VCP",
+      "ETN": "under 65m SMA30 (-1.2%); under 9 EMA; 1 tight day",
+      "IESC": "over 5% from SMA5; under 65m SMA30 (-6.8%); under 9 EMA; loose VCP",
+      "META": "RS 75; extended; under 65m SMA30 (-1.6%); under 9 EMA",
+      "MOG-A": "over 5% from SMA5; under 65m SMA30 (-5.6%); under 9 EMA; loose VCP; 0 tight days",
+      "MRVL": "extended; loose VCP; 1 tight day",
+      "ZBRA": "outside the universe gates (ATR%/adv$/mcap) or no data"
+    }
+  }
+}

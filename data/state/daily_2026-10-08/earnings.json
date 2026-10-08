@@ -1,0 +1,362 @@
+{
+  "ALAB": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "errors": []
+  },
+  "ANET": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "errors": []
+  },
+  "ANF": {
+    "calendar": [
+      "2026-11-25"
+    ],
+    "earnings_dates": [
+      "2026-11-25"
+    ],
+    "errors": []
+  },
+  "APA": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "errors": []
+  },
+  "ARM": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "errors": []
+  },
+  "AXTI": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "errors": []
+  },
+  "BAX": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "errors": []
+  },
+  "BE": {
+    "calendar": [
+      "2026-10-27"
+    ],
+    "earnings_dates": [
+      "2026-10-27"
+    ],
+    "errors": []
+  },
+  "CAKE": {
+    "calendar": [
+      "2026-10-27"
+    ],
+    "earnings_dates": [
+      "2026-10-27"
+    ],
+    "errors": []
+  },
+  "CLMT": {
+    "calendar": [
+      "2026-11-06"
+    ],
+    "earnings_dates": [
+      "2026-11-06"
+    ],
+    "errors": []
+  },
+  "CLS": {
+    "calendar": [
+      "2026-10-26"
+    ],
+    "earnings_dates": [
+      "2026-10-26"
+    ],
+    "errors": []
+  },
+  "CRGY": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "errors": []
+  },
+  "CVLT": {
+    "calendar": [
+      "2026-10-27"
+    ],
+    "earnings_dates": [
+      "2026-10-27"
+    ],
+    "errors": []
+  },
+  "DDOG": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "errors": []
+  },
+  "DELL": {
+    "calendar": [
+      "2026-11-27"
+    ],
+    "earnings_dates": [
+      "2026-11-27"
+    ],
+    "errors": []
+  },
+  "ELF": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "errors": []
+  },
+  "FTNT": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "errors": []
+  },
+  "HNGE": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "errors": []
+  },
+  "JXN": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "errors": []
+  },
+  "MU": {
+    "calendar": [
+      "2026-12-23"
+    ],
+    "earnings_dates": [
+      "2026-12-23"
+    ],
+    "errors": []
+  },
+  "NBIS": {
+    "calendar": [
+      "2026-11-10"
+    ],
+    "earnings_dates": [
+      "2026-11-10"
+    ],
+    "errors": []
+  },
+  "NET": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "errors": []
+  },
+  "NSIT": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "errors": []
+  },
+  "PANW": {
+    "calendar": [
+      "2026-11-19"
+    ],
+    "earnings_dates": [
+      "2026-11-19"
+    ],
+    "errors": []
+  },
+  "PAYC": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "errors": []
+  },
+  "PBF": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "errors": []
+  },
+  "PLTR": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "errors": []
+  },
+  "RNG": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "errors": []
+  },
+  "SANM": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "errors": []
+  },
+  "SCCO": {
+    "calendar": [
+      "2026-10-22"
+    ],
+    "earnings_dates": [
+      "2026-10-22"
+    ],
+    "errors": []
+  },
+  "SIG": {
+    "calendar": [
+      "2026-12-01"
+    ],
+    "earnings_dates": [
+      "2026-12-01"
+    ],
+    "errors": []
+  },
+  "SIMO": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "errors": []
+  },
+  "SMCI": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "errors": []
+  },
+  "SN": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "errors": []
+  },
+  "SNOW": {
+    "calendar": [
+      "2026-12-02"
+    ],
+    "earnings_dates": [
+      "2026-12-02"
+    ],
+    "errors": []
+  },
+  "THC": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "errors": []
+  },
+  "VEEV": {
+    "calendar": [
+      "2026-11-25"
+    ],
+    "earnings_dates": [
+      "2026-11-25"
+    ],
+    "errors": []
+  },
+  "VRNS": {
+    "calendar": [
+      "2026-10-27"
+    ],
+    "earnings_dates": [
+      "2026-10-27"
+    ],
+    "errors": []
+  },
+  "WT": {
+    "calendar": [
+      "2026-10-30"
+    ],
+    "earnings_dates": [
+      "2026-10-30"
+    ],
+    "errors": []
+  },
+  "XMTR": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "errors": []
+  }
+}

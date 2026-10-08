@@ -1,0 +1,5204 @@
+{
+  "session_date": "2026-10-08",
+  "as_of_close": "2026-10-07",
+  "ranking_bar": "2026-10-07",
+  "ranking_bar_status": "completed_rth_daily",
+  "timezone": "Europe/Rome",
+  "asof_rome": "2026-10-08 15:42 CEST",
+  "focus": [
+    "SIMO",
+    "PLTR",
+    "SIG"
+  ],
+  "stalk": [
+    "AXTI",
+    "DELL",
+    "MU",
+    "PBF",
+    "RNG",
+    "ALAB",
+    "ARM",
+    "BE",
+    "CAKE",
+    "CLMT",
+    "DDOG",
+    "FTNT",
+    "HNGE",
+    "NBIS",
+    "NSIT",
+    "PANW",
+    "PAYC",
+    "SN",
+    "XMTR",
+    "SNOW",
+    "ANF",
+    "APA",
+    "NET",
+    "SMCI",
+    "WT",
+    "CRGY",
+    "ANET",
+    "VEEV",
+    "ELF",
+    "SANM",
+    "VRNS",
+    "THC",
+    "SCCO",
+    "CLS",
+    "JXN",
+    "CVLT",
+    "BAX"
+  ],
+  "tickers": [
+    {
+      "ticker": "SIMO",
+      "list": "Focus",
+      "rs": 98,
+      "vcp": 11.95,
+      "sma5": 1.42,
+      "atr_ext": 2.02,
+      "reason_en": "box 265.0–295.0, 3.1% under the high, 3 tight days",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 289.72
+    },
+    {
+      "ticker": "PLTR",
+      "list": "Focus",
+      "rs": 91,
+      "vcp": 4.37,
+      "sma5": 1.7,
+      "atr_ext": 3.79,
+      "reason_en": "ascending base 184.8–194.8, 0.3% under the high, 3 tight days",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 194.7
+    },
+    {
+      "ticker": "SIG",
+      "list": "Focus",
+      "rs": 85,
+      "vcp": 6.48,
+      "sma5": 1.12,
+      "atr_ext": 2.68,
+      "reason_en": "box 99.68–106.6, 3.0% under the high, 3 tight days",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 104.3
+    },
+    {
+      "ticker": "AXTI",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 6.87,
+      "sma5": -4.6,
+      "atr_ext": 1.59,
+      "reason_en": "under 65m SMA30 (-4.9%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 83.22
+    },
+    {
+      "ticker": "DELL",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 30.47,
+      "sma5": 3.04,
+      "atr_ext": 3.33,
+      "reason_en": "loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 585.0
+    },
+    {
+      "ticker": "MU",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 24.66,
+      "sma5": 1.31,
+      "atr_ext": 2.96,
+      "reason_en": "pattern last bar 2.1× ADR, expansion bar +4.1%",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 1089.22
+    },
+    {
+      "ticker": "PBF",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 5.81,
+      "sma5": 1.1,
+      "atr_ext": 2.74,
+      "reason_en": "pattern wide, 10d range 3.0× ADR, still trending",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 85.75
+    },
+    {
+      "ticker": "RNG",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp": 3.25,
+      "sma5": -1.73,
+      "atr_ext": 2.44,
+      "reason_en": "under 65m SMA30 (-1.8%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 78.13
+    },
+    {
+      "ticker": "ALAB",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 27.69,
+      "sma5": 3.81,
+      "atr_ext": 3.5,
+      "reason_en": "loose VCP; 1 tight day",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 388.14
+    },
+    {
+      "ticker": "ARM",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 10.2,
+      "sma5": -1.85,
+      "atr_ext": 1.65,
+      "reason_en": "under 65m SMA30 (-2.3%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 300.6
+    },
+    {
+      "ticker": "BE",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 5.29,
+      "sma5": 1.11,
+      "atr_ext": 3.02,
+      "reason_en": "pattern wide, 10d range 2.8× ADR",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 296.83
+    },
+    {
+      "ticker": "CAKE",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 12.8,
+      "sma5": -1.27,
+      "atr_ext": 0.11,
+      "reason_en": "under 65m SMA30 (-0.9%)",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 107.84
+    },
+    {
+      "ticker": "CLMT",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 15.2,
+      "sma5": 1.41,
+      "atr_ext": 2.71,
+      "reason_en": "pattern base after a 3.8 ATR pullback",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 56.87
+    },
+    {
+      "ticker": "DDOG",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 2.33,
+      "sma5": -1.67,
+      "atr_ext": 2.46,
+      "reason_en": "under 65m SMA30 (-2.0%)",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 281.25
+    },
+    {
+      "ticker": "FTNT",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 47.04,
+      "sma5": 2.39,
+      "atr_ext": 4.3,
+      "reason_en": "extended; loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "ext",
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 192.23
+    },
+    {
+      "ticker": "HNGE",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 0.0,
+      "sma5": -0.18,
+      "atr_ext": 2.23,
+      "reason_en": "under 65m SMA30 (-0.2%)",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 99.79
+    },
+    {
+      "ticker": "NBIS",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 15.69,
+      "sma5": -0.75,
+      "atr_ext": 0.97,
+      "reason_en": "under 65m SMA30 (-0.9%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 243.62
+    },
+    {
+      "ticker": "NSIT",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 0.0,
+      "sma5": -0.04,
+      "atr_ext": 1.47,
+      "reason_en": "under 65m SMA30 (-0.2%)",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 161.86
+    },
+    {
+      "ticker": "PANW",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 35.83,
+      "sma5": -0.19,
+      "atr_ext": 2.47,
+      "reason_en": "under 65m SMA30 (-0.0%); loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 416.6
+    },
+    {
+      "ticker": "PAYC",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 4.02,
+      "sma5": -0.21,
+      "atr_ext": 0.86,
+      "reason_en": "under 65m SMA30 (-0.0%)",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 226.41
+    },
+    {
+      "ticker": "SN",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 7.96,
+      "sma5": 1.2,
+      "atr_ext": 1.43,
+      "reason_en": "pattern wide, 10d range 2.8× ADR",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 185.97
+    },
+    {
+      "ticker": "XMTR",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 39.11,
+      "sma5": 1.14,
+      "atr_ext": 3.14,
+      "reason_en": "loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 109.48
+    },
+    {
+      "ticker": "SNOW",
+      "list": "Stalk",
+      "rs": 97,
+      "vcp": 4.38,
+      "sma5": -1.57,
+      "atr_ext": 0.39,
+      "reason_en": "under 65m SMA30 (-1.9%); under 9 EMA",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 341.62
+    },
+    {
+      "ticker": "ANF",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 10.35,
+      "sma5": 0.39,
+      "atr_ext": 2.4,
+      "reason_en": "pattern wide, 10d range 2.6× ADR, base after a 4.5 ATR pullback",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 141.75
+    },
+    {
+      "ticker": "APA",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 3.04,
+      "sma5": 0.12,
+      "atr_ext": 1.16,
+      "reason_en": "1 tight day",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 45.17
+    },
+    {
+      "ticker": "NET",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 20.9,
+      "sma5": -2.43,
+      "atr_ext": 2.06,
+      "reason_en": "under 65m SMA30 (-2.9%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 353.04
+    },
+    {
+      "ticker": "SMCI",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 27.79,
+      "sma5": 3.45,
+      "atr_ext": 4.02,
+      "reason_en": "extended; loose VCP",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "ext",
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 45.77
+    },
+    {
+      "ticker": "WT",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp": 19.81,
+      "sma5": -2.96,
+      "atr_ext": 0.24,
+      "reason_en": "under 65m SMA30 (-3.4%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 23.81
+    },
+    {
+      "ticker": "CRGY",
+      "list": "Stalk",
+      "rs": 94,
+      "vcp": 8.18,
+      "sma5": 0.06,
+      "atr_ext": 0.67,
+      "reason_en": "1 tight day",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 13.86
+    },
+    {
+      "ticker": "ANET",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp": 41.64,
+      "sma5": 2.78,
+      "atr_ext": 3.16,
+      "reason_en": "loose VCP; 1 tight day",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 217.32
+    },
+    {
+      "ticker": "VEEV",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp": 19.11,
+      "sma5": 0.55,
+      "atr_ext": 3.24,
+      "reason_en": "pattern base after a 4.3 ATR pullback",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 286.98
+    },
+    {
+      "ticker": "ELF",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp": 3.77,
+      "sma5": 0.92,
+      "atr_ext": 1.82,
+      "reason_en": "pattern no fresh thrust",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 106.97
+    },
+    {
+      "ticker": "SANM",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp": 10.73,
+      "sma5": -2.36,
+      "atr_ext": 1.66,
+      "reason_en": "under 65m SMA30 (-2.1%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 222.43
+    },
+    {
+      "ticker": "VRNS",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp": 19.22,
+      "sma5": 1.49,
+      "atr_ext": 2.55,
+      "reason_en": "pattern wide, 10d range 2.8× ADR",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 49.67
+    },
+    {
+      "ticker": "THC",
+      "list": "Stalk",
+      "rs": 89,
+      "vcp": 5.25,
+      "sma5": 0.68,
+      "atr_ext": -0.35,
+      "reason_en": "pattern no fresh thrust",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 261.58
+    },
+    {
+      "ticker": "SCCO",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp": 13.73,
+      "sma5": -1.19,
+      "atr_ext": 0.27,
+      "reason_en": "under 65m SMA30 (-1.0%); under 9 EMA",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 200.84
+    },
+    {
+      "ticker": "CLS",
+      "list": "Stalk",
+      "rs": 86,
+      "vcp": 12.91,
+      "sma5": -2.37,
+      "atr_ext": 2.19,
+      "reason_en": "under 65m SMA30 (-1.9%); under 9 EMA",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 380.42
+    },
+    {
+      "ticker": "JXN",
+      "list": "Stalk",
+      "rs": 86,
+      "vcp": 22.62,
+      "sma5": -1.0,
+      "atr_ext": -0.53,
+      "reason_en": "under 65m SMA30 (-1.1%); under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 132.77
+    },
+    {
+      "ticker": "CVLT",
+      "list": "Stalk",
+      "rs": 85,
+      "vcp": 9.99,
+      "sma5": -0.75,
+      "atr_ext": 2.12,
+      "reason_en": "under 65m SMA30 (-0.9%)",
+      "pattern_a": "wide",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 154.02
+    },
+    {
+      "ticker": "BAX",
+      "list": "Stalk",
+      "rs": 83,
+      "vcp": 16.71,
+      "sma5": 0.14,
+      "atr_ext": -1.75,
+      "reason_en": "1 tight day",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 24.6
+    }
+  ],
+  "notes": "Single deterministic engine. Focus = every closed gate passes and BOTH pattern readings call it tight; Stalk = universe + earnings + RS>=80, above the SMA200, new names with at most 1 numeric gate open and a tight pattern on at least one reading, names already listed while at most 2 numeric gates are open (or RS 70-79 with everything else closed). Alerts: entries on Focus only.",
+  "earnings_check": {
+    "window": "2026-10-08..2026-10-14",
+    "excluded": {},
+    "missing_dates": [],
+    "reported_on_reference_day": []
+  },
+  "info_not_verified": [],
+  "pattern_disagreements": {
+    "BE": {
+      "a": "10-day range 2.8× ADR, wide",
+      "b": "tight"
+    },
+    "CLMT": {
+      "a": "tight",
+      "b": "base after a 3.8 ATR pullback, not a continuation; 5-day range 2.2 ATR"
+    },
+    "SN": {
+      "a": "10-day range 2.8× ADR, wide",
+      "b": "tight"
+    },
+    "VEEV": {
+      "a": "tight",
+      "b": "base after a 4.3 ATR pullback, not a continuation; 5-day range 2.1 ATR"
+    },
+    "ELF": {
+      "a": "tight",
+      "b": "no real prior thrust (2.9 ATR); base after a 4.7 ATR pullback, not a continuation"
+    },
+    "VRNS": {
+      "a": "10-day range 2.8× ADR, wide",
+      "b": "tight"
+    },
+    "THC": {
+      "a": "tight",
+      "b": "no real prior thrust (1.4 ATR)"
+    }
+  },
+  "review": {},
+  "changes_vs_previous": {
+    "focus_before": [
+      "NET",
+      "PLTR",
+      "SIMO",
+      "SMCI"
+    ],
+    "focus_after": [
+      "SIMO",
+      "PLTR",
+      "SIG"
+    ],
+    "left_focus": [
+      "NET",
+      "SMCI"
+    ],
+    "joined_focus": [
+      "SIG"
+    ],
+    "left_list": [
+      "BAND",
+      "BB",
+      "CRWD",
+      "DOCN",
+      "ETN",
+      "IESC",
+      "META",
+      "MOG-A",
+      "MRVL",
+      "ZBRA"
+    ],
+    "joined_list": [
+      "BAX",
+      "PAYC",
+      "SIG",
+      "VEEV"
+    ],
+    "why_left": {
+      "NET": "under 65m SMA30 (-2.9%); under 9 EMA",
+      "SMCI": "extended; loose VCP",
+      "BAND": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "BB": "under 65m SMA30 (-5.0%); under 9 EMA; loose VCP",
+      "CRWD": "extended; under 65m SMA30 (-2.0%); under 9 EMA",
+      "DOCN": "over 5% from SMA5; under 65m SMA30 (-7.0%); under 9 EMA; loose VCP",
+      "ETN": "under 65m SMA30 (-1.2%); under 9 EMA; 1 tight day",
+      "IESC": "over 5% from SMA5; under 65m SMA30 (-6.8%); under 9 EMA; loose VCP",
+      "META": "RS 75; extended; under 65m SMA30 (-1.6%); under 9 EMA",
+      "MOG-A": "over 5% from SMA5; under 65m SMA30 (-5.6%); under 9 EMA; loose VCP; 0 tight days",
+      "MRVL": "extended; loose VCP; 1 tight day",
+      "ZBRA": "outside the universe gates (ATR%/adv$/mcap) or no data"
+    }
+  },
+  "funnel": {
+    "downloaded": 1796,
+    "stale_last_bar": 2,
+    "universe_numeric": 929,
+    "candidates": 347,
+    "out_universe": 1,
+    "focus": 3,
+    "stalk": 37,
+    "out_earnings": 0
+  },
+  "out_universe": {
+    "REPL": "single-name Biotechnology"
+  },
+  "near_misses": {
+    "AMG": "pattern: 10-day range 2.7× ADR, wide; 5-day range 2.0 ATR",
+    "CHYM": "pattern: 19.2% under the 20-day high; no real prior thrust (1.5 ATR)",
+    "COHR": "pattern: 10-day range 3.2× ADR, wide; still trending, not consolidated",
+    "DINO": "pattern: 10-day range 2.8× ADR, wide; still trending, not consolidated",
+    "DK": "pattern: 10-day range 2.8× ADR, wide; base after a 4.3 ATR pullback, not a continuation",
+    "ENTG": "pattern: 10-day range 4.4× ADR, wide; still trending, not consolidated",
+    "FCX": "pattern: 10-day range 2.7× ADR, wide; no real prior thrust (1.9 ATR)",
+    "FROG": "pattern: 10-day range 3.0× ADR, wide; no real prior thrust (2.4 ATR)",
+    "HP": "pattern: 10-day range 3.2× ADR, wide; no real prior thrust (2.3 ATR)",
+    "HPQ": "pattern: 11.0% under the 20-day high; base after a 4.3 ATR pullback, not a continuation",
+    "LFST": "pattern: 10.7% under the 20-day high; no real prior thrust (1.2 ATR)",
+    "MGNI": "pattern: 10-day range 3.4× ADR, wide; no real prior thrust (2.7 ATR)",
+    "NAVN": "pattern: 10-day range 3.3× ADR, wide; no real prior thrust (2.4 ATR)",
+    "PARR": "pattern: 10-day range 3.2× ADR, wide; still trending, not consolidated",
+    "PI": "pattern: 10-day range 2.7× ADR, wide; expansion bar +3.7%, the 30m high would chase",
+    "QLYS": "pattern: 10-day range 3.4× ADR, wide; still trending, not consolidated",
+    "SEZL": "pattern: 6.9% under the 20-day high; no real prior thrust (1.2 ATR)",
+    "SM": "pattern: 15.2% under the 20-day high; no real prior thrust (1.5 ATR)",
+    "TEAM": "pattern: 10-day range 3.6× ADR, wide; base after a 3.6 ATR pullback, not a continuation",
+    "W": "pattern: 10-day range 3.0× ADR, wide; no real prior thrust (2.8 ATR)",
+    "ZETA": "pattern: 10-day range 4.2× ADR, wide; still trending, not consolidated",
+    "ZIM": "pattern: 10-day range 4.2× ADR, wide; base after a 4.3 ATR pullback, not a continuation"
+  },
+  "rows": {
+    "ALAB": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": false,
+          "why": "VCP 27.7, loose"
+        },
+        "comp": {
+          "ok": false,
+          "why": "1 compression day in the last 3"
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.5× ADR, wide; 5-day range 2.5 ATR"
+        }
+      },
+      "metrics": {
+        "close": 382.25,
+        "high": 388.14,
+        "low": 360.22,
+        "ret1_pct": -1.9369,
+        "atr": 23.4449,
+        "atr_pct": 6.1334,
+        "avg_vol_50": 4193530.0,
+        "adv": 1320058868.0118,
+        "sma5": 368.228,
+        "sma5_dist_pct": 3.808,
+        "sma25": 324.1644,
+        "sma50": 314.661,
+        "sma200": 244.5992,
+        "sma200_slope_ok": true,
+        "ema9": 363.3135,
+        "ema21": 342.3516,
+        "ema9_dist_atr": 0.8077,
+        "vcp": 27.6866,
+        "vcp_prev": 27.5279,
+        "compression_days": 1,
+        "rs_raw": 163.3472,
+        "rs": 98,
+        "adr_pct": 6.1418,
+        "last_range_adr": 1.262,
+        "off_52w_high_pct": -23.4698,
+        "n_bars": 551,
+        "ext": 3.5021,
+        "above_sma200": true,
+        "a_range10_adr": 2.5446,
+        "a_range5_adr": 2.5361,
+        "a_close5_adr": 1.6812,
+        "a_thrust60_pct": 64.2369,
+        "a_off_high20_pct": -4.8514,
+        "range10_lo": 342.0,
+        "range10_hi": 401.74,
+        "high20": 401.74,
+        "b_rally20_atr": 5.8546,
+        "b_range5_atr": 2.5396,
+        "b_range12_atr": 2.8467,
+        "b_dist_hi10_atr": 0.8313,
+        "b_slope_h8": 0.1645,
+        "b_slope_l8": 0.1222,
+        "b_thrust_atr": 6.4029,
+        "b_pullback_atr": 1.771,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 1.1909,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.5× ADR, wide",
+          "5-day closes span 1.7× ADR"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "5-day range 2.5 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 367.7385284423828,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-03"
+    },
+    "ANET": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": false,
+          "why": "VCP 41.6, loose"
+        },
+        "comp": {
+          "ok": false,
+          "why": "1 compression day in the last 3"
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.8× ADR, wide; 5-day range 2.4 ATR"
+        }
+      },
+      "metrics": {
+        "close": 215.83,
+        "high": 217.318,
+        "low": 209.13,
+        "ret1_pct": 0.2182,
+        "atr": 6.9572,
+        "atr_pct": 3.2235,
+        "avg_vol_50": 6125870.0,
+        "adv": 1189015699.3605,
+        "sma5": 209.986,
+        "sma5_dist_pct": 2.783,
+        "sma25": 200.5012,
+        "sma50": 195.8894,
+        "sma200": 160.2428,
+        "sma200_slope_ok": true,
+        "ema9": 208.592,
+        "ema21": 203.6802,
+        "ema9_dist_atr": 1.0404,
+        "vcp": 41.6434,
+        "vcp_prev": 41.1977,
+        "compression_days": 1,
+        "rs_raw": 125.4028,
+        "rs": 93,
+        "adr_pct": 3.0496,
+        "last_range_adr": 1.2839,
+        "off_52w_high_pct": -0.6847,
+        "n_bars": 551,
+        "ext": 3.1579,
+        "above_sma200": true,
+        "a_range10_adr": 2.82,
+        "a_range5_adr": 2.514,
+        "a_close5_adr": 1.7229,
+        "a_thrust60_pct": 38.5603,
+        "a_off_high20_pct": -0.6847,
+        "range10_lo": 198.757,
+        "range10_hi": 217.318,
+        "high20": 217.318,
+        "b_rally20_atr": 4.0275,
+        "b_range5_atr": 2.3784,
+        "b_range12_atr": 2.6679,
+        "b_dist_hi10_atr": 0.2139,
+        "b_slope_h8": 0.1924,
+        "b_slope_l8": 0.1311,
+        "b_thrust_atr": 5.1814,
+        "b_pullback_atr": 1.1769,
+        "b_bars_since_peak": 0,
+        "b_last_range_atr": 1.1769,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.8× ADR, wide",
+          "5-day closes span 1.7× ADR"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "5-day range 2.4 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 209.35000305175782,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-03"
+    },
+    "ANF": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.6× ADR, wide; base after a 4.5 ATR pullback, not a continuation"
+        }
+      },
+      "metrics": {
+        "close": 139.44,
+        "high": 141.75,
+        "low": 138.41,
+        "ret1_pct": -1.3792,
+        "atr": 5.4061,
+        "atr_pct": 3.877,
+        "avg_vol_50": 1656300.0,
+        "adv": 221568231.5933,
+        "sma5": 138.9,
+        "sma5_dist_pct": 0.3888,
+        "sma25": 139.3484,
+        "sma50": 127.5642,
+        "sma200": 101.7631,
+        "sma200_slope_ok": true,
+        "ema9": 138.0508,
+        "ema21": 136.432,
+        "ema9_dist_atr": 0.257,
+        "vcp": 10.3453,
+        "vcp_prev": 11.6447,
+        "compression_days": 2,
+        "rs_raw": 133.9294,
+        "rs": 96,
+        "adr_pct": 3.6819,
+        "last_range_adr": 0.6554,
+        "off_52w_high_pct": -10.1662,
+        "n_bars": 551,
+        "ext": 2.4013,
+        "above_sma200": true,
+        "a_range10_adr": 2.5886,
+        "a_range5_adr": 2.2341,
+        "a_close5_adr": 1.0693,
+        "a_thrust60_pct": 72.3326,
+        "a_off_high20_pct": -7.04,
+        "range10_lo": 131.2,
+        "range10_hi": 144.49,
+        "high20": 150.0,
+        "b_rally20_atr": 6.2115,
+        "b_range5_atr": 2.1217,
+        "b_range12_atr": 2.5305,
+        "b_dist_hi10_atr": 0.9341,
+        "b_slope_h8": 0.2067,
+        "b_slope_l8": 0.1938,
+        "b_thrust_atr": 10.1349,
+        "b_pullback_atr": 4.5153,
+        "b_bars_since_peak": 20,
+        "b_last_range_atr": 0.6178,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.6× ADR, wide",
+          "7.0% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "base after a 4.5 ATR pullback, not a continuation",
+          "5-day range 2.1 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 138.52457071940105,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-25"
+    },
+    "APA": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": false,
+          "why": "1 compression day in the last 3"
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.6× ADR, wide; no real prior thrust (2.8 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 43.81,
+        "high": 45.17,
+        "low": 43.34,
+        "ret1_pct": -0.6576,
+        "atr": 1.5384,
+        "atr_pct": 3.5116,
+        "avg_vol_50": 5743950.0,
+        "adv": 240719507.8246,
+        "sma5": 43.756,
+        "sma5_dist_pct": 0.1234,
+        "sma25": 43.9172,
+        "sma50": 42.098,
+        "sma200": 35.6344,
+        "sma200_slope_ok": true,
+        "ema9": 43.5078,
+        "ema21": 43.387,
+        "ema9_dist_atr": 0.1965,
+        "vcp": 3.042,
+        "vcp_prev": 14.7682,
+        "compression_days": 1,
+        "rs_raw": 133.4879,
+        "rs": 96,
+        "adr_pct": 3.4507,
+        "last_range_adr": 1.2236,
+        "off_52w_high_pct": -7.6518,
+        "n_bars": 551,
+        "ext": 1.1581,
+        "above_sma200": true,
+        "a_range10_adr": 2.6062,
+        "a_range5_adr": 2.5533,
+        "a_close5_adr": 0.5027,
+        "a_thrust60_pct": 42.121,
+        "a_off_high20_pct": -7.6518,
+        "range10_lo": 41.23,
+        "range10_hi": 45.17,
+        "high20": 47.44,
+        "b_rally20_atr": 2.7755,
+        "b_range5_atr": 2.509,
+        "b_range12_atr": 2.561,
+        "b_dist_hi10_atr": 0.884,
+        "b_slope_h8": 0.2073,
+        "b_slope_l8": 0.1755,
+        "b_thrust_atr": 8.3851,
+        "b_pullback_atr": 4.0365,
+        "b_bars_since_peak": 16,
+        "b_last_range_atr": 1.1895,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.6× ADR, wide",
+          "7.7% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (2.8 ATR)",
+          "base after a 4.0 ATR pullback, not a continuation",
+          "5-day range 2.5 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 43.625336456298825,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-04"
+    },
+    "ARM": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (294.37 vs 301.39)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 3.1× ADR, wide; 1.8 ATR under the 10-day high"
+        }
+      },
+      "metrics": {
+        "close": 294.37,
+        "high": 300.6,
+        "low": 290.5,
+        "ret1_pct": -2.7069,
+        "atr": 17.2752,
+        "atr_pct": 5.8685,
+        "avg_vol_50": 5159058.0,
+        "adv": 1398276593.07,
+        "sma5": 299.932,
+        "sma5_dist_pct": -1.8544,
+        "sma25": 280.4496,
+        "sma50": 268.3614,
+        "sma200": 218.5422,
+        "sma200_slope_ok": true,
+        "ema9": 297.7948,
+        "ema21": 288.7896,
+        "ema9_dist_atr": -0.1982,
+        "vcp": 10.204,
+        "vcp_prev": 13.5276,
+        "compression_days": 3,
+        "rs_raw": 149.1908,
+        "rs": 98,
+        "adr_pct": 5.1145,
+        "last_range_adr": 0.6798,
+        "off_52w_high_pct": -34.9746,
+        "n_bars": 551,
+        "ext": 1.6515,
+        "above_sma200": true,
+        "a_range10_adr": 3.1085,
+        "a_range5_adr": 2.0499,
+        "a_close5_adr": 1.0063,
+        "a_thrust60_pct": 53.5986,
+        "a_off_high20_pct": -12.6447,
+        "range10_lo": 279.2,
+        "range10_hi": 326.0,
+        "high20": 336.98,
+        "b_rally20_atr": 5.6949,
+        "b_range5_atr": 1.7865,
+        "b_range12_atr": 3.3447,
+        "b_dist_hi10_atr": 1.8309,
+        "b_slope_h8": 0.0398,
+        "b_slope_l8": 0.1472,
+        "b_thrust_atr": 6.4555,
+        "b_pullback_atr": 3.3447,
+        "b_bars_since_peak": 10,
+        "b_last_range_atr": 0.5847,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 3.1× ADR, wide",
+          "12.6% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "1.8 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 301.3929372151693,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-04"
+    },
+    "AXTI": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (79.79 vs 83.86)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.9× ADR, wide; 1.3 ATR under the 10-day high"
+        }
+      },
+      "metrics": {
+        "close": 79.79,
+        "high": 83.22,
+        "low": 78.7,
+        "ret1_pct": -5.0797,
+        "atr": 6.6335,
+        "atr_pct": 8.3137,
+        "avg_vol_50": 10416972.0,
+        "adv": 728364903.1981,
+        "sma5": 83.638,
+        "sma5_dist_pct": -4.6008,
+        "sma25": 71.7024,
+        "sma50": 70.4844,
+        "sma200": 61.386,
+        "sma200_slope_ok": true,
+        "ema9": 80.507,
+        "ema21": 75.9236,
+        "ema9_dist_atr": -0.1081,
+        "vcp": 6.8744,
+        "vcp_prev": 14.2534,
+        "compression_days": 3,
+        "rs_raw": 414.2784,
+        "rs": 99,
+        "adr_pct": 7.9922,
+        "last_range_adr": 0.7186,
+        "off_52w_high_pct": -44.2652,
+        "n_bars": 551,
+        "ext": 1.588,
+        "above_sma200": true,
+        "a_range10_adr": 2.9418,
+        "a_range5_adr": 1.7422,
+        "a_close5_adr": 1.0773,
+        "a_thrust60_pct": 166.2401,
+        "a_off_high20_pct": -9.699,
+        "range10_lo": 69.6,
+        "range10_hi": 88.36,
+        "high20": 88.36,
+        "b_rally20_atr": 4.4728,
+        "b_range5_atr": 1.6748,
+        "b_range12_atr": 2.8281,
+        "b_dist_hi10_atr": 1.2919,
+        "b_slope_h8": 0.1481,
+        "b_slope_l8": 0.2147,
+        "b_thrust_atr": 5.3667,
+        "b_pullback_atr": 1.4563,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 0.6814,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.9× ADR, wide",
+          "9.7% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "1.3 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 83.8627705891927,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-29"
+    },
+    "BAX": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": false,
+          "why": "1 compression day in the last 3"
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (2.2 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 23.97,
+        "high": 24.6,
+        "low": 23.82,
+        "ret1_pct": -1.601,
+        "atr": 0.7186,
+        "atr_pct": 2.9978,
+        "avg_vol_50": 7002932.0,
+        "adv": 177324565.5678,
+        "sma5": 23.936,
+        "sma5_dist_pct": 0.142,
+        "sma25": 23.954,
+        "sma50": 25.301,
+        "sma200": 20.9064,
+        "sma200_slope_ok": true,
+        "ema9": 23.8721,
+        "ema21": 24.0081,
+        "ema9_dist_atr": 0.1362,
+        "vcp": 16.7056,
+        "vcp_prev": 14.6382,
+        "compression_days": 1,
+        "rs_raw": 104.1301,
+        "rs": 83,
+        "adr_pct": 2.8511,
+        "last_range_adr": 1.1485,
+        "off_52w_high_pct": -20.1,
+        "n_bars": 551,
+        "ext": -1.7548,
+        "above_sma200": true,
+        "a_range10_adr": 2.1803,
+        "a_range5_adr": 1.99,
+        "a_close5_adr": 1.273,
+        "a_thrust60_pct": 40.1869,
+        "a_off_high20_pct": -3.2297,
+        "range10_lo": 23.11,
+        "range10_hi": 24.6,
+        "high20": 24.77,
+        "b_rally20_atr": 2.171,
+        "b_range5_atr": 1.8926,
+        "b_range12_atr": 2.0736,
+        "b_dist_hi10_atr": 0.8767,
+        "b_slope_h8": 0.1547,
+        "b_slope_l8": 0.1383,
+        "b_thrust_atr": 2.839,
+        "b_pullback_atr": 1.0855,
+        "b_bars_since_peak": 0,
+        "b_last_range_atr": 1.0855,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (2.2 ATR)"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 23.92779343922933,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-29"
+    },
+    "BE": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.8× ADR, wide"
+        }
+      },
+      "metrics": {
+        "close": 291.29,
+        "high": 296.833,
+        "low": 284.541,
+        "ret1_pct": -1.518,
+        "atr": 19.2287,
+        "atr_pct": 6.6012,
+        "avg_vol_50": 16150414.0,
+        "adv": 3851544624.7736,
+        "sma5": 288.09,
+        "sma5_dist_pct": 1.1108,
+        "sma25": 270.8304,
+        "sma50": 242.832,
+        "sma200": 210.5686,
+        "sma200_slope_ok": true,
+        "ema9": 284.764,
+        "ema21": 273.0186,
+        "ema9_dist_atr": 0.3394,
+        "vcp": 5.2867,
+        "vcp_prev": 5.736,
+        "compression_days": 3,
+        "rs_raw": 189.6014,
+        "rs": 98,
+        "adr_pct": 6.2635,
+        "last_range_adr": 0.6897,
+        "off_52w_high_pct": -17.0775,
+        "n_bars": 551,
+        "ext": 3.023,
+        "above_sma200": true,
+        "a_range10_adr": 2.7982,
+        "a_range5_adr": 1.5578,
+        "a_close5_adr": 0.9975,
+        "a_thrust60_pct": 92.1733,
+        "a_off_high20_pct": -3.6593,
+        "range10_lo": 251.3,
+        "range10_hi": 302.354,
+        "high20": 302.354,
+        "b_rally20_atr": 4.4179,
+        "b_range5_atr": 1.4781,
+        "b_range12_atr": 2.6551,
+        "b_dist_hi10_atr": 0.5754,
+        "b_slope_h8": 0.0317,
+        "b_slope_l8": 0.1701,
+        "b_thrust_atr": 6.0547,
+        "b_pullback_atr": 1.6202,
+        "b_bars_since_peak": 6,
+        "b_last_range_atr": 0.6393,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.8× ADR, wide"
+        ],
+        "pattern_b_ok": true,
+        "pattern_b_why": []
+      },
+      "sma30_65m": {
+        "sma30_65m": 287.8407491048177,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-27"
+    },
+    "CAKE": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (106.99 vs 107.97)"
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 1.2 ATR under the 10-day high"
+        }
+      },
+      "metrics": {
+        "close": 106.99,
+        "high": 107.84,
+        "low": 106.55,
+        "ret1_pct": -1.1457,
+        "atr": 3.4341,
+        "atr_pct": 3.2098,
+        "avg_vol_50": 1668446.0,
+        "adv": 177345794.0284,
+        "sma5": 108.37,
+        "sma5_dist_pct": -1.2734,
+        "sma25": 104.2148,
+        "sma50": 106.62,
+        "sma200": 74.8062,
+        "sma200_slope_ok": true,
+        "ema9": 106.8927,
+        "ema21": 105.6043,
+        "ema9_dist_atr": 0.0283,
+        "vcp": 12.7973,
+        "vcp_prev": 18.3367,
+        "compression_days": 2,
+        "rs_raw": 153.6156,
+        "rs": 98,
+        "adr_pct": 3.3465,
+        "last_range_adr": 0.3618,
+        "off_52w_high_pct": -9.6826,
+        "n_bars": 551,
+        "ext": 0.1081,
+        "above_sma200": true,
+        "a_range10_adr": 2.4187,
+        "a_range5_adr": 1.8015,
+        "a_close5_adr": 0.7429,
+        "a_thrust60_pct": 48.8378,
+        "a_off_high20_pct": -3.6126,
+        "range10_lo": 102.34,
+        "range10_hi": 111.0,
+        "high20": 111.0,
+        "b_rally20_atr": 4.0127,
+        "b_range5_atr": 1.8782,
+        "b_range12_atr": 3.0488,
+        "b_dist_hi10_atr": 1.1677,
+        "b_slope_h8": 0.111,
+        "b_slope_l8": 0.1451,
+        "b_thrust_atr": 4.7931,
+        "b_pullback_atr": 1.2958,
+        "b_bars_since_peak": 2,
+        "b_last_range_atr": 0.3756,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "1.2 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 107.9668362935384,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 2,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-27"
+    },
+    "CLMT": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: base after a 3.8 ATR pullback, not a continuation"
+        }
+      },
+      "metrics": {
+        "close": 56.29,
+        "high": 56.87,
+        "low": 56.05,
+        "ret1_pct": 0.1423,
+        "atr": 2.2606,
+        "atr_pct": 4.0159,
+        "avg_vol_50": 1360834.0,
+        "adv": 69316841.9209,
+        "sma5": 55.506,
+        "sma5_dist_pct": 1.4125,
+        "sma25": 55.3948,
+        "sma50": 50.7706,
+        "sma200": 35.6359,
+        "sma200_slope_ok": true,
+        "ema9": 55.222,
+        "ema21": 54.4892,
+        "ema9_dist_atr": 0.4724,
+        "vcp": 15.1958,
+        "vcp_prev": 20.8655,
+        "compression_days": 3,
+        "rs_raw": 190.551,
+        "rs": 98,
+        "adr_pct": 4.37,
+        "last_range_adr": 0.3348,
+        "off_52w_high_pct": -5.9796,
+        "n_bars": 551,
+        "ext": 2.707,
+        "above_sma200": true,
+        "a_range10_adr": 2.2806,
+        "a_range5_adr": 2.0042,
+        "a_close5_adr": 1.0448,
+        "a_thrust60_pct": 55.0233,
+        "a_off_high20_pct": -5.9796,
+        "range10_lo": 51.33,
+        "range10_hi": 56.94,
+        "high20": 59.87,
+        "b_rally20_atr": 5.8746,
+        "b_range5_atr": 2.1809,
+        "b_range12_atr": 3.0921,
+        "b_dist_hi10_atr": 0.2875,
+        "b_slope_h8": 0.2406,
+        "b_slope_l8": 0.295,
+        "b_thrust_atr": 9.4003,
+        "b_pullback_atr": 3.7778,
+        "b_bars_since_peak": 12,
+        "b_last_range_atr": 0.3627,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "base after a 3.8 ATR pullback, not a continuation",
+          "5-day range 2.2 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 55.3425402323405,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 1,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-06"
+    },
+    "CLS": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (371.57 vs 378.93)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 5-day range 2.0 ATR"
+        }
+      },
+      "metrics": {
+        "close": 371.57,
+        "high": 380.42,
+        "low": 367.15,
+        "ret1_pct": -4.2937,
+        "atr": 19.3077,
+        "atr_pct": 5.1963,
+        "avg_vol_50": 2616762.0,
+        "adv": 872984937.6075,
+        "sma5": 380.582,
+        "sma5_dist_pct": -2.368,
+        "sma25": 345.7304,
+        "sma50": 333.5746,
+        "sma200": 332.2328,
+        "sma200_slope_ok": true,
+        "ema9": 372.2539,
+        "ema21": 356.8745,
+        "ema9_dist_atr": -0.0354,
+        "vcp": 12.9076,
+        "vcp_prev": 22.4682,
+        "compression_days": 3,
+        "rs_raw": 110.0164,
+        "rs": 86,
+        "adr_pct": 4.929,
+        "last_range_adr": 0.7333,
+        "off_52w_high_pct": -21.6147,
+        "n_bars": 551,
+        "ext": 2.192,
+        "above_sma200": true,
+        "a_range10_adr": 2.4134,
+        "a_range5_adr": 2.142,
+        "a_close5_adr": 0.9102,
+        "a_thrust60_pct": 43.7984,
+        "a_off_high20_pct": -5.6258,
+        "range10_lo": 349.52,
+        "range10_hi": 393.72,
+        "high20": 393.72,
+        "b_rally20_atr": 4.9612,
+        "b_range5_atr": 2.0318,
+        "b_range12_atr": 2.7046,
+        "b_dist_hi10_atr": 1.1472,
+        "b_slope_h8": 0.1159,
+        "b_slope_l8": 0.1832,
+        "b_thrust_atr": 6.211,
+        "b_pullback_atr": 1.3761,
+        "b_bars_since_peak": 2,
+        "b_last_range_atr": 0.6873,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "5-day range 2.0 ATR",
+          "1.1 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 378.9267100016276,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-26"
+    },
+    "CRGY": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": false,
+          "why": "1 compression day in the last 3"
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 12.9% under the 20-day high; no real prior thrust (1.5 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 13.47,
+        "high": 13.86,
+        "low": 13.21,
+        "ret1_pct": -1.1013,
+        "atr": 0.4849,
+        "atr_pct": 3.5999,
+        "avg_vol_50": 5884096.0,
+        "adv": 77260885.6227,
+        "sma5": 13.462,
+        "sma5_dist_pct": 0.0594,
+        "sma25": 13.7584,
+        "sma50": 13.1518,
+        "sma200": 11.5718,
+        "sma200_slope_ok": true,
+        "ema9": 13.4077,
+        "ema21": 13.4611,
+        "ema9_dist_atr": 0.1284,
+        "vcp": 8.179,
+        "vcp_prev": 19.104,
+        "compression_days": 1,
+        "rs_raw": 127.8475,
+        "rs": 94,
+        "adr_pct": 3.4934,
+        "last_range_adr": 1.4085,
+        "off_52w_high_pct": -12.9282,
+        "n_bars": 551,
+        "ext": 0.6721,
+        "above_sma200": true,
+        "a_range10_adr": 2.4864,
+        "a_range5_adr": 2.2951,
+        "a_close5_adr": 0.7438,
+        "a_thrust60_pct": 54.4683,
+        "a_off_high20_pct": -12.9282,
+        "range10_lo": 12.69,
+        "range10_hi": 13.86,
+        "high20": 15.47,
+        "b_rally20_atr": 1.5261,
+        "b_range5_atr": 2.2272,
+        "b_range12_atr": 2.4128,
+        "b_dist_hi10_atr": 0.8043,
+        "b_slope_h8": 0.2196,
+        "b_slope_l8": 0.1648,
+        "b_thrust_atr": 9.3935,
+        "b_pullback_atr": 5.733,
+        "b_bars_since_peak": 16,
+        "b_last_range_atr": 1.3405,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "12.9% under the 20-day high",
+          "last range 1.4× ADR"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (1.5 ATR)",
+          "base after a 5.7 ATR pullback, not a continuation",
+          "5-day range 2.2 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 13.43215668996175,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-02"
+    },
+    "CVLT": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (150.28 vs 151.59)"
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.9× ADR, wide; 5-day range 2.2 ATR"
+        }
+      },
+      "metrics": {
+        "close": 150.28,
+        "high": 154.02,
+        "low": 148.43,
+        "ret1_pct": -3.0326,
+        "atr": 5.6925,
+        "atr_pct": 3.7879,
+        "avg_vol_50": 606232.0,
+        "adv": 83066037.8827,
+        "sma5": 151.408,
+        "sma5_dist_pct": -0.745,
+        "sma25": 143.6908,
+        "sma50": 139.0878,
+        "sma200": 115.9646,
+        "sma200_slope_ok": true,
+        "ema9": 150.1235,
+        "ema21": 146.4961,
+        "ema9_dist_atr": 0.0275,
+        "vcp": 9.992,
+        "vcp_prev": 10.4202,
+        "compression_days": 3,
+        "rs_raw": 107.7248,
+        "rs": 85,
+        "adr_pct": 3.9405,
+        "last_range_adr": 0.9557,
+        "off_52w_high_pct": -16.3764,
+        "n_bars": 551,
+        "ext": 2.1244,
+        "above_sma200": true,
+        "a_range10_adr": 2.9028,
+        "a_range5_adr": 2.1277,
+        "a_close5_adr": 1.2175,
+        "a_thrust60_pct": 39.4257,
+        "a_off_high20_pct": -5.0603,
+        "range10_lo": 141.1,
+        "range10_hi": 158.29,
+        "high20": 158.29,
+        "b_rally20_atr": 4.376,
+        "b_range5_atr": 2.2135,
+        "b_range12_atr": 3.0198,
+        "b_dist_hi10_atr": 1.4071,
+        "b_slope_h8": 0.2017,
+        "b_slope_l8": 0.2369,
+        "b_thrust_atr": 5.69,
+        "b_pullback_atr": 1.7321,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 0.982,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.9× ADR, wide"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "5-day range 2.2 ATR",
+          "1.4 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 151.5871561686198,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 4,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-27"
+    },
+    "DDOG": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (271.34 vs 276.76)"
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 3.3× ADR, wide; 1.3 ATR under the 10-day high"
+        }
+      },
+      "metrics": {
+        "close": 271.34,
+        "high": 281.25,
+        "low": 270.81,
+        "ret1_pct": -2.4799,
+        "atr": 11.2761,
+        "atr_pct": 4.1557,
+        "avg_vol_50": 4222662.0,
+        "adv": 1034752563.3815,
+        "sma5": 275.935,
+        "sma5_dist_pct": -1.6652,
+        "sma25": 245.2892,
+        "sma50": 246.19,
+        "sma200": 186.8881,
+        "sma200_slope_ok": true,
+        "ema9": 269.9662,
+        "ema21": 257.9905,
+        "ema9_dist_atr": 0.1218,
+        "vcp": 2.3292,
+        "vcp_prev": 0.0,
+        "compression_days": 3,
+        "rs_raw": 146.3751,
+        "rs": 98,
+        "adr_pct": 4.3146,
+        "last_range_adr": 0.8935,
+        "off_52w_high_pct": -7.3039,
+        "n_bars": 551,
+        "ext": 2.4582,
+        "above_sma200": true,
+        "a_range10_adr": 3.2809,
+        "a_range5_adr": 1.2701,
+        "a_close5_adr": 0.5894,
+        "a_thrust60_pct": 40.5629,
+        "a_off_high20_pct": -5.0196,
+        "range10_lo": 247.269,
+        "range10_hi": 285.68,
+        "high20": 285.68,
+        "b_rally20_atr": 6.0313,
+        "b_range5_atr": 1.3187,
+        "b_range12_atr": 3.6848,
+        "b_dist_hi10_atr": 1.2717,
+        "b_slope_h8": 0.1641,
+        "b_slope_l8": 0.2227,
+        "b_thrust_atr": 7.311,
+        "b_pullback_atr": 1.3187,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 0.9259,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 3.3× ADR, wide"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "1.3 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 276.76050618489586,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-05"
+    },
+    "DELL": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": false,
+          "why": "VCP 30.5, loose"
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 5-day closes span 1.4× ADR; 5-day range 2.4 ATR"
+        }
+      },
+      "metrics": {
+        "close": 578.96,
+        "high": 585.0,
+        "low": 560.38,
+        "ret1_pct": 0.8641,
+        "atr": 28.2763,
+        "atr_pct": 4.884,
+        "avg_vol_50": 7864796.0,
+        "adv": 3944021245.6545,
+        "sma5": 561.902,
+        "sma5_dist_pct": 3.0358,
+        "sma25": 547.0704,
+        "sma50": 497.931,
+        "sma200": 299.7502,
+        "sma200_slope_ok": true,
+        "ema9": 559.1887,
+        "ema21": 544.303,
+        "ema9_dist_atr": 0.6992,
+        "vcp": 30.4699,
+        "vcp_prev": 29.0338,
+        "compression_days": 3,
+        "rs_raw": 260.6973,
+        "rs": 99,
+        "adr_pct": 4.6873,
+        "last_range_adr": 0.9373,
+        "off_52w_high_pct": -2.7791,
+        "n_bars": 551,
+        "ext": 3.3319,
+        "above_sma200": true,
+        "a_range10_adr": 2.4693,
+        "a_range5_adr": 2.4693,
+        "a_close5_adr": 1.3715,
+        "a_thrust60_pct": 65.9357,
+        "a_off_high20_pct": -2.7791,
+        "range10_lo": 520.18,
+        "range10_hi": 587.19,
+        "high20": 595.51,
+        "b_rally20_atr": 5.7787,
+        "b_range5_atr": 2.3698,
+        "b_range12_atr": 2.3698,
+        "b_dist_hi10_atr": 0.2911,
+        "b_slope_h8": 0.1743,
+        "b_slope_l8": 0.1469,
+        "b_thrust_atr": 6.3378,
+        "b_pullback_atr": 2.6641,
+        "b_bars_since_peak": 13,
+        "b_last_range_atr": 0.8707,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "5-day closes span 1.4× ADR"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "5-day range 2.4 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 562.1438374837239,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-27"
+    },
+    "ELF": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (2.9 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 105.03,
+        "high": 106.97,
+        "low": 103.035,
+        "ret1_pct": 2.1792,
+        "atr": 3.9819,
+        "atr_pct": 3.7912,
+        "avg_vol_50": 1873732.0,
+        "adv": 180483194.5696,
+        "sma5": 104.068,
+        "sma5_dist_pct": 0.9244,
+        "sma25": 100.8992,
+        "sma50": 98.2458,
+        "sma200": 78.659,
+        "sma200_slope_ok": true,
+        "ema9": 102.8425,
+        "ema21": 101.2833,
+        "ema9_dist_atr": 0.5494,
+        "vcp": 3.7676,
+        "vcp_prev": 13.4324,
+        "compression_days": 3,
+        "rs_raw": 119.2799,
+        "rs": 91,
+        "adr_pct": 3.8978,
+        "last_range_adr": 0.9798,
+        "off_52w_high_pct": -28.9137,
+        "n_bars": 551,
+        "ext": 1.8214,
+        "above_sma200": true,
+        "a_range10_adr": 2.4354,
+        "a_range5_adr": 1.3606,
+        "a_close5_adr": 0.5472,
+        "a_thrust60_pct": 52.4839,
+        "a_off_high20_pct": -1.8136,
+        "range10_lo": 97.0,
+        "range10_hi": 106.97,
+        "high20": 106.97,
+        "b_rally20_atr": 2.9408,
+        "b_range5_atr": 1.3988,
+        "b_range12_atr": 2.5038,
+        "b_dist_hi10_atr": 0.4872,
+        "b_slope_h8": 0.1336,
+        "b_slope_l8": 0.1804,
+        "b_thrust_atr": 5.967,
+        "b_pullback_atr": 4.6812,
+        "b_bars_since_peak": 21,
+        "b_last_range_atr": 0.9882,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (2.9 ATR)",
+          "base after a 4.7 ATR pullback, not a continuation"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 104.34541625976563,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-04"
+    },
+    "FTNT": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": false,
+          "why": "Atr Ext 4.30× over 4×"
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": false,
+          "why": "VCP 47.0, loose"
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 3.4× ADR, wide; still trending, not consolidated"
+        }
+      },
+      "metrics": {
+        "close": 189.28,
+        "high": 192.23,
+        "low": 188.04,
+        "ret1_pct": -1.0404,
+        "atr": 6.2196,
+        "atr_pct": 3.2859,
+        "avg_vol_50": 4662258.0,
+        "adv": 765916083.4417,
+        "sma5": 184.87,
+        "sma5_dist_pct": 2.3855,
+        "sma25": 171.572,
+        "sma50": 165.845,
+        "sma200": 120.1901,
+        "sma200_slope_ok": true,
+        "ema9": 182.57,
+        "ema21": 176.1203,
+        "ema9_dist_atr": 1.0788,
+        "vcp": 47.036,
+        "vcp_prev": 48.3656,
+        "compression_days": 3,
+        "rs_raw": 166.9768,
+        "rs": 98,
+        "adr_pct": 3.5769,
+        "last_range_adr": 0.623,
+        "off_52w_high_pct": -1.6267,
+        "n_bars": 551,
+        "ext": 4.3004,
+        "above_sma200": true,
+        "a_range10_adr": 3.375,
+        "a_range5_adr": 2.5686,
+        "a_close5_adr": 1.8537,
+        "a_thrust60_pct": 33.8318,
+        "a_off_high20_pct": -1.6267,
+        "range10_lo": 169.56,
+        "range10_hi": 192.41,
+        "high20": 192.41,
+        "b_rally20_atr": 5.6595,
+        "b_range5_atr": 2.796,
+        "b_range12_atr": 3.6739,
+        "b_dist_hi10_atr": 0.5033,
+        "b_slope_h8": 0.3858,
+        "b_slope_l8": 0.4188,
+        "b_thrust_atr": 7.1002,
+        "b_pullback_atr": 0.9502,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 0.6737,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 3.4× ADR, wide",
+          "5-day closes span 1.9× ADR"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "still trending, not consolidated",
+          "5-day range 2.8 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 184.3934331258138,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-28"
+    },
+    "HNGE": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (97.86 vs 98.05)"
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (2.6 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 97.86,
+        "high": 99.79,
+        "low": 96.84,
+        "ret1_pct": -0.4982,
+        "atr": 3.8778,
+        "atr_pct": 3.9626,
+        "avg_vol_50": 1868456.0,
+        "adv": 167767376.8369,
+        "sma5": 98.034,
+        "sma5_dist_pct": -0.1775,
+        "sma25": 93.9944,
+        "sma50": 89.9112,
+        "sma200": 61.9081,
+        "sma200_slope_ok": true,
+        "ema9": 96.8444,
+        "ema21": 94.7804,
+        "ema9_dist_atr": 0.2619,
+        "vcp": 0.0,
+        "vcp_prev": 5.9964,
+        "compression_days": 2,
+        "rs_raw": 156.9227,
+        "rs": 98,
+        "adr_pct": 4.1397,
+        "last_range_adr": 0.7359,
+        "off_52w_high_pct": -2.491,
+        "n_bars": 346,
+        "ext": 2.231,
+        "above_sma200": true,
+        "a_range10_adr": 2.4746,
+        "a_range5_adr": 1.0713,
+        "a_close5_adr": 0.1679,
+        "a_thrust60_pct": 40.5524,
+        "a_off_high20_pct": -2.491,
+        "range10_lo": 90.335,
+        "range10_hi": 100.36,
+        "high20": 100.36,
+        "b_rally20_atr": 2.602,
+        "b_range5_atr": 1.1192,
+        "b_range12_atr": 2.7361,
+        "b_dist_hi10_atr": 0.6447,
+        "b_slope_h8": 0.1748,
+        "b_slope_l8": 0.2065,
+        "b_thrust_atr": 6.4907,
+        "b_pullback_atr": 1.1192,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 0.7607,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (2.6 ATR)"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 98.04832280476889,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-02"
+    },
+    "JXN": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (130.30 vs 131.73)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 7.5% under the 20-day high; no real prior thrust (1.2 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 130.3,
+        "high": 132.77,
+        "low": 129.3,
+        "ret1_pct": -1.9637,
+        "atr": 3.9146,
+        "atr_pct": 3.0043,
+        "avg_vol_50": 713612.0,
+        "adv": 94349583.3604,
+        "sma5": 131.614,
+        "sma5_dist_pct": -0.9984,
+        "sma25": 133.9728,
+        "sma50": 132.4198,
+        "sma200": 116.2773,
+        "sma200_slope_ok": true,
+        "ema9": 131.6428,
+        "ema21": 132.2431,
+        "ema9_dist_atr": -0.343,
+        "vcp": 22.617,
+        "vcp_prev": 23.4876,
+        "compression_days": 2,
+        "rs_raw": 108.9798,
+        "rs": 86,
+        "adr_pct": 3.2402,
+        "last_range_adr": 0.8282,
+        "off_52w_high_pct": -7.5231,
+        "n_bars": 551,
+        "ext": -0.5328,
+        "above_sma200": true,
+        "a_range10_adr": 2.2288,
+        "a_range5_adr": 2.2288,
+        "a_close5_adr": 1.0351,
+        "a_thrust60_pct": 21.5913,
+        "a_off_high20_pct": -7.5231,
+        "range10_lo": 126.14,
+        "range10_hi": 135.55,
+        "high20": 140.9,
+        "b_rally20_atr": 1.1572,
+        "b_range5_atr": 2.4038,
+        "b_range12_atr": 2.4038,
+        "b_dist_hi10_atr": 1.3411,
+        "b_slope_h8": 0.0512,
+        "b_slope_l8": 0.0131,
+        "b_thrust_atr": 3.9365,
+        "b_pullback_atr": 3.9365,
+        "b_bars_since_peak": 14,
+        "b_last_range_atr": 0.8864,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "7.5% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (1.2 ATR)",
+          "base after a 3.9 ATR pullback, not a continuation",
+          "5-day range 2.4 ATR",
+          "1.3 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 131.72883275349935,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-03"
+    },
+    "MU": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: last range 2.1× ADR; expansion bar +4.1%, the 30m high would chase"
+        }
+      },
+      "metrics": {
+        "close": 1088.0,
+        "high": 1089.22,
+        "low": 1011.42,
+        "ret1_pct": 4.0591,
+        "atr": 45.8926,
+        "atr_pct": 4.2181,
+        "avg_vol_50": 30399988.0,
+        "adv": 28708935497.9014,
+        "sma5": 1073.96,
+        "sma5_dist_pct": 1.3073,
+        "sma25": 1024.4716,
+        "sma50": 967.1626,
+        "sma200": 694.069,
+        "sma200_slope_ok": true,
+        "ema9": 1065.7134,
+        "ema21": 1038.9016,
+        "ema9_dist_atr": 0.4856,
+        "vcp": 24.6613,
+        "vcp_prev": 22.1774,
+        "compression_days": 2,
+        "rs_raw": 249.7464,
+        "rs": 99,
+        "adr_pct": 3.7204,
+        "last_range_adr": 2.0675,
+        "off_52w_high_pct": -13.3068,
+        "n_bars": 551,
+        "ext": 2.962,
+        "above_sma200": true,
+        "a_range10_adr": 2.4038,
+        "a_range5_adr": 2.386,
+        "a_close5_adr": 1.2804,
+        "a_thrust60_pct": 50.2575,
+        "a_off_high20_pct": -1.8688,
+        "range10_lo": 1011.42,
+        "range10_hi": 1108.72,
+        "high20": 1108.72,
+        "b_rally20_atr": 4.0471,
+        "b_range5_atr": 2.1045,
+        "b_range12_atr": 2.1202,
+        "b_dist_hi10_atr": 0.4515,
+        "b_slope_h8": -0.0072,
+        "b_slope_l8": -0.0461,
+        "b_thrust_atr": 6.1387,
+        "b_pullback_atr": 2.1202,
+        "b_bars_since_peak": 8,
+        "b_last_range_atr": 1.6953,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "last range 2.1× ADR"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "expansion bar +4.1%, the 30m high would chase",
+          "5-day range 2.1 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 1070.361210123698,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-12-23"
+    },
+    "NBIS": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (237.15 vs 239.38)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 7.0% under the 20-day high; no real prior thrust (2.7 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 237.15,
+        "high": 243.62,
+        "low": 234.03,
+        "ret1_pct": -5.0906,
+        "atr": 16.356,
+        "atr_pct": 6.8969,
+        "avg_vol_50": 20458060.0,
+        "adv": 4519440640.5964,
+        "sma5": 238.936,
+        "sma5_dist_pct": -0.7475,
+        "sma25": 228.9838,
+        "sma50": 222.3365,
+        "sma200": 170.1651,
+        "sma200_slope_ok": true,
+        "ema9": 237.345,
+        "ema21": 232.0914,
+        "ema9_dist_atr": -0.0119,
+        "vcp": 15.6943,
+        "vcp_prev": 15.6647,
+        "compression_days": 2,
+        "rs_raw": 151.9206,
+        "rs": 98,
+        "adr_pct": 6.3128,
+        "last_range_adr": 0.6491,
+        "off_52w_high_pct": -20.9131,
+        "n_bars": 492,
+        "ext": 0.966,
+        "above_sma200": true,
+        "a_range10_adr": 1.7848,
+        "a_range5_adr": 1.7788,
+        "a_close5_adr": 1.175,
+        "a_thrust60_pct": 92.6132,
+        "a_off_high20_pct": -7.0365,
+        "range10_lo": 228.38,
+        "range10_hi": 255.1,
+        "high20": 255.1,
+        "b_rally20_atr": 2.6865,
+        "b_range5_atr": 1.6281,
+        "b_range12_atr": 1.7553,
+        "b_dist_hi10_atr": 1.0975,
+        "b_slope_h8": 0.014,
+        "b_slope_l8": 0.0362,
+        "b_thrust_atr": 6.1261,
+        "b_pullback_atr": 5.2598,
+        "b_bars_since_peak": 36,
+        "b_last_range_atr": 0.5863,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "7.0% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (2.7 ATR)",
+          "base after a 5.3 ATR pullback, not a continuation",
+          "1.1 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 239.38489939371746,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-10"
+    },
+    "NET": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (342.97 vs 353.32)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 7.4% under the 20-day high; 1.7 ATR under the 10-day high"
+        }
+      },
+      "metrics": {
+        "close": 342.97,
+        "high": 353.035,
+        "low": 341.78,
+        "ret1_pct": -3.3915,
+        "atr": 15.9185,
+        "atr_pct": 4.6414,
+        "avg_vol_50": 3493154.0,
+        "adv": 1086950573.0339,
+        "sma5": 351.508,
+        "sma5_dist_pct": -2.429,
+        "sma25": 330.7216,
+        "sma50": 313.039,
+        "sma200": 237.5793,
+        "sma200_slope_ok": true,
+        "ema9": 349.2689,
+        "ema21": 338.6515,
+        "ema9_dist_atr": -0.3957,
+        "vcp": 20.897,
+        "vcp_prev": 13.8821,
+        "compression_days": 3,
+        "rs_raw": 134.4563,
+        "rs": 96,
+        "adr_pct": 4.8685,
+        "last_range_adr": 0.6764,
+        "off_52w_high_pct": -7.393,
+        "n_bars": 551,
+        "ext": 2.06,
+        "above_sma200": true,
+        "a_range10_adr": 1.8973,
+        "a_range5_adr": 1.711,
+        "a_close5_adr": 0.9894,
+        "a_thrust60_pct": 47.7323,
+        "a_off_high20_pct": -7.393,
+        "range10_lo": 338.67,
+        "range10_hi": 370.35,
+        "high20": 370.35,
+        "b_rally20_atr": 5.4075,
+        "b_range5_atr": 1.7948,
+        "b_range12_atr": 1.9901,
+        "b_dist_hi10_atr": 1.72,
+        "b_slope_h8": 0.0498,
+        "b_slope_l8": 0.0468,
+        "b_thrust_atr": 6.348,
+        "b_pullback_atr": 1.7948,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 0.707,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "7.4% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "1.7 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 353.3169199625651,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-29"
+    },
+    "NSIT": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (160.13 vs 160.53)"
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (2.2 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 160.13,
+        "high": 161.86,
+        "low": 158.08,
+        "ret1_pct": 0.4013,
+        "atr": 5.2712,
+        "atr_pct": 3.2919,
+        "avg_vol_50": 379510.0,
+        "adv": 57057438.0337,
+        "sma5": 160.2,
+        "sma5_dist_pct": -0.0437,
+        "sma25": 158.5204,
+        "sma50": 152.7256,
+        "sma200": 105.7793,
+        "sma200_slope_ok": true,
+        "ema9": 159.1216,
+        "ema21": 157.7169,
+        "ema9_dist_atr": 0.1913,
+        "vcp": 0.0,
+        "vcp_prev": 13.7337,
+        "compression_days": 3,
+        "rs_raw": 149.157,
+        "rs": 98,
+        "adr_pct": 3.6642,
+        "last_range_adr": 0.6526,
+        "off_52w_high_pct": -4.9674,
+        "n_bars": 551,
+        "ext": 1.4728,
+        "above_sma200": true,
+        "a_range10_adr": 1.8935,
+        "a_range5_adr": 1.4964,
+        "a_close5_adr": 0.3306,
+        "a_thrust60_pct": 51.1617,
+        "a_off_high20_pct": -4.9674,
+        "range10_lo": 153.62,
+        "range10_hi": 164.73,
+        "high20": 168.5,
+        "b_rally20_atr": 2.1646,
+        "b_range5_atr": 1.6656,
+        "b_range12_atr": 2.2499,
+        "b_dist_hi10_atr": 0.8727,
+        "b_slope_h8": 0.1269,
+        "b_slope_l8": 0.1558,
+        "b_thrust_atr": 7.0951,
+        "b_pullback_atr": 3.1643,
+        "b_bars_since_peak": 14,
+        "b_last_range_atr": 0.7171,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (2.2 ATR)"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 160.52891540527344,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 16,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-29"
+    },
+    "PANW": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (405.57 vs 405.75)"
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": false,
+          "why": "VCP 35.8, loose"
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 3.6× ADR, wide; still trending, not consolidated"
+        }
+      },
+      "metrics": {
+        "close": 405.57,
+        "high": 416.6,
+        "low": 404.63,
+        "ret1_pct": -3.415,
+        "atr": 17.1394,
+        "atr_pct": 4.226,
+        "avg_vol_50": 6184724.0,
+        "adv": 2254252973.018,
+        "sma5": 406.346,
+        "sma5_dist_pct": -0.191,
+        "sma25": 372.482,
+        "sma50": 367.3034,
+        "sma200": 253.7192,
+        "sma200_slope_ok": true,
+        "ema9": 399.868,
+        "ema21": 385.7909,
+        "ema9_dist_atr": 0.3327,
+        "vcp": 35.8345,
+        "vcp_prev": 36.3893,
+        "compression_days": 2,
+        "rs_raw": 160.4026,
+        "rs": 98,
+        "adr_pct": 4.5035,
+        "last_range_adr": 0.6569,
+        "off_52w_high_pct": -6.1897,
+        "n_bars": 551,
+        "ext": 2.4653,
+        "above_sma200": true,
+        "a_range10_adr": 3.5621,
+        "a_range5_adr": 2.4807,
+        "a_close5_adr": 1.2954,
+        "a_thrust60_pct": 40.1212,
+        "a_off_high20_pct": -6.1897,
+        "range10_lo": 367.27,
+        "range10_hi": 432.33,
+        "high20": 432.33,
+        "b_rally20_atr": 5.2079,
+        "b_range5_atr": 2.6436,
+        "b_range12_atr": 4.0112,
+        "b_dist_hi10_atr": 1.5613,
+        "b_slope_h8": 0.2627,
+        "b_slope_l8": 0.3308,
+        "b_thrust_atr": 6.4728,
+        "b_pullback_atr": 1.6162,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 0.6984,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 3.6× ADR, wide",
+          "6.2% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "still trending, not consolidated",
+          "5-day range 2.6 ATR",
+          "1.6 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 405.74866841634116,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-19"
+    },
+    "PAYC": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (223.58 vs 223.61)"
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (1.6 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 223.58,
+        "high": 226.41,
+        "low": 221.51,
+        "ret1_pct": 0.5125,
+        "atr": 7.2178,
+        "atr_pct": 3.2283,
+        "avg_vol_50": 823446.0,
+        "adv": 176206669.0582,
+        "sma5": 224.054,
+        "sma5_dist_pct": -0.2116,
+        "sma25": 223.942,
+        "sma50": 217.5092,
+        "sma200": 155.745,
+        "sma200_slope_ok": true,
+        "ema9": 222.8986,
+        "ema21": 222.465,
+        "ema9_dist_atr": 0.0944,
+        "vcp": 4.0164,
+        "vcp_prev": 10.9575,
+        "compression_days": 3,
+        "rs_raw": 139.0369,
+        "rs": 98,
+        "adr_pct": 3.062,
+        "last_range_adr": 0.7224,
+        "off_52w_high_pct": -8.7354,
+        "n_bars": 551,
+        "ext": 0.8646,
+        "above_sma200": true,
+        "a_range10_adr": 2.4299,
+        "a_range5_adr": 1.3724,
+        "a_close5_adr": 0.9465,
+        "a_thrust60_pct": 79.0789,
+        "a_off_high20_pct": -3.9852,
+        "range10_lo": 212.4,
+        "range10_hi": 229.035,
+        "high20": 232.86,
+        "b_rally20_atr": 1.6473,
+        "b_range5_atr": 1.3016,
+        "b_range12_atr": 2.8347,
+        "b_dist_hi10_atr": 0.7558,
+        "b_slope_h8": 0.1066,
+        "b_slope_l8": 0.1497,
+        "b_thrust_atr": 10.026,
+        "b_pullback_atr": 4.5138,
+        "b_bars_since_peak": 23,
+        "b_last_range_atr": 0.6789,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (1.6 ATR)",
+          "base after a 4.5 ATR pullback, not a continuation"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 223.607053120931,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 4,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-04"
+    },
+    "PBF": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 3.0× ADR, wide; still trending, not consolidated"
+        }
+      },
+      "metrics": {
+        "close": 83.68,
+        "high": 85.75,
+        "low": 82.9,
+        "ret1_pct": 0.9653,
+        "atr": 4.4772,
+        "atr_pct": 5.3504,
+        "avg_vol_50": 3454028.0,
+        "adv": 250844636.3381,
+        "sma5": 82.768,
+        "sma5_dist_pct": 1.1019,
+        "sma25": 76.3844,
+        "sma50": 72.9864,
+        "sma200": 49.1082,
+        "sma200_slope_ok": true,
+        "ema9": 80.196,
+        "ema21": 77.2127,
+        "ema9_dist_atr": 0.7782,
+        "vcp": 5.8116,
+        "vcp_prev": 21.6466,
+        "compression_days": 3,
+        "rs_raw": 197.4073,
+        "rs": 99,
+        "adr_pct": 6.4284,
+        "last_range_adr": 0.5348,
+        "off_52w_high_pct": -2.414,
+        "n_bars": 551,
+        "ext": 2.7384,
+        "above_sma200": true,
+        "a_range10_adr": 3.0469,
+        "a_range5_adr": 1.595,
+        "a_close5_adr": 0.6283,
+        "a_thrust60_pct": 51.3413,
+        "a_off_high20_pct": -2.414,
+        "range10_lo": 69.36,
+        "range10_hi": 85.75,
+        "high20": 85.75,
+        "b_rally20_atr": 3.0733,
+        "b_range5_atr": 1.9164,
+        "b_range12_atr": 3.8752,
+        "b_dist_hi10_atr": 0.4623,
+        "b_slope_h8": 0.3267,
+        "b_slope_l8": 0.3256,
+        "b_thrust_atr": 6.0015,
+        "b_pullback_atr": 0.6366,
+        "b_bars_since_peak": 0,
+        "b_last_range_atr": 0.6366,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 3.0× ADR, wide"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "still trending, not consolidated"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 82.10199635823568,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-29"
+    },
+    "PLTR": {
+      "list": "Focus",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": true,
+          "why": null
+        }
+      },
+      "metrics": {
+        "close": 194.12,
+        "high": 194.7,
+        "low": 190.112,
+        "ret1_pct": 1.0673,
+        "atr": 6.0043,
+        "atr_pct": 3.0931,
+        "avg_vol_50": 33880736.0,
+        "adv": 5716328750.7912,
+        "sma5": 190.876,
+        "sma5_dist_pct": 1.6995,
+        "sma25": 181.2536,
+        "sma50": 173.7282,
+        "sma200": 152.2288,
+        "sma200_slope_ok": true,
+        "ema9": 189.5466,
+        "ema21": 184.6598,
+        "ema9_dist_atr": 0.7617,
+        "vcp": 4.3743,
+        "vcp_prev": 4.1041,
+        "compression_days": 3,
+        "rs_raw": 119.0866,
+        "rs": 91,
+        "adr_pct": 3.0697,
+        "last_range_adr": 0.7862,
+        "off_52w_high_pct": -6.4572,
+        "n_bars": 551,
+        "ext": 3.7948,
+        "above_sma200": true,
+        "a_range10_adr": 1.6731,
+        "a_range5_adr": 1.3727,
+        "a_close5_adr": 0.9012,
+        "a_thrust60_pct": 65.2218,
+        "a_off_high20_pct": -0.3388,
+        "range10_lo": 184.81,
+        "range10_hi": 194.78,
+        "high20": 194.78,
+        "b_rally20_atr": 4.7066,
+        "b_range5_atr": 1.3623,
+        "b_range12_atr": 2.1235,
+        "b_dist_hi10_atr": 0.1099,
+        "b_slope_h8": 0.1366,
+        "b_slope_l8": 0.123,
+        "b_thrust_atr": 7.0083,
+        "b_pullback_atr": 1.1908,
+        "b_bars_since_peak": 3,
+        "b_last_range_atr": 0.7641,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": true,
+        "pattern_b_why": []
+      },
+      "sma30_65m": {
+        "sma30_65m": 190.75716654459634,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-02"
+    },
+    "REPL": {
+      "list": "Out",
+      "out_reason": "single-name Biotechnology",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 8.8% under the 20-day high; no real prior thrust (1.3 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 13.2,
+        "high": 13.6,
+        "low": 13.01,
+        "ret1_pct": -0.3774,
+        "atr": 0.8163,
+        "atr_pct": 6.1844,
+        "avg_vol_50": 4394772.0,
+        "adv": 51866784.3386,
+        "sma5": 13.224,
+        "sma5_dist_pct": -0.1815,
+        "sma25": 13.4364,
+        "sma50": 13.4706,
+        "sma200": 8.963,
+        "sma200_slope_ok": true,
+        "ema9": 13.1379,
+        "ema21": 13.2735,
+        "ema9_dist_atr": 0.0761,
+        "vcp": 3.2762,
+        "vcp_prev": 3.3689,
+        "compression_days": 2,
+        "rs_raw": 163.684,
+        "rs": 98,
+        "adr_pct": 6.2357,
+        "last_range_adr": 0.7273,
+        "off_52w_high_pct": -19.1672,
+        "n_bars": 551,
+        "ext": -0.3248,
+        "above_sma200": true,
+        "a_range10_adr": 2.1382,
+        "a_range5_adr": 1.6037,
+        "a_close5_adr": 0.4617,
+        "a_thrust60_pct": 242.7072,
+        "a_off_high20_pct": -8.7768,
+        "range10_lo": 12.07,
+        "range10_hi": 13.83,
+        "high20": 14.47,
+        "b_rally20_atr": 1.3352,
+        "b_range5_atr": 1.617,
+        "b_range12_atr": 2.156,
+        "b_dist_hi10_atr": 0.7717,
+        "b_slope_h8": 0.08,
+        "b_slope_l8": 0.124,
+        "b_thrust_atr": 6.0146,
+        "b_pullback_atr": 5.2184,
+        "b_bars_since_peak": 24,
+        "b_last_range_atr": 0.7227,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "8.8% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (1.3 ATR)",
+          "base after a 5.2 ATR pullback, not a continuation"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 13.172166665395102,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": null
+    },
+    "RNG": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (76.54 vs 77.91)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.6× ADR, wide; 1.5 ATR under the 10-day high"
+        }
+      },
+      "metrics": {
+        "close": 76.54,
+        "high": 78.13,
+        "low": 76.32,
+        "ret1_pct": -0.9319,
+        "atr": 3.2226,
+        "atr_pct": 4.2104,
+        "avg_vol_50": 1653730.0,
+        "adv": 113058464.0172,
+        "sma5": 77.89,
+        "sma5_dist_pct": -1.7332,
+        "sma25": 74.88,
+        "sma50": 69.41,
+        "sma200": 44.9047,
+        "sma200_slope_ok": true,
+        "ema9": 77.0031,
+        "ema21": 75.1044,
+        "ema9_dist_atr": -0.1437,
+        "vcp": 3.2467,
+        "vcp_prev": 10.0478,
+        "compression_days": 2,
+        "rs_raw": 202.505,
+        "rs": 99,
+        "adr_pct": 4.411,
+        "last_range_adr": 0.5377,
+        "off_52w_high_pct": -6.5446,
+        "n_bars": 551,
+        "ext": 2.4397,
+        "above_sma200": true,
+        "a_range10_adr": 2.645,
+        "a_range5_adr": 1.5047,
+        "a_close5_adr": 0.7464,
+        "a_thrust60_pct": 120.8142,
+        "a_off_high20_pct": -6.5446,
+        "range10_lo": 72.29,
+        "range10_hi": 81.22,
+        "high20": 81.9,
+        "b_rally20_atr": 4.3815,
+        "b_range5_atr": 1.5763,
+        "b_range12_atr": 2.982,
+        "b_dist_hi10_atr": 1.4522,
+        "b_slope_h8": 0.1576,
+        "b_slope_l8": 0.1862,
+        "b_thrust_atr": 6.9043,
+        "b_pullback_atr": 2.982,
+        "b_bars_since_peak": 10,
+        "b_last_range_atr": 0.5617,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.6× ADR, wide",
+          "6.5% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "1.5 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 77.91404673258464,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 1,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-05"
+    },
+    "SANM": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (219.41 vs 224.05)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.6× ADR, wide; 1.3 ATR under the 10-day high"
+        }
+      },
+      "metrics": {
+        "close": 219.41,
+        "high": 222.43,
+        "low": 215.06,
+        "ret1_pct": -3.7971,
+        "atr": 10.2521,
+        "atr_pct": 4.6726,
+        "avg_vol_50": 682124.0,
+        "adv": 136445036.4581,
+        "sma5": 224.712,
+        "sma5_dist_pct": -2.3595,
+        "sma25": 210.6704,
+        "sma50": 203.6418,
+        "sma200": 189.6636,
+        "sma200_slope_ok": true,
+        "ema9": 221.5737,
+        "ema21": 215.3446,
+        "ema9_dist_atr": -0.2111,
+        "vcp": 10.7344,
+        "vcp_prev": 22.5287,
+        "compression_days": 3,
+        "rs_raw": 120.2548,
+        "rs": 91,
+        "adr_pct": 4.6791,
+        "last_range_adr": 0.7324,
+        "off_52w_high_pct": -23.9954,
+        "n_bars": 551,
+        "ext": 1.6571,
+        "above_sma200": true,
+        "a_range10_adr": 2.6036,
+        "a_range5_adr": 1.877,
+        "a_close5_adr": 0.938,
+        "a_thrust60_pct": 43.1562,
+        "a_off_high20_pct": -5.6301,
+        "range10_lo": 205.77,
+        "range10_hi": 232.5,
+        "high20": 232.5,
+        "b_rally20_atr": 3.6549,
+        "b_range5_atr": 1.8796,
+        "b_range12_atr": 2.6073,
+        "b_dist_hi10_atr": 1.2768,
+        "b_slope_h8": 0.0235,
+        "b_slope_l8": 0.1037,
+        "b_thrust_atr": 5.0234,
+        "b_pullback_atr": 2.6073,
+        "b_bars_since_peak": 8,
+        "b_last_range_atr": 0.7189,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.6× ADR, wide"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "1.3 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 224.05476989746094,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 1,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-02"
+    },
+    "SCCO": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (200.57 vs 202.66)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (2.4 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 200.57,
+        "high": 200.84,
+        "low": 198.09,
+        "ret1_pct": -1.8065,
+        "atr": 7.3646,
+        "atr_pct": 3.6718,
+        "avg_vol_50": 1088571.9,
+        "adv": 216324740.4821,
+        "sma5": 202.976,
+        "sma5_dist_pct": -1.1854,
+        "sma25": 200.0708,
+        "sma50": 198.5996,
+        "sma200": 182.8194,
+        "sma200_slope_ok": true,
+        "ema9": 202.4483,
+        "ema21": 201.258,
+        "ema9_dist_atr": -0.255,
+        "vcp": 13.7315,
+        "vcp_prev": 20.2176,
+        "compression_days": 2,
+        "rs_raw": 114.847,
+        "rs": 88,
+        "adr_pct": 3.0583,
+        "last_range_adr": 0.4539,
+        "off_52w_high_pct": -9.1539,
+        "n_bars": 551,
+        "ext": 0.2702,
+        "above_sma200": true,
+        "a_range10_adr": 2.4584,
+        "a_range5_adr": 1.7493,
+        "a_close5_adr": 1.0303,
+        "a_thrust60_pct": 32.1676,
+        "a_off_high20_pct": -4.9792,
+        "range10_lo": 196.0,
+        "range10_hi": 211.08,
+        "high20": 211.08,
+        "b_rally20_atr": 2.4156,
+        "b_range5_atr": 1.457,
+        "b_range12_atr": 2.0476,
+        "b_dist_hi10_atr": 1.4271,
+        "b_slope_h8": -0.0273,
+        "b_slope_l8": 0.0384,
+        "b_thrust_atr": 3.745,
+        "b_pullback_atr": 1.9254,
+        "b_bars_since_peak": 5,
+        "b_last_range_atr": 0.3734,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (2.4 ATR)",
+          "1.4 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 202.66075083414714,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 1,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-22"
+    },
+    "SIG": {
+      "list": "Focus",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": true,
+          "why": null
+        }
+      },
+      "metrics": {
+        "close": 103.38,
+        "high": 104.3,
+        "low": 100.97,
+        "ret1_pct": 1.2537,
+        "atr": 3.9305,
+        "atr_pct": 3.802,
+        "avg_vol_50": 869974.0,
+        "adv": 82632319.831,
+        "sma5": 102.24,
+        "sma5_dist_pct": 1.115,
+        "sma25": 98.4256,
+        "sma50": 93.8232,
+        "sma200": 89.7324,
+        "sma200_slope_ok": true,
+        "ema9": 102.0164,
+        "ema21": 99.5591,
+        "ema9_dist_atr": 0.3469,
+        "vcp": 6.4842,
+        "vcp_prev": 4.9761,
+        "compression_days": 3,
+        "rs_raw": 106.142,
+        "rs": 85,
+        "adr_pct": 3.8418,
+        "last_range_adr": 0.8585,
+        "off_52w_high_pct": -6.1887,
+        "n_bars": 551,
+        "ext": 2.6791,
+        "above_sma200": true,
+        "a_range10_adr": 1.7474,
+        "a_range5_adr": 1.624,
+        "a_close5_adr": 0.9241,
+        "a_thrust60_pct": 34.9449,
+        "a_off_high20_pct": -3.0388,
+        "range10_lo": 99.68,
+        "range10_hi": 106.62,
+        "high20": 106.62,
+        "b_rally20_atr": 5.867,
+        "b_range5_atr": 1.641,
+        "b_range12_atr": 1.954,
+        "b_dist_hi10_atr": 0.8243,
+        "b_slope_h8": -0.0255,
+        "b_slope_l8": -0.0488,
+        "b_thrust_atr": 7.0246,
+        "b_pullback_atr": 1.6181,
+        "b_bars_since_peak": 3,
+        "b_last_range_atr": 0.8472,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": true,
+        "pattern_b_why": []
+      },
+      "sma30_65m": {
+        "sma30_65m": 102.74316635131837,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 2,
+        "missing_days": []
+      },
+      "next_earnings": "2026-12-01"
+    },
+    "SIMO": {
+      "list": "Focus",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": true,
+          "why": null
+        }
+      },
+      "metrics": {
+        "close": 285.78,
+        "high": 289.72,
+        "low": 275.59,
+        "ret1_pct": 0.2878,
+        "atr": 14.8957,
+        "atr_pct": 5.2123,
+        "avg_vol_50": 999890.0,
+        "adv": 252554988.3543,
+        "sma5": 281.786,
+        "sma5_dist_pct": 1.4174,
+        "sma25": 267.9884,
+        "sma50": 258.6134,
+        "sma200": 204.4494,
+        "sma200_slope_ok": true,
+        "ema9": 279.9041,
+        "ema21": 272.6851,
+        "ema9_dist_atr": 0.3945,
+        "vcp": 11.9516,
+        "vcp_prev": 11.7406,
+        "compression_days": 3,
+        "rs_raw": 176.0928,
+        "rs": 98,
+        "adr_pct": 5.3686,
+        "last_range_adr": 0.955,
+        "off_52w_high_pct": -19.4986,
+        "n_bars": 551,
+        "ext": 2.0154,
+        "above_sma200": true,
+        "a_range10_adr": 1.9541,
+        "a_range5_adr": 1.4548,
+        "a_close5_adr": 0.687,
+        "a_thrust60_pct": 44.3363,
+        "a_off_high20_pct": -3.1189,
+        "range10_lo": 265.0,
+        "range10_hi": 294.98,
+        "high20": 294.98,
+        "b_rally20_atr": 3.2875,
+        "b_range5_atr": 1.4984,
+        "b_range12_atr": 2.0127,
+        "b_dist_hi10_atr": 0.6176,
+        "b_slope_h8": 0.1125,
+        "b_slope_l8": 0.0712,
+        "b_thrust_atr": 4.8746,
+        "b_pullback_atr": 1.3017,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 0.9486,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": true,
+        "pattern_b_why": []
+      },
+      "sma30_65m": {
+        "sma30_65m": 282.4731475830078,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 1,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-29"
+    },
+    "SMCI": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": false,
+          "why": "Atr Ext 4.02× over 4×"
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": false,
+          "why": "VCP 27.8, loose"
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.5× ADR, wide; 5-day range 2.5 ATR"
+        }
+      },
+      "metrics": {
+        "close": 44.94,
+        "high": 45.77,
+        "low": 42.46,
+        "ret1_pct": 3.4054,
+        "atr": 2.2605,
+        "atr_pct": 5.03,
+        "avg_vol_50": 43791304.0,
+        "adv": 1623653422.1725,
+        "sma5": 43.44,
+        "sma5_dist_pct": 3.453,
+        "sma25": 40.3928,
+        "sma50": 37.3808,
+        "sma200": 32.2067,
+        "sma200_slope_ok": true,
+        "ema9": 42.8124,
+        "ema21": 41.1268,
+        "ema9_dist_atr": 0.9412,
+        "vcp": 27.7879,
+        "vcp_prev": 20.8988,
+        "compression_days": 2,
+        "rs_raw": 134.5564,
+        "rs": 96,
+        "adr_pct": 5.2288,
+        "last_range_adr": 1.4909,
+        "off_52w_high_pct": -23.5454,
+        "n_bars": 551,
+        "ext": 4.0203,
+        "above_sma200": true,
+        "a_range10_adr": 2.5194,
+        "a_range5_adr": 2.4002,
+        "a_close5_adr": 1.2852,
+        "a_thrust60_pct": 95.7656,
+        "a_off_high20_pct": -1.8134,
+        "range10_lo": 39.85,
+        "range10_hi": 45.77,
+        "high20": 45.77,
+        "b_rally20_atr": 4.1142,
+        "b_range5_atr": 2.495,
+        "b_range12_atr": 2.6189,
+        "b_dist_hi10_atr": 0.3672,
+        "b_slope_h8": 0.1891,
+        "b_slope_l8": 0.1603,
+        "b_thrust_atr": 7.2728,
+        "b_pullback_atr": 1.4643,
+        "b_bars_since_peak": 0,
+        "b_last_range_atr": 1.4643,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.5× ADR, wide",
+          "last range 1.5× ADR"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "5-day range 2.5 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 43.2808469136556,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-03"
+    },
+    "SN": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.8× ADR, wide"
+        }
+      },
+      "metrics": {
+        "close": 185.19,
+        "high": 185.97,
+        "low": 181.96,
+        "ret1_pct": 0.2544,
+        "atr": 5.8299,
+        "atr_pct": 3.1481,
+        "avg_vol_50": 1825630.0,
+        "adv": 319865320.8166,
+        "sma5": 182.99,
+        "sma5_dist_pct": 1.2023,
+        "sma25": 174.0052,
+        "sma50": 177.194,
+        "sma200": 135.9949,
+        "sma200_slope_ok": true,
+        "ema9": 181.2192,
+        "ema21": 177.8775,
+        "ema9_dist_atr": 0.6811,
+        "vcp": 7.964,
+        "vcp_prev": 6.3236,
+        "compression_days": 3,
+        "rs_raw": 139.7645,
+        "rs": 98,
+        "adr_pct": 3.7094,
+        "last_range_adr": 0.5941,
+        "off_52w_high_pct": -4.8062,
+        "n_bars": 551,
+        "ext": 1.4334,
+        "above_sma200": true,
+        "a_range10_adr": 2.7603,
+        "a_range5_adr": 1.2876,
+        "a_close5_adr": 0.7875,
+        "a_thrust60_pct": 37.1159,
+        "a_off_high20_pct": -0.6091,
+        "range10_lo": 167.363,
+        "range10_hi": 186.325,
+        "high20": 186.325,
+        "b_rally20_atr": 4.1836,
+        "b_range5_atr": 1.5172,
+        "b_range12_atr": 3.6064,
+        "b_dist_hi10_atr": 0.1947,
+        "b_slope_h8": 0.0416,
+        "b_slope_l8": 0.1383,
+        "b_thrust_atr": 5.0284,
+        "b_pullback_atr": 0.8825,
+        "b_bars_since_peak": 2,
+        "b_last_range_atr": 0.6878,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.8× ADR, wide"
+        ],
+        "pattern_b_ok": true,
+        "pattern_b_why": []
+      },
+      "sma30_65m": {
+        "sma30_65m": 182.9286677042643,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-05"
+    },
+    "SNOW": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (332.85 vs 339.13)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (2.7 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 332.85,
+        "high": 341.62,
+        "low": 332.0,
+        "ret1_pct": -0.9228,
+        "atr": 13.5463,
+        "atr_pct": 4.0698,
+        "avg_vol_50": 4990320.0,
+        "adv": 1626221625.7127,
+        "sma5": 338.164,
+        "sma5_dist_pct": -1.5714,
+        "sma25": 334.0756,
+        "sma50": 327.6246,
+        "sma200": 229.7339,
+        "sma200_slope_ok": true,
+        "ema9": 336.0882,
+        "ema21": 333.7763,
+        "ema9_dist_atr": -0.239,
+        "vcp": 4.3766,
+        "vcp_prev": 3.1513,
+        "compression_days": 2,
+        "rs_raw": 136.3664,
+        "rs": 97,
+        "adr_pct": 3.9474,
+        "last_range_adr": 0.7341,
+        "off_52w_high_pct": -13.4465,
+        "n_bars": 551,
+        "ext": 0.3919,
+        "above_sma200": true,
+        "a_range10_adr": 2.4637,
+        "a_range5_adr": 1.2939,
+        "a_close5_adr": 0.6956,
+        "a_thrust60_pct": 51.6464,
+        "a_off_high20_pct": -4.6275,
+        "range10_lo": 316.63,
+        "range10_hi": 349.0,
+        "high20": 349.0,
+        "b_rally20_atr": 2.6686,
+        "b_range5_atr": 1.255,
+        "b_range12_atr": 2.3896,
+        "b_dist_hi10_atr": 1.1922,
+        "b_slope_h8": 0.1056,
+        "b_slope_l8": 0.1592,
+        "b_thrust_atr": 5.9551,
+        "b_pullback_atr": 5.0146,
+        "b_bars_since_peak": 23,
+        "b_last_range_atr": 0.7102,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (2.7 ATR)",
+          "base after a 5.0 ATR pullback, not a continuation",
+          "1.2 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 339.13316955566404,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-12-02"
+    },
+    "THC": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (1.4 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 259.83,
+        "high": 261.58,
+        "low": 256.45,
+        "ret1_pct": 0.5262,
+        "atr": 7.497,
+        "atr_pct": 2.8853,
+        "avg_vol_50": 811280.0,
+        "adv": 212772105.7297,
+        "sma5": 258.072,
+        "sma5_dist_pct": 0.6812,
+        "sma25": 260.3024,
+        "sma50": 262.5052,
+        "sma200": 214.4338,
+        "sma200_slope_ok": true,
+        "ema9": 258.3856,
+        "ema21": 259.2601,
+        "ema9_dist_atr": 0.1927,
+        "vcp": 5.2515,
+        "vcp_prev": 3.6941,
+        "compression_days": 3,
+        "rs_raw": 115.7393,
+        "rs": 89,
+        "adr_pct": 2.7668,
+        "last_range_adr": 0.723,
+        "off_52w_high_pct": -8.2035,
+        "n_bars": 551,
+        "ext": -0.3532,
+        "above_sma200": true,
+        "a_range10_adr": 2.3342,
+        "a_range5_adr": 1.7152,
+        "a_close5_adr": 0.8151,
+        "a_thrust60_pct": 55.3513,
+        "a_off_high20_pct": -3.9836,
+        "range10_lo": 248.86,
+        "range10_hi": 265.64,
+        "high20": 270.61,
+        "b_rally20_atr": 1.3725,
+        "b_range5_atr": 1.6447,
+        "b_range12_atr": 2.2382,
+        "b_dist_hi10_atr": 0.775,
+        "b_slope_h8": 0.0028,
+        "b_slope_l8": 0.0381,
+        "b_thrust_atr": 2.2382,
+        "b_pullback_atr": 1.8034,
+        "b_bars_since_peak": 7,
+        "b_last_range_atr": 0.6843,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (1.4 ATR)"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 259.5623362223307,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 8,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-29"
+    },
+    "VEEV": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: base after a 4.3 ATR pullback, not a continuation"
+        }
+      },
+      "metrics": {
+        "close": 282.5,
+        "high": 286.98,
+        "low": 279.8,
+        "ret1_pct": -0.3527,
+        "atr": 9.0002,
+        "atr_pct": 3.1859,
+        "avg_vol_50": 1757928.0,
+        "adv": 447540094.2946,
+        "sma5": 280.942,
+        "sma5_dist_pct": 0.5546,
+        "sma25": 272.3016,
+        "sma50": 256.0852,
+        "sma200": 202.2087,
+        "sma200_slope_ok": true,
+        "ema9": 279.5066,
+        "ema21": 273.295,
+        "ema9_dist_atr": 0.3326,
+        "vcp": 19.1136,
+        "vcp_prev": 21.7271,
+        "compression_days": 2,
+        "rs_raw": 123.7269,
+        "rs": 93,
+        "adr_pct": 2.9615,
+        "last_range_adr": 0.8665,
+        "off_52w_high_pct": -9.0177,
+        "n_bars": 551,
+        "ext": 3.2377,
+        "above_sma200": true,
+        "a_range10_adr": 2.4766,
+        "a_range5_adr": 2.2184,
+        "a_close5_adr": 1.2156,
+        "a_thrust60_pct": 65.2664,
+        "a_off_high20_pct": -3.0542,
+        "range10_lo": 270.68,
+        "range10_hi": 291.4,
+        "high20": 291.4,
+        "b_rally20_atr": 3.3255,
+        "b_range5_atr": 2.0622,
+        "b_range12_atr": 3.5622,
+        "b_dist_hi10_atr": 0.9889,
+        "b_slope_h8": 0.0676,
+        "b_slope_l8": 0.1038,
+        "b_thrust_atr": 9.7965,
+        "b_pullback_atr": 4.2633,
+        "b_bars_since_peak": 28,
+        "b_last_range_atr": 0.7978,
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "base after a 4.3 ATR pullback, not a continuation",
+          "5-day range 2.1 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 280.96271464029945,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-25"
+    },
+    "VRNS": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 2.8× ADR, wide"
+        }
+      },
+      "metrics": {
+        "close": 48.96,
+        "high": 49.665,
+        "low": 47.92,
+        "ret1_pct": -0.2445,
+        "atr": 1.7654,
+        "atr_pct": 3.6058,
+        "avg_vol_50": 1771896.0,
+        "adv": 79523275.0928,
+        "sma5": 48.242,
+        "sma5_dist_pct": 1.4883,
+        "sma25": 47.224,
+        "sma50": 44.8324,
+        "sma200": 34.2399,
+        "sma200_slope_ok": true,
+        "ema9": 48.078,
+        "ema21": 47.2374,
+        "ema9_dist_atr": 0.4996,
+        "vcp": 19.2169,
+        "vcp_prev": 16.4941,
+        "compression_days": 3,
+        "rs_raw": 119.2902,
+        "rs": 91,
+        "adr_pct": 3.689,
+        "last_range_adr": 0.9871,
+        "off_52w_high_pct": -23.3803,
+        "n_bars": 551,
+        "ext": 2.5533,
+        "above_sma200": true,
+        "a_range10_adr": 2.7932,
+        "a_range5_adr": 1.7247,
+        "a_close5_adr": 0.9025,
+        "a_thrust60_pct": 27.4769,
+        "a_off_high20_pct": -1.4195,
+        "range10_lo": 44.62,
+        "range10_hi": 49.665,
+        "high20": 49.665,
+        "b_rally20_atr": 4.3248,
+        "b_range5_atr": 1.7645,
+        "b_range12_atr": 2.8577,
+        "b_dist_hi10_atr": 0.3993,
+        "b_slope_h8": 0.1216,
+        "b_slope_l8": 0.2562,
+        "b_thrust_atr": 5.5427,
+        "b_pullback_atr": 0.9885,
+        "b_bars_since_peak": 0,
+        "b_last_range_atr": 0.9885,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 2.8× ADR, wide"
+        ],
+        "pattern_b_ok": true,
+        "pattern_b_why": []
+      },
+      "sma30_65m": {
+        "sma30_65m": 48.150333150227866,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 2,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-27"
+    },
+    "WT": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (23.37 vs 24.19)"
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 6.6% under the 20-day high; no real prior thrust (2.5 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 23.37,
+        "high": 23.81,
+        "low": 23.11,
+        "ret1_pct": -3.3499,
+        "atr": 0.925,
+        "atr_pct": 3.958,
+        "avg_vol_50": 2708530.0,
+        "adv": 62177528.3184,
+        "sma5": 24.082,
+        "sma5_dist_pct": -2.9566,
+        "sma25": 23.7996,
+        "sma50": 23.15,
+        "sma200": 18.3303,
+        "sma200_slope_ok": true,
+        "ema9": 23.983,
+        "ema21": 23.8108,
+        "ema9_dist_atr": -0.6627,
+        "vcp": 19.8126,
+        "vcp_prev": 8.224,
+        "compression_days": 3,
+        "rs_raw": 131.8725,
+        "rs": 96,
+        "adr_pct": 3.9004,
+        "last_range_adr": 0.7766,
+        "off_52w_high_pct": -9.8032,
+        "n_bars": 551,
+        "ext": 0.2401,
+        "above_sma200": true,
+        "a_range10_adr": 2.1064,
+        "a_range5_adr": 2.1064,
+        "a_close5_adr": 1.1848,
+        "a_thrust60_pct": 43.0701,
+        "a_off_high20_pct": -6.632,
+        "range10_lo": 23.11,
+        "range10_hi": 25.03,
+        "high20": 25.03,
+        "b_rally20_atr": 2.5406,
+        "b_range5_atr": 2.0757,
+        "b_range12_atr": 2.173,
+        "b_dist_hi10_atr": 1.7946,
+        "b_slope_h8": -0.0287,
+        "b_slope_l8": -0.0479,
+        "b_thrust_atr": 5.3298,
+        "b_pullback_atr": 4.6595,
+        "b_bars_since_peak": 23,
+        "b_last_range_atr": 0.7568,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "6.6% under the 20-day high"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (2.5 ATR)",
+          "base after a 4.7 ATR pullback, not a continuation",
+          "5-day range 2.1 ATR",
+          "1.8 ATR under the 10-day high"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 24.190833282470702,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-30"
+    },
+    "XMTR": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": false,
+          "why": "VCP 39.1, loose"
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 3.0× ADR, wide; 5-day range 2.3 ATR"
+        }
+      },
+      "metrics": {
+        "close": 107.8,
+        "high": 109.481,
+        "low": 104.68,
+        "ret1_pct": -2.5845,
+        "atr": 5.3308,
+        "atr_pct": 4.9451,
+        "avg_vol_50": 709060.0,
+        "adv": 66641741.9289,
+        "sma5": 106.584,
+        "sma5_dist_pct": 1.1409,
+        "sma25": 97.4306,
+        "sma50": 93.3204,
+        "sma200": 73.1363,
+        "sma200_slope_ok": true,
+        "ema9": 105.0742,
+        "ema21": 100.6424,
+        "ema9_dist_atr": 0.5113,
+        "vcp": 39.1097,
+        "vcp_prev": 30.9651,
+        "compression_days": 2,
+        "rs_raw": 152.0755,
+        "rs": 98,
+        "adr_pct": 5.2519,
+        "last_range_adr": 0.8733,
+        "off_52w_high_pct": -4.5511,
+        "n_bars": 551,
+        "ext": 3.1376,
+        "above_sma200": true,
+        "a_range10_adr": 2.9638,
+        "a_range5_adr": 2.1884,
+        "a_close5_adr": 1.436,
+        "a_thrust60_pct": 40.0546,
+        "a_off_high20_pct": -4.5511,
+        "range10_lo": 96.16,
+        "range10_hi": 112.94,
+        "high20": 112.94,
+        "b_rally20_atr": 4.8416,
+        "b_range5_atr": 2.3242,
+        "b_range12_atr": 3.1477,
+        "b_dist_hi10_atr": 0.9642,
+        "b_slope_h8": 0.1865,
+        "b_slope_l8": 0.1738,
+        "b_thrust_atr": 5.9372,
+        "b_pullback_atr": 1.5495,
+        "b_bars_since_peak": 1,
+        "b_last_range_atr": 0.9006,
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 3.0× ADR, wide",
+          "5-day closes span 1.4× ADR"
+        ],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "5-day range 2.3 ATR"
+        ]
+      },
+      "sma30_65m": {
+        "sma30_65m": 106.45981674194336,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-07#5",
+        "incomplete": 5,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-03"
+    }
+  }
+}

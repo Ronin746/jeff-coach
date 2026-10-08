@@ -1,0 +1,48 @@
+name: Weekly del lunedì
+
+# Lunedì 07:08 e 08:08 UTC = 09:08/10:08 Roma (ora legale), 08:08/09:08 (ora solare). Niente Discord.
+on:
+  schedule:
+    - cron: "8 6 * * 1"
+    - cron: "8 7 * * 1"
+  workflow_dispatch:
+    inputs:
+      monday:
+        description: "Lunedì YYYY-MM-DD (vuoto = oggi)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeff-coach-data
+  cancel-in-progress: false
+
+env:
+  JEFF_COACH_HOME: ${{ github.workspace }}/data
+  JEFF_COACH_AGREED: ${{ github.workspace }}/data/coach-agreed
+  PYTHONUTF8: "1"
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: |
+          ARGS="--skip-if-done"
+          if [ -n "${{ github.event.inputs.monday }}" ]; then ARGS="--monday ${{ github.event.inputs.monday }}"; fi
+          python -m jeffcoach.weekly $ARGS
+      - name: Commit
+        run: |
+          git config user.name "jeff-coach-bot"
+          git config user.email "jeff-coach-bot@users.noreply.github.com"
+          git add -A data
+          git diff --cached --quiet && exit 0
+          git commit -m "Weekly"
+          git pull --rebase && git push
