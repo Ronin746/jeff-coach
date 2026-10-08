@@ -269,7 +269,8 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
     pegw = peg_watch(peg_names, metrics, rows, earn, earn_out, out_universe, grp)
     chan = channel_watch(rows, s65)
 
-    # revisione a occhio del bot: può solo DECLASSARE (Focus -> Stalk) o cambiare il testo, mai promuovere
+    # revisione a occhio del bot [RONIN 09/10]: DECLASSA un Focus a Stalk, oppure PROMUOVE a Focus uno Stalk il cui
+    # unico gate aperto è il pattern (le letture A/B non lo vedono ma il grafico sì). Mai sopra un gate numerico.
     review_applied = {}
     for s, rv in (review or {}).items():
         r = rows.get(s)
@@ -279,6 +280,14 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             r.list = "Stalk"
             r.gates.append(E.Gate("review", False, "pattern review: " + rv["demote"]))
             review_applied[s] = "demoted: " + rv["demote"]
+        elif rv.get("promote") and r.list == "Stalk":
+            numeric = [g.code for g in r.fails if g.code not in E.SOFT_GATES]
+            if not numeric and [g.code for g in r.fails] and all(g.code == "pattern" for g in r.fails):
+                r.list = "Focus"
+                r.gates = [g for g in r.gates if g.code != "pattern"]
+                review_applied[s] = "promoted: " + rv["promote"]
+            else:
+                review_applied[s] = "promote refused (open gates: " + ", ".join(g.code for g in r.fails) + ")"
         if rv.get("pattern"):
             r.m["pattern"] = rv["pattern"]
         if rv.get("reason_en"):

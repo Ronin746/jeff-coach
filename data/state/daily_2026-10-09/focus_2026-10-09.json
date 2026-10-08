@@ -4,16 +4,17 @@
   "ranking_bar": "2026-10-08",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-08 22:59 CEST",
+  "asof_rome": "2026-10-09 01:44 CEST",
   "focus": [
+    "DELL",
     "RNG",
-    "SN",
+    "FIVN",
     "HPQ",
     "ELF"
   ],
   "stalk": [
     "CLMT",
-    "DELL",
+    "AMC",
     "APA",
     "BE",
     "CAKE",
@@ -28,14 +29,17 @@
     "PANW",
     "PARR",
     "PAYC",
+    "SN",
     "SNOW",
     "XMTR",
     "ANF",
     "TENB",
+    "VAC",
     "VEEV",
     "ANET",
     "BTE",
     "DAR",
+    "ENTG",
     "PLTR",
     "SBLK",
     "VRNS",
@@ -45,13 +49,43 @@
     "SCCO",
     "VG",
     "JXN",
+    "WDAY",
     "CVLT",
     "SIG",
     "IT",
     "BAX",
+    "MTD",
     "MTDR"
   ],
   "tickers": [
+    {
+      "ticker": "DELL",
+      "list": "Focus",
+      "rs": 99,
+      "vcp": 7.25,
+      "sma5": 1.07,
+      "atr_ext": 2.99,
+      "reason_en": "ascending base 520.2–587.2, 3.5% under the high, 3 tight days",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 585.74,
+      "pattern_c": "tight",
+      "pattern_c_shape": "box",
+      "trendline_next": 585.11,
+      "industry": "Computer Hardware",
+      "group_pctl": 98,
+      "leader": [
+        "6m"
+      ],
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": true,
+      "channel_lower_next": 540.11,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
     {
       "ticker": "RNG",
       "list": "Focus",
@@ -81,24 +115,26 @@
       "triangle_top": null
     },
     {
-      "ticker": "SN",
+      "ticker": "FIVN",
       "list": "Focus",
       "rs": 98,
-      "vcp": 0.0,
-      "sma5": 0.47,
-      "atr_ext": 1.3,
-      "reason_en": "box 174.4–186.3, 0.8% under the high, 3 tight days",
+      "vcp": 23.65,
+      "sma5": 2.81,
+      "atr_ext": 1.17,
+      "reason_en": "box 32.65–37.79, 12.1% under the high, 2 tight days",
       "pattern_a": "tight",
       "pattern_b": "tight",
       "open_gates": [],
       "extreme_rvol_ok": false,
-      "prior_day_high": 185.73,
+      "prior_day_high": 35.27,
       "pattern_c": "wide",
       "pattern_c_shape": "descending triangle",
-      "trendline_next": 185.01,
-      "industry": "Furnishings, Fixtures & Appliances",
-      "group_pctl": 41,
-      "leader": [],
+      "trendline_next": 33.95,
+      "industry": "Software—Infrastructure",
+      "group_pctl": 90,
+      "leader": [
+        "6m"
+      ],
       "carry_days": 0,
       "channel": null,
       "channel_buy_zone": false,
@@ -187,32 +223,31 @@
       "triangle_top": null
     },
     {
-      "ticker": "DELL",
+      "ticker": "AMC",
       "list": "Stalk",
-      "rs": 99,
-      "vcp": 7.25,
-      "sma5": 1.07,
-      "atr_ext": 2.99,
-      "reason_en": "pattern wide, 10d range 2.5× ADR",
+      "rs": 98,
+      "vcp": 6.89,
+      "sma5": 0.91,
+      "atr_ext": 1.09,
+      "reason_en": "under 9 EMA",
       "pattern_a": "wide",
       "pattern_b": "tight",
       "open_gates": [
+        "ema9",
         "pattern"
       ],
       "extreme_rvol_ok": false,
-      "prior_day_high": 585.74,
-      "pattern_c": "tight",
-      "pattern_c_shape": "box",
-      "trendline_next": 585.11,
-      "industry": "Computer Hardware",
-      "group_pctl": 98,
-      "leader": [
-        "6m"
-      ],
+      "prior_day_high": 2.96,
+      "pattern_c": "wide",
+      "pattern_c_shape": "flat base",
+      "trendline_next": 3.4,
+      "industry": "Entertainment",
+      "group_pctl": 68,
+      "leader": [],
       "carry_days": 0,
-      "channel": "lower part of the channel",
-      "channel_buy_zone": true,
-      "channel_lower_next": 540.11,
+      "channel": "failed breakout",
+      "channel_buy_zone": false,
+      "channel_lower_next": 2.66,
       "gap_to_fill": null,
       "triangle_top": null
     },
@@ -253,7 +288,7 @@
       "atr_ext": 1.57,
       "reason_en": "under 65m SMA30 (-5.0%); under 9 EMA",
       "pattern_a": "wide",
-      "pattern_b": "wide",
+      "pattern_b": "tight",
       "open_gates": [
         "sma65",
         "ema9",
@@ -282,11 +317,10 @@
       "sma5": -1.16,
       "atr_ext": 0.05,
       "reason_en": "under 65m SMA30 (-1.0%)",
-      "pattern_a": "wide",
-      "pattern_b": "wide",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
       "open_gates": [
-        "sma65",
-        "pattern"
+        "sma65"
       ],
       "extreme_rvol_ok": false,
       "prior_day_high": 107.95,
@@ -296,7 +330,7 @@
       "industry": "Restaurants",
       "group_pctl": 19,
       "leader": [],
-      "carry_days": 1,
+      "carry_days": 0,
       "channel": null,
       "channel_buy_zone": false,
       "channel_lower_next": null,
@@ -629,6 +663,34 @@
       "triangle_top": null
     },
     {
+      "ticker": "SN",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 0.0,
+      "sma5": 0.47,
+      "atr_ext": 1.3,
+      "reason_en": "pattern review: test",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [
+        "review"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 185.73,
+      "pattern_c": "wide",
+      "pattern_c_shape": "descending triangle",
+      "trendline_next": 185.01,
+      "industry": "Furnishings, Fixtures & Appliances",
+      "group_pctl": 41,
+      "leader": [],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
       "ticker": "SNOW",
       "list": "Stalk",
       "rs": 98,
@@ -747,6 +809,34 @@
       "triangle_top": 39.76
     },
     {
+      "ticker": "VAC",
+      "list": "Stalk",
+      "rs": 94,
+      "vcp": 0.0,
+      "sma5": 0.59,
+      "atr_ext": -0.7,
+      "reason_en": "pattern no fresh thrust",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 105.52,
+      "pattern_c": "wide",
+      "pattern_c_shape": "descending triangle",
+      "trendline_next": 102.21,
+      "industry": "Resorts & Casinos",
+      "group_pctl": 6,
+      "leader": [],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
       "ticker": "VEEV",
       "list": "Stalk",
       "rs": 94,
@@ -859,6 +949,35 @@
       "channel": "middle of the channel",
       "channel_buy_zone": false,
       "channel_lower_next": 58.09,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
+      "ticker": "ENTG",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp": 4.26,
+      "sma5": -2.15,
+      "atr_ext": 2.88,
+      "reason_en": "under 65m SMA30 (-2.4%)",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 166.18,
+      "pattern_c": "tight",
+      "pattern_c_shape": "flat base",
+      "trendline_next": 169.63,
+      "industry": "Semiconductor Equipment & Materials",
+      "group_pctl": 95,
+      "leader": [],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
       "gap_to_fill": null,
       "triangle_top": null
     },
@@ -1121,6 +1240,35 @@
       "triangle_top": 135.55
     },
     {
+      "ticker": "WDAY",
+      "list": "Stalk",
+      "rs": 87,
+      "vcp": 2.4,
+      "sma5": 0.57,
+      "atr_ext": -0.11,
+      "reason_en": "SMA200 declining",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma200",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 188.26,
+      "pattern_c": "wide",
+      "pattern_c_shape": "descending triangle",
+      "trendline_next": 190.15,
+      "industry": "Software—Application",
+      "group_pctl": 76,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": false,
+      "channel_lower_next": 181.57,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
       "ticker": "CVLT",
       "list": "Stalk",
       "rs": 86,
@@ -1129,7 +1277,7 @@
       "atr_ext": 2.19,
       "reason_en": "under 65m SMA30 (-0.9%)",
       "pattern_a": "wide",
-      "pattern_b": "wide",
+      "pattern_b": "tight",
       "open_gates": [
         "sma65",
         "pattern"
@@ -1142,7 +1290,7 @@
       "industry": "Software—Application",
       "group_pctl": 76,
       "leader": [],
-      "carry_days": 1,
+      "carry_days": 0,
       "channel": null,
       "channel_buy_zone": false,
       "channel_lower_next": null,
@@ -1186,7 +1334,7 @@
       "atr_ext": 1.35,
       "reason_en": "SMA200 declining",
       "pattern_a": "wide",
-      "pattern_b": "wide",
+      "pattern_b": "tight",
       "open_gates": [
         "sma200",
         "pattern"
@@ -1214,7 +1362,7 @@
       "sma5": -0.37,
       "atr_ext": -1.83,
       "reason_en": "under 65m SMA30 (-0.2%)",
-      "pattern_a": "wide",
+      "pattern_a": "tight",
       "pattern_b": "wide",
       "open_gates": [
         "sma65",
@@ -1228,10 +1376,39 @@
       "industry": "Medical Instruments & Supplies",
       "group_pctl": 65,
       "leader": [],
-      "carry_days": 1,
+      "carry_days": 0,
       "channel": "extended above",
       "channel_buy_zone": false,
       "channel_lower_next": 20.69,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
+      "ticker": "MTD",
+      "list": "Stalk",
+      "rs": 84,
+      "vcp": 29.87,
+      "sma5": 0.31,
+      "atr_ext": 2.62,
+      "reason_en": "loose VCP",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 1536.54,
+      "pattern_c": "tight",
+      "pattern_c_shape": "flat base",
+      "trendline_next": 1585.72,
+      "industry": "Diagnostics & Research",
+      "group_pctl": 89,
+      "leader": [],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
       "gap_to_fill": null,
       "triangle_top": null
     },
@@ -1273,10 +1450,6 @@
   },
   "info_not_verified": [],
   "pattern_disagreements": {
-    "DELL": {
-      "a": "10-day range 2.5× ADR, wide",
-      "b": "tight"
-    },
     "ESTC": {
       "a": "10-day range 3.9× ADR, wide",
       "b": "tight"
@@ -1292,6 +1465,10 @@
     "ANF": {
       "a": "10-day range 2.6× ADR, wide",
       "b": "tight"
+    },
+    "VAC": {
+      "a": "tight",
+      "b": "no real prior thrust (1.5 ATR); base gave back 55% of the thrust"
     },
     "VEEV": {
       "a": "5-day closes span 1.4× ADR",
@@ -1322,7 +1499,11 @@
       "b": "no real prior thrust (2.1 ATR); base gave back 73% of the thrust"
     }
   },
-  "review": {},
+  "review": {
+    "DELL": "promoted: tight box 14d under 585 after the August thrust",
+    "BE": "promote refused (open gates: sma65, ema9, pattern)",
+    "SN": "demoted: test"
+  },
   "changes_vs_previous": {
     "focus_before": [
       "PLTR",
@@ -1330,8 +1511,9 @@
       "SIMO"
     ],
     "focus_after": [
+      "DELL",
       "RNG",
-      "SN",
+      "FIVN",
       "HPQ",
       "ELF"
     ],
@@ -1341,10 +1523,11 @@
       "SIMO"
     ],
     "joined_focus": [
+      "DELL",
       "ELF",
+      "FIVN",
       "HPQ",
-      "RNG",
-      "SN"
+      "RNG"
     ],
     "left_list": [
       "ALAB",
@@ -1363,22 +1546,28 @@
       "WT"
     ],
     "joined_list": [
+      "AMC",
       "BTE",
       "DAR",
       "DOCU",
+      "ENTG",
       "ESTC",
+      "FIVN",
       "FROG",
       "HPQ",
       "IT",
       "LFST",
       "MANH",
       "MATX",
+      "MTD",
       "MTDR",
       "PARR",
       "SBLK",
       "STNG",
       "TENB",
-      "VG"
+      "VAC",
+      "VG",
+      "WDAY"
     ],
     "why_left": {
       "PLTR": "extended",
@@ -1403,7 +1592,6 @@
   "stale_stalk": {},
   "pattern_c_vs_decision": {
     "c_tight_not_focus": {
-      "DELL": "box 14d after +66%, line 585.11, volume drying up",
       "ESTC": "pennant 28d after +104%, line 97.52, volume drying up",
       "JXN": "pennant 19d after +38%, line 134.61",
       "MANH": "falling wedge 29d after +80%, line 205.86, volume drying up",
@@ -1418,7 +1606,7 @@
       "ZETA": "flat base 5d after +82%, line 34.80"
     },
     "focus_c_wide": {
-      "SN": "descending triangle; range between the lines 4.9 ATR, wide; lost the 50-day during the base"
+      "FIVN": "descending triangle"
     }
   },
   "top_groups": [
@@ -1490,7 +1678,9 @@
       "median_rs": 91,
       "n": 24,
       "strong": 13,
-      "in_list": []
+      "in_list": [
+        "ENTG"
+      ]
     },
     {
       "industry": "Electronic Components",
@@ -2422,7 +2612,7 @@
     },
     {
       "ticker": "VAC",
-      "list": "Out",
+      "list": "Stalk",
       "rs": 94,
       "close": 104.21,
       "peg_date": "2026-08-06",
@@ -2564,8 +2754,8 @@
     "universe_numeric": 931,
     "candidates": 358,
     "out_universe": 6,
-    "focus": 4,
-    "stalk": 38,
+    "focus": 5,
+    "stalk": 43,
     "out_earnings": 0
   },
   "out_universe": {
@@ -2582,7 +2772,6 @@
     "CHYM": "pattern: 10-day range 2.6× ADR, wide; no real prior thrust (2.1 ATR)",
     "DK": "pattern: 10-day range 2.9× ADR, wide; still trending, not consolidated",
     "DVN": "pattern: 10-day range 2.7× ADR, wide; no real prior thrust (2.0 ATR)",
-    "FIVN": "pattern: 1.2 ADR under the base pivot (10-day high); 1.4 ATR under the 10-day high",
     "HP": "pattern: 10-day range 3.2× ADR, wide; no real prior thrust (2.4 ATR)",
     "MGNI": "pattern: 10-day range 3.3× ADR, wide; no real prior thrust (2.7 ATR)",
     "MUR": "pattern: 10-day range 2.6× ADR, wide; no real prior thrust (2.3 ATR)",
@@ -2592,7 +2781,6 @@
     "SM": "pattern: 10-day range 3.4× ADR, wide; no real prior thrust (2.7 ATR)",
     "TDW": "pattern: 10-day range 2.7× ADR, wide; no real prior thrust (1.2 ATR)",
     "U": "pattern: 10-day range 3.9× ADR, wide; no real prior thrust (3.0 ATR)",
-    "VAC": "pattern: 1.1 ADR under the base pivot (10-day high); no real prior thrust (1.5 ATR)",
     "W": "pattern: 10-day range 2.9× ADR, wide; no real prior thrust (2.9 ATR)",
     "ZETA": "pattern: 10-day range 4.4× ADR, wide; still trending, not consolidated",
     "ZIM": "pattern: 10-day range 4.0× ADR, wide; base gave back 52% of the thrust"
@@ -2744,14 +2932,12 @@
         "pattern_a_ok": false,
         "pattern_a_why": [
           "10-day range 4.1× ADR, wide",
-          "3.4 ADR under the base pivot (10-day high)",
           "5-day closes span 2.7× ADR"
         ],
         "pattern_b_ok": false,
         "pattern_b_why": [
           "base gave back 54% of the thrust",
-          "5-day range 3.9 ATR",
-          "3.3 ATR under the 10-day high"
+          "5-day range 3.9 ATR"
         ],
         "pattern_c_ok": false,
         "pattern_c_why": [
@@ -2767,6 +2953,206 @@
         "missing_days": []
       },
       "next_earnings": null
+    },
+    "AMC": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": false,
+          "why": "under the 9 EMA"
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 3.5× ADR, wide"
+        }
+      },
+      "metrics": {
+        "close": 2.88,
+        "high": 2.965,
+        "low": 2.75,
+        "ret1_pct": 0.0,
+        "atr": 0.1979,
+        "atr_pct": 6.8713,
+        "avg_vol_50": 26205292.0,
+        "adv": 71765387.2196,
+        "sma5": 2.854,
+        "sma5_dist_pct": 0.911,
+        "sma25": 2.7652,
+        "sma50": 2.68,
+        "sma200": 1.8652,
+        "sma200_slope_ok": true,
+        "ema9": 2.8826,
+        "ema21": 2.8227,
+        "ema9_dist_atr": -0.0131,
+        "vcp": 6.8912,
+        "vcp_prev": 10.0241,
+        "compression_days": 2,
+        "rs_raw": 147.9883,
+        "rs": 98,
+        "adr_pct": 6.9776,
+        "last_range_adr": 1.1205,
+        "off_52w_high_pct": -15.2941,
+        "n_bars": 551,
+        "ret21_pct": 17.0732,
+        "ret63_pct": 52.381,
+        "ret126_pct": 113.3333,
+        "ext": 1.0861,
+        "above_sma200": true,
+        "a_range10_adr": 3.4834,
+        "a_range5_adr": 1.3187,
+        "a_close5_adr": 0.8957,
+        "a_thrust60_pct": 78.9474,
+        "a_off_high20_pct": -15.2941,
+        "range10_lo": 2.7,
+        "range10_hi": 3.4,
+        "high20": 3.4,
+        "b_rally20_atr": 4.6995,
+        "b_range5_atr": 1.3391,
+        "b_range12_atr": 3.5372,
+        "b_dist_hi10_atr": 2.6277,
+        "b_slope_h8": -0.2241,
+        "b_slope_l8": -0.1005,
+        "b_thrust_atr": 5.4575,
+        "b_pullback_atr": 3.5372,
+        "b_bars_since_peak": 8,
+        "b_last_range_atr": 1.0864,
+        "gap_open": false,
+        "c_ok_data": true,
+        "c_kind": "pullback base",
+        "c_peak_i": 542,
+        "c_start_i": 485,
+        "c_base_len": 8,
+        "c_thrust_pct": 112.5,
+        "c_thrust_atr": 9.0958,
+        "c_thrust_bars": 57,
+        "c_depth_pct": 20.5882,
+        "c_depth_atr": 3.5372,
+        "c_retrace": 0.3889,
+        "c_peak": 3.4,
+        "c_slope_up_atr": 0.0,
+        "c_slope_lo_atr": 0.0,
+        "c_touch_up": 1,
+        "c_touch_lo": 4,
+        "c_upper": 3.4,
+        "c_lower": 2.7,
+        "c_upper_next": 3.4,
+        "c_width_atr": 3.5372,
+        "c_width0_atr": 3.5372,
+        "c_dist_upper_atr": 2.6277,
+        "c_range5_atr": 1.3391,
+        "c_range_first5_atr": 3.5372,
+        "c_atr5_atr20": 1.0208,
+        "c_close_vs_ema20_atr": 0.2598,
+        "c_close_vs_ema10_atr": -0.0002,
+        "c_closes_under_sma50": 0,
+        "c_close_vs_sma50_atr": 1.0106,
+        "c_closes_above_ema20": 0.6667,
+        "c_vol_dryup": 0.7124,
+        "c_line_up": [
+          542,
+          3.4000000953674316,
+          550,
+          3.4000000953674316
+        ],
+        "c_line_lo": [
+          545,
+          2.700000047683716,
+          550,
+          2.700000047683716
+        ],
+        "c_undercut_reclaim": false,
+        "t_ok": false,
+        "d_ok_data": true,
+        "d_found": true,
+        "d_window": 65,
+        "d_excluded_last": 0,
+        "d_span": 39,
+        "d_anchor": "high",
+        "d_slope_atr": 0.0641,
+        "d_touch_up": 5,
+        "d_touch_lo": 2,
+        "d_upper": 3.165,
+        "d_lower": 2.6512,
+        "d_upper_next": 3.1777,
+        "d_lower_next": 2.6638,
+        "d_width_atr": 2.5966,
+        "d_rise_width": 0.9633,
+        "d_pos": 0.4454,
+        "d_dist_upper_atr": -1.4402,
+        "d_dist_lower_atr": 1.1564,
+        "d_low_vs_lower_atr": 0.4995,
+        "d_broke_above": true,
+        "d_broke_ago": 8,
+        "d_max_above_atr": 1.1447,
+        "d_close_vs_ema21_atr": 0.2897,
+        "d_low_vs_ema21_atr": -0.3672,
+        "d_low_vs_ema10_atr": -0.6571,
+        "d_under_sma50": false,
+        "d_stacked": true,
+        "d_state": "failed breakout",
+        "pattern_d_ok": false,
+        "pattern_d_why": [
+          "channel rose only 1.0x its width (sideways)",
+          "failed breakout, not the lower part"
+        ],
+        "peg_found": false,
+        "industry": "Entertainment",
+        "sector": "Communication Services",
+        "group_pctl": 68,
+        "group_n": 21,
+        "group_level": "industry",
+        "leader": [],
+        "c_shape": "flat base",
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 3.5× ADR, wide"
+        ],
+        "pattern_b_ok": true,
+        "pattern_b_why": [],
+        "pattern_c_ok": false,
+        "pattern_c_why": [
+          "range between the lines 3.5 ATR, wide",
+          "2.6 ATR under the trendline"
+        ],
+        "carry_days": 0
+      },
+      "sma30_65m": {
+        "sma30_65m": 2.861700010299683,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-08#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-20"
     },
     "ANET": {
       "list": "Stalk",
@@ -3388,7 +3774,7 @@
         },
         "pattern": {
           "ok": false,
-          "why": "pattern: 1.0 ADR under the base pivot (10-day high); no real prior thrust (2.2 ATR)"
+          "why": "pattern: no real prior thrust (2.2 ATR)"
         }
       },
       "metrics": {
@@ -3531,10 +3917,8 @@
         "group_level": "industry",
         "leader": [],
         "c_shape": "flat base",
-        "pattern_a_ok": false,
-        "pattern_a_why": [
-          "1.0 ADR under the base pivot (10-day high)"
-        ],
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
         "pattern_b_ok": false,
         "pattern_b_why": [
           "no real prior thrust (2.2 ATR)",
@@ -3547,7 +3931,7 @@
           "8.6 ATR under the trendline",
           "lost the 50-day during the base"
         ],
-        "carry_days": 1
+        "carry_days": 0
       },
       "sma30_65m": {
         "sma30_65m": 23.94332675933838,
@@ -3596,7 +3980,7 @@
         },
         "pattern": {
           "ok": false,
-          "why": "pattern: 1.7 ADR under the base pivot (10-day high); 1.5 ATR under the 10-day high"
+          "why": "pattern: last range 1.3× ADR"
         }
       },
       "metrics": {
@@ -3753,14 +4137,11 @@
         "c_shape": "flat base",
         "pattern_a_ok": false,
         "pattern_a_why": [
-          "1.7 ADR under the base pivot (10-day high)",
           "last range 1.3× ADR",
           "5-day closes span 1.3× ADR"
         ],
-        "pattern_b_ok": false,
-        "pattern_b_why": [
-          "1.5 ATR under the 10-day high"
-        ],
+        "pattern_b_ok": true,
+        "pattern_b_why": [],
         "pattern_c_ok": true,
         "pattern_c_why": [],
         "carry_days": 1
@@ -3984,8 +4365,8 @@
           "why": null
         },
         "pattern": {
-          "ok": false,
-          "why": "pattern: 1.2 ADR under the base pivot (10-day high); 1.2 ATR under the 10-day high"
+          "ok": true,
+          "why": null
         }
       },
       "metrics": {
@@ -4098,21 +4479,17 @@
         "group_level": "industry",
         "leader": [],
         "c_shape": "broadening",
-        "pattern_a_ok": false,
-        "pattern_a_why": [
-          "1.2 ADR under the base pivot (10-day high)"
-        ],
-        "pattern_b_ok": false,
-        "pattern_b_why": [
-          "1.2 ATR under the 10-day high"
-        ],
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": true,
+        "pattern_b_why": [],
         "pattern_c_ok": false,
         "pattern_c_why": [
           "broadening",
           "range between the lines 6.4 ATR, wide",
           "lost the 50-day during the base"
         ],
-        "carry_days": 1
+        "carry_days": 0
       },
       "sma30_65m": {
         "sma30_65m": 107.95632960001628,
@@ -4579,7 +4956,7 @@
         },
         "pattern": {
           "ok": false,
-          "why": "pattern: 10-day range 2.9× ADR, wide; 1.3 ATR under the 10-day high"
+          "why": "pattern: 10-day range 2.9× ADR, wide"
         }
       },
       "metrics": {
@@ -4694,16 +5071,13 @@
         "c_shape": "flat base",
         "pattern_a_ok": false,
         "pattern_a_why": [
-          "10-day range 2.9× ADR, wide",
-          "1.2 ADR under the base pivot (10-day high)"
+          "10-day range 2.9× ADR, wide"
         ],
-        "pattern_b_ok": false,
-        "pattern_b_why": [
-          "1.3 ATR under the 10-day high"
-        ],
+        "pattern_b_ok": true,
+        "pattern_b_why": [],
         "pattern_c_ok": true,
         "pattern_c_why": [],
-        "carry_days": 1
+        "carry_days": 0
       },
       "sma30_65m": {
         "sma30_65m": 152.37140655517578,
@@ -5102,13 +5476,11 @@
         "c_shape": "ascending base",
         "pattern_a_ok": false,
         "pattern_a_why": [
-          "10-day range 2.6× ADR, wide",
-          "1.0 ADR under the base pivot (10-day high)"
+          "10-day range 2.6× ADR, wide"
         ],
         "pattern_b_ok": false,
         "pattern_b_why": [
-          "base gave back 83% of the thrust",
-          "1.1 ATR under the 10-day high"
+          "base gave back 83% of the thrust"
         ],
         "pattern_c_ok": false,
         "pattern_c_why": [
@@ -5127,7 +5499,7 @@
       "next_earnings": "2026-11-05"
     },
     "DELL": {
-      "list": "Stalk",
+      "list": "Focus",
       "out_reason": "",
       "gates": {
         "rs": {
@@ -5161,10 +5533,6 @@
         "comp": {
           "ok": true,
           "why": null
-        },
-        "pattern": {
-          "ok": false,
-          "why": "pattern: 10-day range 2.5× ADR, wide"
         }
       },
       "metrics": {
@@ -5728,6 +6096,177 @@
       },
       "next_earnings": "2026-11-04"
     },
+    "ENTG": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": false,
+          "why": "closed under the 65m SMA30 (162.19 vs 166.11)"
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 10-day range 4.1× ADR, wide"
+        }
+      },
+      "metrics": {
+        "close": 162.19,
+        "high": 166.18,
+        "low": 157.5501,
+        "ret1_pct": -2.4832,
+        "atr": 6.6115,
+        "atr_pct": 4.0764,
+        "avg_vol_50": 2243652.0,
+        "adv": 318574571.4658,
+        "sma5": 165.758,
+        "sma5_dist_pct": -2.1525,
+        "sma25": 147.5616,
+        "sma50": 145.1632,
+        "sma200": 133.7373,
+        "sma200_slope_ok": true,
+        "ema9": 160.6413,
+        "ema21": 153.4718,
+        "ema9_dist_atr": 0.2342,
+        "vcp": 4.2618,
+        "vcp_prev": 23.3593,
+        "compression_days": 2,
+        "rs_raw": 125.666,
+        "rs": 93,
+        "adr_pct": 3.6629,
+        "last_range_adr": 1.4954,
+        "off_52w_high_pct": -13.2395,
+        "n_bars": 551,
+        "ret21_pct": 13.3958,
+        "ret63_pct": 11.5858,
+        "ret126_pct": 22.2876,
+        "ext": 2.8774,
+        "above_sma200": true,
+        "a_range10_adr": 4.0954,
+        "a_range5_adr": 2.0334,
+        "a_close5_adr": 0.7962,
+        "a_thrust60_pct": 58.6662,
+        "a_off_high20_pct": -4.386,
+        "range10_lo": 145.3,
+        "range10_hi": 169.63,
+        "high20": 169.63,
+        "b_rally20_atr": 5.808,
+        "b_range5_atr": 1.8271,
+        "b_range12_atr": 3.9053,
+        "b_dist_hi10_atr": 1.1253,
+        "b_slope_h8": 0.2652,
+        "b_slope_l8": 0.2171,
+        "b_thrust_atr": 6.6323,
+        "b_pullback_atr": 1.8271,
+        "b_bars_since_peak": 4,
+        "b_last_range_atr": 1.3053,
+        "gap_open": false,
+        "c_ok_data": true,
+        "c_kind": "pullback base",
+        "c_peak_i": 546,
+        "c_start_i": 500,
+        "c_base_len": 4,
+        "c_thrust_pct": 58.6662,
+        "c_thrust_atr": 9.4864,
+        "c_thrust_bars": 46,
+        "c_depth_pct": 7.1213,
+        "c_depth_atr": 1.8271,
+        "c_retrace": 0.1926,
+        "c_peak": 169.63,
+        "c_slope_up_atr": 0.0,
+        "c_slope_lo_atr": 0.0,
+        "c_touch_up": 1,
+        "c_touch_lo": 1,
+        "c_upper": 169.63,
+        "c_lower": 157.5501,
+        "c_upper_next": 169.63,
+        "c_width_atr": 1.8271,
+        "c_width0_atr": 1.8271,
+        "c_dist_upper_atr": 1.1253,
+        "c_range5_atr": 1.8271,
+        "c_range_first5_atr": 1.8271,
+        "c_atr5_atr20": 0.9195,
+        "c_close_vs_ema20_atr": 1.2544,
+        "c_close_vs_ema10_atr": 0.3501,
+        "c_closes_under_sma50": 0,
+        "c_close_vs_sma50_atr": 2.5753,
+        "c_closes_above_ema20": 1.0,
+        "c_vol_dryup": 0.949,
+        "c_line_up": [
+          546,
+          169.6300048828125,
+          550,
+          169.6300048828125
+        ],
+        "c_line_lo": [
+          546,
+          157.5500946044922,
+          550,
+          157.5500946044922
+        ],
+        "c_undercut_reclaim": false,
+        "t_ok": false,
+        "d_ok_data": true,
+        "d_found": false,
+        "pattern_d_ok": false,
+        "pattern_d_why": [
+          "no clean channel"
+        ],
+        "peg_found": false,
+        "industry": "Semiconductor Equipment & Materials",
+        "sector": "Technology",
+        "group_pctl": 95,
+        "group_n": 24,
+        "group_level": "industry",
+        "leader": [],
+        "c_shape": "flat base",
+        "pattern_a_ok": false,
+        "pattern_a_why": [
+          "10-day range 4.1× ADR, wide",
+          "last range 1.5× ADR"
+        ],
+        "pattern_b_ok": true,
+        "pattern_b_why": [],
+        "pattern_c_ok": true,
+        "pattern_c_why": [],
+        "carry_days": 0
+      },
+      "sma30_65m": {
+        "sma30_65m": 166.11383260091145,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-08#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-10-29"
+    },
     "ESTC": {
       "list": "Stalk",
       "out_reason": "",
@@ -5955,7 +6494,7 @@
         },
         "pattern": {
           "ok": false,
-          "why": "pattern: 1.2 ADR under the base pivot (10-day high); no real prior thrust (2.8 ATR)"
+          "why": "pattern: no real prior thrust (2.8 ATR)"
         }
       },
       "metrics": {
@@ -6113,14 +6652,11 @@
         "leader": [],
         "c_shape": "ascending triangle",
         "c_shape_base": "descending triangle",
-        "pattern_a_ok": false,
-        "pattern_a_why": [
-          "1.2 ADR under the base pivot (10-day high)"
-        ],
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
         "pattern_b_ok": false,
         "pattern_b_why": [
-          "no real prior thrust (2.8 ATR)",
-          "1.3 ATR under the 10-day high"
+          "no real prior thrust (2.8 ATR)"
         ],
         "pattern_c_ok": true,
         "pattern_c_why": [],
@@ -6134,6 +6670,178 @@
         "missing_days": []
       },
       "next_earnings": null
+    },
+    "FIVN": {
+      "list": "Focus",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": true,
+          "why": null
+        }
+      },
+      "metrics": {
+        "close": 35.15,
+        "high": 35.27,
+        "low": 33.66,
+        "ret1_pct": 4.0557,
+        "atr": 1.9263,
+        "atr_pct": 5.4803,
+        "avg_vol_50": 2682972.0,
+        "adv": 86862715.3847,
+        "sma5": 34.19,
+        "sma5_dist_pct": 2.8078,
+        "sma25": 34.034,
+        "sma50": 33.0355,
+        "sma200": 22.8589,
+        "sma200_slope_ok": true,
+        "ema9": 34.5201,
+        "ema21": 34.2686,
+        "ema9_dist_atr": 0.327,
+        "vcp": 23.6495,
+        "vcp_prev": 23.5684,
+        "compression_days": 2,
+        "rs_raw": 158.3688,
+        "rs": 98,
+        "adr_pct": 6.0308,
+        "last_range_adr": 0.7931,
+        "off_52w_high_pct": -12.125,
+        "n_bars": 551,
+        "ret21_pct": 15.7392,
+        "ret63_pct": 38.277,
+        "ret126_pct": 154.3416,
+        "ext": 1.168,
+        "above_sma200": true,
+        "a_range10_adr": 2.4242,
+        "a_range5_adr": 1.8016,
+        "a_close5_adr": 0.8774,
+        "a_thrust60_pct": 92.6782,
+        "a_off_high20_pct": -12.125,
+        "range10_lo": 32.651,
+        "range10_hi": 37.79,
+        "high20": 40.0,
+        "b_rally20_atr": 4.3607,
+        "b_range5_atr": 1.9825,
+        "b_range12_atr": 3.8151,
+        "b_dist_hi10_atr": 1.3705,
+        "b_slope_h8": -0.0095,
+        "b_slope_l8": -0.0338,
+        "b_thrust_atr": 6.5955,
+        "b_pullback_atr": 3.8151,
+        "b_bars_since_peak": 11,
+        "b_last_range_atr": 0.8358,
+        "gap_open": false,
+        "c_ok_data": true,
+        "c_kind": "pullback base",
+        "c_peak_i": 539,
+        "c_start_i": 480,
+        "c_base_len": 11,
+        "c_thrust_pct": 93.1434,
+        "c_thrust_atr": 10.014,
+        "c_thrust_bars": 59,
+        "c_depth_pct": 18.3725,
+        "c_depth_atr": 3.8151,
+        "c_retrace": 0.381,
+        "c_peak": 40.0,
+        "c_slope_up_atr": -0.2618,
+        "c_slope_lo_atr": 0.0,
+        "c_touch_up": 4,
+        "c_touch_lo": 1,
+        "c_upper": 34.4529,
+        "c_lower": 32.651,
+        "c_upper_next": 33.9486,
+        "c_width_atr": 0.9354,
+        "c_width0_atr": 3.5533,
+        "c_dist_upper_atr": -0.3619,
+        "c_range5_atr": 1.9825,
+        "c_range_first5_atr": 3.4055,
+        "c_atr5_atr20": 0.9723,
+        "c_close_vs_ema20_atr": 0.4348,
+        "c_close_vs_ema10_atr": 0.3217,
+        "c_closes_under_sma50": 0,
+        "c_close_vs_sma50_atr": 1.0977,
+        "c_closes_above_ema20": 0.5,
+        "c_vol_dryup": 0.7572,
+        "c_line_up": [
+          539,
+          40.0,
+          550,
+          34.4528590611049
+        ],
+        "c_line_lo": [
+          544,
+          32.6510009765625,
+          550,
+          32.6510009765625
+        ],
+        "c_undercut_reclaim": false,
+        "t_ok": false,
+        "d_ok_data": true,
+        "d_found": false,
+        "pattern_d_ok": false,
+        "pattern_d_why": [
+          "no clean channel"
+        ],
+        "peg_found": false,
+        "industry": "Software—Infrastructure",
+        "sector": "Technology",
+        "group_pctl": 90,
+        "group_n": 70,
+        "group_level": "industry",
+        "leader": [
+          "6m"
+        ],
+        "c_shape": "descending triangle",
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": true,
+        "pattern_b_why": [],
+        "pattern_c_ok": false,
+        "pattern_c_why": [
+          "descending triangle"
+        ],
+        "carry_days": 0
+      },
+      "sma30_65m": {
+        "sma30_65m": 34.3398634592692,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-08#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-09"
     },
     "FROG": {
       "list": "Stalk",
@@ -6766,13 +7474,11 @@
         "c_shape": "flat base",
         "pattern_a_ok": false,
         "pattern_a_why": [
-          "10-day range 2.8× ADR, wide",
-          "1.8 ADR under the base pivot (10-day high)"
+          "10-day range 2.8× ADR, wide"
         ],
         "pattern_b_ok": false,
         "pattern_b_why": [
-          "5-day range 2.3 ATR",
-          "1.8 ATR under the 10-day high"
+          "5-day range 2.3 ATR"
         ],
         "pattern_c_ok": false,
         "pattern_c_why": [
@@ -7357,13 +8063,11 @@
         "c_shape": "flat base",
         "pattern_a_ok": false,
         "pattern_a_why": [
-          "10-day range 3.5× ADR, wide",
-          "1.2 ADR under the base pivot (10-day high)"
+          "10-day range 3.5× ADR, wide"
         ],
         "pattern_b_ok": false,
         "pattern_b_why": [
-          "5-day range 2.4 ATR",
-          "1.4 ATR under the 10-day high"
+          "5-day range 2.4 ATR"
         ],
         "pattern_c_ok": true,
         "pattern_c_why": [],
@@ -7416,7 +8120,7 @@
         },
         "pattern": {
           "ok": false,
-          "why": "pattern: 10-day range 3.3× ADR, wide; 1.1 ATR under the 10-day high"
+          "why": "pattern: 10-day range 3.3× ADR, wide"
         }
       },
       "metrics": {
@@ -7550,13 +8254,10 @@
         "pattern_a_ok": false,
         "pattern_a_why": [
           "10-day range 3.3× ADR, wide",
-          "1.1 ADR under the base pivot (10-day high)",
           "5-day closes span 1.3× ADR"
         ],
-        "pattern_b_ok": false,
-        "pattern_b_why": [
-          "1.1 ATR under the 10-day high"
-        ],
+        "pattern_b_ok": true,
+        "pattern_b_why": [],
         "pattern_c_ok": true,
         "pattern_c_why": [],
         "carry_days": 0
@@ -7824,7 +8525,7 @@
         },
         "pattern": {
           "ok": false,
-          "why": "pattern: 10-day range 7.8× ADR, wide; 1.4 ATR under the 10-day high"
+          "why": "pattern: 10-day range 7.8× ADR, wide"
         }
       },
       "metrics": {
@@ -7987,13 +8688,10 @@
         "c_shape": "flat base",
         "pattern_a_ok": false,
         "pattern_a_why": [
-          "10-day range 7.8× ADR, wide",
-          "1.0 ADR under the base pivot (10-day high)"
+          "10-day range 7.8× ADR, wide"
         ],
-        "pattern_b_ok": false,
-        "pattern_b_why": [
-          "1.4 ATR under the 10-day high"
-        ],
+        "pattern_b_ok": true,
+        "pattern_b_why": [],
         "pattern_c_ok": true,
         "pattern_c_why": [],
         "carry_days": 0
@@ -8621,6 +9319,176 @@
       },
       "next_earnings": "2026-11-04"
     },
+    "MTD": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": false,
+          "why": "VCP 29.9, loose"
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: 5-day range 2.4 ATR"
+        }
+      },
+      "metrics": {
+        "close": 1529.46,
+        "high": 1536.54,
+        "low": 1500.9,
+        "ret1_pct": -0.2622,
+        "atr": 43.9557,
+        "atr_pct": 2.8739,
+        "avg_vol_50": 191394.0,
+        "adv": 271565830.9788,
+        "sma5": 1524.766,
+        "sma5_dist_pct": 0.3079,
+        "sma25": 1433.2776,
+        "sma50": 1422.424,
+        "sma200": 1321.4769,
+        "sma200_slope_ok": true,
+        "ema9": 1514.4719,
+        "ema21": 1475.0627,
+        "ema9_dist_atr": 0.341,
+        "vcp": 29.8652,
+        "vcp_prev": 33.0914,
+        "compression_days": 2,
+        "rs_raw": 104.5236,
+        "rs": 84,
+        "adr_pct": 3.1799,
+        "last_range_adr": 0.7468,
+        "off_52w_high_pct": -3.5479,
+        "n_bars": 551,
+        "ret21_pct": 18.5297,
+        "ret63_pct": 17.9984,
+        "ret126_pct": 14.5663,
+        "ext": 2.6183,
+        "above_sma200": true,
+        "a_range10_adr": 2.301,
+        "a_range5_adr": 2.1912,
+        "a_close5_adr": 1.1399,
+        "a_thrust60_pct": 30.3082,
+        "a_off_high20_pct": -3.5479,
+        "range10_lo": 1473.8101,
+        "range10_hi": 1585.72,
+        "high20": 1585.72,
+        "b_rally20_atr": 6.0215,
+        "b_range5_atr": 2.4245,
+        "b_range12_atr": 2.546,
+        "b_dist_hi10_atr": 1.2799,
+        "b_slope_h8": 0.0184,
+        "b_slope_l8": -0.0034,
+        "b_thrust_atr": 7.2612,
+        "b_pullback_atr": 1.9297,
+        "b_bars_since_peak": 2,
+        "b_last_range_atr": 0.8108,
+        "gap_open": false,
+        "c_ok_data": true,
+        "c_kind": "tight at the highs",
+        "c_peak_i": 546,
+        "c_start_i": 494,
+        "c_base_len": 4,
+        "c_thrust_pct": 30.3082,
+        "c_thrust_atr": 8.3907,
+        "c_thrust_bars": 52,
+        "c_depth_pct": 6.7206,
+        "c_depth_atr": 2.4245,
+        "c_retrace": 0.2889,
+        "c_peak": 1585.72,
+        "c_slope_up_atr": 0.0,
+        "c_slope_lo_atr": 0.0,
+        "c_touch_up": 1,
+        "c_touch_lo": 1,
+        "c_upper": 1585.72,
+        "c_lower": 1479.15,
+        "c_upper_next": 1585.72,
+        "c_width_atr": 2.4245,
+        "c_width0_atr": 2.4245,
+        "c_dist_upper_atr": 1.2799,
+        "c_range5_atr": 2.4245,
+        "c_range_first5_atr": 2.4245,
+        "c_atr5_atr20": 1.0855,
+        "c_close_vs_ema20_atr": 1.1749,
+        "c_close_vs_ema10_atr": 0.4202,
+        "c_closes_under_sma50": 0,
+        "c_close_vs_sma50_atr": 2.4351,
+        "c_closes_above_ema20": 1.0,
+        "c_vol_dryup": 1.0181,
+        "c_line_up": [
+          548,
+          1585.719970703125,
+          550,
+          1585.719970703125
+        ],
+        "c_line_lo": [
+          546,
+          1479.1500244140625,
+          550,
+          1479.1500244140625
+        ],
+        "c_undercut_reclaim": false,
+        "t_ok": false,
+        "d_ok_data": true,
+        "d_found": false,
+        "pattern_d_ok": false,
+        "pattern_d_why": [
+          "no clean channel"
+        ],
+        "peg_found": false,
+        "industry": "Diagnostics & Research",
+        "sector": "Healthcare",
+        "group_pctl": 89,
+        "group_n": 27,
+        "group_level": "industry",
+        "leader": [],
+        "c_shape": "flat base",
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "5-day range 2.4 ATR"
+        ],
+        "pattern_c_ok": true,
+        "pattern_c_why": [],
+        "carry_days": 0
+      },
+      "sma30_65m": {
+        "sma30_65m": 1519.2491658528645,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-08#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-05"
+    },
     "MTDR": {
       "list": "Stalk",
       "out_reason": "",
@@ -9224,13 +10092,11 @@
         "c_shape": "flat base",
         "pattern_a_ok": false,
         "pattern_a_why": [
-          "10-day range 3.6× ADR, wide",
-          "1.9 ADR under the base pivot (10-day high)"
+          "10-day range 3.6× ADR, wide"
         ],
         "pattern_b_ok": false,
         "pattern_b_why": [
-          "5-day range 2.1 ATR",
-          "2.0 ATR under the 10-day high"
+          "5-day range 2.1 ATR"
         ],
         "pattern_c_ok": false,
         "pattern_c_why": [
@@ -10349,14 +11215,12 @@
         "c_shape": "pennant",
         "pattern_a_ok": false,
         "pattern_a_why": [
-          "10-day range 2.5× ADR, wide",
-          "2.1 ADR under the base pivot (10-day high)"
+          "10-day range 2.5× ADR, wide"
         ],
         "pattern_b_ok": false,
         "pattern_b_why": [
           "no real prior thrust (2.5 ATR)",
-          "base gave back 61% of the thrust",
-          "1.7 ATR under the 10-day high"
+          "base gave back 61% of the thrust"
         ],
         "pattern_c_ok": false,
         "pattern_c_why": [
@@ -10609,7 +11473,7 @@
       "next_earnings": "2026-12-01"
     },
     "SN": {
-      "list": "Focus",
+      "list": "Stalk",
       "out_reason": "",
       "gates": {
         "rs": {
@@ -10647,6 +11511,10 @@
         "pattern": {
           "ok": true,
           "why": null
+        },
+        "review": {
+          "ok": false,
+          "why": "pattern review: test"
         }
       },
       "metrics": {
@@ -11416,6 +12284,198 @@
       },
       "next_earnings": "2026-10-28"
     },
+    "VAC": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": true,
+          "why": null
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (1.5 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 104.21,
+        "high": 105.52,
+        "low": 103.165,
+        "ret1_pct": 1.0962,
+        "atr": 3.6286,
+        "atr_pct": 3.482,
+        "avg_vol_50": 485278.0,
+        "adv": 52475498.806,
+        "sma5": 103.598,
+        "sma5_dist_pct": 0.5907,
+        "sma25": 102.6316,
+        "sma50": 106.821,
+        "sma200": 82.3227,
+        "sma200_slope_ok": true,
+        "ema9": 103.3985,
+        "ema21": 103.5642,
+        "ema9_dist_atr": 0.2236,
+        "vcp": 0.0,
+        "vcp_prev": 0.0518,
+        "compression_days": 3,
+        "rs_raw": 127.221,
+        "rs": 94,
+        "adr_pct": 3.2545,
+        "last_range_adr": 0.7014,
+        "off_52w_high_pct": -20.6563,
+        "n_bars": 551,
+        "ret21_pct": 3.5576,
+        "ret63_pct": 6.0014,
+        "ret126_pct": 52.1314,
+        "ext": -0.702,
+        "above_sma200": true,
+        "a_range10_adr": 2.0227,
+        "a_range5_adr": 1.1027,
+        "a_close5_adr": 0.7784,
+        "a_thrust60_pct": 41.9278,
+        "a_off_high20_pct": -3.3482,
+        "range10_lo": 100.96,
+        "range10_hi": 107.82,
+        "high20": 107.82,
+        "b_rally20_atr": 1.5433,
+        "b_range5_atr": 1.0307,
+        "b_range12_atr": 2.8661,
+        "b_dist_hi10_atr": 0.9949,
+        "b_slope_h8": -0.0681,
+        "b_slope_l8": -0.0035,
+        "b_thrust_atr": 3.0369,
+        "b_pullback_atr": 1.7389,
+        "b_bars_since_peak": 7,
+        "b_last_range_atr": 0.649,
+        "gap_open": false,
+        "c_ok_data": true,
+        "c_kind": "pullback base",
+        "c_peak_i": 507,
+        "c_start_i": 453,
+        "c_base_len": 43,
+        "c_thrust_pct": 92.2142,
+        "c_thrust_atr": 17.3646,
+        "c_thrust_bars": 54,
+        "c_depth_pct": 26.2982,
+        "c_depth_atr": 9.5187,
+        "c_retrace": 0.5482,
+        "c_peak": 131.34,
+        "c_slope_up_atr": -0.1825,
+        "c_slope_lo_atr": 0.0,
+        "c_touch_up": 6,
+        "c_touch_lo": 1,
+        "c_upper": 102.8718,
+        "c_lower": 96.8,
+        "c_upper_next": 102.2097,
+        "c_width_atr": 1.6733,
+        "c_width0_atr": 9.3363,
+        "c_dist_upper_atr": -0.3688,
+        "c_range5_atr": 1.0307,
+        "c_range_first5_atr": 5.0735,
+        "c_atr5_atr20": 0.7742,
+        "c_close_vs_ema20_atr": 0.1896,
+        "c_close_vs_ema10_atr": 0.2336,
+        "c_closes_under_sma50": 22,
+        "c_close_vs_sma50_atr": -0.7196,
+        "c_closes_above_ema20": 0.4318,
+        "c_vol_dryup": 0.5766,
+        "c_line_up": [
+          507,
+          131.33999633789062,
+          550,
+          102.87179154616138
+        ],
+        "c_line_lo": [
+          516,
+          96.80000305175781,
+          550,
+          96.80000305175781
+        ],
+        "c_undercut_reclaim": false,
+        "t_ok": false,
+        "d_ok_data": true,
+        "d_found": false,
+        "pattern_d_ok": false,
+        "pattern_d_why": [
+          "no clean channel"
+        ],
+        "peg_found": true,
+        "peg_date": "2026-08-06",
+        "peg_bars_ago": 44,
+        "peg_gap_pct": 8.8756,
+        "peg_vol_mult": 3.8041,
+        "peg_day_low": 101.74,
+        "peg_day_high": 128.01,
+        "peg_gap_day_low": 107.55,
+        "peg_after_high": 131.34,
+        "peg_run_after_pct": 2.6014,
+        "peg_pos": 0.094,
+        "peg_range5_atr": 1.0307,
+        "peg_atr5_20": 0.7742,
+        "peg_higher_low": true,
+        "peg_pivot": 107.82,
+        "peg_ok": true,
+        "peg_why": [],
+        "peg_earnings": true,
+        "industry": "Resorts & Casinos",
+        "sector": "Consumer Cyclical",
+        "group_pctl": 6,
+        "group_n": 10,
+        "group_level": "industry",
+        "leader": [],
+        "c_shape": "descending triangle",
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (1.5 ATR)",
+          "base gave back 55% of the thrust"
+        ],
+        "pattern_c_ok": false,
+        "pattern_c_why": [
+          "pullback 26% (55% of the thrust), too deep",
+          "descending triangle",
+          "lost the 50-day during the base"
+        ],
+        "carry_days": 0
+      },
+      "sma30_65m": {
+        "sma30_65m": 103.84583333333333,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-08#5",
+        "incomplete": 18,
+        "missing_days": []
+      },
+      "next_earnings": "2026-11-04"
+    },
     "VEEV": {
       "list": "Stalk",
       "out_reason": "",
@@ -11998,6 +13058,207 @@
       },
       "next_earnings": "2026-10-27"
     },
+    "WDAY": {
+      "list": "Stalk",
+      "out_reason": "",
+      "gates": {
+        "rs": {
+          "ok": true,
+          "why": null
+        },
+        "sma200": {
+          "ok": false,
+          "why": "SMA200 declining"
+        },
+        "ext": {
+          "ok": true,
+          "why": null
+        },
+        "sma5": {
+          "ok": true,
+          "why": null
+        },
+        "sma65": {
+          "ok": true,
+          "why": null
+        },
+        "ema9": {
+          "ok": true,
+          "why": null
+        },
+        "vcp": {
+          "ok": true,
+          "why": null
+        },
+        "comp": {
+          "ok": true,
+          "why": null
+        },
+        "pattern": {
+          "ok": false,
+          "why": "pattern: no real prior thrust (1.2 ATR)"
+        }
+      },
+      "metrics": {
+        "close": 187.81,
+        "high": 188.265,
+        "low": 183.67,
+        "ret1_pct": 1.9266,
+        "atr": 7.2277,
+        "atr_pct": 3.8484,
+        "avg_vol_50": 3732650.0,
+        "adv": 707060332.3423,
+        "sma5": 186.744,
+        "sma5_dist_pct": 0.5708,
+        "sma25": 190.1316,
+        "sma50": 188.627,
+        "sma200": 156.6395,
+        "sma200_slope_ok": false,
+        "ema9": 187.6716,
+        "ema21": 188.8179,
+        "ema9_dist_atr": 0.0191,
+        "vcp": 2.3986,
+        "vcp_prev": 10.3288,
+        "compression_days": 3,
+        "rs_raw": 110.8461,
+        "rs": 87,
+        "adr_pct": 3.5514,
+        "last_range_adr": 0.7045,
+        "off_52w_high_pct": -24.0865,
+        "n_bars": 551,
+        "ret21_pct": 0.946,
+        "ret63_pct": 35.1637,
+        "ret126_pct": 66.1153,
+        "ext": -0.1125,
+        "above_sma200": true,
+        "a_range10_adr": 2.141,
+        "a_range5_adr": 1.141,
+        "a_close5_adr": 0.7047,
+        "a_thrust60_pct": 78.971,
+        "a_off_high20_pct": -6.5622,
+        "range10_lo": 181.47,
+        "range10_hi": 195.75,
+        "high20": 201.0,
+        "b_rally20_atr": 1.2148,
+        "b_range5_atr": 1.0529,
+        "b_range12_atr": 1.9757,
+        "b_dist_hi10_atr": 1.0986,
+        "b_slope_h8": -0.0562,
+        "b_slope_l8": -0.0396,
+        "b_thrust_atr": 8.9157,
+        "b_pullback_atr": 7.3177,
+        "b_bars_since_peak": 39,
+        "b_last_range_atr": 0.6357,
+        "gap_open": false,
+        "c_ok_data": true,
+        "c_kind": "pullback base",
+        "c_peak_i": 511,
+        "c_start_i": 474,
+        "c_base_len": 39,
+        "c_thrust_pct": 104.0269,
+        "c_thrust_atr": 16.048,
+        "c_thrust_bars": 37,
+        "c_depth_pct": 23.2494,
+        "c_depth_atr": 7.3177,
+        "c_retrace": 0.456,
+        "c_peak": 227.49,
+        "c_slope_up_atr": -0.1292,
+        "c_slope_lo_atr": -0.0071,
+        "c_touch_up": 4,
+        "c_touch_lo": 10,
+        "c_upper": 191.0824,
+        "c_lower": 182.455,
+        "c_upper_next": 190.1488,
+        "c_width_atr": 1.1937,
+        "c_width0_atr": 5.8301,
+        "c_dist_upper_atr": 0.4528,
+        "c_range5_atr": 1.0529,
+        "c_range_first5_atr": 7.3177,
+        "c_atr5_atr20": 0.8043,
+        "c_close_vs_ema20_atr": -0.1407,
+        "c_close_vs_ema10_atr": -0.0047,
+        "c_closes_under_sma50": 1,
+        "c_close_vs_sma50_atr": -0.113,
+        "c_closes_above_ema20": 0.575,
+        "c_vol_dryup": 0.4675,
+        "c_line_up": [
+          511,
+          227.49000549316406,
+          550,
+          191.0823521333582
+        ],
+        "c_line_lo": [
+          520,
+          184.00498962402344,
+          550,
+          182.4550018310547
+        ],
+        "c_undercut_reclaim": false,
+        "t_ok": false,
+        "d_ok_data": true,
+        "d_found": true,
+        "d_window": 150,
+        "d_excluded_last": 0,
+        "d_span": 32,
+        "d_anchor": "high",
+        "d_slope_atr": -0.0143,
+        "d_touch_up": 3,
+        "d_touch_lo": 5,
+        "d_upper": 199.4471,
+        "d_lower": 181.6694,
+        "d_upper_next": 199.3435,
+        "d_lower_next": 181.5659,
+        "d_width_atr": 2.4597,
+        "d_rise_width": -0.1864,
+        "d_pos": 0.3454,
+        "d_dist_upper_atr": -1.6101,
+        "d_dist_lower_atr": 0.8496,
+        "d_low_vs_lower_atr": 0.2768,
+        "d_broke_above": true,
+        "d_broke_ago": 24,
+        "d_max_above_atr": 0.6902,
+        "d_close_vs_ema21_atr": -0.1394,
+        "d_low_vs_ema21_atr": -0.7122,
+        "d_low_vs_ema10_atr": -0.5775,
+        "d_under_sma50": true,
+        "d_stacked": true,
+        "d_state": "lower part of the channel",
+        "pattern_d_ok": false,
+        "pattern_d_why": [
+          "channel not rising",
+          "channel rose only -0.2x its width (sideways)",
+          "closed under the SMA50"
+        ],
+        "peg_found": false,
+        "industry": "Software—Application",
+        "sector": "Technology",
+        "group_pctl": 76,
+        "group_n": 74,
+        "group_level": "industry",
+        "leader": [],
+        "c_shape": "descending triangle",
+        "pattern_a_ok": true,
+        "pattern_a_why": [],
+        "pattern_b_ok": false,
+        "pattern_b_why": [
+          "no real prior thrust (1.2 ATR)"
+        ],
+        "pattern_c_ok": false,
+        "pattern_c_why": [
+          "descending triangle",
+          "lost the 50-day during the base"
+        ],
+        "carry_days": 0
+      },
+      "sma30_65m": {
+        "sma30_65m": 186.91100056966147,
+        "n_buckets": 36,
+        "last_bucket": "2026-10-08#5",
+        "incomplete": 0,
+        "missing_days": []
+      },
+      "next_earnings": "2026-12-01"
+    },
     "XMTR": {
       "list": "Stalk",
       "out_reason": "",
@@ -12182,13 +13443,11 @@
         "pattern_a_ok": false,
         "pattern_a_why": [
           "10-day range 2.9× ADR, wide",
-          "1.2 ADR under the base pivot (10-day high)",
           "5-day closes span 1.5× ADR"
         ],
         "pattern_b_ok": false,
         "pattern_b_why": [
-          "5-day range 2.4 ATR",
-          "1.2 ATR under the 10-day high"
+          "5-day range 2.4 ATR"
         ],
         "pattern_c_ok": true,
         "pattern_c_why": [],

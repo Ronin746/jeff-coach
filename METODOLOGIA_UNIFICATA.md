@@ -190,9 +190,12 @@ Il riepilogo mostra i gruppi più forti con i nomi in lista e il percentile del 
 
 C'è un gate pronto ma spento: `GROUP_FOCUS_MIN_PCTL` (es. 40), che non farebbe essere Focus un nome di un gruppo debole (resta Stalk). Va acceso solo dopo averlo visto sui dati. Sull'08/10 avrebbe tolto SIG, che è in un gruppo al 10° percentile ed era un Focus di Jeff.
 
-**Revisione a occhio del bot (opzionale).** Dopo il calcolo il bot può guardare i Focus. Se uno non è un pattern ammesso, lo **declassa** a Stalk con un motivo in inglese (`state/daily_<data>/review.json`). Il bot:
-- **non può** promuovere un nome;
-- **non può** aggiungerne;
+**Revisione a occhio del bot.** Dopo il calcolo il bot guarda tutta la lista, Focus e Stalk (`state/daily_<data>/review.json`) [RONIN 09/10]:
+- un Focus che non è un pattern ammesso lo **declassa** a Stalk con un motivo in inglese;
+- uno Stalk lo **promuove** a Focus solo se l'unico gate aperto è il pattern (le letture A/B non lo vedono, il grafico sì). Con un gate numerico aperto il motore rifiuta la promozione e lo scrive nel riepilogo.
+
+Il bot:
+- **non può** aggiungere nomi che non sono in lista;
 - **non può** toccare i gate.
 
 Può anche dare il nome al pattern (flag, pennant, box…) e riscrivere la frase.
