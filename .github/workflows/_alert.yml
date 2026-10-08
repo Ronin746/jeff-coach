@@ -43,9 +43,9 @@ jobs:
           echo "oggi=$OGGI" >> "$GITHUB_OUTPUT"
           echo "Turno $T, ora New York $H, dal vivo: ${{ vars.CLOUD_ALERT_LIVE == 'true' }}"
           vai=true
-          # orari utili (New York): A dalle 09:00 alle 13:00, B dalle 11:30 alle 16:00.
+          # orari utili (New York): A dalle 07:45 alle 13:00, B dalle 11:30 alle 16:00.
           # I cron sono due o tre per turno (ora legale/solare USA e riserva se GitHub ne salta uno).
-          if [ "$T" = "A" ] && { [ "$H" -lt 0900 ] || [ "$H" -ge 1300 ]; }; then vai=false; echo "fuori orario per A"; fi
+          if [ "$T" = "A" ] && { [ "$H" -lt 0745 ] || [ "$H" -ge 1300 ]; }; then vai=false; echo "fuori orario per A"; fi
           if [ "$T" = "B" ] && { [ "$H" -lt 1130 ] || [ "$H" -ge 1600 ]; }; then vai=false; echo "fuori orario per B"; fi
           if [ "$T" != "prova" ] && [ "$vai" = "true" ]; then
             WF=$(basename "${GITHUB_WORKFLOW_REF%@*}")      # alert-a.yml / alert-b.yml (il workflow che chiama)
