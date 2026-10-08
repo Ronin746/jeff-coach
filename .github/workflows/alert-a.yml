@@ -1,0 +1,23 @@
+name: Alert turno A (fino alle 19:00 Roma)
+
+# Parte prima dell'apertura e manda fino alla barra delle 13:00 di New York (19:00 Roma).
+# 12:15 / 13:15 / 13:45 UTC: con l'ora legale USA parte il primo (08:15 NY), con l'ora solare il secondo
+# (08:15 NY: il primo esce perché troppo presto). Gli altri sono la riserva se GitHub ne salta uno:
+# escono subito se il turno è già attivo.
+on:
+  schedule:
+    - cron: "15 12 * * 1-5"
+    - cron: "15 13 * * 1-5"
+    - cron: "45 13 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  turno:
+    uses: ./.github/workflows/_alert.yml
+    with:
+      turno: A
+    secrets: inherit

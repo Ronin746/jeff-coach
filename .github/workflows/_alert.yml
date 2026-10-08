@@ -1,0 +1,111 @@
+name: Turno alert (comune)
+
+# Usato da alert-a.yml e alert-b.yml. Fa in cloud quello che avvia.py fa sul PC: alert di Sydney, scanner
+# di Remy ogni barra da 5 minuti e (solo turno A) sync delle watchlist di Remy alle 15:00 di Roma.
+#
+# Passaggio di turno alle 13:00 di New York (19:00 Roma; 18:00 nelle settimane del cambio d'ora sfasato):
+#   Remy:   A manda fino alla barra che chiude alle 13:00, B dalla barra delle 13:05.
+#   Sydney: A fino alle 13:04:59, B dalle 13:05:00.
+# B parte circa un'ora prima e resta muto (segna come già fatto quello che sta mandando A); alle 13:05 A
+# salva il suo stato sul ramo "stato-alert" ed esce, B lo unisce al proprio prima di mandare.
+#
+# Prova o dal vivo: finché la variabile del repo CLOUD_ALERT_LIVE non vale "true", i messaggi vanno a un
+# finto Discord interno (cloud/sink.py) e finiscono in data/cloud/AAAA-MM-GG-<turno>.jsonl. Dal vivo servono
+# i secrets COACH_ALERT_DISCORD_WEBHOOK_URL (Sydney) e REMY_DISCORD_WEBHOOK_URL (Remy).
+on:
+  workflow_call:
+    inputs:
+      turno:
+        type: string
+        required: true
+
+env:
+  PYTHONUTF8: "1"
+  AVVIA_LOG_STDOUT: "1"
+  AVVIA_MUTO_URL: http://127.0.0.1:8765/muto
+  PASSAGGIO_NY: "13:00"
+  COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ vars.CLOUD_ALERT_LIVE == 'true' && secrets.COACH_ALERT_DISCORD_WEBHOOK_URL || 'http://127.0.0.1:8765/sydney' }}
+  DISCORD_WEBHOOK_URL: ${{ vars.CLOUD_ALERT_LIVE == 'true' && secrets.REMY_DISCORD_WEBHOOK_URL || 'http://127.0.0.1:8765/remy' }}
+
+jobs:
+  turno:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - name: Partire adesso?
+        id: g
+        env:
+          GH_TOKEN: ${{ github.token }}
+          T: ${{ inputs.turno }}
+        run: |
+          OGGI=$(TZ=America/New_York date +%F); H=$(TZ=America/New_York date +%H%M)
+          echo "oggi=$OGGI" >> "$GITHUB_OUTPUT"
+          echo "Turno $T, ora New York $H, dal vivo: ${{ vars.CLOUD_ALERT_LIVE == 'true' }}"
+          vai=true
+          # orari utili (New York): A dalle 07:45 alle 13:00, B dalle 11:30 alle 16:00.
+          # I cron sono due o tre per turno (ora legale/solare USA e riserva se GitHub ne salta uno).
+          if [ "$T" = "A" ] && { [ "$H" -lt 0745 ] || [ "$H" -ge 1300 ]; }; then vai=false; echo "fuori orario per A"; fi
+          if [ "$T" = "B" ] && { [ "$H" -lt 1130 ] || [ "$H" -ge 1600 ]; }; then vai=false; echo "fuori orario per B"; fi
+          if [ "$T" != "prova" ] && [ "$vai" = "true" ]; then
+            n=$(gh run list -R "$GITHUB_REPOSITORY" -w "${{ github.workflow }}" -s in_progress --json databaseId \
+                 -q "[.[] | select(.databaseId != ${{ github.run_id }})] | length")
+            if [ "$n" != "0" ]; then vai=false; echo "turno $T già attivo"; fi
+          fi
+          echo "vai=$vai" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        if: steps.g.outputs.vai == 'true'
+        with:
+          python-version: "3.13"
+          cache: pip
+      - if: steps.g.outputs.vai == 'true'
+        run: pip install -r requirements.txt -r tv-scanner/requirements.txt
+      - uses: actions/cache/restore@v4
+        if: steps.g.outputs.vai == 'true' && inputs.turno != 'prova'
+        with:
+          path: |
+            dati/state/alerts
+            dati/remy_sync_ultimo.txt
+            tv-scanner/signal_state.json
+          key: alert-state-${{ inputs.turno }}-${{ steps.g.outputs.oggi }}-${{ github.run_id }}
+          restore-keys: |
+            alert-state-${{ inputs.turno }}-
+      - name: Sydney e Remy
+        if: steps.g.outputs.vai == 'true'
+        run: |
+          nohup python cloud/sink.py > /tmp/sink.log 2>&1 &
+          sleep 1
+          case "${{ inputs.turno }}" in
+            prova) python avvia.py --once ;;
+            A) python avvia.py --fino-chiusura --invia-fino "$PASSAGGIO_NY" --stato-git ;;
+            B) python avvia.py --fino-chiusura --invia-da "$PASSAGGIO_NY" --stato-git --senza-sync ;;
+          esac
+      - name: Registro
+        if: always() && steps.g.outputs.vai == 'true'
+        run: |
+          F="data/cloud/${{ steps.g.outputs.oggi }}-${{ inputs.turno }}.jsonl"
+          echo "### Turno ${{ inputs.turno }} ${{ steps.g.outputs.oggi }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f cloud/sink_out.jsonl ]; then
+            echo "Messaggi registrati: $(wc -l < cloud/sink_out.jsonl)" >> "$GITHUB_STEP_SUMMARY"
+            mkdir -p data/cloud && cat cloud/sink_out.jsonl >> "$F"
+          fi
+          grep -E "passaggio|stato per|fine turno|muto \(" logs/locale.log 2>/dev/null | tail -n 40 || true
+          tail -n 40 logs/remy.log 2>/dev/null || true
+      - uses: actions/cache/save@v4
+        if: always() && steps.g.outputs.vai == 'true' && inputs.turno != 'prova'
+        with:
+          path: |
+            dati/state/alerts
+            dati/remy_sync_ultimo.txt
+            tv-scanner/signal_state.json
+          key: alert-state-${{ inputs.turno }}-${{ steps.g.outputs.oggi }}-${{ github.run_id }}
+      - name: Commit (watchlist di Remy e registro)
+        if: always() && steps.g.outputs.vai == 'true'
+        run: |
+          git config user.name "jeff-coach-bot"
+          git config user.email "jeff-coach-bot@users.noreply.github.com"
+          git add data/cloud 2>/dev/null || true
+          [ "${{ inputs.turno }}" = "A" ] && git add tv-scanner/pivot_wl_*.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Alert cloud ${{ steps.g.outputs.oggi }} turno ${{ inputs.turno }}"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 10; done

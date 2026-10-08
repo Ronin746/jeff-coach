@@ -1,0 +1,19 @@
+name: Alert prova (un giro)
+
+# Un solo giro di Sydney, Remy e sync watchlist, senza mandare niente: si fa partire cambiando cloud/prova.txt.
+on:
+  push:
+    branches: [main]
+    paths: ["cloud/prova.txt"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  turno:
+    uses: ./.github/workflows/_alert.yml
+    with:
+      turno: prova
+    secrets: inherit

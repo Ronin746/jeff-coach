@@ -15,10 +15,15 @@ Uso:
   avvia.py --dry-run     prova: calcola tutto ma non manda niente e non salva lo stato di Remy
   avvia.py --once        un solo giro di tutto e poi esce (anche fuori seduta, per provare)
 
-In cloud (GitHub Actions, .github/workflows/alert.yml):
-  avvia.py --fino-chiusura --max-minuti 335
-      esce da solo 5 minuti dopo la chiusura (codice 0) oppure dopo 335 minuti se la seduta non è finita
-      (codice 3: il workflow fa partire il secondo turno, che riprende lo stato salvato).
+In cloud (GitHub Actions, due turni che si accavallano, vedi .github/workflows/_alert.yml):
+  avvia.py --fino-chiusura --invia-fino 13:00 --stato-git      turno A
+  avvia.py --fino-chiusura --invia-da 13:00 --stato-git --senza-sync    turno B
+      L'ora è quella di New York ed è la chiusura di una barra da 5 minuti (13:00 NY = 19:00 Roma).
+      Remy: A manda fino alla barra che chiude alle 13:00 compresa, B dalla barra delle 13:05.
+      Sydney: A manda fino alle 13:04:59, B dalle 13:05:00. Nessun buco e nessuna sovrapposizione.
+      B gira già da prima ma resta muto (segna come fatto quello che vede, perché lo sta mandando A).
+      Alle 13:05 A salva il suo stato ed esce; B lo unisce al proprio prima del suo primo invio.
+      Nelle chiusure anticipate (13:00 o prima) A fa tutta la seduta e B esce subito.
 """
 from __future__ import annotations
 
@@ -65,6 +70,7 @@ def load_env() -> None:
 load_env()
 sys.path.insert(0, str(BASE))
 from jeffcoach import alerts, config as C  # noqa: E402  (dopo load_env: config legge le variabili)
+from jeffcoach import discord as D  # noqa: E402
 from jeffcoach.calendar_us import ET, ROME, close_et, is_session, now_et  # noqa: E402
 
 LOG_DIR = BASE / "logs"
@@ -96,29 +102,139 @@ def single_instance() -> socket.socket | None:
         return None
 
 
+# ------------------------------------------------------------------ turni (solo in cloud)
+class Turno:
+    """Finestra in cui questo processo manda le notifiche. Senza --invia-da/--invia-fino manda sempre (PC)."""
+
+    def __init__(self, da: str | None, fino: str | None, stato_git: bool):
+        self.da_s, self.fino_s, self.stato_git = da, fino, stato_git
+        self.lock_coach = threading.Lock()    # tenuti durante ogni giro: l'unione dello stato li aspetta
+        self.lock_remy = threading.Lock()
+        self.unito = False
+
+    def _hm(self, s: str | None, d) -> datetime | None:
+        if not s:
+            return None
+        h, m = map(int, s.split(":"))
+        return datetime(d.year, d.month, d.day, h, m, tzinfo=ET)
+
+    def bounds(self):
+        """(da, fino) come ore di chiusura barra di oggi, tenendo conto delle chiusure anticipate."""
+        d = now_et().date()
+        da, fino = self._hm(self.da_s, d), self._hm(self.fino_s, d)
+        if is_session(d):
+            c = close_et(d)
+            if fino and fino >= c:
+                fino = None                    # chiusura anticipata: A fa tutta la seduta
+        return da, fino
+
+    def fase(self, t: datetime, remy: bool) -> str:
+        """'invia', 'muto' (prima della propria finestra: registra senza mandare) o 'salta' (dopo la finestra).
+
+        Remy: t è la chiusura della barra (A fino a 13:00 compresa, B dalla 13:05).
+        Sydney: t è l'ora del giro (A prima delle 13:05:00, B dalle 13:05:00): nessun buco tra i due.
+        """
+        da, fino = self.bounds()
+        if da is not None:
+            ok = t > da if remy else t >= da + timedelta(minutes=5)
+            if not ok:
+                return "muto"
+        if fino is not None:
+            ok = t <= fino if remy else t < fino + timedelta(minutes=5)
+            if not ok:
+                return "salta"     # A non registra niente dopo il passaggio: è roba di B
+        return "invia"
+
+    def finito_a(self) -> bool:
+        """Turno A: passata la propria finestra."""
+        _, fino = self.bounds()
+        return fino is not None and now_et() >= fino + timedelta(minutes=5)
+
+    def nessun_invio_oggi(self) -> bool:
+        da, _ = self.bounds()
+        d = now_et().date()
+        return da is not None and (not is_session(d) or da >= close_et(d))
+
+    def forse_unisci(self) -> None:
+        """Turno B: prima del primo invio unisce lo stato di A (una volta), fermando per un attimo l'altro giro."""
+        da, _ = self.bounds()
+        if not self.stato_git or self.unito or da is None or now_et() < da + timedelta(minutes=5):
+            return
+        with self.lock_coach, self.lock_remy:
+            if self.unito:
+                return
+            try:
+                r = subprocess.run([sys.executable, str(BASE / "cloud" / "stato.py"), "unisci", now_et().date().isoformat()],
+                                   capture_output=True, text=True, timeout=240)
+                log.info("passaggio di turno: %s", (r.stdout or r.stderr).strip()[-300:])
+            except Exception as e:
+                log.warning("passaggio di turno non riuscito: %s", e)
+            self.unito = True
+
+    def salva(self) -> None:
+        if not self.stato_git:
+            return
+        r = subprocess.run([sys.executable, str(BASE / "cloud" / "stato.py"), "salva", now_et().date().isoformat()],
+                           capture_output=True, text=True, timeout=180)
+        log.info("stato per il turno B: %s", (r.stdout or r.stderr).strip()[-300:])
+
+
+TURNO = Turno(None, None, False)
+_MUTO = threading.local()
+_send_alert_vero = alerts.send_alert
+
+
+def _send_alert_turno(title: str, body: str) -> dict:
+    """Fuori dalla propria finestra: segna l'alert come fatto ma non lo manda (o lo manda al finto Discord)."""
+    if not getattr(_MUTO, "on", False):
+        return _send_alert_vero(title, body)
+    log.info("muto (fuori turno): %s", title)
+    url = os.environ.get("AVVIA_MUTO_URL")
+    if url:
+        try:
+            D._request(url.rstrip("/") + "-sydney", "POST", json.dumps({"embeds": [{"title": title, "description": body}]}).encode(),
+                       "application/json")
+        except Exception:
+            pass
+    return {"sent": True, "muted": True}
+
+
+alerts.send_alert = _send_alert_turno
+
+
 # ------------------------------------------------------------------ alert Jeff Coach
 def coach_loop(dry: bool, stop: threading.Event) -> None:
     lg = logging.getLogger("coach")
     while not stop.is_set():
         if alerts.in_window():
-            try:
-                lg.info(json.dumps(alerts.run_once(dry_run=dry), default=str))
-            except Exception as e:
-                lg.exception("giro alert: %s", e)
+            TURNO.forse_unisci()
+            fase = TURNO.fase(now_et(), remy=False)
+            if fase == "salta":
+                stop.wait(30)
+                continue
+            with TURNO.lock_coach:
+                _MUTO.on = fase == "muto"
+                try:
+                    lg.info(("[muto] " if _MUTO.on else "") + json.dumps(alerts.run_once(dry_run=dry), default=str))
+                except Exception as e:
+                    lg.exception("giro alert: %s", e)
             stop.wait(C.POLL_SEC)
         else:
             stop.wait(30)
 
 
 # ------------------------------------------------------------------ scanner di Remy
-def remy_scan(dry: bool) -> int:
+def remy_scan(dry: bool, muto: bool = False) -> int:
     cmd = [sys.executable, "refresh_yfinance.py", "--scan"] + (["--dry-run"] if dry else [])
+    env = os.environ.copy()
+    if muto:      # fuori turno: Remy registra i segnali come fatti ma li manda al finto Discord (o a nessuno)
+        env["DISCORD_WEBHOOK_URL"] = (os.environ.get("AVVIA_MUTO_URL") or "http://127.0.0.1:9").rstrip("/") + "-remy"
     with open(LOG_DIR / "remy.log", "a", encoding="utf-8") as f:
-        f.write(f"{datetime.now(ROME):%Y-%m-%d %H:%M:%S} START {' '.join(cmd[1:])}\n")
+        f.write(f"{datetime.now(ROME):%Y-%m-%d %H:%M:%S} START {' '.join(cmd[1:])}{' [muto]' if muto else ''}\n")
         f.flush()
         try:
             rc = subprocess.run(cmd, cwd=TV, stdout=f, stderr=subprocess.STDOUT, timeout=280,
-                                env=os.environ.copy()).returncode
+                                env=env).returncode
         except subprocess.TimeoutExpired:
             rc = -9
         f.write(f"{datetime.now(ROME):%Y-%m-%d %H:%M:%S} END rc={rc}\n")
@@ -137,8 +253,14 @@ def remy_loop(dry: bool, stop: threading.Event) -> None:
         if stop.is_set():
             break
         if alerts.in_window():
+            bar_close = datetime.fromtimestamp(nxt - offset, tz=ET)
+            TURNO.forse_unisci()
+            fase = TURNO.fase(bar_close, remy=True)
+            if fase == "salta":
+                continue
             try:
-                rc = remy_scan(dry)
+                with TURNO.lock_remy:
+                    rc = remy_scan(dry, muto=fase == "muto")
                 if rc != 0:
                     lg.warning("scan Remy rc=%s (vedi logs/remy.log)", rc)
             except Exception as e:
@@ -203,6 +325,10 @@ def main() -> int:
     ap.add_argument("--once", action="store_true")
     ap.add_argument("--fino-chiusura", action="store_true", help="esce 5 minuti dopo la chiusura NYSE (o subito se oggi non c'è seduta)")
     ap.add_argument("--max-minuti", type=int, default=0, help="esce con codice 3 dopo N minuti se la seduta non è finita")
+    ap.add_argument("--invia-da", help="HH:MM New York: manda solo dalla barra dopo questa (turno B)")
+    ap.add_argument("--invia-fino", help="HH:MM New York: manda fino a questa barra compresa, poi esce (turno A)")
+    ap.add_argument("--stato-git", action="store_true", help="passa lo stato tra i turni sul ramo git stato-alert")
+    ap.add_argument("--senza-sync", action="store_true", help="non aggiorna le watchlist di Remy (lo fa l'altro turno)")
     a = ap.parse_args()
     setup_logging()
     lock = single_instance()
@@ -215,13 +341,20 @@ def main() -> int:
         log.info("Remy scan rc=%s", remy_scan(True))
         remy_sync(True)
         return 0
+    global TURNO
+    TURNO = Turno(a.invia_da, a.invia_fino, a.stato_git)
     t_start = time.time()
+    if TURNO.nessun_invio_oggi():
+        log.info("turno B: oggi la seduta finisce prima del passaggio di turno, niente da fare: esco")
+        return 0
 
     def finito() -> int | None:
         if not a.fino_chiusura:
             return None
         n = now_et()
         if not is_session(n.date()) or n >= close_et(n.date()) + timedelta(minutes=5):
+            return 0
+        if TURNO.finito_a():
             return 0
         if a.max_minuti and time.time() - t_start >= a.max_minuti * 60:
             return 3
@@ -232,7 +365,7 @@ def main() -> int:
         return 0
     stop = threading.Event()
     ts = [threading.Thread(target=f, args=(a.dry_run, stop), daemon=True, name=f.__name__)
-          for f in (coach_loop, remy_loop, sync_loop)]
+          for f in (coach_loop, remy_loop) + (() if a.senza_sync else (sync_loop,))]
     for t in ts:
         t.start()
     try:
@@ -244,6 +377,11 @@ def main() -> int:
                 stop.set()
                 for t in ts:
                     t.join(timeout=300)     # lascia finire la scansione in corso
+                if a.invia_fino:
+                    try:
+                        TURNO.salva()
+                    except Exception as e:
+                        log.warning("stato per il turno B non salvato: %s", e)
                 return rc
             for t in ts:
                 if not t.is_alive():

@@ -46,13 +46,19 @@ La cartella `JeffCoach-locale` (alert, scanner di Remy, sync delle watchlist) no
 
 ## Alert in cloud (Sydney e Remy)
 
-`.github/workflows/alert.yml` fa in cloud quello che `avvia.py` fa sul PC: alert di Sydney, scanner di Remy ogni
-barra da 5 minuti e sync delle watchlist di Remy alle 15:00 di Roma. Parte ogni giorno di borsa alle 15:05 di Roma
-(14:05 con l'ora solare USA) e lavora in due turni, perché un lavoro GitHub dura al massimo 6 ore: il primo turno,
-dopo 335 minuti, fa partire il secondo e gli passa lo stato. Il secondo finisce 5 minuti dopo la chiusura.
+Tre workflow fanno in cloud quello che `avvia.py` fa sul PC (alert di Sydney, scanner di Remy ogni barra da
+5 minuti, sync delle watchlist di Remy alle 15:00 di Roma), divisi in due turni che si accavallano perché un
+lavoro GitHub dura al massimo 6 ore. Il passaggio è alle 13:00 di New York (19:00 Roma):
 
+- **Turno A** (`alert-a.yml`): parte alle 08:15 di New York, manda fino alla barra delle 13:00 compresa
+  (Sydney fino alle 13:04:59), poi salva il suo stato sul ramo `stato-alert` ed esce.
+- **Turno B** (`alert-b.yml`): parte alle 12:00 di New York e resta muto (segna come fatto quello che sta
+  mandando A); alle 13:05 unisce lo stato di A e manda dalla barra delle 13:05 fino alla chiusura.
+- Ogni turno ha due o tre partenze (ora legale/solare USA e riserva se GitHub ne salta una): quelle in più
+  escono subito. Nelle chiusure anticipate A fa tutta la seduta e B non fa niente.
 - **In prova** (finché la variabile del repo `CLOUD_ALERT_LIVE` non vale `true`): i messaggi vanno a un finto
-  Discord interno (`cloud/sink.py`) e finiscono in `data/cloud/AAAA-MM-GG.jsonl`, così si confrontano con il PC.
+  Discord interno (`cloud/sink.py`) e finiscono in `data/cloud/AAAA-MM-GG-A.jsonl` e `-B.jsonl`, con anche
+  quelli "muti" del turno B, così si controlla il passaggio e si confronta con il PC.
 - **Dal vivo**: secrets `COACH_ALERT_DISCORD_WEBHOOK_URL` (Sydney) e `REMY_DISCORD_WEBHOOK_URL` (Remy), variabile
   `CLOUD_ALERT_LIVE=true`, e il PC spento (FERMA-ALERT), altrimenti ogni alert arriva due volte.
 - Un giro di prova a mercato chiuso: cambiare `cloud/prova.txt` e fare push.

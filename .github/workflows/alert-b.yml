@@ -1,0 +1,23 @@
+name: Alert turno B (dalle 19:05 Roma)
+
+# Parte circa un'ora prima del passaggio (13:00 New York = 19:00 Roma) e resta muto fino a lì, poi manda
+# dalla barra delle 13:05 fino alla chiusura.
+# 16:00 / 17:00 / 17:30 UTC: con l'ora legale USA parte il primo (12:00 NY), con l'ora solare il secondo
+# (12:00 NY). Gli altri sono la riserva: escono subito se il turno è già attivo.
+on:
+  schedule:
+    - cron: "0 16 * * 1-5"
+    - cron: "0 17 * * 1-5"
+    - cron: "30 17 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  turno:
+    uses: ./.github/workflows/_alert.yml
+    with:
+      turno: B
+    secrets: inherit
