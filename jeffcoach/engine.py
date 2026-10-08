@@ -171,12 +171,8 @@ def reading_b(m: dict) -> tuple[bool, list[str], list[str]]:
         why.append(f"base gave back {rt:.0%} of the thrust"); sh.append(f"gave back {rt:.0%} of the thrust")
     if m["b_slope_h8"] >= p["trend_slope_atr"] and m["b_slope_l8"] >= p["trend_slope_atr"]:
         why.append("still trending, not consolidated"); sh.append("still trending")
-    if m["b_last_range_atr"] >= p["expansion_range_atr"] and m["ret1_pct"] >= p["expansion_ret_pct"]:
-        why.append(f"expansion bar {m['ret1_pct']:+.1f}%, the 30m high would chase"); sh.append(f"expansion bar {m['ret1_pct']:+.1f}%")
     if m["b_range5_atr"] > p["range5_max_atr"]:
         why.append(f"5-day range {m['b_range5_atr']:.1f} ATR"); sh.append(f"5d range {m['b_range5_atr']:.1f} ATR")
-    if m["b_dist_hi10_atr"] > p["dist_hi10_max_atr"]:
-        why.append(f"{m['b_dist_hi10_atr']:.1f} ATR under the 10-day high"); sh.append(f"{m['b_dist_hi10_atr']:.1f} ATR under the 10d high")
     return (not why), why, sh
 
 

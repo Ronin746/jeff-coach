@@ -119,10 +119,9 @@ La trendline discendente singola non è un ingresso. Non si usano entry, stop e 
 |---|---|
 | range 10 sedute ≤ 2,5× ADR | spinta: rally dei close in 20 barre ≥ 3 ATR |
 | close entro 30% dal massimo a 20 giorni [RONIN 08/10] | range 5 sedute ≤ 2 ATR |
-| ultima barra ≤ 1,3× ADR | close entro 1 ATR dal massimo a 10 giorni |
+| ultima barra ≤ 1,3× ADR | |
 | escursione dei close a 5 giorni ≤ 1,3× ADR | la base non restituisce più di metà della spinta (come la lettura C) [RONIN 08/10] |
 | spinta ≥ 15% nelle ultime 60 barre | non ancora in trend: pendenze di massimi e minimi a 8 barre non entrambe ≥ 0,25 ATR/barra |
-| | niente barra di espansione ieri (≥ 1,5 ATR e ≥ +3%: l'ORH inseguirebbe) |
 
 - **Focus** solo se A **e** B sono strette.
 - **Se non concordano**, il nome va in Stalk e il riepilogo lo scrive ("A tight / B no fresh thrust"). È la regola "se non siete d'accordo lo mettete in stalk che li guardo io" [RONIN 04/10], applicata in automatico.
@@ -333,4 +332,5 @@ Stessi gate e stessa regola dello Stalk della daily, con queste differenze [RONI
 | Drug Manufacturers esclusi (Dua) | Solo Biotechnology | 08/10 |
 | Lettura A: close entro 6% dal massimo a 20 giorni | Entro 30% dal massimo a 20 giorni | 08/10 |
 | Lettura B: pullback dal massimo ≤ 3,5 ATR | La base non restituisce più di metà della spinta | 08/10 |
+| Lettura B: close entro 1 ATR dal massimo a 10 giorni; niente barra di espansione ieri | Tolte | 08/10 |
 | Copiare i Focus di Jeff da X, controllo abbonati | Lista costruita dal processo; controllo FERMO | 04–05/10 |

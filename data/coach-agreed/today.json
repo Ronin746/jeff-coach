@@ -4,9 +4,10 @@
   "ranking_bar": "2026-10-08",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-08 23:03 CEST",
+  "asof_rome": "2026-10-08 23:13 CEST",
   "focus": [
     "RNG",
+    "FIVN",
     "SN",
     "HPQ",
     "ELF"
@@ -14,12 +15,12 @@
   "stalk": [
     "CLMT",
     "DELL",
+    "AMC",
     "APA",
     "BE",
     "CAKE",
     "DDOG",
     "ESTC",
-    "FIVN",
     "FROG",
     "FTNT",
     "HNGE",
@@ -38,6 +39,7 @@
     "ANET",
     "BTE",
     "DAR",
+    "ENTG",
     "PLTR",
     "SBLK",
     "VRNS",
@@ -81,6 +83,34 @@
       "channel": "lower part of the channel",
       "channel_buy_zone": true,
       "channel_lower_next": 76.13,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
+      "ticker": "FIVN",
+      "list": "Focus",
+      "rs": 98,
+      "vcp": 23.65,
+      "sma5": 2.81,
+      "atr_ext": 1.17,
+      "reason_en": "box 32.65–37.79, 12.1% under the high, 2 tight days",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 35.27,
+      "pattern_c": "wide",
+      "pattern_c_shape": "descending triangle",
+      "trendline_next": 33.95,
+      "industry": "Software—Infrastructure",
+      "group_pctl": 90,
+      "leader": [
+        "6m"
+      ],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
       "gap_to_fill": null,
       "triangle_top": null
     },
@@ -221,6 +251,35 @@
       "triangle_top": null
     },
     {
+      "ticker": "AMC",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 6.89,
+      "sma5": 0.91,
+      "atr_ext": 1.09,
+      "reason_en": "under 9 EMA",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 2.96,
+      "pattern_c": "wide",
+      "pattern_c_shape": "flat base",
+      "trendline_next": 3.4,
+      "industry": "Entertainment",
+      "group_pctl": 68,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "failed breakout",
+      "channel_buy_zone": false,
+      "channel_lower_next": 2.66,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
       "ticker": "APA",
       "list": "Stalk",
       "rs": 98,
@@ -257,7 +316,7 @@
       "atr_ext": 1.57,
       "reason_en": "under 65m SMA30 (-5.0%); under 9 EMA",
       "pattern_a": "wide",
-      "pattern_b": "wide",
+      "pattern_b": "tight",
       "open_gates": [
         "sma65",
         "ema9",
@@ -287,10 +346,9 @@
       "atr_ext": 0.05,
       "reason_en": "under 65m SMA30 (-1.0%)",
       "pattern_a": "tight",
-      "pattern_b": "wide",
+      "pattern_b": "tight",
       "open_gates": [
-        "sma65",
-        "pattern"
+        "sma65"
       ],
       "extreme_rvol_ok": false,
       "prior_day_high": 107.95,
@@ -360,36 +418,6 @@
       "group_pctl": 76,
       "leader": [
         "3m"
-      ],
-      "carry_days": 0,
-      "channel": null,
-      "channel_buy_zone": false,
-      "channel_lower_next": null,
-      "gap_to_fill": null,
-      "triangle_top": null
-    },
-    {
-      "ticker": "FIVN",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 23.65,
-      "sma5": 2.81,
-      "atr_ext": 1.17,
-      "reason_en": "pattern 1.4 ATR under the 10d high",
-      "pattern_a": "tight",
-      "pattern_b": "wide",
-      "open_gates": [
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 35.27,
-      "pattern_c": "wide",
-      "pattern_c_shape": "descending triangle",
-      "trendline_next": 33.95,
-      "industry": "Software—Infrastructure",
-      "group_pctl": 90,
-      "leader": [
-        "6m"
       ],
       "carry_days": 0,
       "channel": null,
@@ -925,6 +953,35 @@
       "triangle_top": null
     },
     {
+      "ticker": "ENTG",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp": 4.26,
+      "sma5": -2.15,
+      "atr_ext": 2.88,
+      "reason_en": "under 65m SMA30 (-2.4%)",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 166.18,
+      "pattern_c": "tight",
+      "pattern_c_shape": "flat base",
+      "trendline_next": 169.63,
+      "industry": "Semiconductor Equipment & Materials",
+      "group_pctl": 95,
+      "leader": [],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
       "ticker": "PLTR",
       "list": "Stalk",
       "rs": 93,
@@ -1220,7 +1277,7 @@
       "atr_ext": 2.19,
       "reason_en": "under 65m SMA30 (-0.9%)",
       "pattern_a": "wide",
-      "pattern_b": "wide",
+      "pattern_b": "tight",
       "open_gates": [
         "sma65",
         "pattern"
@@ -1233,7 +1290,7 @@
       "industry": "Software—Application",
       "group_pctl": 76,
       "leader": [],
-      "carry_days": 1,
+      "carry_days": 0,
       "channel": null,
       "channel_buy_zone": false,
       "channel_lower_next": null,
@@ -1277,7 +1334,7 @@
       "atr_ext": 1.35,
       "reason_en": "SMA200 declining",
       "pattern_a": "wide",
-      "pattern_b": "wide",
+      "pattern_b": "tight",
       "open_gates": [
         "sma200",
         "pattern"
@@ -1401,10 +1458,6 @@
       "a": "10-day range 3.9× ADR, wide",
       "b": "tight"
     },
-    "FIVN": {
-      "a": "tight",
-      "b": "1.4 ATR under the 10-day high"
-    },
     "NSIT": {
       "a": "tight",
       "b": "no real prior thrust (2.2 ATR)"
@@ -1459,6 +1512,7 @@
     ],
     "focus_after": [
       "RNG",
+      "FIVN",
       "SN",
       "HPQ",
       "ELF"
@@ -1470,6 +1524,7 @@
     ],
     "joined_focus": [
       "ELF",
+      "FIVN",
       "HPQ",
       "RNG",
       "SN"
@@ -1491,9 +1546,11 @@
       "WT"
     ],
     "joined_list": [
+      "AMC",
       "BTE",
       "DAR",
       "DOCU",
+      "ENTG",
       "ESTC",
       "FIVN",
       "FROG",
@@ -1550,6 +1607,7 @@
       "ZETA": "flat base 5d after +82%, line 34.80"
     },
     "focus_c_wide": {
+      "FIVN": "descending triangle",
       "SN": "descending triangle; range between the lines 4.9 ATR, wide; lost the 50-day during the base"
     }
   },
@@ -1622,7 +1680,9 @@
       "median_rs": 91,
       "n": 24,
       "strong": 13,
-      "in_list": []
+      "in_list": [
+        "ENTG"
+      ]
     },
     {
       "industry": "Electronic Components",

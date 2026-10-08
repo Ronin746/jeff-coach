@@ -85,13 +85,11 @@ PATTERN_A = dict(            # lettura "Dua" (range vs ADR20)
 PATTERN_B = dict(            # lettura "Sydney" (in ATR)
     rally20_min_atr=3.0,       # spinta: rally dei close in 20 barre (nelle ultime 15) >= 3 ATR
     range5_max_atr=2.0,        # range 5 sedute <= 2 ATR
-    dist_hi10_max_atr=1.0,     # close entro 1 ATR dal massimo a 10 giorni
     retrace_max=0.5,           # la base non restituisce più di metà della spinta (Qullamaggie, come la lettura C) [RONIN 08/10]
                                # (sostituisce "pullback <= 3,5 ATR": una base ascendente dopo un ritracciamento è un
                                #  setup di Jeff, es. HPQ "mini ascending triangle base" l'08/10)
     trend_slope_atr=0.25,      # pendenze massimi E minimi a 8 barre >= 0.25 ATR/barra = ancora in trend, non consolidato
-    expansion_range_atr=1.5,   # barra di ieri >= 1.5 ATR ...
-    expansion_ret_pct=3.0,     # ... e >= +3% = barra di espansione (l'ORH insegue)
+    # [RONIN 08/10] tolte: "close entro 1 ATR dal massimo a 10 giorni" e "niente barra di espansione ieri"
 )
 
 # Lettura C (impl., 08/10): struttura con pivot e trendline (Qullamaggie breakout, Kell, Monis). Vedi patterns.py.
