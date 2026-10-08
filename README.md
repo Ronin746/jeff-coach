@@ -43,3 +43,16 @@ I webhook degli alert e di Remy restano solo sul PC, nel file `.env`.
 ## Parte locale
 
 La cartella `JeffCoach-locale` (alert, scanner di Remy, sync delle watchlist) non sta in questo repo perché contiene configurazioni personali. Ha il suo `LEGGIMI.md`.
+
+## Alert in cloud (Sydney e Remy)
+
+`.github/workflows/alert.yml` fa in cloud quello che `avvia.py` fa sul PC: alert di Sydney, scanner di Remy ogni
+barra da 5 minuti e sync delle watchlist di Remy alle 15:00 di Roma. Parte ogni giorno di borsa alle 15:05 di Roma
+(14:05 con l'ora solare USA) e lavora in due turni, perché un lavoro GitHub dura al massimo 6 ore: il primo turno,
+dopo 335 minuti, fa partire il secondo e gli passa lo stato. Il secondo finisce 5 minuti dopo la chiusura.
+
+- **In prova** (finché la variabile del repo `CLOUD_ALERT_LIVE` non vale `true`): i messaggi vanno a un finto
+  Discord interno (`cloud/sink.py`) e finiscono in `data/cloud/AAAA-MM-GG.jsonl`, così si confrontano con il PC.
+- **Dal vivo**: secrets `COACH_ALERT_DISCORD_WEBHOOK_URL` (Sydney) e `REMY_DISCORD_WEBHOOK_URL` (Remy), variabile
+  `CLOUD_ALERT_LIVE=true`, e il PC spento (FERMA-ALERT), altrimenti ogni alert arriva due volte.
+- Un giro di prova a mercato chiuso: cambiare `cloud/prova.txt` e fare push.
