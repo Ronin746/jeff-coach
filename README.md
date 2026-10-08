@@ -50,7 +50,8 @@ Tre workflow fanno in cloud quello che `avvia.py` fa sul PC (alert di Sydney, sc
 5 minuti, sync delle watchlist di Remy alle 15:00 di Roma), divisi in due turni che si accavallano perché un
 lavoro GitHub dura al massimo 6 ore. Il passaggio è alle 13:00 di New York (19:00 Roma):
 
-- **Turno A** (`alert-a.yml`): parte alle 08:15 di New York, manda fino alla barra delle 13:00 compresa
+- **Turno A** (`alert-a.yml`): parte alle 09:15 di New York per essere pronto e manda dall'apertura delle 09:30
+  fino alla barra delle 13:00 compresa
   (Sydney fino alle 13:04:59), poi salva il suo stato sul ramo `stato-alert` ed esce.
 - **Turno B** (`alert-b.yml`): parte alle 12:00 di New York e resta muto (segna come fatto quello che sta
   mandando A); alle 13:05 unisce lo stato di A e manda dalla barra delle 13:05 fino alla chiusura.
