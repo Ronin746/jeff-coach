@@ -67,11 +67,40 @@ def compute_metrics(df: pd.DataFrame, spx_close: pd.Series) -> Optional[dict]:
     m["ext"] = I.atr_ext(close, m["sma50"], atr) if m["sma50"] else None
     m["above_sma200"] = bool(m["sma200"] is not None and close > m["sma200"])
     m.update(pattern_metrics(df, atr, adr_last))
+    m.update(gap_resistance(df, atr))
     try:
         m.update(P.read_structure(df, atr))
     except Exception:                       # una struttura illeggibile non deve togliere il titolo dai calcoli
         m["c_ok_data"] = False
+    try:
+        m.update(P.read_triangle(df, atr))
+    except Exception:
+        m["t_ok"] = False
     return m
+
+
+def gap_resistance(df: pd.DataFrame, atr: float) -> dict:
+    """Gap al ribasso ancora aperto sopra il prezzo (Jeff: "gap down resistance to fill" prima del Focus).
+    Gap = massimo del giorno sotto il minimo del giorno prima; si riempie quando un massimo successivo torna
+    al minimo del giorno prima. Conta il gap aperto più vicino sopra il close, entro GAP_NEAR_ATR."""
+    h, l, c = df.High.to_numpy(dtype=float), df.Low.to_numpy(dtype=float), df.Close.to_numpy(dtype=float)
+    n = len(c)
+    best = None
+    for i in range(max(1, n - C.GAP_LOOKBACK), n):
+        top, bot = l[i - 1], h[i]
+        if top - bot < C.GAP_MIN_ATR * atr:
+            continue
+        if i + 1 < n and h[i + 1:].max() >= top:
+            continue                                   # già riempito
+        if top <= c[-1] or top - c[-1] > C.GAP_NEAR_ATR * atr:
+            continue
+        if best is None or top < best[0]:
+            best = (float(top), float(bot), int(n - 1 - i), df.index[i])
+    if not best:
+        return {"gap_open": False}
+    return {"gap_open": True, "gap_top": best[0], "gap_bottom": best[1], "gap_bars_ago": best[2],
+            "gap_date": str(best[3].date()) if hasattr(best[3], "date") else str(best[3]),
+            "gap_dist_atr": (best[0] - c[-1]) / atr}
 
 
 def pattern_metrics(df: pd.DataFrame, atr: float, adr: Optional[float]) -> dict:
@@ -200,6 +229,10 @@ def focus_gates(m: dict, sma65: Optional[dict]) -> list[Gate]:
     g.append(Gate("comp", cd >= C.COMPRESSION_DAYS_MIN,
                   f"{cd} compression day{'s' if cd != 1 else ''} in the last {C.COMPRESSION_WINDOW}",
                   f"{cd} tight day{'s' if cd != 1 else ''}"))
+    if m.get("gap_open") is not None:
+        g.append(Gate("gap", not m["gap_open"],
+                      f"gap-down resistance to fill at {m.get('gap_top', 0):.2f} ({m.get('gap_date')})",
+                      f"gap to fill {m.get('gap_top', 0):.2f}"))
     a_ok, a_why, a_sh = reading_a(m)
     b_ok, b_why, b_sh = reading_b(m)
     c_ok, c_why, c_sh = P.reading_c(m)
@@ -258,7 +291,7 @@ def universe_check(m: dict, info: dict, ticker: str) -> Optional[str]:
     return None
 
 
-SOFT_GATES = ("pattern", "group")       # non sono gate numerici: se manca solo questo è Stalk
+SOFT_GATES = ("pattern", "group", "gap")   # non sono gate numerici: se manca solo questo è Stalk
 
 
 def classify(m: dict, gates: list[Gate], was_listed: bool = False) -> str:
@@ -273,7 +306,8 @@ def classify(m: dict, gates: list[Gate], was_listed: bool = False) -> str:
         return "Stalk" if fails == ["rs"] else "Out"
     if rs < C.STALK_RS_MIN:
         return "Out"
-    some_tight = m.get("pattern_a_ok") or m.get("pattern_b_ok") or (C.PATTERN_MODE != "AB" and m.get("pattern_c_ok"))
+    some_tight = (m.get("pattern_a_ok") or m.get("pattern_b_ok") or (C.PATTERN_MODE != "AB" and m.get("pattern_c_ok"))
+                  or m.get("t_ok"))          # triangolo ascendente: basta per lo Stalk [RONIN 08/10]
     if len(numeric) <= C.STALK_NEW_MAX_NUMERIC_OPEN and some_tight:
         return "Stalk"
     if was_listed and len(numeric) <= C.STALK_CARRY_MAX_NUMERIC_OPEN:

@@ -160,6 +160,88 @@ def read_structure(df: pd.DataFrame, atr: float) -> dict:
     return out
 
 
+def read_triangle(df: pd.DataFrame, atr: float) -> dict:
+    """Triangolo ascendente (Jeff: HPQ, FROG, EROC, NOK): tetto piatto toccato più volte e minimi crescenti che
+    stringono verso l'apice, prezzo sotto il tetto. È IN PIÙ alla lettura C (che chiede una spinta prima della
+    base): il triangolo vale anche senza spinta, come base di inversione o di continuazione [RONIN 08/10]."""
+    p = C.TRIANGLE
+    c, h, l = (df[k].to_numpy(dtype=float) for k in ("Close", "High", "Low"))
+    n = len(c)
+    out: dict = {"t_ok": False}
+    if n < 70 or not atr:
+        return out
+    ph_all, pl_all = _pivots(h, 1, 1, "high"), _pivots(l, 2, 2, "low")
+    best = None
+    for W in p["windows"]:
+        lo = n - W
+        if np.isnan(h[lo:]).any() or np.isnan(l[lo:]).any():
+            continue
+        # tetto: il livello toccato più volte dai pivot massimi; poche spike possono superarlo, nessun close sopra
+        cand_i = [i for i in ph_all if i >= lo] + [i for i in (n - 2, n - 1)]
+        top, tops = None, []
+        for k in cand_i:
+            lvl = h[k]
+            tt = sorted({i for i in cand_i if abs(h[i] - lvl) <= p["top_tol_atr"] * atr})
+            spikes = int(np.sum(h[lo:] > lvl + p["top_tol_atr"] * atr))
+            if spikes > p["max_spikes"] or np.any(c[n - 3:] > lvl + p["above_top_max_atr"] * atr):
+                continue
+            if len(tt) > len(tops) or (len(tt) == len(tops) and tt and tops and tt[-1] - tt[0] > tops[-1] - tops[0]):
+                top, tops = float(max(h[i] for i in tt)), tt
+        if top is None or len(tops) < p["min_top_touches"] or tops[-1] - tops[0] < p["min_top_spread"]:
+            continue
+        lows = [i for i in pl_all if i >= tops[0] - 3 and i < n - 1]
+        if len(lows) < 2:
+            continue
+        j = lows[-1]
+        for i in lows[:-1]:
+            if j - i < 5:
+                continue
+            slope = (l[j] - l[i]) / (j - i)
+            if slope / atr < p["min_lo_slope_atr"] or slope / atr > p["max_lo_slope_atr"]:
+                continue
+            if (n - 1 - i) < p["min_lo_share"] * (n - 1 - tops[0]) or n - 1 - min(i, tops[0]) < p["min_len"]:
+                continue                               # il supporto deve coprire buona parte del triangolo (no V)
+            line = lambda k: l[i] + slope * (k - i)
+            if any(l[k] < line(k) - p["lo_tol_atr"] * atr for k in range(i, n)):
+                continue
+            touches = sum(1 for k in lows if k >= i and abs(l[k] - line(k)) <= p["lo_tol_atr"] * atr)
+            w0, w1 = top - line(tops[0]), top - line(n - 1)
+            if w1 <= 0 or w0 <= 0 or w1 > p["converge"] * w0 or w1 / atr > p["width_max_atr"]:
+                continue
+            key = (len(tops) + touches, W)
+            if best is None or key > best[0]:
+                best = (key, dict(t_top=top, t_support=float(line(n - 1)), t_support_next=float(line(n)),
+                                  t_len=int(n - 1 - min(i, tops[0])), t_touch_top=len(tops), t_touch_lo=int(touches),
+                                  t_width_atr=float(w1 / atr), t_window=W,
+                                  t_line_lo=(int(i), float(l[i]), n - 1, float(line(n - 1)))))
+    if not best:
+        return out
+    m = best[1]
+    d_top = (m["t_top"] - c[-1]) / atr
+    range5 = (h[-5:].max() - l[-5:].min()) / atr
+    m.update(t_found=True, t_dist_top_atr=float(d_top), t_range5_atr=float(range5))
+    why = []
+    if d_top > p["dist_top_max_atr"]:
+        why.append(f"{d_top:.1f} ATR under the flat top")
+    if d_top < -p["above_top_max_atr"]:
+        why.append("already above the flat top")
+    if c[-1] < m["t_support"] - p["lo_tol_atr"] * atr:
+        why.append("under the rising support")
+    if range5 > p["range5_max_atr"]:
+        why.append(f"5-day range {range5:.1f} ATR")
+    sma50 = I.sma(df.Close, 50).to_numpy()
+    if c[-1] < sma50[-1] - p["sma50_tol_atr"] * atr or sma50[-1] < sma50[-11]:
+        why.append("under a falling 50-day" if sma50[-1] < sma50[-11] else "under the 50-day")
+    m["t_ok"], m["t_why"] = (not why), why
+    out.update(m)
+    return out
+
+
+def describe_triangle(m: dict) -> str:
+    return (f"ascending triangle {m['t_len']}d, flat top {m['t_top']:.2f} ({m['t_touch_top']} touches), "
+            f"rising support {m['t_support_next']:.2f}")
+
+
 def shape(m: dict) -> str:
     p = C.PATTERN_C
     su, sl, flat = m["c_slope_up_atr"], m["c_slope_lo_atr"], p["flat_slope_atr"]
@@ -191,7 +273,17 @@ BAD_SHAPES = {"rising wedge", "channel up", "broadening", "descending triangle"}
 
 
 def reading_c(m: dict) -> tuple[bool, list[str], list[str]]:
-    """Giudizio della lettura C. Ritorna ok, motivi (detail), motivi brevi (card)."""
+    """Giudizio della lettura C. Ritorna ok, motivi (detail), motivi brevi (card).
+    Il triangolo ascendente è un modo in più per passare: se la base non va ma il triangolo sì, C è stretta."""
+    ok, why, sh = _reading_c_base(m)
+    if not ok and m.get("t_ok"):
+        m["c_shape_base"] = m.get("c_shape")
+        m["c_shape"] = "ascending triangle"
+        return True, [], []
+    return ok, why, sh
+
+
+def _reading_c_base(m: dict) -> tuple[bool, list[str], list[str]]:
     p = C.PATTERN_C
     if not m.get("c_ok_data"):
         return False, ["short history"], ["short history"]
@@ -228,6 +320,8 @@ def reading_c(m: dict) -> tuple[bool, list[str], list[str]]:
 def describe(m: dict) -> str:
     """Frase per la card: forma, linea di ingresso, dettagli utili."""
     s = m.get("c_shape") or "base"
+    if s == "ascending triangle" and m.get("t_ok"):
+        return describe_triangle(m)
     extra = []
     if m.get("c_undercut_reclaim"):
         extra.append("undercut & reclaim")

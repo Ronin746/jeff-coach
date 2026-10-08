@@ -268,7 +268,7 @@ def fetch_earnings(symbols: Iterable[str], since: date, workers: int = 8) -> dic
     yf = _yf()
 
     def one(t):
-        res = {"calendar": [], "earnings_dates": [], "errors": []}
+        res = {"calendar": [], "earnings_dates": [], "past_dates": [], "errors": []}
         tk = yf.Ticker(t)
         try:
             cal = tk.calendar or {}
@@ -279,6 +279,8 @@ def fetch_earnings(symbols: Iterable[str], since: date, workers: int = 8) -> dic
             ed = tk.get_earnings_dates(limit=8)
             if ed is not None and len(ed):
                 res["earnings_dates"] = sorted({ix.date().isoformat() for ix in ed.index if ix.date() >= since})
+                res["past_dates"] = sorted({ix.date().isoformat() for ix in ed.index
+                                            if since - timedelta(days=120) <= ix.date() < since})   # per la lista PEG
         except Exception as e:
             res["errors"].append(f"earnings_dates: {str(e)[:80]}")
         return t, res

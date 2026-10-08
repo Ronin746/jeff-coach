@@ -25,6 +25,7 @@ from . import config as C
 from . import data as D
 from . import engine as E
 from . import channel as CH
+from . import peg as PG
 from . import patterns as P
 from .calendar_us import ROME, is_session, prev_session, sessions_from, today_rome, last_sessions
 from .output import card_description, tv_txt, write_atomic
@@ -78,6 +79,13 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
     cand = {s for s in num_ok if metrics[s]["above_sma200"] and (metrics[s]["rs"] or 0) >= C.STALK_RS_THEME_MIN}
     for s in cand:           # lettura D (canale rialzista): solo sui candidati, ~0,04 s a titolo
         add_channel(metrics[s], daily[s])
+    for s in num_ok:         # reazione ritardata agli utili: anche RS 60-69 (Jeff prende ACN a RS 66)
+        m = metrics[s]
+        if (m.get("rs") or 0) >= C.PEG["rs_min"] and m.get("sma200") and m["close"] >= m["sma200"] - C.PEG["sma200_tol_atr"] * m["atr"]:
+            try:
+                m.update(PG.read_peg(daily[s], m["atr"]))
+            except Exception as e:
+                log.warning("PEG %s: %s", s, e)
     info: dict = {}          # mcap/settore freschi: si scaricano in build() solo per i nomi che entrano in lista
     s65 = D.sma30_65m(cand, last_sessions(as_of, 6))
     doc = dict(session=session, as_of=as_of, meta=meta, metrics=metrics, info=info, sma65=s65, industry=industry,
@@ -115,6 +123,29 @@ def channel_watch(rows: dict, s65: dict) -> list[dict]:
                         above_sma30_65m=above, ema9=_r(m["ema9"]), under_ema9=m["close"] <= m["ema9"],
                         atr=_r(m["atr"]), industry=m.get("industry"), group_pctl=m.get("group_pctl")))
     return sorted(out, key=lambda x: (-(x["rs"] or 0), x["ticker"]))
+
+
+def peg_watch(names, metrics, rows, earn, earn_out, out_universe, grp) -> list[dict]:
+    """Reazione ritardata agli utili [RONIN 08/10]: gap confermato dalla data degli utili, prezzo tornato nel range
+    del PEG, base stretta, sopra la SMA200. Fuori chi ha gli utili nella finestra o non passa l'universo."""
+    out = []
+    for s in names:
+        if s in earn_out or s in out_universe:
+            continue
+        m = metrics[s]
+        e = earn.get(s, {})
+        conf = PG.confirm_earnings(m, (e.get("past_dates") or []) + (e.get("calendar") or []))
+        if not conf:
+            continue
+        m["peg_earnings"] = True
+        r = rows.get(s)
+        out.append(dict(ticker=s, list=r.list if r else "Out", rs=m.get("rs"), close=_r(m["close"]),
+                        peg_date=m["peg_date"], gap_pct=_r(m["peg_gap_pct"], 1), pre_gap_close=_r(m["peg_day_low"]),
+                        gap_day_high=_r(m["peg_day_high"]), pivot=_r(m["peg_pivot"]), pos=_r(m.get("peg_pos")),
+                        higher_low=m.get("peg_higher_low"), range5_atr=_r(m["peg_range5_atr"], 1),
+                        industry=(grp.get(s) or {}).get("industry"), group_pctl=(grp.get(s) or {}).get("group_pctl"),
+                        text=PG.describe_peg(m)))
+    return sorted(out, key=lambda x: (x["peg_date"], x["rs"] or 0), reverse=True)     # i più recenti prima
 
 
 def group_strength(doc: dict) -> tuple[dict, dict]:
@@ -190,7 +221,9 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                 and not [g for g in r.fails if g.code not in E.SOFT_GATES])
     def _chan(r):   # lettura D: nome nella parte bassa di un canale (lista a parte, controllata come le altre)
         return r.m.get("pattern_d_ok") and (r.m.get("rs") or 0) >= C.CHANNEL_RS_MIN
+    peg_names = [s for s in doc["num_ok"] if metrics[s].get("peg_ok") and (metrics[s].get("rs") or 0) >= C.PEG["rs_min"]]
     pre = [s for s, r in rows.items() if r.list != "Out" or _near(r) or _chan(r)]
+    pre += [s for s in peg_names if s not in pre]
     need = [s for s in pre if s not in info or "err" in info[s]]
     if need:
         info.update(D.fetch_info(need))
@@ -198,18 +231,20 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
     for s in pre:
         if "err" in info.get(s, {}):
             info_missing.append(s)
-        why = E.universe_check(rows[s].m, info.get(s, {}), s)
+        why = E.universe_check(rows[s].m if s in rows else metrics[s], info.get(s, {}), s)
         if why:
             out_universe[s] = why
-            rows[s].list = "Out"
-            rows[s].out_reason = why
+            if s in rows:
+                rows[s].list = "Out"
+                rows[s].out_reason = why
 
     # utili: tutti i nomi che finirebbero in lista
     listed = [s for s, r in rows.items() if r.list != "Out" or (_chan(r) and s not in out_universe)]
+    listed += [s for s in peg_names if s not in listed and s not in out_universe]
     window = sessions_from(session, C.EARNINGS_SESSIONS)
     lo, hi = window[0].isoformat(), window[-1].isoformat()
     earn = dict(earn or {})
-    missing = [s for s in listed if s not in earn]
+    missing = [s for s in listed if s not in earn or (s in peg_names and "past_dates" not in earn[s])]
     if missing:
         earn.update(D.fetch_earnings(missing, since=as_of))
     earn_out, earn_next, earn_missing, earn_on_ref = {}, {}, [], []
@@ -228,8 +263,10 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
         if as_of.isoformat() in dates:
             earn_on_ref.append(s)
     for s in earn_out:
-        rows[s].list = "Out"
-        rows[s].out_reason = f"earnings {earn_out[s]}"
+        if s in rows:
+            rows[s].list = "Out"
+            rows[s].out_reason = f"earnings {earn_out[s]}"
+    pegw = peg_watch(peg_names, metrics, rows, earn, earn_out, out_universe, grp)
     chan = channel_watch(rows, s65)
 
     # revisione a occhio del bot: può solo DECLASSARE (Focus -> Stalk) o cambiare il testo, mai promuovere
@@ -259,6 +296,8 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             leader=m.get("leader") or [], carry_days=m.get("carry_days", 0),
             channel=m.get("d_state") if m.get("d_found") else None, channel_buy_zone=bool(m.get("pattern_d_ok")),
             channel_lower_next=_r(m.get("d_lower_next")),
+            gap_to_fill=_r(m.get("gap_top")) if m.get("gap_open") else None,
+            triangle_top=_r(m.get("t_top")) if m.get("t_ok") else None,
         )
 
     focus = sorted([r for r in rows.values() if r.list == "Focus"], key=lambda r: (-(r.m["rs"] or 0), r.ticker))
@@ -309,6 +348,13 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
         pattern_c_vs_decision=pattern_c_compare(rows),
         top_groups=top_groups(groups, rows),
         channel_watch=chan,
+        peg_watch=pegw,
+        triangles=[dict(ticker=t, list=r.list, top=_r(r.m["t_top"]), support_next=_r(r.m["t_support_next"]),
+                        touches_top=r.m["t_touch_top"], length=r.m["t_len"], rs=r.m.get("rs"))
+                   for t, r in sorted(rows.items()) if r.m.get("t_ok") and not r.out_reason
+                   and (r.m.get("rs") or 0) >= C.RS_FOCUS_MIN],
+        gap_to_fill={t: _r(r.m["gap_top"]) for t, r in rows.items()
+                     if r.list != "Out" and any(g.code == "gap" and not g.ok for g in r.gates)},
     )
     detail = dict(agreed, funnel=dict(downloaded=doc["n_downloaded"], stale_last_bar=len(doc["stale"]),
                                       universe_numeric=len(doc["num_ok"]), candidates=len(doc["cand"]),
@@ -403,6 +449,19 @@ def summary_it(res: dict, doc: dict) -> str:
             L.append("  sopra SMA30 65m ed EMA9: " + "; ".join(f(c) for c in ok))
         if wait:
             L.append("  sotto la SMA30 65m (alert se la recupera): " + "; ".join(f(c) for c in wait))
+    pw = a.get("peg_watch") or []
+    if pw:
+        L.append(f"Reazione ritardata agli utili ({len(pw)}): " + "; ".join(
+            f"{p['ticker']} (utili {p['peg_date'][5:]} +{p['gap_pct']:.0f}%, pivot {p['pivot']}"
+            + (", minimo crescente" if p["higher_low"] else "") + ")" for p in pw))
+    tri = a.get("triangles") or []
+    if tri:
+        L.append(f"Triangoli ascendenti ({len(tri)}): " + "; ".join(
+            f"{t['ticker']} (tetto {t['top']}, {t['touches_top']} tocchi, {t['list']})" for t in tri))
+    gp = a.get("gap_to_fill") or {}
+    if gp:
+        L.append("Gap al ribasso da riempire (restano Stalk finché non lo riempiono): " +
+                 "; ".join(f"{t} {v}" for t, v in sorted(gp.items())))
     nm = res["detail"].get("near_misses") or {}
     if nm:
         L.append(f"Numeri ok ma senza pattern di continuation (fuori lista): {', '.join(sorted(nm))}")

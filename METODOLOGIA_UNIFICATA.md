@@ -175,6 +175,12 @@ Imparata dai grafici di Ronin dell'08/10 (XLK, NET, CRWD, FTNT, RNG, RBRK, SMCI)
 - **Alert Sydney "· Channel"**: per i nomi della lista che hanno chiuso **sotto** la SMA30 65m, un alert (una volta per nome al giorno) quando in seduta il prezzo torna sopra la SMA30 65m calcolata con il bucket in corso, anche se è ancora sotto la EMA9. È un "guardalo", non un ingresso Focus. Spegnibile con `CHANNEL_ALERT = False`.
 - Non cambia Focus/Stalk: escono gli stessi nomi di prima. Gli utili e i gate di universo valgono anche per la lista canale; gli Stalk scaduti possono restarci (spesso sono proprio i pullback nel canale).
 
+### Regole dai post per abbonati di Jeff (dal 09/10) [RONIN 08/10]
+
+- **Gap da riempire** (`gap` in `focus_gates`, gate "soft"): un gap al ribasso degli ultimi 60 giorni ancora aperto sopra il prezzo, entro 3 ATR, tiene il nome in **Stalk** finché un massimo non torna al minimo del giorno prima del gap (XLK, ESTC, NOW, FRSH). Nel riepilogo: "Gap al ribasso da riempire".
+- **Triangolo ascendente** (`patterns.read_triangle`): tetto piatto toccato almeno 2 volte (al massimo 2 spike sopra, nessun close sopra nelle ultime 3 sedute), supporto che sale (0,03–0,15 ATR a seduta) dalla prima metà del triangolo, larghezza che si stringe (≤ 75% di quella iniziale, ≤ 3,5 ATR), durata ≥ 15 sedute, close entro 1,5 ATR sotto il tetto, range 5 giorni ≤ 2,5 ATR, sopra una SMA50 che non scende. È **in più** alla lettura C: se la base non passa ma il triangolo sì, C è stretta; e il triangolo basta come pattern per lo Stalk. Nel riepilogo: "Triangoli ascendenti".
+- **Reazione ritardata agli utili** (`peg.py`, lista `peg_watch`): gap ≥ 4% (o 1 ATR) con volume ≥ 1,5× la media (o gap ≥ 8%) di 4–45 sedute fa, **confermato dalla data degli utili**; prezzo tornato nel range del PEG (dal close prima del gap al massimo del giorno del gap), base stretta, sopra la SMA200, RS ≥ 60. Lista a parte nel riepilogo, non cambia Focus/Stalk.
+
 ## 6b. Forza del gruppo (dal 09/10, per ora solo mostrata)
 
 - **Gruppo:** l'industria Yahoo, circa 145 gruppi. La mappa titolo → industria si rinnova una volta a settimana in `state/industry_map.json`, con uno screener per industria.
@@ -220,12 +226,15 @@ Può anche dare il nome al pattern (flag, pennant, box…) e riscrivere la frase
   - `30m high`;
   - `Price`;
   - `RVOL now`;
-  - `RVOL first 30m`.
-  - Niente PDH, il volume non blocca. [RONIN 04/10]
+  - `RVOL first 30m`;
+  - `RVOL needed` e `LoD` (dal 09/10).
+  - Niente PDH. [RONIN 04/10]
+- **Condizioni d'ingresso di Jeff (dal 09/10)** [RONIN 08/10, dai post per abbonati]:
+  - **RVOL:** controvalore medio ≥ 1 mld $ → non serve (ma niente prima dei 30 minuti). Sotto: RVOL entro 30 minuti tra il **18% e il 40%**, secondo il RVOL pieno di ieri (≤ 40% → 18%, ≥ 125% → 40%, in mezzo lineare). Dopo i 30 minuti la soglia cresce con il tempo (a 60 minuti serve il doppio). Se manca, l'alert non parte e si riprova al giro dopo.
+  - **LoD:** prezzo − minimo del giorno ≤ **0,70 ATR**, adesso blocca.
 - **Alert RVOL:** Focus e Stalk, una volta per nome, quando il volume RTH cumulato arriva al **30% della media a 50 giorni**, solo nella prima ora. Non è un ingresso. [RONIN 30/09]
 - **Calcolati ma non bloccano:**
-  - LoD 0,7 ATR (si dice in coaching);
-  - mega-liquidi con adv$ ≥ $2B (RVOL soft).
+  - mega-liquidi con adv$ ≥ $2B (RVOL soft per l'alert RVOL del 30%).
 - **Gestione:**
   - stop al massimo 1 ATR;
   - al massimo 3 posizioni nuove a seduta;
@@ -304,6 +313,8 @@ Stessi gate e stessa regola dello Stalk della daily, con queste differenze [RONI
 | Stalk portati avanti | Scadenza dopo 5 sedute solo "per inerzia" |
 | Forza del gruppo | Calcolata e mostrata, gate spento |
 | Lettura C (trendline) | Calcolata e mostrata, modo `AB` finché Ronin non sceglie |
+| Canale rialzista (lettura D) | Lista a parte, alert Sydney sul recupero della SMA30 65m anche sotto la EMA9 |
+| Regole di Jeff dai post abbonati | RVOL e LoD bloccano l'alert d'ingresso; gap da riempire = Stalk; triangolo ascendente in più; lista PEG |
 
 ## 14. Regole superate (per non riaprirle)
 
@@ -315,7 +326,8 @@ Stessi gate e stessa regola dello Stalk della daily, con queste differenze [RONI
 | RS da csv scaricati o percentile | pine_replay locale | 05–06/10 |
 | Due liste più confronto alle 10:15 | Motore unico con doppia lettura del pattern | 08/10 |
 | Top-11 Focus | Nessun taglio | 06/10 |
-| LoD ≤ 0,60 ATR come veto | LoD 0,7 ATR, non blocca | 04/10 |
+| LoD ≤ 0,60 ATR come veto | LoD 0,7 ATR, non blocca (04/10); dal 09/10 blocca l'alert d'ingresso | 04/10, 08/10 |
+| Volume solo mostrato | RVOL richiesto per l'alert d'ingresso (18–40%, niente sopra 1 mld $) | 08/10 |
 | Gap EMA 9/21 settimanali | Solo 1,5 ATR settimanali dalla EMA 9 settimanale | 06/10 |
 | Drug Manufacturers esclusi (Dua) | Solo Biotechnology | 08/10 |
 | Copiare i Focus di Jeff da X, controllo abbonati | Lista costruita dal processo; controllo FERMO | 04–05/10 |

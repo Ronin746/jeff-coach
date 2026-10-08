@@ -146,6 +146,36 @@ CHANNEL_RS_MIN = 80              # lista "canale": solo RS >= 80 [RONIN 08/10]
 CHANNEL_ALERT = True             # Sydney: alert quando un nome del canale recupera la SMA30 65m in seduta
 CHANNEL_POLL_SEC = 300           # la SMA30 65m live dei nomi del canale si riscarica ogni 5 minuti
 
+# Gap al ribasso da riempire (Jeff: XLK, ESTC, NOW restano Stalk finché non riempiono il gap) [RONIN 08/10]
+GAP_LOOKBACK = 60                # sedute in cui si cercano i gap al ribasso
+GAP_MIN_ATR = 0.10               # gap vero: massimo del giorno sotto il minimo del giorno prima, di almeno 0,1 ATR
+GAP_NEAR_ATR = 3.0               # conta solo se il bordo alto del gap è entro 3 ATR sopra il close
+
+# Reazione ritardata agli utili (PEG delayed reaction) [RONIN 08/10], lista a parte come il canale
+PEG = dict(
+    min_bars_ago=4, max_bars_ago=45,   # il gap è di 4-45 sedute fa (la reazione è "ritardata", al massimo ~2 mesi)
+    gap_min_pct=4.0, gap_min_atr=1.0,  # apertura sopra il close prima di almeno 4% o 1 ATR ...
+    vol_mult=1.5, gap_big_pct=8.0,     # ... con volume del giorno >= 1,5x la media 50 (o gap >= 8%, il volume di Yahoo a volte è basso)
+    range_below_atr=0.5,               # il prezzo è nel range del PEG: dal close prima del gap (fino a 0,5 ATR sotto) ...
+    range_above_atr=1.0,               # ... al massimo del giorno del gap (fino a 1 ATR sopra)
+    range5_max_atr=2.5, atr5_atr20_max=0.8,   # base stretta
+    sma200_tol_atr=0.3,                # mai contro la SMA200 (regola 7 di Jeff)
+    rs_min=60,                         # Jeff li prende anche con RS 66 (ACN)
+)
+
+# Triangolo ascendente (in più alla base ascendente della lettura C, non al posto) [RONIN 08/10]
+TRIANGLE = dict(
+    windows=(60, 45, 30, 20, 15, 10), top_tol_atr=0.5, lo_tol_atr=0.35, min_top_touches=2, min_lo_touches=2,
+    min_top_spread=4,                  # i tocchi del tetto distano almeno 4 sedute (mini triangolo, HPQ)
+    max_spikes=2,                      # al massimo 2 barre oltre il tetto (spike), e nessun close sopra nelle ultime 3
+    min_lo_slope_atr=0.03, max_lo_slope_atr=0.15,   # supporto che sale (0,03-0,15 ATR per seduta: non una V)
+    min_len=15,                        # il triangolo dura almeno 15 sedute
+    min_lo_share=0.5,                  # il supporto parte dalla prima metà del triangolo
+    sma50_tol_atr=0.3,                 # sopra una SMA50 che non scende
+    converge=0.75,                     # larghezza oggi <= 75% di quella all'inizio
+    width_max_atr=3.5, dist_top_max_atr=1.5, above_top_max_atr=0.3, range5_max_atr=2.5,
+)
+
 # Come entra la lettura C nella decisione (da scegliere con Ronin dopo la galleria del 08/10):
 #   "AB"  = come oggi, Focus solo se A e B sono d'accordo (C solo mostrata)
 #   "C"   = decide C da sola (A e B mostrate)
@@ -180,7 +210,16 @@ WEEKLY_PATTERN_REQUIRE_BOTH = True
 RVOL_ALERT = 0.30              # 30% della media 50gg, solo nella prima ora, Focus+Stalk
 RVOL_ALERT_WINDOW_MIN = 60
 ORH_MINUTES = 30               # ingresso: rottura del massimo dei primi 30 minuti, solo Focus
-LOD_ATR_RONIN = 0.70           # si calcola, non blocca
+LOD_ATR_RONIN = 0.70           # ingresso solo se (prezzo - minimo del giorno) <= 0,70 ATR [RONIN 08/10: ora blocca, come Jeff]
+ENTRY_LOD_BLOCKS = True
+# RVOL richiesto per l'ingresso Focus (Jeff, post abbonati set-ott 2026) [RONIN 08/10]:
+#   - controvalore medio >= 1 mld $: niente RVOL, si aspettano i primi 30 minuti;
+#   - altrimenti RVOL >= soglia entro 30 minuti (ritmo: dopo 60 minuti serve il doppio); la soglia va dal 18% al 40%
+#     in base al RVOL pieno della seduta prima (bassa dopo una seduta a volume contratto, alta dopo una a volume forte).
+ENTRY_RVOL_REQUIRED = True
+ENTRY_NO_RVOL_ADV = 1e9
+ENTRY_RVOL_MIN, ENTRY_RVOL_MAX = 0.18, 0.40
+ENTRY_RVOL_PREV_LO, ENTRY_RVOL_PREV_HI = 0.40, 1.25   # RVOL pieno di ieri: <=0,40 -> 18%, >=1,25 -> 40%, in mezzo lineare
 MEGA_LIQUID_ADV = 2e9          # RVOL soft
 # Distanza massima dall'ORH per mandare l'ingresso (anti-inseguimento, hard rule 10 "never chase").
 # None = disattivo (comportamento attuale). Da attivare solo se Ronin lo chiede.

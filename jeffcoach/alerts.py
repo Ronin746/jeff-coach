@@ -5,7 +5,9 @@ Regole [RONIN 30/09, 04/10, 05/10]:
   - RVOL: Focus e Stalk, una volta per nome, quando il volume RTH cumulato arriva al 30% della
     media a 50 giorni, solo nella prima ora. Non è un ingresso;
   - ingresso: SOLO Focus, dopo 30 minuti, prezzo >= massimo dei primi 30 minuti (ORH). Una volta per nome;
-  - il volume si mostra e non blocca; LoD 0,7 ATR si calcola e non blocca; niente PDH nei messaggi;
+  - [RONIN 08/10, regole di Jeff] l'ingresso parte solo con il RVOL richiesto (niente sotto 1 mld $ di controvalore
+    medio: 18-40% entro 30 minuti secondo il volume di ieri, poi a ritmo) e con prezzo - minimo del giorno <= 0,70 ATR;
+    niente PDH nei messaggi;
   - canale [RONIN 08/10]: i nomi nella parte bassa di un canale rialzista (lettura D, "channel_watch" in today.json)
     che hanno chiuso SOTTO la SMA30 65m: un alert, una volta per nome, quando il prezzo la recupera, anche se
     è ancora sotto la EMA9 giornaliera. Non è un ingresso Focus: è un "guardalo".
@@ -151,7 +153,8 @@ def daily_refs(tickers: list[str], today: date) -> dict[str, dict]:
                 sub = sub[sub.index.date < today]              # solo sedute completate
                 atr = float(I.atr(sub).iloc[-1])
                 cache[t] = {"avg_vol_50": float(sub.Volume.iloc[-50:].mean()),
-                            "adv": float((sub.Volume * sub.Close).iloc[-50:].mean()), "atr": atr}
+                            "adv": float((sub.Volume * sub.Close).iloc[-50:].mean()), "atr": atr,
+                            "prev_rvol": float(sub.Volume.iloc[-1] / sub.Volume.iloc[-51:-1].mean())}
             except Exception as e:
                 log.warning("refs %s: %s", t, e)
         write_atomic(p, cache)
@@ -178,11 +181,37 @@ def intraday(tickers: list[str], today: date) -> dict[str, pd.DataFrame]:
     return out
 
 
+# ------------------------------------------------------------------ regole d'ingresso di Jeff [RONIN 08/10]
+def rvol_needed(ref: dict) -> Optional[float]:
+    """RVOL richiesto entro 30 minuti; None = non serve (nomi oltre 1 mld $ di controvalore medio)."""
+    if (ref.get("adv") or 0) >= C.ENTRY_NO_RVOL_ADV:
+        return None
+    pv = ref.get("prev_rvol")
+    if pv is None:
+        return 0.25
+    lo, hi = C.ENTRY_RVOL_PREV_LO, C.ENTRY_RVOL_PREV_HI
+    f = min(1.0, max(0.0, (pv - lo) / (hi - lo)))
+    return C.ENTRY_RVOL_MIN + f * (C.ENTRY_RVOL_MAX - C.ENTRY_RVOL_MIN)
+
+
+def entry_checks(price: float, lod: float, rvol: float, mins: float, ref: dict) -> tuple[bool, str, Optional[float]]:
+    """Ritorna (ok, motivo se no, RVOL richiesto). Ritmo: la soglia vale a 30 minuti, poi cresce col tempo."""
+    need = rvol_needed(ref)
+    if C.ENTRY_RVOL_REQUIRED and need is not None and rvol < need * max(1.0, mins / C.ORH_MINUTES):
+        return False, f"rvol {rvol:.0%} < {need * max(1.0, mins / C.ORH_MINUTES):.0%}", need
+    if C.ENTRY_LOD_BLOCKS and ref.get("atr") and (price - lod) / ref["atr"] > C.LOD_ATR_RONIN:
+        return False, f"LoD {(price - lod) / ref['atr']:.0%} ATR > 70%", need
+    return True, "", need
+
+
 # ------------------------------------------------------------------ messaggi (formato invariato)
-def fmt_entry(t, orh, price, rvol, rvol30):
-    return f"{t} · Focus", "\n".join([
-        f"30m high `{orh:.2f}`", f"Price: `{price:.2f}`",
-        f"RVOL now: `{100 * rvol:.0f}%`", f"RVOL first 30m: `{'n/a' if rvol30 is None else f'{100 * rvol30:.0f}%'}`"])
+def fmt_entry(t, orh, price, rvol, rvol30, need=None, lod_atr=None):
+    lines = [f"30m high `{orh:.2f}`", f"Price: `{price:.2f}`",
+             f"RVOL now: `{100 * rvol:.0f}%`", f"RVOL first 30m: `{'n/a' if rvol30 is None else f'{100 * rvol30:.0f}%'}`",
+             f"RVOL needed: `{'none (liquid)' if need is None else f'{100 * need:.0f}%'}`"]
+    if lod_atr is not None:
+        lines.append(f"LoD: `{100 * lod_atr:.0f}%` ATR")
+    return f"{t} · Focus", "\n".join(lines)
 
 
 def fmt_channel(c, price, sma):
@@ -247,7 +276,12 @@ def run_once(dry_run: bool = False) -> dict:
         if C.CHASE_MAX_ATR_ABOVE_ORH is not None and ref.get("atr") and (price - orh) / ref["atr"] > C.CHASE_MAX_ATR_ABOVE_ORH:
             rec["skipped"] = "chase"
             continue
-        res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_entry(t, orh, price, rvol, rvol30))
+        ok, why, need = entry_checks(price, float(b.Low.min()), rvol, mins, ref)
+        rec["rvol_needed"] = need
+        if not ok:
+            rec["skipped"] = why               # si riprova al giro dopo (il volume può arrivare)
+            continue
+        res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_entry(t, orh, price, rvol, rvol30, need, rec["lod_atr"]))
         if res.get("sent"):
             day[k] = {"ts": datetime.now(ROME).isoformat(), "price": price, "orh": orh, "rvol": rvol, "lod_atr": rec["lod_atr"]}
             fired.append(k)
