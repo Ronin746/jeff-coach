@@ -1,6 +1,7 @@
 name: Alert turno A (fino alle 19:00 Roma)
 
-# Parte prima dell'apertura e manda fino alla barra delle 13:00 di New York (19:00 Roma).
+# Parte alle 08:15 di New York e manda dall'apertura delle 09:30 (15:30 Roma) fino alla barra delle 13:00
+# (19:00 Roma). Prima delle 09:30 non manda niente.
 # 12:15 / 13:15 / 13:45 UTC: con l'ora legale USA parte il primo (08:15 NY), con l'ora solare il secondo
 # (08:15 NY: il primo esce perché troppo presto). Gli altri sono la riserva se GitHub ne salta uno:
 # escono subito se il turno è già attivo.

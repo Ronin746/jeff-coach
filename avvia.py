@@ -71,7 +71,7 @@ load_env()
 sys.path.insert(0, str(BASE))
 from jeffcoach import alerts, config as C  # noqa: E402  (dopo load_env: config legge le variabili)
 from jeffcoach import discord as D  # noqa: E402
-from jeffcoach.calendar_us import ET, ROME, close_et, is_session, now_et  # noqa: E402
+from jeffcoach.calendar_us import ET, ROME, close_et, is_session, now_et, open_et  # noqa: E402
 
 LOG_DIR = BASE / "logs"
 LOG_DIR.mkdir(exist_ok=True)
@@ -254,6 +254,8 @@ def remy_loop(dry: bool, stop: threading.Event) -> None:
             break
         if alerts.in_window():
             bar_close = datetime.fromtimestamp(nxt - offset, tz=ET)
+            if bar_close <= open_et(bar_close.date()):
+                continue                      # notifiche di Remy solo dall'apertura: prima barra 09:30-09:35
             TURNO.forse_unisci()
             fase = TURNO.fase(bar_close, remy=True)
             if fase == "salta":
