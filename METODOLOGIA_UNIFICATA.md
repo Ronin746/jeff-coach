@@ -84,6 +84,8 @@ Un nome entra in Stalk se:
   - **nome già in lista ieri:** resta in Stalk finché ha al massimo **2 gate numerici** aperti. Con 3 o più esce;
   - **RS 70–79** con tutti gli altri gate chiusi: è il tema forte con RS appena sotto. [RONIN 04/10]
 
+**Scadenza (dal 09/10).** Un nome che resta in Stalk solo per la regola "già in lista" (cioè come nome nuovo non entrerebbe) ha un contatore di sedute (`carry_days` nella lista pubblica). Dopo **5 sedute di fila** così esce, con il motivo "stale Stalk". Se nel frattempo torna a soddisfare la regola dei nomi nuovi (1 gate aperto più un pattern stretto), il contatore torna a zero. Serve a tenere la lista corta: senza scadenza i nomi entrati una volta restano finché non aprono 3 gate. La soglia è `STALK_CARRY_MAX_SESSIONS` in `config.py`.
+
 **Chi resta fuori:**
 - **Sotto la SMA200:** mai in lista, finché non la riprende e ricostruisce la struttura. [RONIN 01/10]
 - **Numeri ok ma nessuna delle due letture vede un pattern di continuation** (ancora in trend, senza spinta, base dopo un pullback profondo): fuori lista, ma **elencati nel riepilogo** perché Ronin li veda.
@@ -124,6 +126,53 @@ La trendline discendente singola non è un ingresso. Non si usano entry, stop e 
 
 - **Focus** solo se A **e** B sono strette.
 - **Se non concordano**, il nome va in Stalk e il riepilogo lo scrive ("A tight / B no fresh thrust"). È la regola "se non siete d'accordo lo mettete in stalk che li guardo io" [RONIN 04/10], applicata in automatico.
+
+### Lettura C: trendline (dal 09/10, per ora solo mostrata)
+
+Una terza lettura, scritta in `jeffcoach/patterns.py`, guarda il grafico come lo si guarda a mano. Le fonti sono il setup "breakout" di Qullamaggie, il ciclo del prezzo di Kell (Base n' Break, EMA crossback, 2B), le trendline di Monis e il failed breakdown di Mancini.
+
+1. **Spinta:** il massimo della spinta e il minimo da cui è partita nei 1–3 mesi prima. Deve valere almeno **+25%** oppure **6 ATR**.
+2. **Base:** dal massimo a oggi.
+   - Se il massimo è di 1–3 giorni fa, la base è la pausa stretta sui massimi: la finestra più lunga con range ≤ 2,5 ATR. È il caso tipico dei Focus di Jeff, come PLTR, SIG e SIMO l'08/10.
+   - La base non deve restituire più di metà della spinta, né scendere più del 30%.
+3. **Trendline:**
+   - linea alta sui pivot massimi, rispettando il picco;
+   - linea bassa sull'ultimo pivot minimo e su uno precedente;
+   - dalle due pendenze viene la forma: flag, pennant, base piatta, base ascendente, falling wedge, canale stretto che sale.
+   - Sono fuori, come nella lista chiusa: rising wedge, triangolo discendente, canale largo, allargamento.
+4. **Stretto:**
+   - le due linee distano al massimo 3,5 ATR;
+   - il range a 5 giorni è ≤ 2,5 ATR, oppure ATR5/ATR20 ≤ 0,8.
+5. **Posizione:**
+   - close entro 1,5 ATR sotto la linea alta, e non già oltre di 0,5 ATR;
+   - sopra la EMA20;
+   - la SMA50 si può toccare, ma non perdere.
+6. **Informazioni in più** (non bloccano):
+   - "undercut & reclaim", cioè un minimo sotto il supporto recuperato (2B / failed breakdown);
+   - "volume drying up";
+   - il **livello della trendline per la seduta dopo** (`trendline_next`), utile come alert su TradingView.
+
+Il modo è in `PATTERN_MODE`:
+- `AB`: decidono A e B come prima, C è solo mostrata. È il modo attivo.
+- `C`: decide C da sola.
+- `C+1`: Focus se C è stretta e almeno una tra A e B è d'accordo.
+
+Sull'08/10:
+- `AB` dà 3 Focus (SIMO, PLTR, SIG);
+- `C+1` dà 7 Focus;
+- `C` ne dà 16.
+
+Si sceglie con Ronin dopo qualche settimana di confronto. Il riepilogo ogni giorno elenca dove C non è d'accordo con la decisione.
+
+## 6b. Forza del gruppo (dal 09/10, per ora solo mostrata)
+
+- **Gruppo:** l'industria Yahoo, circa 145 gruppi. La mappa titolo → industria si rinnova una volta a settimana in `state/industry_map.json`, con uno screener per industria.
+- **Forza:** la mediana dell'RS dei titoli del gruppo nell'universo, messa in percentile tra i gruppi (100 = il più forte). I gruppi con meno di 3 titoli usano il percentile del settore.
+- **Leader alla Qullamaggie:** il titolo è nel top 2% dell'universo per rendimento a 1, 3 o 6 mesi (`leader` nella lista pubblica).
+
+Il riepilogo mostra i gruppi più forti con i nomi in lista e il percentile del gruppo di ogni Focus.
+
+C'è un gate pronto ma spento: `GROUP_FOCUS_MIN_PCTL` (es. 40), che non farebbe essere Focus un nome di un gruppo debole (resta Stalk). Va acceso solo dopo averlo visto sui dati. Sull'08/10 avrebbe tolto SIG, che è in un gruppo al 10° percentile ed era un Focus di Jeff.
 
 **Revisione a occhio del bot (opzionale).** Dopo il calcolo il bot può guardare i Focus. Se uno non è un pattern ammesso, lo **declassa** a Stalk con un motivo in inglese (`state/daily_<data>/review.json`). Il bot:
 - **non può** promuovere un nome;
@@ -241,6 +290,9 @@ Stessi gate e stessa regola dello Stalk della daily, con queste differenze [RONI
 | Compressione | Almeno 2 delle ultime 3 barre sotto l'ADR20, più VCP ≤ 25 |
 | Biotech | Esclusa solo l'industria Biotechnology (il pharma resta) |
 | Confronto Dua/Sydney | Sostituito dalla doppia lettura del pattern nel codice: il disaccordo va in Stalk |
+| Stalk portati avanti | Scadenza dopo 5 sedute solo "per inerzia" |
+| Forza del gruppo | Calcolata e mostrata, gate spento |
+| Lettura C (trendline) | Calcolata e mostrata, modo `AB` finché Ronin non sceglie |
 
 ## 14. Regole superate (per non riaprirle)
 

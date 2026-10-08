@@ -92,6 +92,51 @@ PATTERN_B = dict(            # lettura "Sydney" (in ATR)
     expansion_ret_pct=3.0,     # ... e >= +3% = barra di espansione (l'ORH insegue)
 )
 
+# Lettura C (impl., 08/10): struttura con pivot e trendline (Qullamaggie breakout, Kell, Monis). Vedi patterns.py.
+PATTERN_C = dict(
+    base_max_bars=50,          # il picco della spinta si cerca nelle ultime 50 sedute (consolidamento fino a ~2,5 mesi)
+    base_min_bars=4,           # almeno 4 sedute dal picco, altrimenti sta ancora correndo
+    shelf_max_atr=2.5,         # pausa stretta sui massimi: la base è la finestra con range <= 2,5 ATR (>= 3 sedute)
+    thrust_lookback=60,        # la spinta parte dal minimo dei 60 giorni prima del picco (1-3 mesi)
+    thrust_min_pct=25.0,       # spinta >= 25% ...
+    thrust_min_atr=6.0,        # ... oppure >= 6 ATR (titoli grandi e lenti)
+    retrace_max=0.5,           # il consolidamento non restituisce più di metà della spinta
+    depth_max_pct=30.0,        # e non scende più del 30% dal picco
+    line_tol_atr=0.3,          # tolleranza delle trendline (una barra può bucarle di 0,3 ATR)
+    flat_slope_atr=0.04,       # |pendenza| <= 0,04 ATR al giorno = linea piatta
+    width_max_atr=3.5,         # oggi le due linee distano al massimo 3,5 ATR
+    range5_max_atr=2.5,        # stretto: range degli ultimi 5 giorni <= 2,5 ATR ...
+    atr5_atr20_max=0.8,        # ... oppure ATR5/ATR20 <= 0,8 (volatilità che si contrae)
+    dist_upper_max_atr=1.5,    # close entro 1,5 ATR sotto la linea alta
+    broken_above_atr=0.5,      # oltre 0,5 ATR sopra la linea = già rotto
+    ema20_tol_atr=0.3,         # close non sotto la EMA20 (tolleranza 0,3 ATR)
+    sma50_tol_atr=0.5,         # la SMA50 si può toccare (Qullamaggie): conta come persa una chiusura oltre 0,5 ATR sotto
+    sma50_max_closes_under=3,  # ... e la base è rotta con 3 chiusure così, o con il close di oggi sotto la SMA50
+    channel_ok_width_atr=2.5,  # canale che sale ma stretto (<= 2,5 ATR) = gradini sui massimi, accettato
+    undercut_min_atr=0.2,      # 2B / failed breakdown: minimo sotto il supporto di almeno 0,2 ATR, poi recuperato
+)
+# Come entra la lettura C nella decisione (da scegliere con Ronin dopo la galleria del 08/10):
+#   "AB"  = come oggi, Focus solo se A e B sono d'accordo (C solo mostrata)
+#   "C"   = decide C da sola (A e B mostrate)
+#   "C+1" = Focus se C dice stretto e almeno una tra A e B è d'accordo
+PATTERN_MODE = "AB"
+
+# ---------------------------------------------------------------- forza del gruppo (impl., 08/10) [Kell, Jeff: temi e gruppi leader]
+# Industria Yahoo (circa 145 gruppi). Forza del gruppo = mediana dell'RS dei suoi titoli nell'universo,
+# messa in percentile tra i gruppi (0 = il più debole, 100 = il più forte). Gruppi con meno di
+# GROUP_MIN_MEMBERS titoli usano il percentile del settore.
+GROUP_MIN_MEMBERS = 3
+# Gate sul gruppo: None = solo mostrato e usato per ordinare. Con un numero (es. 40) un nome di un gruppo
+# sotto quel percentile non può essere Focus (resta Stalk).
+GROUP_FOCUS_MIN_PCTL = None
+# Leader alla Qullamaggie: nel top 2% dell'universo per rendimento a 1, 3 o 6 mesi.
+LEADER_TOP_PCT = 2.0
+
+# ---------------------------------------------------------------- scadenza degli Stalk portati avanti (impl., 08/10)
+# Un nome resta in Stalk "per inerzia" (regola dei 2 gate aperti) al massimo per queste sedute di fila.
+# Se in quel tempo non torna a soddisfare la regola dei nuovi ingressi (1 gate aperto + pattern stretto), esce.
+STALK_CARRY_MAX_SESSIONS = 5
+
 # ---------------------------------------------------------------- weekly [RONIN 06/10]
 WEEKLY_SMA25_DAILY_MAX_PCT = 5.0   # al posto della SMA30 65m: close entro ~5% dalla SMA25 giornaliera
 WEEKLY_EMA9_MAX_ATR = 1.5          # entro 1,5 ATR settimanali dalla EMA9 settimanale

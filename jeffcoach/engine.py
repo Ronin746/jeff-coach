@@ -13,6 +13,7 @@ import pandas as pd
 
 from . import config as C
 from . import indicators as I
+from . import patterns as P
 
 
 def _r(x, n=2):
@@ -59,10 +60,17 @@ def compute_metrics(df: pd.DataFrame, spx_close: pd.Series) -> Optional[dict]:
         adr_pct=adr_last, last_range_adr=(float(rng.iloc[-1]) / adr_last) if adr_last else None,
         off_52w_high_pct=(close / float(h.iloc[-252:].max()) - 1) * 100,
         n_bars=len(df),
+        ret21_pct=(close / float(c.iloc[-22]) - 1) * 100 if len(c) > 22 else None,
+        ret63_pct=(close / float(c.iloc[-64]) - 1) * 100 if len(c) > 64 else None,
+        ret126_pct=(close / float(c.iloc[-127]) - 1) * 100 if len(c) > 127 else None,
     )
     m["ext"] = I.atr_ext(close, m["sma50"], atr) if m["sma50"] else None
     m["above_sma200"] = bool(m["sma200"] is not None and close > m["sma200"])
     m.update(pattern_metrics(df, atr, adr_last))
+    try:
+        m.update(P.read_structure(df, atr))
+    except Exception:                       # una struttura illeggibile non deve togliere il titolo dai calcoli
+        m["c_ok_data"] = False
     return m
 
 
@@ -194,10 +202,25 @@ def focus_gates(m: dict, sma65: Optional[dict]) -> list[Gate]:
                   f"{cd} tight day{'s' if cd != 1 else ''}"))
     a_ok, a_why, a_sh = reading_a(m)
     b_ok, b_why, b_sh = reading_b(m)
+    c_ok, c_why, c_sh = P.reading_c(m)
     m["pattern_a_ok"], m["pattern_a_why"], m["pattern_b_ok"], m["pattern_b_why"] = a_ok, a_why, b_ok, b_why
-    why = a_why[:1] + [w for w in b_why[:1] if w not in a_why[:1]]
-    sh = a_sh[:1] + [w for w in b_sh[:1] if w not in a_sh[:1]]
-    g.append(Gate("pattern", a_ok and b_ok, "pattern: " + "; ".join(why), "pattern " + ", ".join(sh)))
+    m["pattern_c_ok"], m["pattern_c_why"] = c_ok, c_why
+    mode = C.PATTERN_MODE
+    if mode == "C":
+        ok, why, sh = c_ok, c_why[:2], c_sh[:2]
+    elif mode == "C+1":
+        ok = c_ok and (a_ok or b_ok)
+        why = c_why[:2] if not c_ok else (a_why[:1] + b_why[:1])
+        sh = c_sh[:2] if not c_ok else (a_sh[:1] + b_sh[:1])
+    else:
+        ok = a_ok and b_ok
+        why = a_why[:1] + [w for w in b_why[:1] if w not in a_why[:1]]
+        sh = a_sh[:1] + [w for w in b_sh[:1] if w not in a_sh[:1]]
+    g.append(Gate("pattern", ok, "pattern: " + "; ".join(why), "pattern " + ", ".join(sh)))
+    gp = m.get("group_pctl")
+    if C.GROUP_FOCUS_MIN_PCTL is not None and gp is not None:
+        g.append(Gate("group", gp >= C.GROUP_FOCUS_MIN_PCTL, f"weak group ({m.get('industry')}, {gp:.0f}th pctl)",
+                      f"weak group ({gp:.0f})"))
     return g
 
 
@@ -235,6 +258,9 @@ def universe_check(m: dict, info: dict, ticker: str) -> Optional[str]:
     return None
 
 
+SOFT_GATES = ("pattern", "group")       # non sono gate numerici: se manca solo questo è Stalk
+
+
 def classify(m: dict, gates: list[Gate], was_listed: bool = False) -> str:
     fails = [g.code for g in gates if not g.ok]
     if not fails:
@@ -242,12 +268,12 @@ def classify(m: dict, gates: list[Gate], was_listed: bool = False) -> str:
     if not m["above_sma200"]:
         return "Out"                 # sotto la 200: mai Focus né Stalk finché non la riprende [RONIN 01/10]
     rs = m.get("rs") or 0
-    numeric = [f for f in fails if f != "pattern"]
+    numeric = [f for f in fails if f not in SOFT_GATES]
     if C.STALK_RS_THEME_MIN <= rs < C.STALK_RS_MIN:
         return "Stalk" if fails == ["rs"] else "Out"
     if rs < C.STALK_RS_MIN:
         return "Out"
-    some_tight = m.get("pattern_a_ok") or m.get("pattern_b_ok")
+    some_tight = m.get("pattern_a_ok") or m.get("pattern_b_ok") or (C.PATTERN_MODE != "AB" and m.get("pattern_c_ok"))
     if len(numeric) <= C.STALK_NEW_MAX_NUMERIC_OPEN and some_tight:
         return "Stalk"
     if was_listed and len(numeric) <= C.STALK_CARRY_MAX_NUMERIC_OPEN:
@@ -262,11 +288,13 @@ def _px(x: float) -> str:
 def reason_en(row: Row, sma65: Optional[dict] = None) -> str:
     """Frase breve in inglese sulla stessa riga del nome [RONIN 04/10]."""
     m = row.m
+    if row.list == "Focus" and C.PATTERN_MODE != "AB" and m.get("pattern_c_ok") and not m.get("pattern"):
+        return P.describe(m)
     if row.list == "Focus":
         lab = m.get("pattern") or pattern_label(m)
         return (f"{lab} {_px(m['range10_lo'])}–{_px(m['range10_hi'])}, "
                 f"{abs(m['a_off_high20_pct']):.1f}% under the high, {m['compression_days']} tight days")
-    numeric = [g.short for g in row.fails if g.code != "pattern"]
+    numeric = [g.short for g in row.fails if g.code not in SOFT_GATES]
     if numeric:
         return "; ".join(numeric)
     return "; ".join(g.short for g in row.fails)

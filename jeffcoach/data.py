@@ -85,6 +85,57 @@ def build_universe(max_age_days: int = 6, force: bool = False) -> dict[str, dict
     return out
 
 
+INDUSTRY_FILE = C.STATE / "industry_map.json"
+
+
+def build_industry_map(max_age_days: int = 6, force: bool = False) -> dict[str, dict]:
+    """Settore e industria Yahoo di ogni azione dell'universo, con uno screener per industria
+    (circa 150 chiamate invece di una `info` per titolo). Si rinnova con l'universo, una volta a settimana."""
+    if INDUSTRY_FILE.exists() and not force:
+        doc = json.loads(INDUSTRY_FILE.read_text(encoding="utf-8"))
+        age = datetime.now(timezone.utc) - datetime.fromisoformat(doc["built_utc"])
+        if age < timedelta(days=max_age_days):
+            return doc["symbols"]
+    yf = _yf()
+    from yfinance import EquityQuery as Q
+    groups = Q("eq", ["region", "us"]).valid_values.get("industry") or {}
+    out: dict[str, dict] = {}
+    failed = 0
+    for sector, inds in sorted(groups.items()):
+        for ind in sorted(inds):
+            q = Q("and", [Q("eq", ["region", "us"]), Q("eq", ["industry", ind]),
+                          Q("gt", ["intradaymarketcap", C.MCAP_MIN]), Q("is-in", ["exchange", *C.EXCHANGES])])
+            offset, total = 0, None
+            while total is None or offset < total:
+                r = None
+                for attempt in range(3):
+                    try:
+                        r = yf.screen(q, size=250, offset=offset, sortField="intradaymarketcap", sortAsc=False)
+                        break
+                    except Exception as e:
+                        log.warning("industria %s: %s", ind, e)
+                        time.sleep(3 * (attempt + 1))
+                if r is None:
+                    failed += 1
+                    break
+                total = r.get("total") or 0
+                quotes = r.get("quotes") or []
+                if not quotes:
+                    break
+                for x in quotes:
+                    out[x["symbol"]] = {"sector": sector, "industry": ind}
+                offset += len(quotes)
+    if failed > 20 and INDUSTRY_FILE.exists():
+        log.error("mappa industrie incompleta (%d errori): tengo quella salvata", failed)
+        return json.loads(INDUSTRY_FILE.read_text(encoding="utf-8"))["symbols"]
+    C.STATE.mkdir(parents=True, exist_ok=True)
+    tmp = INDUSTRY_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps({"built_utc": datetime.now(timezone.utc).isoformat(), "symbols": out}), encoding="utf-8")
+    tmp.replace(INDUSTRY_FILE)
+    log.info("mappa industrie: %d azioni, %d errori", len(out), failed)
+    return out
+
+
 def extra_symbols() -> set[str]:
     """Simboli in più da non perdere: cache daily di Remy (solo lettura) + lista del giorno prima."""
     s: set[str] = set()

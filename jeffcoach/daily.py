@@ -24,6 +24,7 @@ from datetime import date, datetime, timedelta
 from . import config as C
 from . import data as D
 from . import engine as E
+from . import patterns as P
 from .calendar_us import ROME, is_session, prev_session, sessions_from, today_rome, last_sessions
 from .output import card_description, tv_txt, write_atomic
 
@@ -42,6 +43,11 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
         return pickle.loads(cache.read_bytes())
 
     meta = D.build_universe()
+    try:
+        industry = D.build_industry_map()
+    except Exception as e:                  # senza mappa la lista si fa lo stesso, solo senza forza del gruppo
+        log.warning("mappa industrie non disponibile: %s", e)
+        industry = {}
     syms = set(meta) | D.extra_symbols()
     start = (as_of - timedelta(days=800)).isoformat()
     daily = D.download_daily(list(syms) + ["^GSPC"], start, as_of)
@@ -71,10 +77,48 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
     cand = {s for s in num_ok if metrics[s]["above_sma200"] and (metrics[s]["rs"] or 0) >= C.STALK_RS_THEME_MIN}
     info: dict = {}          # mcap/settore freschi: si scaricano in build() solo per i nomi che entrano in lista
     s65 = D.sma30_65m(cand, last_sessions(as_of, 6))
-    doc = dict(session=session, as_of=as_of, meta=meta, metrics=metrics, info=info, sma65=s65,
+    doc = dict(session=session, as_of=as_of, meta=meta, metrics=metrics, info=info, sma65=s65, industry=industry,
                n_downloaded=len(daily) - 1, stale=stale, num_ok=sorted(num_ok), cand=sorted(cand))
     cache.write_bytes(pickle.dumps(doc))
     return doc
+
+
+def group_strength(doc: dict) -> tuple[dict, dict]:
+    """Forza di ogni industria (e settore): mediana dell'RS dei titoli dell'universo, in percentile tra i gruppi.
+    Ritorna (per titolo: industria, settore, percentile, n, leader) e la classifica dei gruppi."""
+    import numpy as np
+    ind = doc.get("industry") or {}
+    metrics, meta = doc["metrics"], doc["meta"]
+    uni = [s for s in metrics if s in meta and metrics[s].get("rs") is not None and s in ind]
+    by_ind, by_sec = {}, {}
+    for s in uni:
+        by_ind.setdefault(ind[s]["industry"], []).append(s)
+        by_sec.setdefault(ind[s]["sector"], []).append(s)
+
+    def pctl(groups: dict) -> dict:
+        med = {g: float(np.median([metrics[s]["rs"] for s in v])) for g, v in groups.items() if len(v) >= C.GROUP_MIN_MEMBERS}
+        order = sorted(med, key=lambda g: med[g])
+        k = max(1, len(order) - 1)
+        return {g: dict(pctl=round(i / k * 100), median_rs=round(med[g]), n=len(groups[g]),
+                        strong=sum(1 for s in groups[g] if metrics[s]["rs"] >= 90)) for i, g in enumerate(order)}
+    gi, gs = pctl(by_ind), pctl(by_sec)
+    lead = {}
+    for key, lab in (("ret21_pct", "1m"), ("ret63_pct", "3m"), ("ret126_pct", "6m")):
+        vals = sorted((metrics[s][key] for s in uni if metrics[s].get(key) is not None), reverse=True)
+        if vals:
+            cut = vals[max(0, int(len(vals) * C.LEADER_TOP_PCT / 100) - 1)]
+            for s in uni:
+                if (metrics[s].get(key) or -1e9) >= cut:
+                    lead.setdefault(s, []).append(lab)
+    per = {}
+    for s in metrics:
+        if s not in ind:
+            continue
+        i_, se = ind[s]["industry"], ind[s]["sector"]
+        g = gi.get(i_) or gs.get(se)
+        per[s] = dict(industry=i_, sector=se, group_pctl=(g or {}).get("pctl"), group_n=len(by_ind.get(i_, [])),
+                      group_level="industry" if i_ in gi else "sector", leader=lead.get(s, []))
+    return per, dict(industries=gi, sectors=gs)
 
 
 def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict:
@@ -82,15 +126,34 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
     rows: dict[str, E.Row] = {}
     out_universe = {}
     prev_listed = set((prev or {}).get("focus", [])) | set((prev or {}).get("stalk", []))
+    prev_carry = {t["ticker"]: int(t.get("carry_days") or 0) for t in (prev or {}).get("tickers", [])}
+    if not doc.get("industry"):
+        try:
+            doc["industry"] = D.build_industry_map()
+        except Exception as e:
+            log.warning("mappa industrie non disponibile: %s", e)
+    grp, groups = group_strength(doc)
+    stale_stalk = {}
     for s in doc["cand"]:
         m = dict(metrics[s])
+        m.update(grp.get(s, {}))
         gates = E.focus_gates(m, s65.get(s))
-        rows[s] = E.Row(s, E.classify(m, gates, s in prev_listed), m, gates)
+        lst = E.classify(m, gates, s in prev_listed)
+        # scadenza: Stalk tenuto solo dalla regola "già in lista" (non passerebbe come nuovo ingresso)
+        m["carry_days"] = 0
+        if lst == "Stalk" and E.classify(m, gates, False) == "Out":
+            m["carry_days"] = prev_carry.get(s, 0) + 1
+            if m["carry_days"] > C.STALK_CARRY_MAX_SESSIONS:
+                lst = "Out"
+                stale_stalk[s] = m["carry_days"] - 1
+        rows[s] = E.Row(s, lst, m, gates)
+        if s in stale_stalk:
+            rows[s].out_reason = f"stale Stalk: {stale_stalk[s]} sessions without tightening"
 
     # universo con info fresche (tipo, market cap, industria) sui soli nomi che entrerebbero in lista
     def _near(r):   # numeri tutti ok ma nessun pattern: si mostrano a Ronin, non entrano in lista
         return (r.list == "Out" and r.m["above_sma200"] and (r.m["rs"] or 0) >= C.RS_FOCUS_MIN
-                and not [g for g in r.fails if g.code != "pattern"])
+                and not [g for g in r.fails if g.code not in E.SOFT_GATES])
     pre = [s for s, r in rows.items() if r.list != "Out" or _near(r)]
     need = [s for s in pre if s not in info or "err" in info[s]]
     if need:
@@ -154,6 +217,9 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             atr_ext=_r(m["ext"]), reason_en=m.get("reason_override") or E.reason_en(r, s65.get(r.ticker)),
             pattern_a=("tight" if m["pattern_a_ok"] else "wide"), pattern_b=("tight" if m["pattern_b_ok"] else "wide"),
             open_gates=[g.code for g in r.fails], extreme_rvol_ok=False, prior_day_high=_r(m["high"]),
+            pattern_c=("tight" if m.get("pattern_c_ok") else "wide"), pattern_c_shape=m.get("c_shape"),
+            trendline_next=_r(m.get("c_upper_next")), industry=m.get("industry"), group_pctl=m.get("group_pctl"),
+            leader=m.get("leader") or [], carry_days=m.get("carry_days", 0),
         )
 
     focus = sorted([r for r in rows.values() if r.list == "Focus"], key=lambda r: (-(r.m["rs"] or 0), r.ticker))
@@ -200,6 +266,9 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                             reported_on_reference_day=sorted(earn_on_ref)),
         info_not_verified=sorted(info_missing),
         pattern_disagreements=disagree, review=review_applied, changes_vs_previous=changes,
+        pattern_mode=C.PATTERN_MODE, stale_stalk=stale_stalk,
+        pattern_c_vs_decision=pattern_c_compare(rows),
+        top_groups=top_groups(groups, rows),
     )
     detail = dict(agreed, funnel=dict(downloaded=doc["n_downloaded"], stale_last_bar=len(doc["stale"]),
                                       universe_numeric=len(doc["num_ok"]), candidates=len(doc["cand"]),
@@ -214,6 +283,32 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                                        sma30_65m=s65.get(r.ticker), next_earnings=earn_next.get(r.ticker))
                         for r in rows.values() if r.list != "Out" or r.out_reason})
     return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn)
+
+
+def pattern_c_compare(rows: dict) -> dict:
+    """Dove la lettura C (trendline) non è d'accordo con la decisione di oggi: serve a Ronin per scegliere il modo."""
+    out = {"c_tight_not_focus": {}, "focus_c_wide": {}}
+    for t, r in rows.items():
+        m = r.m
+        if r.out_reason:
+            continue
+        numeric_ok = not [g for g in r.fails if g.code not in E.SOFT_GATES]
+        if r.list == "Focus" and not m.get("pattern_c_ok"):
+            out["focus_c_wide"][t] = "; ".join(m.get("pattern_c_why") or [])
+        elif r.list != "Focus" and m.get("pattern_c_ok") and numeric_ok and m["above_sma200"] and (m["rs"] or 0) >= C.RS_FOCUS_MIN:
+            out["c_tight_not_focus"][t] = P.describe(m)
+    return out
+
+
+def top_groups(groups: dict, rows: dict, n: int = 8) -> list[dict]:
+    gi = groups.get("industries") or {}
+    listed = {}
+    for t, r in rows.items():
+        if r.list in ("Focus", "Stalk") and r.m.get("industry"):
+            listed.setdefault(r.m["industry"], []).append(t)
+    best = sorted(gi.items(), key=lambda kv: -kv[1]["pctl"])[:n]
+    return [dict(industry=k, pctl=v["pctl"], median_rs=v["median_rs"], n=v["n"], strong=v["strong"],
+                 in_list=sorted(listed.get(k, []))) for k, v in best]
 
 
 def exch_of(s: str, doc: dict) -> str | None:
@@ -233,6 +328,24 @@ def summary_it(res: dict, doc: dict) -> str:
     if a["pattern_disagreements"]:
         L.append("Pattern: le due letture non concordano (restano in Stalk, da guardare): " +
                  "; ".join(f"{t} (A {v['a']} / B {v['b']})" for t, v in a["pattern_disagreements"].items()))
+    if a.get("stale_stalk"):
+        L.append("Stalk scaduti (troppe sedute senza stringere): " +
+                 ", ".join(f"{t} ({d})" for t, d in sorted(a["stale_stalk"].items())))
+    tg = a.get("top_groups") or []
+    if tg:
+        L.append("Gruppi più forti: " + "; ".join(
+            f"{g['industry']} ({g['pctl']}" + (f": {', '.join(g['in_list'])}" if g["in_list"] else "") + ")" for g in tg[:6]))
+    fg = [f"{r['ticker']} {r['group_pctl']}" for r in res["fpub"] if r.get("group_pctl") is not None]
+    if fg:
+        L.append("Forza del gruppo dei Focus (percentile): " + ", ".join(fg))
+    cc = a.get("pattern_c_vs_decision") or {}
+    if cc.get("c_tight_not_focus") or cc.get("focus_c_wide"):
+        parts = []
+        if cc.get("c_tight_not_focus"):
+            parts.append("stretti per le trendline ma non Focus: " + "; ".join(f"{t} ({v})" for t, v in sorted(cc["c_tight_not_focus"].items())))
+        if cc.get("focus_c_wide"):
+            parts.append("Focus che le trendline non vedono stretti: " + "; ".join(f"{t} ({v})" for t, v in sorted(cc["focus_c_wide"].items())))
+        L.append(f"Lettura C (modo {a.get('pattern_mode')}): " + " · ".join(parts))
     nm = res["detail"].get("near_misses") or {}
     if nm:
         L.append(f"Numeri ok ma senza pattern di continuation (fuori lista): {', '.join(sorted(nm))}")
