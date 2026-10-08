@@ -118,9 +118,9 @@ La trendline discendente singola non è un ingresso. Non si usano entry, stop e 
 | Lettura A (ex Dua, su ADR20) | Lettura B (ex Sydney, in ATR) |
 |---|---|
 | range 10 sedute ≤ 2,5× ADR | spinta: rally dei close in 20 barre ≥ 3 ATR |
-| close entro 6% dal massimo a 20 giorni | range 5 sedute ≤ 2 ATR |
+| close entro 1 ADR dal massimo a 10 giorni (il pivot della base) [RONIN 08/10] | range 5 sedute ≤ 2 ATR |
 | ultima barra ≤ 1,3× ADR | close entro 1 ATR dal massimo a 10 giorni |
-| escursione dei close a 5 giorni ≤ 1,3× ADR | pullback dal massimo della spinta ≤ 3,5 ATR (oltre è una base di pullback) |
+| escursione dei close a 5 giorni ≤ 1,3× ADR | la base non restituisce più di metà della spinta (come la lettura C) [RONIN 08/10] |
 | spinta ≥ 15% nelle ultime 60 barre | non ancora in trend: pendenze di massimi e minimi a 8 barre non entrambe ≥ 0,25 ATR/barra |
 | | niente barra di espansione ieri (≥ 1,5 ATR e ≥ +3%: l'ORH inseguirebbe) |
 
@@ -315,6 +315,7 @@ Stessi gate e stessa regola dello Stalk della daily, con queste differenze [RONI
 | Lettura C (trendline) | Calcolata e mostrata, modo `AB` finché Ronin non sceglie |
 | Canale rialzista (lettura D) | Lista a parte, alert Sydney sul recupero della SMA30 65m anche sotto la EMA9 |
 | Regole di Jeff dai post abbonati | RVOL e LoD bloccano l'alert d'ingresso; gap da riempire spento (da rifare); triangolo ascendente in più; lista PEG |
+| Letture A e B misurano la base nuova | A: entro 1 ADR dal pivot (massimo a 10 giorni) invece di 6% dal massimo a 20 giorni; B: la base tiene almeno metà della spinta invece di pullback ≤ 3,5 ATR. Caso HPQ, Focus di Jeff l'08/10 (mini triangolo ascendente) |
 
 ## 14. Regole superate (per non riaprirle)
 
@@ -330,4 +331,6 @@ Stessi gate e stessa regola dello Stalk della daily, con queste differenze [RONI
 | Volume solo mostrato | RVOL richiesto per l'alert d'ingresso (18–40%, niente sopra 1 mld $) | 08/10 |
 | Gap EMA 9/21 settimanali | Solo 1,5 ATR settimanali dalla EMA 9 settimanale | 06/10 |
 | Drug Manufacturers esclusi (Dua) | Solo Biotechnology | 08/10 |
+| Lettura A: close entro 6% dal massimo a 20 giorni | Entro 1 ADR dal massimo a 10 giorni (pivot della base) | 08/10 |
+| Lettura B: pullback dal massimo ≤ 3,5 ATR | La base non restituisce più di metà della spinta | 08/10 |
 | Copiare i Focus di Jeff da X, controllo abbonati | Lista costruita dal processo; controllo FERMO | 04–05/10 |

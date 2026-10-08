@@ -77,7 +77,9 @@ STALK_CARRY_MAX_NUMERIC_OPEN = 2
 # se una dice largo -> Stalk [RONIN 04/10: "se non siete d'accordo lo mettete in stalk"].
 PATTERN_A = dict(            # lettura "Dua" (range vs ADR20)
     range10_adr_max=2.5,       # range 10 sedute (in % del close) / ADR20%
-    off_high20_min_pct=-6.0,   # close entro 6% dal massimo a 20 giorni
+    dist_hi10_max_adr=1.0,     # close entro 1 ADR dal massimo a 10 giorni = sul pivot della base [RONIN 08/10]
+                               # (sostituisce "entro 6% dal massimo a 20 giorni": misurava il vecchio massimo della
+                               #  spinta, non il pivot della base nuova; caso HPQ, Focus di Jeff l'08/10)
     last_range_adr_max=1.3,    # ultima barra <= 1.3 ADR
     close5_adr_max=1.3,        # escursione dei close a 5 giorni <= 1.3 ADR
     thrust60_min_pct=15.0,     # spinta >= 15% nelle ultime 60 barre (minimo -> massimo successivo)
@@ -86,7 +88,9 @@ PATTERN_B = dict(            # lettura "Sydney" (in ATR)
     rally20_min_atr=3.0,       # spinta: rally dei close in 20 barre (nelle ultime 15) >= 3 ATR
     range5_max_atr=2.0,        # range 5 sedute <= 2 ATR
     dist_hi10_max_atr=1.0,     # close entro 1 ATR dal massimo a 10 giorni
-    pullback_max_atr=3.5,      # pullback dal massimo della spinta <= 3.5 ATR (oltre = base di pullback, non continuation)
+    retrace_max=0.5,           # la base non restituisce più di metà della spinta (Qullamaggie, come la lettura C) [RONIN 08/10]
+                               # (sostituisce "pullback <= 3,5 ATR": una base ascendente dopo un ritracciamento è un
+                               #  setup di Jeff, es. HPQ "mini ascending triangle base" l'08/10)
     trend_slope_atr=0.25,      # pendenze massimi E minimi a 8 barre >= 0.25 ATR/barra = ancora in trend, non consolidato
     expansion_range_atr=1.5,   # barra di ieri >= 1.5 ATR ...
     expansion_ret_pct=3.0,     # ... e >= +3% = barra di espansione (l'ORH insegue)

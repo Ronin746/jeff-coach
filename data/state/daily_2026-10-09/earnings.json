@@ -1189,5 +1189,65 @@
       "2026-08-19"
     ],
     "errors": []
+  },
+  "BTE": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "DAR": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "LFST": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "MTDR": {
+    "calendar": [
+      "2026-10-27"
+    ],
+    "earnings_dates": [
+      "2026-10-27"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "VG": {
+    "calendar": [
+      "2026-11-09"
+    ],
+    "earnings_dates": [
+      "2026-11-09"
+    ],
+    "past_dates": [
+      "2026-08-11"
+    ],
+    "errors": []
   }
 }

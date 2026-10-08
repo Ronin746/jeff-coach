@@ -4,10 +4,12 @@
   "ranking_bar": "2026-10-08",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-08 22:44 CEST",
+  "asof_rome": "2026-10-08 23:00 CEST",
   "focus": [
     "RNG",
-    "SN"
+    "SN",
+    "HPQ",
+    "ELF"
   ],
   "stalk": [
     "CLMT",
@@ -16,9 +18,11 @@
     "BE",
     "CAKE",
     "DDOG",
+    "ESTC",
     "FROG",
     "FTNT",
     "HNGE",
+    "LFST",
     "MATX",
     "NSIT",
     "PANW",
@@ -28,22 +32,24 @@
     "XMTR",
     "ANF",
     "TENB",
-    "VAC",
     "VEEV",
     "ANET",
+    "BTE",
+    "DAR",
     "PLTR",
+    "SBLK",
     "VRNS",
+    "DOCU",
     "MANH",
     "STNG",
-    "ELF",
     "SCCO",
+    "VG",
     "JXN",
-    "NAVN",
     "CVLT",
     "SIG",
     "IT",
     "BAX",
-    "MTD"
+    "MTDR"
   ],
   "tickers": [
     {
@@ -101,13 +107,65 @@
       "triangle_top": null
     },
     {
+      "ticker": "HPQ",
+      "list": "Focus",
+      "rs": 95,
+      "vcp": 8.67,
+      "sma5": 1.37,
+      "atr_ext": 1.22,
+      "reason_en": "ascending base 30.60–32.85, 10.5% under the high, 3 tight days",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 32.61,
+      "pattern_c": "tight",
+      "pattern_c_shape": "pennant",
+      "trendline_next": 31.91,
+      "industry": "Computer Hardware",
+      "group_pctl": 98,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": true,
+      "channel_lower_next": 31.63,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
+      "ticker": "ELF",
+      "list": "Focus",
+      "rs": 90,
+      "vcp": 4.29,
+      "sma5": 1.45,
+      "atr_ext": 1.98,
+      "reason_en": "ascending base 97.00–107.0, 0.9% under the high, 3 tight days",
+      "pattern_a": "tight",
+      "pattern_b": "tight",
+      "open_gates": [],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 106.49,
+      "pattern_c": "tight",
+      "pattern_c_shape": "pennant",
+      "trendline_next": 106.32,
+      "industry": "Household & Personal Products",
+      "group_pctl": 63,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": true,
+      "channel_lower_next": 100.52,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
       "ticker": "CLMT",
       "list": "Stalk",
       "rs": 99,
       "vcp": 19.71,
       "sma5": 2.55,
       "atr_ext": 3.37,
-      "reason_en": "pattern wide, 10d range 2.8× ADR, base after a 3.8 ATR pullback",
+      "reason_en": "pattern wide, 10d range 2.8× ADR, still trending",
       "pattern_a": "wide",
       "pattern_b": "wide",
       "open_gates": [
@@ -224,7 +282,7 @@
       "sma5": -1.16,
       "atr_ext": 0.05,
       "reason_en": "under 65m SMA30 (-1.0%)",
-      "pattern_a": "tight",
+      "pattern_a": "wide",
       "pattern_b": "wide",
       "open_gates": [
         "sma65",
@@ -238,7 +296,7 @@
       "industry": "Restaurants",
       "group_pctl": 19,
       "leader": [],
-      "carry_days": 0,
+      "carry_days": 1,
       "channel": null,
       "channel_buy_zone": false,
       "channel_lower_next": null,
@@ -273,6 +331,36 @@
       "channel": "at the upper line",
       "channel_buy_zone": false,
       "channel_lower_next": 207.57,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
+      "ticker": "ESTC",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 4.23,
+      "sma5": 0.95,
+      "atr_ext": 3.07,
+      "reason_en": "pattern wide, 10d range 3.9× ADR",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 95.5,
+      "pattern_c": "tight",
+      "pattern_c_shape": "pennant",
+      "trendline_next": 97.52,
+      "industry": "Software—Application",
+      "group_pctl": 76,
+      "leader": [
+        "3m"
+      ],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
       "gap_to_fill": null,
       "triangle_top": null
     },
@@ -363,6 +451,35 @@
       "channel": "middle of the channel",
       "channel_buy_zone": false,
       "channel_lower_next": 91.14,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
+      "ticker": "LFST",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 21.32,
+      "sma5": -0.07,
+      "atr_ext": -0.16,
+      "reason_en": "under 9 EMA",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 12.16,
+      "pattern_c": "wide",
+      "pattern_c_shape": "falling wedge",
+      "trendline_next": 12.09,
+      "industry": "Medical Care Facilities",
+      "group_pctl": 87,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": false,
+      "channel_lower_next": 11.72,
       "gap_to_fill": null,
       "triangle_top": null
     },
@@ -580,9 +697,9 @@
       "vcp": 7.64,
       "sma5": 1.07,
       "atr_ext": 2.66,
-      "reason_en": "pattern wide, 10d range 2.6× ADR, base after a 4.5 ATR pullback",
+      "reason_en": "pattern wide, 10d range 2.6× ADR",
       "pattern_a": "wide",
-      "pattern_b": "wide",
+      "pattern_b": "tight",
       "open_gates": [
         "pattern"
       ],
@@ -594,7 +711,7 @@
       "industry": "Apparel Retail",
       "group_pctl": 46,
       "leader": [],
-      "carry_days": 1,
+      "carry_days": 0,
       "channel": null,
       "channel_buy_zone": false,
       "channel_lower_next": null,
@@ -608,7 +725,7 @@
       "vcp": 21.39,
       "sma5": 1.18,
       "atr_ext": 1.8,
-      "reason_en": "pattern wide, 10d range 3.1× ADR, still trending",
+      "reason_en": "pattern wide, 10d range 3.1× ADR, gave back 59% of the thrust",
       "pattern_a": "wide",
       "pattern_b": "wide",
       "open_gates": [
@@ -630,43 +747,15 @@
       "triangle_top": 39.76
     },
     {
-      "ticker": "VAC",
-      "list": "Stalk",
-      "rs": 94,
-      "vcp": 0.0,
-      "sma5": 0.59,
-      "atr_ext": -0.7,
-      "reason_en": "pattern no fresh thrust",
-      "pattern_a": "tight",
-      "pattern_b": "wide",
-      "open_gates": [
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 105.52,
-      "pattern_c": "wide",
-      "pattern_c_shape": "descending triangle",
-      "trendline_next": 102.21,
-      "industry": "Resorts & Casinos",
-      "group_pctl": 6,
-      "leader": [],
-      "carry_days": 0,
-      "channel": null,
-      "channel_buy_zone": false,
-      "channel_lower_next": null,
-      "gap_to_fill": null,
-      "triangle_top": null
-    },
-    {
       "ticker": "VEEV",
       "list": "Stalk",
       "rs": 94,
       "vcp": 19.04,
       "sma5": 1.18,
       "atr_ext": 3.42,
-      "reason_en": "pattern closes not tight, base after a 4.4 ATR pullback",
+      "reason_en": "pattern closes not tight",
       "pattern_a": "wide",
-      "pattern_b": "wide",
+      "pattern_b": "tight",
       "open_gates": [
         "pattern"
       ],
@@ -678,7 +767,7 @@
       "industry": "Health Information Services",
       "group_pctl": 97,
       "leader": [],
-      "carry_days": 1,
+      "carry_days": 0,
       "channel": null,
       "channel_buy_zone": false,
       "channel_lower_next": null,
@@ -716,6 +805,64 @@
       "triangle_top": 217.32
     },
     {
+      "ticker": "BTE",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp": 12.63,
+      "sma5": 1.63,
+      "atr_ext": 0.53,
+      "reason_en": "1 tight day",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 4.77,
+      "pattern_c": "wide",
+      "pattern_c_shape": "pennant",
+      "trendline_next": 4.68,
+      "industry": "Oil & Gas E&P",
+      "group_pctl": 86,
+      "leader": [],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
+      "ticker": "DAR",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp": 35.94,
+      "sma5": 0.7,
+      "atr_ext": -0.55,
+      "reason_en": "loose VCP",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 62.7,
+      "pattern_c": "wide",
+      "pattern_c_shape": "descending triangle",
+      "trendline_next": 64.63,
+      "industry": "Packaged Foods",
+      "group_pctl": 10,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "middle of the channel",
+      "channel_buy_zone": false,
+      "channel_lower_next": 58.09,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
       "ticker": "PLTR",
       "list": "Stalk",
       "rs": 93,
@@ -741,6 +888,34 @@
       "channel": null,
       "channel_buy_zone": false,
       "channel_lower_next": null,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
+      "ticker": "SBLK",
+      "list": "Stalk",
+      "rs": 92,
+      "vcp": 21.94,
+      "sma5": 0.49,
+      "atr_ext": 0.37,
+      "reason_en": "pattern closes not tight",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 30.51,
+      "pattern_c": "tight",
+      "pattern_c_shape": "pennant",
+      "trendline_next": 30.38,
+      "industry": "Marine Shipping",
+      "group_pctl": 98,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": true,
+      "channel_lower_next": 29.79,
       "gap_to_fill": null,
       "triangle_top": null
     },
@@ -771,6 +946,35 @@
       "channel_lower_next": 40.29,
       "gap_to_fill": null,
       "triangle_top": 49.25
+    },
+    {
+      "ticker": "DOCU",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp": 20.5,
+      "sma5": 2.75,
+      "atr_ext": 3.01,
+      "reason_en": "1 tight day",
+      "pattern_a": "wide",
+      "pattern_b": "tight",
+      "open_gates": [
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 71.51,
+      "pattern_c": "wide",
+      "pattern_c_shape": "pennant",
+      "trendline_next": 69.88,
+      "industry": "Software—Application",
+      "group_pctl": 76,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": true,
+      "channel_lower_next": 70.22,
+      "gap_to_fill": null,
+      "triangle_top": null
     },
     {
       "ticker": "MANH",
@@ -830,34 +1034,6 @@
       "triangle_top": null
     },
     {
-      "ticker": "ELF",
-      "list": "Stalk",
-      "rs": 90,
-      "vcp": 4.29,
-      "sma5": 1.45,
-      "atr_ext": 1.98,
-      "reason_en": "pattern base after a 4.8 ATR pullback",
-      "pattern_a": "tight",
-      "pattern_b": "wide",
-      "open_gates": [
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 106.49,
-      "pattern_c": "tight",
-      "pattern_c_shape": "pennant",
-      "trendline_next": 106.32,
-      "industry": "Household & Personal Products",
-      "group_pctl": 63,
-      "leader": [],
-      "carry_days": 0,
-      "channel": "lower part of the channel",
-      "channel_buy_zone": true,
-      "channel_lower_next": 100.52,
-      "gap_to_fill": null,
-      "triangle_top": null
-    },
-    {
       "ticker": "SCCO",
       "list": "Stalk",
       "rs": 89,
@@ -888,6 +1064,35 @@
       "triangle_top": null
     },
     {
+      "ticker": "VG",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp": 16.73,
+      "sma5": 0.03,
+      "atr_ext": -0.83,
+      "reason_en": "under 65m SMA30 (-0.1%)",
+      "pattern_a": "tight",
+      "pattern_b": "wide",
+      "open_gates": [
+        "sma65",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 13.55,
+      "pattern_c": "wide",
+      "pattern_c_shape": "falling wedge",
+      "trendline_next": 13.34,
+      "industry": "Oil & Gas Midstream",
+      "group_pctl": 86,
+      "leader": [],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
+      "gap_to_fill": null,
+      "triangle_top": null
+    },
+    {
       "ticker": "JXN",
       "list": "Stalk",
       "rs": 87,
@@ -914,35 +1119,6 @@
       "channel_lower_next": 125.83,
       "gap_to_fill": null,
       "triangle_top": 135.55
-    },
-    {
-      "ticker": "NAVN",
-      "list": "Stalk",
-      "rs": 87,
-      "vcp": 13.42,
-      "sma5": 4.94,
-      "atr_ext": -1.7,
-      "reason_en": "1 tight day",
-      "pattern_a": "wide",
-      "pattern_b": "tight",
-      "open_gates": [
-        "comp",
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 23.15,
-      "pattern_c": "wide",
-      "pattern_c_shape": "box",
-      "trendline_next": 30.88,
-      "industry": "Software—Application",
-      "group_pctl": 76,
-      "leader": [],
-      "carry_days": 0,
-      "channel": null,
-      "channel_buy_zone": false,
-      "channel_lower_next": null,
-      "gap_to_fill": null,
-      "triangle_top": null
     },
     {
       "ticker": "CVLT",
@@ -1038,7 +1214,7 @@
       "sma5": -0.37,
       "atr_ext": -1.83,
       "reason_en": "under 65m SMA30 (-0.2%)",
-      "pattern_a": "tight",
+      "pattern_a": "wide",
       "pattern_b": "wide",
       "open_gates": [
         "sma65",
@@ -1052,7 +1228,7 @@
       "industry": "Medical Instruments & Supplies",
       "group_pctl": 65,
       "leader": [],
-      "carry_days": 0,
+      "carry_days": 1,
       "channel": "extended above",
       "channel_buy_zone": false,
       "channel_lower_next": 20.69,
@@ -1060,26 +1236,25 @@
       "triangle_top": null
     },
     {
-      "ticker": "MTD",
+      "ticker": "MTDR",
       "list": "Stalk",
-      "rs": 84,
-      "vcp": 29.87,
-      "sma5": 0.31,
-      "atr_ext": 2.62,
-      "reason_en": "loose VCP",
+      "rs": 80,
+      "vcp": 5.42,
+      "sma5": 2.12,
+      "atr_ext": -0.22,
+      "reason_en": "pattern no fresh thrust",
       "pattern_a": "tight",
       "pattern_b": "wide",
       "open_gates": [
-        "vcp",
         "pattern"
       ],
       "extreme_rvol_ok": false,
-      "prior_day_high": 1536.54,
-      "pattern_c": "tight",
+      "prior_day_high": 54.75,
+      "pattern_c": "wide",
       "pattern_c_shape": "flat base",
-      "trendline_next": 1585.72,
-      "industry": "Diagnostics & Research",
-      "group_pctl": 89,
+      "trendline_next": 63.82,
+      "industry": "Oil & Gas E&P",
+      "group_pctl": 86,
       "leader": [],
       "carry_days": 0,
       "channel": null,
@@ -1102,17 +1277,29 @@
       "a": "10-day range 2.5× ADR, wide",
       "b": "tight"
     },
+    "ESTC": {
+      "a": "10-day range 3.9× ADR, wide",
+      "b": "tight"
+    },
     "NSIT": {
       "a": "tight",
       "b": "no real prior thrust (2.2 ATR)"
     },
     "SNOW": {
       "a": "tight",
-      "b": "no real prior thrust (2.7 ATR); base after a 5.0 ATR pullback, not a continuation"
+      "b": "no real prior thrust (2.7 ATR)"
     },
-    "VAC": {
-      "a": "tight",
-      "b": "no real prior thrust (1.5 ATR)"
+    "ANF": {
+      "a": "10-day range 2.6× ADR, wide",
+      "b": "tight"
+    },
+    "VEEV": {
+      "a": "5-day closes span 1.4× ADR",
+      "b": "tight"
+    },
+    "SBLK": {
+      "a": "5-day closes span 1.4× ADR",
+      "b": "tight"
     },
     "VRNS": {
       "a": "10-day range 2.8× ADR, wide",
@@ -1120,19 +1307,19 @@
     },
     "MANH": {
       "a": "tight",
-      "b": "no real prior thrust (1.6 ATR); base after a 5.0 ATR pullback, not a continuation"
-    },
-    "ELF": {
-      "a": "tight",
-      "b": "base after a 4.8 ATR pullback, not a continuation"
+      "b": "no real prior thrust (1.6 ATR)"
     },
     "JXN": {
       "a": "tight",
-      "b": "no real prior thrust (1.2 ATR); base after a 3.9 ATR pullback, not a continuation"
+      "b": "no real prior thrust (1.2 ATR)"
     },
     "SIG": {
       "a": "5-day closes span 1.4× ADR",
       "b": "tight"
+    },
+    "MTDR": {
+      "a": "tight",
+      "b": "no real prior thrust (2.1 ATR); base gave back 73% of the thrust"
     }
   },
   "review": {},
@@ -1144,7 +1331,9 @@
     ],
     "focus_after": [
       "RNG",
-      "SN"
+      "SN",
+      "HPQ",
+      "ELF"
     ],
     "left_focus": [
       "PLTR",
@@ -1152,6 +1341,8 @@
       "SIMO"
     ],
     "joined_focus": [
+      "ELF",
+      "HPQ",
       "RNG",
       "SN"
     ],
@@ -1172,16 +1363,22 @@
       "WT"
     ],
     "joined_list": [
+      "BTE",
+      "DAR",
+      "DOCU",
+      "ESTC",
       "FROG",
+      "HPQ",
       "IT",
+      "LFST",
       "MANH",
       "MATX",
-      "MTD",
-      "NAVN",
+      "MTDR",
       "PARR",
+      "SBLK",
       "STNG",
       "TENB",
-      "VAC"
+      "VG"
     ],
     "why_left": {
       "PLTR": "extended",
@@ -1207,9 +1404,7 @@
   "pattern_c_vs_decision": {
     "c_tight_not_focus": {
       "DELL": "box 14d after +66%, line 585.11, volume drying up",
-      "ELF": "pennant 22d after +95%, line 106.32, volume drying up",
       "ESTC": "pennant 28d after +104%, line 97.52, volume drying up",
-      "HPQ": "pennant 19d after +67%, line 31.91, volume drying up",
       "JXN": "pennant 19d after +38%, line 134.61",
       "MANH": "falling wedge 29d after +80%, line 205.86, volume drying up",
       "NSIT": "pennant 15d after +59%, line 163.02, volume drying up",
@@ -1255,7 +1450,8 @@
       "strong": 10,
       "in_list": [
         "ANET",
-        "DELL"
+        "DELL",
+        "HPQ"
       ]
     },
     {
@@ -1265,7 +1461,8 @@
       "n": 5,
       "strong": 4,
       "in_list": [
-        "MATX"
+        "MATX",
+        "SBLK"
       ]
     },
     {
@@ -1595,7 +1792,7 @@
     },
     {
       "ticker": "HPQ",
-      "list": "Out",
+      "list": "Focus",
       "state": "lower part of the channel",
       "rs": 95,
       "close": 32.44,
@@ -1649,7 +1846,7 @@
     },
     {
       "ticker": "SBLK",
-      "list": "Out",
+      "list": "Stalk",
       "state": "lower part of the channel",
       "rs": 92,
       "close": 30.47,
@@ -1667,7 +1864,7 @@
     },
     {
       "ticker": "DOCU",
-      "list": "Out",
+      "list": "Stalk",
       "state": "lower part of the channel",
       "rs": 91,
       "close": 71.43,
@@ -1721,7 +1918,7 @@
     },
     {
       "ticker": "ELF",
-      "list": "Stalk",
+      "list": "Focus",
       "state": "lower part of the channel",
       "rs": 90,
       "close": 105.96,
@@ -1987,7 +2184,7 @@
     },
     {
       "ticker": "ESTC",
-      "list": "Out",
+      "list": "Stalk",
       "rs": 98,
       "close": 95.26,
       "peg_date": "2026-08-28",
@@ -2225,7 +2422,7 @@
     },
     {
       "ticker": "VAC",
-      "list": "Stalk",
+      "list": "Out",
       "rs": 94,
       "close": 104.21,
       "peg_date": "2026-08-06",
