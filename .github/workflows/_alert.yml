@@ -48,7 +48,8 @@ jobs:
           if [ "$T" = "A" ] && { [ "$H" -lt 0745 ] || [ "$H" -ge 1300 ]; }; then vai=false; echo "fuori orario per A"; fi
           if [ "$T" = "B" ] && { [ "$H" -lt 1130 ] || [ "$H" -ge 1600 ]; }; then vai=false; echo "fuori orario per B"; fi
           if [ "$T" != "prova" ] && [ "$vai" = "true" ]; then
-            n=$(gh run list -R "$GITHUB_REPOSITORY" -w "${{ github.workflow }}" -s in_progress --json databaseId \
+            WF=$(basename "${GITHUB_WORKFLOW_REF%@*}")      # alert-a.yml / alert-b.yml (il workflow che chiama)
+            n=$(gh run list -R "$GITHUB_REPOSITORY" -w "$WF" -s in_progress --json databaseId \
                  -q "[.[] | select(.databaseId != ${{ github.run_id }})] | length")
             if [ "$n" != "0" ]; then vai=false; echo "turno $T già attivo"; fi
           fi
