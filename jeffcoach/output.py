@@ -44,8 +44,8 @@ def above_sma65(r: dict) -> bool:
 
 def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict]) -> list[str]:
     """Card: FOCUS, STALK sopra la SMA30 65m, STALK sotto [RONIN 04/10, 09/10]. Niente tabelle: una voce per nome
-    con statistiche e descrizione. Se non sta in un embed (4096) le sezioni vanno in più embed dello stesso
-    messaggio (al massimo 6000 caratteri in tutto); oltre si accorciano le frasi, prima degli Stalk.
+    con statistiche e descrizione. Ogni sezione è un embed a sé dello stesso messaggio (Discord: 4096 caratteri per
+    embed, 6000 in tutto); oltre si accorciano le frasi, prima degli Stalk.
     I nomi non si tolgono mai."""
     up = [r for r in stalk if above_sma65(r)]
     down = [r for r in stalk if not above_sma65(r)]
@@ -57,13 +57,7 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict]) -> 
         parts = [f"**WATCHLIST — {title_date}**\n\n" + sect("FOCUS", focus, f_lim),
                  sect(f"STALK — above 65m SMA30 ({len(up)})", up, s_lim),
                  sect(f"STALK — below 65m SMA30 ({len(down)})", down, s_lim)]
-        out = [parts[0]]
-        for p in parts[1:]:                         # unisce finché sta in un embed
-            if len(out[-1]) + 2 + len(p) <= CARD_LIMIT:
-                out[-1] += "\n\n" + p
-            else:
-                out.append(p)
-        return out
+        return parts                                # una sezione per embed, sempre [RONIN 09/10]
     for f_lim, s_lim in ((None, None), (None, 70), (None, 45), (80, 30), (60, 0), (0, 0)):
         d = build(f_lim, s_lim)
         if all(len(x) <= CARD_LIMIT for x in d) and sum(len(x) for x in d) <= CARD_TOTAL_LIMIT:

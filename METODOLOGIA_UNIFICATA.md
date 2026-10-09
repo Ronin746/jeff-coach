@@ -258,7 +258,7 @@ Può anche dare il nome al pattern (flag, pennant, box…) e riscrivere la frase
 
 ## 10. Card Discord
 
-- **Formato (dal 09/10) [RONIN 09/10]:** niente tabelle. Una voce per nome: in grassetto il ticker con RS · VCP · SMA5 · Atr Ext, e subito sotto (`↳`) la descrizione, per Focus e Stalk. Gli Stalk sono divisi in due sezioni: **sopra** e **sotto** la SMA30 65m. Se il testo supera un embed Discord (4096 caratteri) le sezioni vanno in più embed dello stesso messaggio. Nella descrizione degli Stalk, `lagging` = la lettura B non vede una spinta recente (nessun +3 ATR negli ultimi 15 giorni).
+- **Formato (dal 09/10) [RONIN 09/10]:** niente tabelle. Una voce per nome: in grassetto il ticker con RS · VCP · SMA5 · Atr Ext, e subito sotto (`↳`) la descrizione, per Focus e Stalk. Gli Stalk sono divisi in due sezioni: **sopra** e **sotto** la SMA30 65m. Ogni sezione (Focus, Stalk sopra, Stalk sotto) è un riquadro a sé dello stesso messaggio. Nella descrizione degli Stalk, `lagging` = la lettura B non vede una spinta recente (nessun +3 ATR negli ultimi 15 giorni).
 
 **Struttura:**
 - un solo messaggio e un solo embed;
