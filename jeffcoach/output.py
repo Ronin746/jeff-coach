@@ -89,8 +89,10 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
                  sect(f"STALK — above 65m SMA30 ({len(up)})", up, s_lim),
                  sect(f"STALK — below 65m SMA30 ({len(down)})", down, s_lim)]
         if dtl_breaks:          # rotture della trendline discendente in chiusura con volume >= 1,5x [RONIN 09/10]
-            rows = [dict(d, reason_en=f"downtrend line break, vol {d['break_vol']}× avg · line from "
-                                      f"{d['start'][5:]} high {d['start_high']} · next {d['line_next']}"
+            rows = [dict(d, reason_en=(f"downtrend line break, vol {d['break_vol']}× avg" if d.get("break_ago") == 0 else
+                                       f"downtrend line broken {d['break_date'][5:]}, confirmed today with vol {d['confirm_vol']}× avg")
+                                      + " · line from "
+                                      + f"{d['start'][5:]} high {d['start_high']} · next {d['line_next']}"
                                       + ("" if d.get("above_sma200") else " · under SMA200"))
                     for d in dtl_breaks]
             parts.append(sect(f"DOWNTREND LINE BREAK — vol ≥1.5× ({len(rows)})", rows, s_lim))

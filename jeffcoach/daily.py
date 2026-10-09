@@ -148,7 +148,8 @@ def dtl_watch(names, metrics, rows, earn_out, out_universe, grp) -> list[dict]:
             continue
         m = metrics[s]
         kind = DT.state(m)
-        if kind == "break" and (m.get("dt_break_vol") or 0) < C.DTL["break_vol_min"]:
+        bv = m.get("dt_confirm_vol") if m.get("dt_confirm_ago") == 0 else m.get("dt_break_vol")
+        if kind == "break" and (bv or 0) < C.DTL["break_vol_min"]:
             continue
         r = rows.get(s)
         out.append(dict(
@@ -156,6 +157,7 @@ def dtl_watch(names, metrics, rows, earn_out, out_universe, grp) -> list[dict]:
             line_next=_r(m["dt_line_next"]), dist_atr=_r(m["dt_dist_atr"]), touches=m["dt_touches"],
             start=m["dt_start"], start_high=_r(m["dt_start_high"]), slope=round(m["dt_slope"], 6),
             break_date=m.get("dt_break_date"), break_vol=_r(m.get("dt_break_vol")), break_ago=m.get("dt_break_ago"),
+            confirm_date=m.get("dt_confirm_date"), confirm_vol=_r(m.get("dt_confirm_vol")),
             ema9=_r(m["ema9"]), ema21=_r(m["ema21"]), atr=_r(m["atr"]), vcp=_r(m.get("vcp"), 1),
             on_emas=bool(min(m["low"] - m["ema9"], m["low"] - m["ema21"]) <= C.DTL["ema_touch_atr"] * m["atr"]),
             sma5=_r(m.get("sma5_dist_pct")), atr_ext=_r(m.get("ext")), above_sma200=m.get("above_sma200"),

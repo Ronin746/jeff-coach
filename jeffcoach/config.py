@@ -162,6 +162,7 @@ DTL = dict(
     min_drop_pct=15.0,       # dal picco il prezzo è sceso almeno del 15% (una vera discesa)
     min_span=20,             # la linea dura almeno 20 sedute
     break_vol_min=1.5,       # rottura in chiusura da segnalare: volume >= 1,5x la media a 50 giorni [RONIN 09/10]
+    confirm_days=3,          # ... oppure confermata col volume >= 1,5x in uno dei 3 giorni dopo, sopra la linea (caso P)
     near_atr=1.0,            # "vicina": close sotto la linea entro 1 ATR (alert di rottura in seduta)
     pullback_max_days=10,    # dopo la rottura, per 10 sedute si segue il pullback (crossback e SMA30 65m)
     failed_atr=1.0,          # ricaduto più di 1 ATR sotto la linea = rottura fallita, non si segue più

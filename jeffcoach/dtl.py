@@ -81,6 +81,17 @@ def read_dtl(df: pd.DataFrame, atr: float) -> dict:
                    dt_break_close=float(c[brk]), dt_break_line=float(h[a] + s * (brk - a)),
                    dt_break_vol=float(v[brk] / vol50[brk]) if vol50[brk] and not np.isnan(vol50[brk]) else None,
                    dt_max_since_atr=float((h[brk:].max() - (h[a] + s * (brk - a))) / atr))
+        # conferma col volume [RONIN 09/10, caso P]: il volume >= break_vol_min può arrivare nei giorni subito dopo
+        # la rottura (P: rotta il 17/09 a 1,1x, il 18/09 a 25x sopra la linea). Primo giorno così, entro confirm_days.
+        line = h[a] + s * (np.arange(n) - a)
+        conf = None
+        for i in range(brk, min(n, brk + p["confirm_days"] + 1)):
+            if vol50[i] and not np.isnan(vol50[i]) and v[i] / vol50[i] >= p["break_vol_min"] and c[i] > line[i]:
+                conf = i
+                break
+        if conf is not None:
+            out.update(dt_confirm_ago=int(n - 1 - conf), dt_confirm_vol=float(v[conf] / vol50[conf]),
+                       dt_confirm_date=str(df.index[conf].date()))
     return out
 
 
@@ -91,7 +102,7 @@ def state(m: dict) -> Optional[str]:
         return None
     if m.get("dt_broken"):
         ago = m["dt_break_ago"]
-        if ago == 0:
+        if ago == 0 or m.get("dt_confirm_ago") == 0:     # rotta oggi, o confermata oggi dal volume
             return "break"
         if ago <= p["pullback_max_days"] and m["dt_dist_atr"] >= -p["failed_atr"]:
             return "pullback"
