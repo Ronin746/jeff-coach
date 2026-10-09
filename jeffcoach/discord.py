@@ -147,14 +147,28 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     return res
 
 
-def send_alert(title: str, body: str) -> dict:
-    """Alert intraday: un embed, niente content né menzioni."""
+def send_alert(title: str, body: str, image: Optional[bytes] = None) -> dict:
+    """Alert intraday: un embed, niente content né menzioni. Con image (PNG) il grafico va dentro l'embed [RONIN 09/10]."""
     url = load_webhook(C.ALERT_WEBHOOK_ENV)
     if not url:
         return {"sent": False, "reason": "discord_not_configured"}
-    payload = {"username": C.ALERT_USERNAME, "allowed_mentions": {"parse": []},
-               "embeds": [{"title": title, "description": body, "color": C.ALERT_COLOR}]}
-    res = _request(url, "POST", json.dumps(payload).encode(), "application/json")
+    emb = {"title": title, "description": body, "color": C.ALERT_COLOR}
+    payload = {"username": C.ALERT_USERNAME, "allowed_mentions": {"parse": []}, "embeds": [emb]}
+    if image:
+        emb["image"] = {"url": "attachment://chart.png"}
+        payload["attachments"] = [{"id": 0, "filename": "chart.png"}]
+        b = uuid.uuid4().hex
+        data = (f"--{b}\r\nContent-Disposition: form-data; name=\"payload_json\"\r\nContent-Type: application/json\r\n\r\n".encode()
+                + json.dumps(payload).encode()
+                + f"\r\n--{b}\r\nContent-Disposition: form-data; name=\"files[0]\"; filename=\"chart.png\"\r\nContent-Type: image/png\r\n\r\n".encode()
+                + image + f"\r\n--{b}--\r\n".encode())
+        res = _request(url, "POST", data, f"multipart/form-data; boundary={b}")
+        if not res.get("ok"):                   # se l'immagine dà problemi, l'alert parte senza
+            emb.pop("image", None)
+            payload.pop("attachments", None)
+            res = _request(url, "POST", json.dumps(payload).encode(), "application/json")
+    else:
+        res = _request(url, "POST", json.dumps(payload).encode(), "application/json")
     return {"sent": bool(res.get("ok")), "status": res.get("status"), "reason": res.get("error")}
 
 

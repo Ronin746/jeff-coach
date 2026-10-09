@@ -172,6 +172,7 @@ Imparata dai grafici di Ronin dell'08/10 (XLK, NET, CRWD, FTNT, RNG, RBRK, SMCI)
 - Zona d'acquisto = i primi tre stati, con EMA21 > SMA50 > SMA200, close sopra la SMA50 e RS >= 80.
 - **Lista canale** (`channel_watch` in `today.json`, riga "Canale rialzista" nel riepilogo): i nomi in zona d'acquisto con SMA30 65m ed EMA9. Si segnala anche chi ha **recuperato la SMA30 65m pur essendo ancora sotto la EMA9** [RONIN 08/10].
 - **Alert Sydney "· Channel"**: per i nomi della lista che hanno chiuso **sotto** la SMA30 65m, un alert (una volta per nome al giorno) quando in seduta il prezzo torna sopra la SMA30 65m calcolata con il bucket in corso, anche se è ancora sotto la EMA9. È un "guardalo", non un ingresso Focus. Spegnibile con `CHANNEL_ALERT = False`.
+- **Grafico nell'alert Channel (dal 09/10) [RONIN 09/10]:** sotto il testo c'è un'immagine con il daily degli ultimi ~6 mesi (candele, EMA9, EMA21, SMA50 e le due linee del canale prolungate a oggi, linea tratteggiata al prezzo dell'alert) e un riquadro con i close a 65 minuti degli ultimi ~15 giorni e la SMA30 65m. Le linee vengono da `channel_watch[].lines` della lista del mattino. Spegnibile con `CHANNEL_CHART = False`; senza matplotlib l'alert parte senza immagine.
 - Non cambia Focus/Stalk: escono gli stessi nomi di prima. Gli utili e i gate di universo valgono anche per la lista canale; gli Stalk scaduti possono restarci (spesso sono proprio i pullback nel canale).
 
 ### Regole dai post per abbonati di Jeff (dal 09/10) [RONIN 08/10]

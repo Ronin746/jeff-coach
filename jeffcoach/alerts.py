@@ -303,7 +303,12 @@ def run_once(dry_run: bool = False) -> dict:
             if lv["price"] <= lv["sma"]:
                 continue
             k = f"{t}|Channel|sma30-65m"
-            res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_channel(c, lv["price"], lv["sma"]))
+            img = None
+            if not dry_run and C.CHANNEL_CHART:
+                from .chart import channel_chart          # grafico daily + 65m nell'alert [RONIN 09/10]
+                img = channel_chart(c, _chan_cache["bars"].get(t), lv["price"], lv["sma"])
+            res = ({"sent": True, "dry_run": True} if dry_run
+                   else send_alert(*fmt_channel(c, lv["price"], lv["sma"]), image=img))
             if res.get("sent"):
                 day[k] = {"ts": datetime.now(ROME).isoformat(), "price": lv["price"], "sma30_65m": lv["sma"]}
                 fired.append(k)

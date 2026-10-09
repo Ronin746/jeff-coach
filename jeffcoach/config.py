@@ -148,6 +148,7 @@ CHANNEL = dict(
 )
 CHANNEL_RS_MIN = 80              # lista "canale": solo RS >= 80 [RONIN 08/10]
 CHANNEL_ALERT = True             # Sydney: alert quando un nome del canale recupera la SMA30 65m in seduta
+CHANNEL_CHART = True           # grafico (daily con le linee del canale + 65m) allegato all'alert Channel [RONIN 09/10]
 CHANNEL_POLL_SEC = 300           # la SMA30 65m live dei nomi del canale si riscarica ogni 5 minuti
 
 # Gap al ribasso da riempire (Jeff: XLK, ESTC, NOW restano Stalk finché non riempiono il gap)

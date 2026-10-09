@@ -103,7 +103,15 @@ def add_channel(m: dict, df) -> None:
         m["d_ok_data"] = False
     ok, why, _ = CH.reading_d(m)
     m["pattern_d_ok"], m["pattern_d_why"] = ok, why
-    m.pop("d_lines", None)
+    ln = m.pop("d_lines", None)
+    if ln:                                       # linee del canale in date, per il grafico dell'alert [RONIN 09/10]
+        i0, u0, l0, i1, u1, l1 = ln
+        try:
+            m["d_line_pts"] = dict(start=str(df.index[i0].date()), end=str(df.index[i1].date()),
+                                   up0=round(u0, 4), lo0=round(l0, 4), up1=round(u1, 4), lo1=round(l1, 4),
+                                   slope=round((u1 - u0) / max(i1 - i0, 1), 6))
+        except Exception:
+            pass
 
 
 def channel_watch(rows: dict, s65: dict) -> list[dict]:
@@ -122,7 +130,8 @@ def channel_watch(rows: dict, s65: dict) -> list[dict]:
                         lower_line_next=_r(m["d_lower_next"]), upper_line_next=_r(m["d_upper_next"]),
                         pos=_r(m["d_pos"]), width_atr=_r(m["d_width_atr"], 1), sma30_65m=_r(s30),
                         above_sma30_65m=above, ema9=_r(m["ema9"]), under_ema9=m["close"] <= m["ema9"],
-                        atr=_r(m["atr"]), industry=m.get("industry"), group_pctl=m.get("group_pctl")))
+                        atr=_r(m["atr"]), industry=m.get("industry"), group_pctl=m.get("group_pctl"),
+                        lines=m.get("d_line_pts")))
     return sorted(out, key=lambda x: (-(x["rs"] or 0), x["ticker"]))
 
 

@@ -185,10 +185,10 @@ _MUTO = threading.local()
 _send_alert_vero = alerts.send_alert
 
 
-def _send_alert_turno(title: str, body: str) -> dict:
+def _send_alert_turno(title: str, body: str, image: bytes | None = None) -> dict:
     """Fuori dalla propria finestra: segna l'alert come fatto ma non lo manda (o lo manda al finto Discord)."""
     if not getattr(_MUTO, "on", False):
-        return _send_alert_vero(title, body)
+        return _send_alert_vero(title, body, image=image)
     log.info("muto (fuori turno): %s", title)
     url = os.environ.get("AVVIA_MUTO_URL")
     if url:
