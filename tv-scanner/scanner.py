@@ -76,7 +76,8 @@ PIVOT30_LIST_PATH = BASE_DIR / "pivot30_list.txt"  # legacy only (unused in wl m
 PIVOT_WL_PATH = BASE_DIR / "pivot_wl_323848747.txt"  # TV WL 323848747 "Main" (universe)
 PIVOT_WL_FOCUS_PATH = BASE_DIR / "pivot_wl_318147906.txt"  # TV WL 318147906 "Focus" (2026-10-06: both WLs)
 PIVOT_WL_EXTRA_PATH = BASE_DIR / "pivot_wl_327715885.txt"  # TV WL 327715885 (Ronin 2026-10-09: aggiunta)
-PIVOT_WL_PATHS = [PIVOT_WL_PATH, PIVOT_WL_FOCUS_PATH, PIVOT_WL_EXTRA_PATH]
+PIVOT_WL_AUTO_PATH = BASE_DIR / "pivot_wl_auto.txt"  # Ronin 09/10: titoli adv$>=50M, mcap>500M, RS>=80 (universo_auto.py)
+PIVOT_WL_PATHS = [PIVOT_WL_PATH, PIVOT_WL_FOCUS_PATH, PIVOT_WL_EXTRA_PATH, PIVOT_WL_AUTO_PATH]
 # Tickers never scanned even if present in the WL (user cannot trade ETFs).
 # sync_pivot_wl.py comments ETFs out of the WL file automatically; this is a
 # manual override list (bare tickers, upper-case).
@@ -127,7 +128,7 @@ PIVOT30_SAME_SESSION_ONLY = True
 PIVOT30_MAX_CROSSES = 1
 # Filtro qualità del pivot (2026-10-09 Ronin, vedi backtest sopra). Tutte in ATR(14) daily.
 PIVOT30_QUALITY = True
-PIVOT30_MAX_EXT50_ATR = 4.0       # close daily di ieri non oltre 4 ATR sopra la SMA50 (non esteso)
+PIVOT30_MAX_EXT50_ATR = 5.5       # close daily di ieri non oltre 5,5 ATR sopra la SMA50 (Ronin 09/10: era 4)
 PIVOT30_MAX_DROP_ATR = 1.5        # la discesa prima del pivot non oltre 1,5 ATR (non un crollo)
 PIVOT30_MAX_RISK_ATR = 0.3        # prezzo del segnale − minimo del pivot <= 0,3 ATR (pivot stretto, rischio piccolo)
 PIVOT30_MIN_GAP_ATR = -0.5        # apertura non sotto la chiusura di ieri di oltre 0,5 ATR
@@ -385,7 +386,13 @@ def load_pivot_wl(path: Path | str | None = None) -> list[str]:
     lines: list[str] = []
     for p in paths:
         if p.exists():
-            lines.extend(p.read_text().splitlines())
+            txt = p.read_text(encoding="utf-8").splitlines()
+            # file con data (pivot_wl_auto.txt): vale solo per la seduta di New York di quel giorno
+            if txt and txt[0].startswith("date:"):
+                if txt[0].split(":", 1)[1].strip() != datetime.now(ZoneInfo("America/New_York")).date().isoformat():
+                    continue
+                txt = txt[1:]
+            lines.extend(txt)
     out: list[str] = []
     seen_tk: set[str] = set()
     for line in lines:
@@ -1416,6 +1423,60 @@ def _pivot30_quality(
     return None
 
 
+# Ronin 09/10: Remy manda solo i pivot di tre versioni (backtest 58 sedute 5m + 3 anni 60m, uscita swing 7-10R).
+# L'ordine è la priorità: se un pivot è di più versioni, nel titolo va la prima.
+PIVOT30_VERSIONS_ONLY = True
+PIVOT30_V_DTL_EMA9 = "DTL break + EMA9"       # trendline daily rotta <=10 sedute con volume + pivot a +-0,25 ATR dalla EMA9 in salita
+PIVOT30_V_DTL5 = "DTL break 5d"               # trendline daily rotta <=5 sedute con volume
+PIVOT30_V_EMA9U = "EMA9 undercut"             # minimo del pivot da -0,25 a 0 ATR sotto la EMA9 daily in salita
+PIVOT30_DTL_VOL_MIN = 1.5
+PIVOT30_DTL_MAX_BELOW_LINE_ATR = 1.0
+PIVOT30_EMA9_BAND_ATR = 0.25
+
+
+def _daily_df(prior: list[dict]):
+    import pandas as pd
+    idx = pd.DatetimeIndex([pd.Timestamp(daily_session_date(int(b["t"]))) for b in prior])
+    return pd.DataFrame({"Open": [float(b["o"]) for b in prior], "High": [float(b["h"]) for b in prior],
+                         "Low": [float(b["l"]) for b in prior], "Close": [float(b["c"]) for b in prior],
+                         "Volume": [float(b.get("v") or 0) for b in prior]}, index=idx)
+
+
+def pivot30_version(daily_bars: Optional[list[dict]], green_t: int, pivot_low: float, atr: float) -> Optional[str]:
+    """Versione del pivot (None = nessuna). Daily solo fino a ieri (le sedute prima di quella del pivot)."""
+    if not daily_bars or not atr:
+        return None
+    g_day = _et_day(int(green_t))
+    prior = sorted((b for b in daily_bars if daily_session_date(int(b["t"])) < g_day), key=lambda b: int(b["t"]))
+    if len(prior) < 80:
+        return None
+    closes = [float(b["c"]) for b in prior]
+    e9 = ema_series(closes, 9)
+    e9_rise = e9[-1] is not None and e9[-2] is not None and e9[-1] > e9[-2]
+    lv = (pivot_low - e9[-1]) / atr if e9[-1] is not None else None
+    dtl_ago = None
+    try:
+        import sys as _sys
+        _root = str(Path(__file__).resolve().parent.parent)
+        if _root not in _sys.path:
+            _sys.path.insert(0, _root)
+        from jeffcoach import dtl as _D
+        m = _D.read_dtl(_daily_df(prior[-260:]), atr)
+        vol_ok = (m.get("dt_break_vol") or 0) >= PIVOT30_DTL_VOL_MIN or m.get("dt_confirm_ago") is not None
+        if m.get("dt_broken") and vol_ok and m.get("dt_dist_atr", -99) >= -PIVOT30_DTL_MAX_BELOW_LINE_ATR:
+            dtl_ago = int(m["dt_break_ago"])
+    except Exception as e:  # senza jeffcoach: niente versioni DTL, resta la EMA9
+        print(f"[pivot30] DTL non disponibile: {type(e).__name__}: {e}")
+    b = PIVOT30_EMA9_BAND_ATR
+    if dtl_ago is not None and dtl_ago <= 10 and e9_rise and lv is not None and -b <= lv <= b:
+        return PIVOT30_V_DTL_EMA9
+    if dtl_ago is not None and dtl_ago <= 5:
+        return PIVOT30_V_DTL5
+    if e9_rise and lv is not None and -b <= lv <= 0:
+        return PIVOT30_V_EMA9U
+    return None
+
+
 def detect_30m_pivot(
     symbol: str,
     bars_5m: list[dict],
@@ -1504,6 +1565,9 @@ def detect_30m_pivot(
     px_now = float(break_resolved[0]["c"]) if is_break else float(ind.price)
     if _pivot30_quality(daily_bars, bars_30, green_idx, pivot_low, pivot_drop, pivot_atr, px_now, closed):
         return None
+    version = pivot30_version(daily_bars, green_t, pivot_low, pivot_atr)
+    if PIVOT30_VERSIONS_ONLY and version is None:
+        return None
 
     if is_break and is_cross:
         kind = "break + cross"
@@ -1543,6 +1607,7 @@ def detect_30m_pivot(
         pivot_atr=float(pivot_atr),
         pivot_ref=float(pivot_ref),
         pivot_ref_kind=str(pivot_ref_kind),
+        pivot_version=version,
     )
 
 
@@ -1731,6 +1796,7 @@ class Signal:
     pivot_atr: Optional[float] = None  # daily ATR(14) used for the gate
     pivot_ref: Optional[float] = None  # high_ref: PDH/session high; gap_ref: prior close/open
     pivot_ref_kind: Optional[str] = None  # prior_close|session_high (high_ref) or gap_down|gap_up
+    pivot_version: Optional[str] = None  # Ronin 09/10: "DTL break + EMA9" | "DTL break 5d" | "EMA9 undercut"
 
 
 def _macd_bull(ind: Indicators) -> bool:
@@ -2241,6 +2307,8 @@ def format_signal_md(sig: Signal) -> str:
     if sig.nearest_daily_ma:
         lines.append(f"Nearest daily MA: {sig.nearest_daily_ma}")
     if sig.trigger == TRIGGER_30M_PIVOT:
+        if sig.pivot_version:
+            lines.append(f"Version: {sig.pivot_version}")
         if sig.pivot_kind:
             lines.append(f"Pivot kind: {sig.pivot_kind}")
         if sig.pivot_alert_n is not None:

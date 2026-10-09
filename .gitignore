@@ -15,3 +15,4 @@ tv-scanner/last_signals.md
 tv-scanner/last_scan_summary.json
 tv-scanner/*.bak_*
 cloud/sink_out.jsonl
+tv-scanner/pivot_wl_auto.json

@@ -214,3 +214,30 @@ minimo del pivot, conta se arriva prima +2R o lo stop (entro la seduta dopo). Sc
   STX 28–29/09) restano segnalati.
 - Ingresso sulla rottura del massimo del pivot invece del crossback: risultati simili (+0,28R con il filtro).
   Resta il crossback, come deciso il 06/10.
+
+## 30M PIVOT — solo tre versioni (Ronin 09/10)
+
+Remy manda un pivot (crossback EMA6/20 + MACD sui 5m, filtro qualità del 09/10) **solo** se è di una di
+queste versioni; la versione è nel titolo dell'embed (`30 minute pivot · <versione> • HH:MM Close`),
+un embed per versione. Se un pivot rientra in più versioni vale la prima.
+
+| Versione | Regola (daily fino a ieri) |
+|---|---|
+| `DTL break + EMA9` | trendline discendente daily rotta da <=10 sedute con volume >= 1,5x (o conferma entro 3 giorni), close non oltre 1 ATR sotto la linea, e minimo del pivot a ±0,25 ATR dalla EMA9 daily in salita |
+| `DTL break 5d` | trendline rotta da <=5 sedute con volume, non fallita |
+| `EMA9 undercut` | minimo del pivot tra −0,25 e 0 ATR sotto la EMA9 daily in salita (buca appena e richiude sopra) |
+
+Estensione massima dalla SMA50 portata da 4 a **5,5 ATR** (`PIVOT30_MAX_EXT50_ATR`): su 3 anni di 60m i segnali
+tra 4 e 5,5 ATR rendono come gli altri. Spegnere le versioni: `PIVOT30_VERSIONS_ONLY = False`.
+
+Backtest (tenuta swing, stop fisso al minimo del pivot): 5m 58 sedute, 5 sedute, 7R/10R —
+V1 +2,0/+2,1R (14 segnali), V2 +0,35/+0,61 (54), V3 +0,68/+0,82 (152). Su 3 anni di 60m (ingresso sulla
+rottura del massimo del pivot), 10 sedute: V1 +0,51/+0,65 (136), V2 +0,34/+0,40 (563), V3 +0,23/+0,24 (1819).
+Script: `backtest/pivot30_livelli_target.py`, `backtest/pivot_rottura_swing.py`.
+
+### Titoli in più oltre le watchlist
+`universo_auto.py` (lanciato da avvia.py con il sync delle 15:00 di Roma; il turno B in cloud lo fa all'avvio
+se manca) scrive `pivot_wl_auto.txt` con `date: AAAA-MM-GG`: azioni USA mcap > 500M, adv$ (media 50 giorni
+di volume × close) >= 50M, RS >= 80, non oltre 5,5 ATR sopra la SMA50, e candidate a una versione (trendline
+rotta <=10 giorni con volume, oppure EMA9 in salita con il close non oltre 3 ATR sopra). Lo scanner lo legge
+solo nella seduta di quella data. Le daily dei titoli si scaricano una volta al giorno (cache del giorno).

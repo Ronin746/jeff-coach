@@ -257,6 +257,24 @@ def build_discord_embed(signals: list[dict[str, Any]]) -> dict[str, Any]:
     return embed
 
 
+def build_pivot30_embeds(signals: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Ronin 09/10: un embed per versione del pivot, titolo ``30 minute pivot · <versione> • HH:MM Close``."""
+    _e, _v, _d, _s, pivot30 = _split_buckets(signals)
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for s in pivot30:
+        groups.setdefault(str(s.get("pivot_version") or ""), []).append(s)
+    out: list[dict[str, Any]] = []
+    for ver, sigs in groups.items():
+        rows = "\n".join(_aligned_pivot30_rows(sigs)).strip()
+        if not rows:
+            continue
+        title = _pivot30_title(sigs)
+        if ver:
+            title = title.replace("30 minute pivot •", f"30 minute pivot · {ver} •", 1)
+        out.append({"title": title, "color": 0x5DADE2, "description": rows})
+    return out
+
+
 def build_pivot30_embed(signals: list[dict[str, Any]]) -> dict[str, Any]:
     """Separate 30m pivot embed. Title ``30 minute pivot • HH:MM Close``."""
     if not signals:
@@ -282,9 +300,7 @@ def build_discord_embeds(signals: list[dict[str, Any]]) -> list[dict[str, Any]]:
         # main may have title-only if somehow empty desc — require description for main
         if main.get("description"):
             embeds.append(main)
-    pivot = build_pivot30_embed(signals)
-    if pivot.get("title") and pivot.get("description"):
-        embeds.append(pivot)
+    embeds.extend(build_pivot30_embeds(signals))
     return embeds
 
 
@@ -313,6 +329,9 @@ def _normalize(signals: list[Any]) -> list[dict[str, Any]]:
             pk = getattr(s, "pivot_kind", None)
             if pk:
                 d["pivot_kind"] = pk
+            pv = getattr(s, "pivot_version", None)
+            if pv:
+                d["pivot_version"] = pv
             rr = getattr(s, "rs_rating", None)
             if rr is not None:
                 d["rs_rating"] = rr

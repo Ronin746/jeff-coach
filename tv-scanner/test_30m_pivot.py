@@ -46,6 +46,7 @@ def _regole_meccanica(monkeypatch):
     di prima (2 rosse, senza filtro qualità). Il filtro del 09/10 ha i suoi test in fondo al file."""
     monkeypatch.setattr(_S, "PIVOT30_MIN_REDS", 2)
     monkeypatch.setattr(_S, "PIVOT30_QUALITY", False)
+    monkeypatch.setattr(_S, "PIVOT30_VERSIONS_ONLY", False)
 
 
 def _ts(y, m, d, hh, mm) -> int:
@@ -970,3 +971,36 @@ def test_filtro_qualita_pivot():
         assert q(ext, b30, 5, 111.5, 1.0, 2.0, 112.0, s5) == "ext50"
     finally:
         _S.PIVOT30_QUALITY = True
+
+
+def test_versioni_pivot_e_titolo():
+    """Ronin 09/10: tre versioni; la EMA9 sotto di poco -> 'EMA9 undercut'; lontano -> nessuna; titolo con versione."""
+    from datetime import datetime as _dt, timedelta as _td
+    from zoneinfo import ZoneInfo as _Z
+    et = _Z("America/New_York")
+    day0 = _dt(2026, 3, 2, 16, 0, tzinfo=et)
+    bars = []
+    px = 100.0
+    i = 0
+    while len(bars) < 120:
+        d = day0 + _td(days=i); i += 1
+        if d.weekday() >= 5:
+            continue
+        px *= 1.004                                   # salita regolare: EMA9 in salita, nessuna trendline discendente
+        bars.append({"t": int(d.replace(hour=9, minute=30).timestamp()), "o": px, "h": px * 1.01, "l": px * 0.99, "c": px, "v": 1e6})
+    green = _dt(2026, 9, 1, 11, 0, tzinfo=et)
+    green_t = int(green.timestamp())
+    closes = [b["c"] for b in bars]
+    e9 = _S.ema_series(closes, 9)[-1]
+    atr = 2.0
+    assert _S.pivot30_version(bars, green_t, e9 - 0.1 * atr, atr) == _S.PIVOT30_V_EMA9U
+    assert _S.pivot30_version(bars, green_t, e9 + 0.1 * atr, atr) is None       # sopra la EMA9: non è undercut
+    assert _S.pivot30_version(bars, green_t, e9 - 1.0 * atr, atr) is None
+    sigs = [{"symbol": "NASDAQ:AAA", "trigger": _S.TRIGGER_30M_PIVOT, "price": 10.0, "bar_t": green_t,
+             "pivot_high": 10.2, "pivot_low": 9.9, "pivot_kind": "cross", "pivot_version": _S.PIVOT30_V_EMA9U},
+            {"symbol": "NYSE:BBB", "trigger": _S.TRIGGER_30M_PIVOT, "price": 20.0, "bar_t": green_t,
+             "pivot_high": 20.2, "pivot_low": 19.9, "pivot_kind": "cross", "pivot_version": _S.PIVOT30_V_DTL5}]
+    embeds = build_discord_embeds(sigs)
+    titles = sorted(e["title"] for e in embeds)
+    assert len(embeds) == 2
+    assert any("· EMA9 undercut •" in t for t in titles) and any("· DTL break 5d •" in t for t in titles)

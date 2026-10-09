@@ -7,8 +7,10 @@ di New York (festività, chiusure anticipate e settimane con l'apertura alle 14:
     Manda l'ingresso sul 30m ORH (solo Focus) e l'RVOL 30% nella prima ora (Focus e Stalk).
   - Scanner di Remy: una scansione 20 s dopo la chiusura di ogni barra da 5 minuti (30m pivot crossback),
     con il suo codice invariato.
-  - Watchlist di Remy: alle 15:00 di Roma dei giorni di borsa rilegge le due watchlist TradingView
-    pubbliche (Main, Focus e la 327715885) e aggiorna i file locali. Non le modifica mai su TradingView.
+  - Watchlist di Remy: alle 15:00 di Roma dei giorni di borsa rilegge le watchlist TradingView pubbliche
+    (Main, Focus e la 327715885) e aggiorna i file locali (non le modifica mai su TradingView); poi
+    costruisce pivot_wl_auto.txt, i titoli in più con adv$ >= 50M, mcap > 500M e RS >= 80
+    (tv-scanner/universo_auto.py).
 
 Uso:
   avvia.py               normale (manda su Discord)
@@ -304,6 +306,17 @@ def remy_sync(dry: bool) -> None:
         lg.info("watchlist %s: %d simboli, sync rc=%s %s", wl_id, len(syms), r.returncode, (r.stdout or r.stderr)[-300:].replace("\n", " "))
 
 
+def remy_universo(dry: bool) -> None:
+    """Ronin 09/10: titoli in più per Remy (adv$ >= 50M, mcap > 500M, RS >= 80) -> tv-scanner/pivot_wl_auto.txt."""
+    lg = logging.getLogger("remy-sync")
+    if dry:
+        lg.info("universo automatico: salto (prova)")
+        return
+    r = subprocess.run([sys.executable, "universo_auto.py", "--se-manca"], cwd=TV, capture_output=True, text=True,
+                       env=os.environ.copy(), timeout=1500)
+    lg.info("universo automatico rc=%s %s", r.returncode, (r.stdout or r.stderr)[-300:].replace("\n", " "))
+
+
 def sync_loop(dry: bool, stop: threading.Event) -> None:
     """Una volta al giorno di borsa, alle 15:00 di Roma (o all'avvio se è già passata e non è stata fatta)."""
     mark = BASE / "dati" / "remy_sync_ultimo.txt"
@@ -317,6 +330,10 @@ def sync_loop(dry: bool, stop: threading.Event) -> None:
                 remy_sync(dry)
             except Exception as e:
                 logging.getLogger("remy-sync").exception("sync: %s", e)
+            try:
+                remy_universo(dry)
+            except Exception as e:
+                logging.getLogger("remy-sync").exception("universo automatico: %s", e)
             if not dry:
                 mark.write_text(today, encoding="utf-8")
         stop.wait(120)
@@ -367,6 +384,10 @@ def main() -> int:
         log.info("oggi niente seduta o seduta già chiusa: esco")
         return 0
     stop = threading.Event()
+    if a.senza_sync and not a.dry_run:
+        # turno B: il file dei titoli in più lo fa il turno A, ma il commit di A arriva a fine turno.
+        # Se manca quello di oggi lo costruisco io (una volta, in un thread a parte).
+        threading.Thread(target=lambda: remy_universo(False), daemon=True, name="universo").start()
     ts = [threading.Thread(target=f, args=(a.dry_run, stop), daemon=True, name=f.__name__)
           for f in (coach_loop, remy_loop) + (() if a.senza_sync else (sync_loop,))]
     for t in ts:

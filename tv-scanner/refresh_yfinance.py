@@ -43,6 +43,7 @@ SYMBOLS_PATH = BASE / "symbols.txt"
 SOURCE_LABEL = "yfinance:5m:10d"
 DAILY_SOURCE_LABEL = "yfinance:1d:2y"
 DAILY_PERIOD_DEFAULT = "2y"
+REUSE_DAILY_SAME_DAY = True
 SPX_YAHOO = "^GSPC"  # RS Rating reference; cached daily, not scanned
 DAILY_INTERVAL = "1d"
 
@@ -311,9 +312,32 @@ def refresh_daily(
         "fetched_at_utc": fetched_at,
     }
     t0 = time.perf_counter()
+    # Ronin 09/10: il 30M PIVOT usa solo le daily chiuse (fino a ieri). Se la cache del titolo è già stata
+    # scaricata oggi (New York) la riuso: una sola discesa al giorno invece che a ogni scansione.
+    if REUSE_DAILY_SAME_DAY:
+        from zoneinfo import ZoneInfo
+        _et = ZoneInfo("America/New_York")
+        today_et = datetime.now(_et).date()
+        keep_sym, keep_tk = [], []
+        for sym, t in zip(symbols, tickers):
+            try:
+                pth = DAILY_CACHE / f"{sym.replace(':', '_')}.json"
+                j = json.loads(pth.read_text())
+                got = datetime.fromisoformat(j["downloaded_at_utc"]).astimezone(_et).date()
+                if got == today_et and len(j.get("bars") or []) >= 260:
+                    bars_by_symbol[sym] = j["bars"]
+                    report["fetched_ok"] += 1
+                    report["bars"][sym] = len(j["bars"])
+                    continue
+            except Exception:
+                pass
+            keep_sym.append(sym)
+            keep_tk.append(t)
+        report["from_cache_today"] = len(symbols) - len(keep_sym)
+        symbols, tickers = keep_sym, keep_tk
     df = None
     try:
-        df = batch_download(tickers, period, DAILY_INTERVAL, prepost=False)
+        df = batch_download(tickers, period, DAILY_INTERVAL, prepost=False) if tickers else None
     except Exception as e:
         report["errors"].append({"stage": "batch_download", "error": f"{type(e).__name__}: {e}"})
 
