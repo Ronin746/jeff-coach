@@ -70,41 +70,49 @@ def _multipart(payload: dict, filename: str, content: bytes) -> tuple[bytes, str
 
 
 def post_card(session: date, dry_run: bool = False) -> dict:
+    """Card (riquadri) e, subito sotto, un secondo messaggio con il solo file txt per TradingView, così il file
+    da scaricare sta in fondo alla card [RONIN 09/10]. Stesso giorno: si correggono i due messaggi, mai nuovi post."""
     work = C.STATE / f"daily_{session}"
     card = json.loads((work / "card.json").read_text(encoding="utf-8"))
     txt_path = C.AGREED / f"watchlist_{session}.txt"
     if not txt_path.exists():
         txt_path = work / f"watchlist_{session}.txt"
     fname = f"watchlist_{session}.txt"
-    payload = {"username": C.CARD_USERNAME, **card, "attachments": [{"id": 0, "filename": fname}]}
-    # tasto in fondo alla card che scarica il txt per TradingView [RONIN 09/10]
-    # (tasto-link: i webhook normali li accettano con ?with_components=true; se Discord li rifiuta si pubblica senza)
-    btn = [{"type": 1, "components": [{"type": 2, "style": 5, "label": f"⬇ Download {fname}",
-                                       "url": f"{C.WATCHLIST_RAW_BASE}/{fname}"}]}]
-    body, ctype = _multipart({**payload, "components": btn}, fname, txt_path.read_bytes())
-    body_plain, _ = _multipart(payload, fname, txt_path.read_bytes())
     state_p = work / "discord_post.json"
     prev = json.loads(state_p.read_text(encoding="utf-8")) if state_p.exists() else {}
     if dry_run:
-        return {"dry_run": True, "would": "PATCH" if prev.get("message_id") else "POST", "bytes": len(body)}
+        return {"dry_run": True, "would": "PATCH" if prev.get("message_id") else "POST"}
     url = load_webhook(C.CARD_WEBHOOK_ENV)
     if not url:
         return {"ok": False, "error": "webhook card non configurato"}
-    base = url.split("?")[0]
-    q = "&" if "?" in url else "?"
-    if prev.get("message_id"):       # stesso giorno: si corregge il messaggio, mai un secondo post
-        target, method = f"{base}/messages/{prev['message_id']}?with_components=true", "PATCH"
-    else:
-        target, method = url + q + "wait=true&with_components=true", "POST"
-    res = _request(target, method, body, ctype)
-    if not res.get("ok") and res.get("status") == 400:          # tasto rifiutato: card senza tasto
-        res = _request(target.replace("with_components=true", "").rstrip("?&").replace("?&", "?"), method, body_plain, ctype)
-        res["button"] = False
-    res["method"] = method
-    if method == "PATCH":
+    base, q = url.split("?")[0], ("&" if "?" in url else "?")
+
+    # 1) la card, senza allegati (attachments: [] toglie anche un file allegato da una versione precedente)
+    payload = {"username": C.CARD_USERNAME, **card, "attachments": []}
+    body = json.dumps(payload).encode()
+    if prev.get("message_id"):
+        res = _request(f"{base}/messages/{prev['message_id']}", "PATCH", body, "application/json")
+        res["method"] = "PATCH"
         res.setdefault("message_id", prev["message_id"])
-    if res.get("ok"):
-        write_atomic(state_p, {**prev, **{k: v for k, v in res.items() if v is not None}, "session": str(session)})
+    else:
+        res = _request(url + q + "wait=true", "POST", body, "application/json")
+        res["method"] = "POST"
+    if not res.get("ok"):
+        return res
+    state = {**prev, **{k: v for k, v in res.items() if v is not None}, "session": str(session)}
+
+    # 2) il file, in un messaggio subito sotto la card
+    fpay = {"username": C.CARD_USERNAME, "allowed_mentions": {"parse": []}, "attachments": [{"id": 0, "filename": fname}]}
+    fbody, ctype = _multipart(fpay, fname, txt_path.read_bytes())
+    if prev.get("file_message_id"):
+        fres = _request(f"{base}/messages/{prev['file_message_id']}", "PATCH", fbody, ctype)
+        fres.setdefault("message_id", prev["file_message_id"])
+    else:
+        fres = _request(url + q + "wait=true", "POST", fbody, ctype)
+    if fres.get("ok"):
+        state["file_message_id"] = fres.get("message_id")
+    res["file_ok"] = bool(fres.get("ok"))
+    write_atomic(state_p, state)
     return res
 
 
