@@ -37,11 +37,19 @@ def _num(v, f: str, w: int) -> str:
     return ("n/a" if v is None else f.format(v)).rjust(w)
 
 
-def card_table(rows: list[dict]) -> str:
-    """Colonne allineate in un blocco a larghezza fissa (leggibile anche sul telefono) [RONIN 09/10]."""
+def card_table(rows: list[dict], lim: Optional[int] = None) -> str:
+    """Colonne allineate in un blocco a larghezza fissa; sotto ogni nome, rientrata, la sua descrizione
+    (statistiche e motivo restano insieme) [RONIN 09/10]."""
     head = f"{'':6}{'RS':>3} {'VCP':>5} {'SMA5':>6} {'AtrExt':>6}"
-    lines = [head] + [f"{r['ticker']:<6}{_num(r.get('rs'), '{}', 3)} {_num(r.get('vcp'), '{:.1f}', 5)} "
-                      f"{_num(r.get('sma5'), '{:+.1f}%', 6)} {_num(r.get('atr_ext'), '{:.2f}', 6)}" for r in rows]
+    lines = [head]
+    for r in rows:
+        lines.append(f"{r['ticker']:<6}{_num(r.get('rs'), '{}', 3)} {_num(r.get('vcp'), '{:.1f}', 5)} "
+                     f"{_num(r.get('sma5'), '{:+.1f}%', 6)} {_num(r.get('atr_ext'), '{:.2f}', 6)}")
+        why = r.get("reason_en") or ""
+        if lim is not None and len(why) > lim:
+            why = why[: lim - 1].rstrip(" ;,") + "…" if lim > 0 else ""
+        if why:
+            lines.append("  " + why)
     return "```\n" + "\n".join(lines) + "\n```"
 
 
@@ -57,18 +65,8 @@ def card_description(title_date: str, focus: list[dict], stalk: list[dict]) -> s
     up = [r for r in stalk if above_sma65(r)]
     down = [r for r in stalk if not above_sma65(r)]
 
-    def notes(rows: list[dict], lim: Optional[int]) -> str:
-        out = []
-        for r in rows:
-            why = r.get("reason_en") or ""
-            if lim is not None and len(why) > lim:
-                why = why[: lim - 1].rstrip(" ;,") + "…" if lim > 0 else ""
-            if why:
-                out.append(f"• **{r['ticker']}** — {why}")
-        return ("\n" + "\n".join(out)) if out else ""
-
     def sect(title: str, rows: list[dict], lim: Optional[int]) -> str:
-        return f"**{title}**\n" + ((card_table(rows) + notes(rows, lim)) if rows else "• none")
+        return f"**{title}**\n" + (card_table(rows, lim) if rows else "• none")
 
     def build(f_lim: Optional[int], s_lim: Optional[int]):
         return (f"**WATCHLIST — {title_date}**\n\n" + sect("FOCUS", focus, f_lim) + "\n\n"
