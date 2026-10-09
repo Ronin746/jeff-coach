@@ -29,6 +29,9 @@ CARD_USERNAME = os.environ.get("COACH_NAME", "Dua")
 ALERT_USERNAME = os.environ.get("COACH_ALERT_NAME", "Sydney")
 CARD_COLOR = 15105570          # #E67E22 [RONIN 04/10]
 ALERT_COLOR = 0xF39C12
+# file txt della lista (import TradingView) scaricabile dal tasto in fondo alla card [RONIN 09/10]
+WATCHLIST_RAW_BASE = os.environ.get("JEFF_COACH_TXT_BASE",
+                                    "https://raw.githubusercontent.com/Ronin746/jeff-coach/main/data/coach-agreed")
 
 # ---------------------------------------------------------------- universo [RONIN 04/10]
 MCAP_MIN = 500e6               # > $500M

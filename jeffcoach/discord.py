@@ -77,7 +77,12 @@ def post_card(session: date, dry_run: bool = False) -> dict:
         txt_path = work / f"watchlist_{session}.txt"
     fname = f"watchlist_{session}.txt"
     payload = {"username": C.CARD_USERNAME, **card, "attachments": [{"id": 0, "filename": fname}]}
-    body, ctype = _multipart(payload, fname, txt_path.read_bytes())
+    # tasto in fondo alla card che scarica il txt per TradingView [RONIN 09/10]
+    # (tasto-link: i webhook normali li accettano con ?with_components=true; se Discord li rifiuta si pubblica senza)
+    btn = [{"type": 1, "components": [{"type": 2, "style": 5, "label": f"⬇ Download {fname}",
+                                       "url": f"{C.WATCHLIST_RAW_BASE}/{fname}"}]}]
+    body, ctype = _multipart({**payload, "components": btn}, fname, txt_path.read_bytes())
+    body_plain, _ = _multipart(payload, fname, txt_path.read_bytes())
     state_p = work / "discord_post.json"
     prev = json.loads(state_p.read_text(encoding="utf-8")) if state_p.exists() else {}
     if dry_run:
@@ -86,13 +91,18 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     if not url:
         return {"ok": False, "error": "webhook card non configurato"}
     base = url.split("?")[0]
+    q = "&" if "?" in url else "?"
     if prev.get("message_id"):       # stesso giorno: si corregge il messaggio, mai un secondo post
-        res = _request(f"{base}/messages/{prev['message_id']}", "PATCH", body, ctype)
-        res["method"] = "PATCH"
-        res.setdefault("message_id", prev["message_id"])
+        target, method = f"{base}/messages/{prev['message_id']}?with_components=true", "PATCH"
     else:
-        res = _request(url + ("&" if "?" in url else "?") + "wait=true", "POST", body, ctype)
-        res["method"] = "POST"
+        target, method = url + q + "wait=true&with_components=true", "POST"
+    res = _request(target, method, body, ctype)
+    if not res.get("ok") and res.get("status") == 400:          # tasto rifiutato: card senza tasto
+        res = _request(target.replace("with_components=true", "").rstrip("?&").replace("?&", "?"), method, body_plain, ctype)
+        res["button"] = False
+    res["method"] = method
+    if method == "PATCH":
+        res.setdefault("message_id", prev["message_id"])
     if res.get("ok"):
         write_atomic(state_p, {**prev, **{k: v for k, v in res.items() if v is not None}, "session": str(session)})
     return res
