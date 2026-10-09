@@ -163,7 +163,7 @@ def reading_b(m: dict) -> tuple[bool, list[str], list[str]]:
     """Lettura B (Sydney): spinta, contrazione e trend misurati in ATR."""
     p, why, sh = C.PATTERN_B, [], []
     if m["b_rally20_atr"] < p["rally20_min_atr"]:
-        why.append(f"no real prior thrust ({m['b_rally20_atr']:.1f} ATR)"); sh.append("no fresh thrust")
+        why.append(f"lagging: no 3-ATR push in the last 15 days ({m['b_rally20_atr']:.1f} ATR)"); sh.append("lagging")
     rt = m.get("c_retrace")
     if rt is None and m.get("b_thrust_atr"):
         rt = m["b_pullback_atr"] / m["b_thrust_atr"]

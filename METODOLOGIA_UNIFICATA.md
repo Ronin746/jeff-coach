@@ -124,7 +124,7 @@ La trendline discendente singola non è un ingresso. Non si usano entry, stop e 
 | spinta ≥ 15% nelle ultime 60 barre | non ancora in trend: pendenze di massimi e minimi a 8 barre non entrambe ≥ 0,25 ATR/barra |
 
 - **Focus** solo se A **e** B sono strette.
-- **Se non concordano**, il nome va in Stalk e il riepilogo lo scrive ("A tight / B no fresh thrust"). È la regola "se non siete d'accordo lo mettete in stalk che li guardo io" [RONIN 04/10], applicata in automatico.
+- **Se non concordano**, il nome va in Stalk e il riepilogo lo scrive ("A tight / B lagging"). È la regola "se non siete d'accordo lo mettete in stalk che li guardo io" [RONIN 04/10], applicata in automatico.
 
 ### Lettura C: trendline (dal 09/10, per ora solo mostrata)
 
