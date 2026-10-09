@@ -258,6 +258,8 @@ Può anche dare il nome al pattern (flag, pennant, box…) e riscrivere la frase
 
 ## 10. Card Discord
 
+- **Formato (dal 09/10) [RONIN 09/10]:** le statistiche (RS, VCP, SMA5, Atr Ext) stanno in colonne allineate dentro un blocco a larghezza fissa; sotto la tabella dei Focus c'è una riga di motivo per nome. Gli Stalk sono divisi in due sezioni: **sopra** e **sotto** la SMA30 65m.
+
 **Struttura:**
 - un solo messaggio e un solo embed;
 - niente `content`, niente menzioni (`allowed_mentions.parse=[]`), niente code fence;

@@ -33,20 +33,49 @@ def card_line(r: dict, with_reason: bool = True) -> str:
     return s
 
 
+def _num(v, f: str, w: int) -> str:
+    return ("n/a" if v is None else f.format(v)).rjust(w)
+
+
+def card_table(rows: list[dict]) -> str:
+    """Colonne allineate in un blocco a larghezza fissa (leggibile anche sul telefono) [RONIN 09/10]."""
+    head = f"{'':6}{'RS':>3} {'VCP':>5} {'SMA5':>6} {'AtrExt':>6}"
+    lines = [head] + [f"{r['ticker']:<6}{_num(r.get('rs'), '{}', 3)} {_num(r.get('vcp'), '{:.1f}', 5)} "
+                      f"{_num(r.get('sma5'), '{:+.1f}%', 6)} {_num(r.get('atr_ext'), '{:.2f}', 6)}" for r in rows]
+    return "```\n" + "\n".join(lines) + "\n```"
+
+
+def above_sma65(r: dict) -> bool:
+    return "sma65" not in (r.get("open_gates") or [])
+
+
 def card_description(title_date: str, focus: list[dict], stalk: list[dict]) -> str:
     """**WATCHLIST — data** in grassetto in prima riga, poi FOCUS e STALK [RONIN 04/10].
-    Se si superano 4096 caratteri si accorciano le frasi Stalk: i nomi non si tolgono mai."""
-    def build(stalk_reason_max: Optional[int]):
-        st = []
-        for r in stalk:
-            rr = dict(r)
-            if stalk_reason_max is not None and rr.get("reason_en") and len(rr["reason_en"]) > stalk_reason_max:
-                rr["reason_en"] = rr["reason_en"][: stalk_reason_max - 1].rstrip(" ;,") + "…"
-            st.append(card_line(rr, with_reason=stalk_reason_max != 0))
-        fo = "\n".join(card_line(r) for r in focus) or "• none"
-        return f"**WATCHLIST — {title_date}**\n\n**FOCUS**\n{fo}\n\n**STALK**\n" + ("\n".join(st) or "• none")
-    for lim in (None, 60, 40, 25, 0):
-        d = build(lim)
+    Statistiche in colonne allineate, sotto ogni tabella la descrizione completa di ogni nome; Stalk divisi tra
+    sopra e sotto la SMA30 65m [RONIN 09/10]. Oltre 4096 caratteri si accorciano le frasi (prima gli Stalk):
+    i nomi non si tolgono mai."""
+    up = [r for r in stalk if above_sma65(r)]
+    down = [r for r in stalk if not above_sma65(r)]
+
+    def notes(rows: list[dict], lim: Optional[int]) -> str:
+        out = []
+        for r in rows:
+            why = r.get("reason_en") or ""
+            if lim is not None and len(why) > lim:
+                why = why[: lim - 1].rstrip(" ;,") + "…" if lim > 0 else ""
+            if why:
+                out.append(f"• **{r['ticker']}** — {why}")
+        return ("\n" + "\n".join(out)) if out else ""
+
+    def sect(title: str, rows: list[dict], lim: Optional[int]) -> str:
+        return f"**{title}**\n" + ((card_table(rows) + notes(rows, lim)) if rows else "• none")
+
+    def build(f_lim: Optional[int], s_lim: Optional[int]):
+        return (f"**WATCHLIST — {title_date}**\n\n" + sect("FOCUS", focus, f_lim) + "\n\n"
+                + sect(f"STALK — above 65m SMA30 ({len(up)})", up, s_lim) + "\n\n"
+                + sect(f"STALK — below 65m SMA30 ({len(down)})", down, s_lim))
+    for f_lim, s_lim in ((None, None), (None, 60), (None, 40), (80, 30), (60, 0), (0, 0)):
+        d = build(f_lim, s_lim)
         if len(d) <= CARD_LIMIT:
             return d
     return d[:CARD_LIMIT]
