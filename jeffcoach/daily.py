@@ -28,7 +28,7 @@ from . import channel as CH
 from . import peg as PG
 from . import patterns as P
 from .calendar_us import ROME, is_session, prev_session, sessions_from, today_rome, last_sessions
-from .output import above_sma65, card_descriptions, tv_txt, write_atomic
+from .output import above_sma65, by_sector, card_descriptions, tv_txt, write_atomic
 
 log = logging.getLogger("jeffcoach.daily")
 
@@ -306,7 +306,8 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             pattern_a=("tight" if m["pattern_a_ok"] else "wide"), pattern_b=("tight" if m["pattern_b_ok"] else "wide"),
             open_gates=[g.code for g in r.fails], extreme_rvol_ok=False, prior_day_high=_r(m["high"]),
             pattern_c=("tight" if m.get("pattern_c_ok") else "wide"), pattern_c_shape=m.get("c_shape"),
-            trendline_next=_r(m.get("c_upper_next")), industry=m.get("industry"), group_pctl=m.get("group_pctl"),
+            trendline_next=_r(m.get("c_upper_next")), industry=m.get("industry"), sector=m.get("sector"),
+            group_pctl=m.get("group_pctl"),
             leader=m.get("leader") or [], carry_days=m.get("carry_days", 0),
             channel=m.get("d_state") if m.get("d_found") else None, channel_buy_zone=bool(m.get("pattern_d_ok")),
             channel_lower_next=_r(m.get("d_lower_next")),
@@ -530,9 +531,12 @@ def main(argv=None) -> int:
 
     a = res["agreed"]
     up = {r["ticker"] for r in res["spub"] if above_sma65(r)}
-    txt = tv_txt([(t, exch_of(t, doc)) for t in a["focus"]],
-                 [(t, exch_of(t, doc)) for t in a["stalk"] if t in up],
-                 [(t, exch_of(t, doc)) for t in a["stalk"] if t not in up])
+    # nel txt i nomi di ogni sezione seguono lo stesso ordine per settore della card [RONIN 09/10]
+    fo = [r["ticker"] for r in by_sector(res["fpub"])]
+    so = [r["ticker"] for r in by_sector([r for r in res["spub"] if r["ticker"] in up])]
+    sb = [r["ticker"] for r in by_sector([r for r in res["spub"] if r["ticker"] not in up])]
+    txt = tv_txt([(t, exch_of(t, doc)) for t in fo], [(t, exch_of(t, doc)) for t in so],
+                 [(t, exch_of(t, doc)) for t in sb])
     descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"])
     card = {"embeds": [{"description": d, "color": C.CARD_COLOR} for d in descs], "allowed_mentions": {"parse": []}}
     summ = summary_it(res, doc)

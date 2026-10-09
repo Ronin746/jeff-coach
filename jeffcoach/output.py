@@ -38,6 +38,19 @@ def card_line(r: dict, lim: Optional[int] = None) -> str:
     return s + (f"\n  ↳ {why}" if why else "")
 
 
+def sector_groups(rows: list[dict]) -> list[tuple[str, list[dict]]]:
+    """Raggruppa per settore [RONIN 09/10]: settori con più nomi prima, a parità in ordine alfabetico;
+    dentro il settore resta l'ordine della lista (RS decrescente)."""
+    g: dict[str, list[dict]] = {}
+    for r in rows:
+        g.setdefault(r.get("sector") or "Other", []).append(r)
+    return sorted(g.items(), key=lambda kv: (-len(kv[1]), kv[0] == "Other", kv[0]))
+
+
+def by_sector(rows: list[dict]) -> list[dict]:
+    return [r for _, rr in sector_groups(rows) for r in rr]
+
+
 def above_sma65(r: dict) -> bool:
     return "sma65" not in (r.get("open_gates") or [])
 
@@ -51,7 +64,10 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict]) -> 
     down = [r for r in stalk if not above_sma65(r)]
 
     def sect(title: str, rows: list[dict], lim: Optional[int]) -> str:
-        return f"**{title}**\n" + ("\n".join(card_line(r, lim) for r in rows) if rows else "• none")
+        if not rows:
+            return f"**{title}**\n• none"
+        blocks = [f"__{sec}__\n" + "\n".join(card_line(r, lim) for r in rr) for sec, rr in sector_groups(rows)]
+        return f"**{title}**\n" + "\n\n".join(blocks)
 
     def build(f_lim, s_lim) -> list[str]:
         parts = [f"**WATCHLIST — {title_date}**\n\n" + sect("FOCUS", focus, f_lim),
