@@ -69,7 +69,7 @@ def sector_line(name: str, st: Optional[dict]) -> str:
 
 
 def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
-                      sectors: Optional[dict] = None) -> list[str]:
+                      sectors: Optional[dict] = None, dtl_breaks: Optional[list[dict]] = None) -> list[str]:
     """Card: FOCUS, STALK sopra la SMA30 65m, STALK sotto [RONIN 04/10, 09/10]. Niente tabelle: una voce per nome
     con statistiche e descrizione. Ogni sezione è un embed a sé dello stesso messaggio (Discord: 4096 caratteri per
     embed, 6000 in tutto); oltre si accorciano le frasi, prima degli Stalk.
@@ -88,6 +88,12 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
         parts = [f"**WATCHLIST — {title_date}**\n\n" + sect("FOCUS", focus, f_lim),
                  sect(f"STALK — above 65m SMA30 ({len(up)})", up, s_lim),
                  sect(f"STALK — below 65m SMA30 ({len(down)})", down, s_lim)]
+        if dtl_breaks:          # rotture della trendline discendente in chiusura con volume >= 1,5x [RONIN 09/10]
+            rows = [dict(d, reason_en=f"downtrend line break, vol {d['break_vol']}× avg · line from "
+                                      f"{d['start'][5:]} high {d['start_high']} · next {d['line_next']}"
+                                      + ("" if d.get("above_sma200") else " · under SMA200"))
+                    for d in dtl_breaks]
+            parts.append(sect(f"DOWNTREND LINE BREAK — vol ≥1.5× ({len(rows)})", rows, s_lim))
         return parts                                # una sezione per embed, sempre [RONIN 09/10]
     # oltre i 6000 caratteri a messaggio la card continua in un secondo messaggio (discord.post_card): le frasi
     # si accorciano solo se una singola sezione supera i 4096 caratteri di un riquadro

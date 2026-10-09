@@ -92,6 +92,11 @@ def compute_metrics(df: pd.DataFrame, spx_close: pd.Series) -> Optional[dict]:
         m.update(P.read_triangle(df, atr))
     except Exception:
         m["t_ok"] = False
+    try:
+        from .dtl import read_dtl            # trendline discendente / wedge pop [RONIN 09/10]
+        m.update(read_dtl(df, atr))
+    except Exception:
+        m["dt_found"] = False
     return m
 
 

@@ -78,3 +78,24 @@ def test_base_dopo_ritracciamento_sul_pivot_e_stretta():
     assert not E.reading_b(m2)[0]
     m3 = dict(m, a_off_high20_pct=-31.0)       # oltre 30% sotto il massimo a 20 giorni
     assert not E.reading_a(m3)[0]
+
+
+def test_trendline_discendente_rotta_con_volume():
+    """Discesa dal picco con massimi decrescenti, poi rottura con volume: la linea parte dal picco e la rottura
+    è oggi, con volume 2x la media."""
+    import numpy as np
+    import pandas as pd
+    from jeffcoach import dtl
+    n = 160
+    idx = pd.bdate_range("2026-03-02", periods=n)
+    base = np.r_[np.linspace(60, 100, 40), np.linspace(100, 70, 110), np.linspace(70, 70, 9), [80.0]]
+    wave = np.r_[np.zeros(40), 4 * np.sin(np.linspace(0, 6 * np.pi, 110)), np.zeros(10)]
+    close = base + wave
+    high, low = close + 1.0, close - 1.0
+    vol = np.full(n, 1_000_000.0)
+    vol[-1] = 2_000_000.0
+    df = pd.DataFrame(dict(Open=close, High=high, Low=low, Close=close, Volume=vol), index=idx)
+    m = dtl.read_dtl(df, atr=2.0)
+    assert m["dt_found"] and m["dt_broken"] and m["dt_break_ago"] == 0
+    assert m["dt_break_vol"] >= 1.5
+    assert dtl.state(m) == "break"

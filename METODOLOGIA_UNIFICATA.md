@@ -175,6 +175,19 @@ Imparata dai grafici di Ronin dell'08/10 (XLK, NET, CRWD, FTNT, RNG, RBRK, SMCI)
 - **Grafico nell'alert Channel (dal 09/10) [RONIN 09/10]:** sotto il testo c'è un'immagine con il daily degli ultimi ~6 mesi (candele, EMA9, EMA21, SMA50 e le due linee del canale prolungate a oggi, linea tratteggiata al prezzo dell'alert) e un riquadro con i close a 65 minuti degli ultimi ~15 giorni e la SMA30 65m. Le linee vengono da `channel_watch[].lines` della lista del mattino. Spegnibile con `CHANNEL_CHART = False`; senza matplotlib l'alert parte senza immagine.
 - Non cambia Focus/Stalk: escono gli stessi nomi di prima. Gli utili e i gate di universo valgono anche per la lista canale; gli Stalk scaduti possono restarci (spesso sono proprio i pullback nel canale).
 
+### Trendline discendente e "wedge pop" (dal 12/10) [RONIN 09/10]
+
+Codice: `jeffcoach/dtl.py`, soglie in `config.DTL`. Sul daily, come la si disegna a mano (AAOI, PWR del 09/10):
+
+- **Linea:** parte dal picco più alto delle ultime 200 sedute (nessun massimo più alto dopo) e passa per l'ultimo massimo più basso prima della rottura. Scende di almeno 0,03 ATR a seduta, dura almeno 20 sedute, il prezzo dal picco è sceso almeno del 15%. Fino alla rottura nessun close sopra la linea; i massimi possono bucarla di 0,3 ATR al massimo 3 volte.
+- **Rottura:** primo close sopra la linea di almeno 0,1 ATR.
+- **Filtri:** universo, utili fuori finestra, RS ≥ 80.
+- **Nella card del giorno dopo** (sezione "DOWNTREND LINE BREAK"): solo le rotture in chiusura con volume **≥ 1,5× la media a 50 giorni**.
+- **Alert Sydney in seduta** (con grafico daily + 65m):
+  - **"· DTL break"**: nomi con il close sotto la linea entro 1 ATR; scatta se il prezzo supera la linea del giorno con **RVOL all'ora del giorno ≥ 1,5** (volume di oggi fino a quell'ora / media delle sedute precedenti alla stessa ora).
+  - **"· Wedge pop"**: nomi che hanno rotto la linea nelle ultime 10 sedute (non ricaduti più di 1 ATR sotto). Crossback: il minimo torna sulla EMA9 o EMA21 (entro 0,3 ATR); scatta quando il prezzo, dopo essere stato sotto la SMA30 65m, la recupera stando sopra la EMA9 daily.
+- Nel riepilogo: "Trendline discendente (wedge pop)" con le tre liste. Spegnibile con `DTL_ALERT = False`.
+
 ### Regole dai post per abbonati di Jeff (dal 09/10) [RONIN 08/10]
 
 - **Gap da riempire — SPENTO** (`GAP_GATE_ON = False`, [RONIN 08/10]: da rifare meglio prima di usarlo). Com'è scritto oggi (`gap` in `focus_gates`, gate "soft"): un gap al ribasso degli ultimi 60 giorni ancora aperto sopra il prezzo, entro 3 ATR, tiene il nome in **Stalk** finché un massimo non torna al minimo del giorno prima del gap (XLK, ESTC, NOW, FRSH). Nel riepilogo: "Gap al ribasso da riempire".

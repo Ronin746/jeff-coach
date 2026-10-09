@@ -112,6 +112,68 @@ def load_channel(today: date) -> list[dict]:
 _chan_cache: dict = {"ts": 0.0, "bars": {}}
 
 
+# ------------------------------------------------------------------ trendline discendente [RONIN 09/10]
+def load_dtl(today: date) -> list[dict]:
+    p = C.AGREED / "today.json"
+    if not C.DTL_ALERT or not p.exists():
+        return []
+    d = json.loads(p.read_text(encoding="utf-8"))
+    if d.get("session_date") != today.isoformat():
+        return []
+    return [x for x in d.get("dtl_watch") or [] if x.get("kind") in ("near", "pullback") and x.get("ticker")]
+
+
+_dtl_cache: dict = {"ts": 0.0, "df": {}}
+
+
+def live_5m(tickers: list[str]) -> dict[str, pd.DataFrame]:
+    """5 minuti degli ultimi 10 giorni (ora di New York), al massimo ogni CHANNEL_POLL_SEC."""
+    import yfinance as yf
+    if time.time() - _dtl_cache["ts"] >= C.CHANNEL_POLL_SEC or set(tickers) - set(_dtl_cache["df"]):
+        df = yf.download(tickers, period="10d", interval="5m", prepost=False, auto_adjust=False,
+                         group_by="ticker", progress=False, threads=True)
+        out = {}
+        for t in tickers:
+            try:
+                sub = (df[t] if isinstance(df.columns, pd.MultiIndex) else df).dropna(subset=["Close"]).copy()
+                sub.index = sub.index.tz_convert(ET)
+                out[t] = sub
+            except Exception:
+                pass
+        _dtl_cache.update(ts=time.time(), df=out)
+    return _dtl_cache["df"]
+
+
+def rvol_time_of_day(sub: pd.DataFrame, today: date) -> Optional[float]:
+    """RVOL all'ora del giorno: volume di oggi fino all'ultima barra / media delle sedute prima alla stessa ora."""
+    if sub is None or not len(sub):
+        return None
+    d = sub[sub.index.date == today]
+    if not len(d):
+        return None
+    tod = d.index[-1].time()
+    prev = sub[(sub.index.date < today)]
+    prev = prev[[t <= tod for t in prev.index.time]]
+    per_day = prev.groupby(prev.index.date).Volume.sum()
+    if len(per_day) < 3 or per_day.mean() <= 0:
+        return None
+    return float(d.Volume.sum() / per_day.mean())
+
+
+def fmt_dtl_break(x, price, line, rvol):
+    return f"{x['ticker']} · DTL break", "\n".join([
+        f"Downtrend line broken `{line:.2f}`", f"Price: `{price:.2f}`", f"RVOL (time of day): `{rvol:.2f}`",
+        f"Line from {x['start'][5:]} high `{x['start_high']}` · touches {x['touches']}",
+        f"Daily EMA9 `{x['ema9']}` · EMA21 `{x['ema21']}`" + ("" if x.get("above_sma200") else " · under SMA200")])
+
+
+def fmt_dtl_pullback(x, price, sma, rvol):
+    return f"{x['ticker']} · Wedge pop", "\n".join([
+        f"65m SMA30 reclaimed `{sma:.2f}` above the daily EMA9 `{x['ema9']}`", f"Price: `{price:.2f}`",
+        f"Downtrend line broken {x['break_date'][5:]} (vol {x['break_vol']}×) · line now `{x['line_next']}`",
+        f"Daily EMA21 `{x['ema21']}`" + (f" · RVOL `{rvol:.2f}`" if rvol is not None else "")])
+
+
 def live_sma30_65m(tickers: list[str], today: date) -> dict[str, dict]:
     """SMA30 65m con il bucket in corso (come TradingView): ultimi 30 close di bucket, l'ultimo = prezzo attuale.
     Un download 5m di 7 giorni per i soli nomi del canale, al massimo ogni CHANNEL_POLL_SEC."""
@@ -233,7 +295,7 @@ def run_once(dry_run: bool = False) -> dict:
     today = now.date()
     mins = minutes_from_open(now)
     rows = load_rows(today)
-    if (not rows and not load_channel(today)) or mins is None or mins < 0:
+    if (not rows and not load_channel(today) and not load_dtl(today)) or mins is None or mins < 0:
         return {"scanned": 0, "minutes": mins}
     tickers = [r["ticker"] for r in rows]
     refs = daily_refs(tickers, today) if tickers else {}
@@ -311,6 +373,53 @@ def run_once(dry_run: bool = False) -> dict:
                    else send_alert(*fmt_channel(c, lv["price"], lv["sma"]), image=img))
             if res.get("sent"):
                 day[k] = {"ts": datetime.now(ROME).isoformat(), "price": lv["price"], "sma30_65m": lv["sma"]}
+                fired.append(k)
+    # trendline discendente: rottura in seduta con RVOL alto (near) e crossback dopo la rottura (pullback)
+    dl = [x for x in load_dtl(today) if f"{x['ticker']}|DTL|alert" not in day]
+    if dl and mins >= 0:
+        try:
+            live = live_5m([x["ticker"] for x in dl])
+        except Exception as e:
+            log.warning("trendline 5m: %s", e)
+            live = {}
+        from .data import buckets_65m
+        for x in dl:
+            t, sub = x["ticker"], live.get(x["ticker"])
+            if sub is None or not len(sub) or sub.index[-1].date() != today:
+                continue
+            price = float(sub.Close.iloc[-1])
+            rv = rvol_time_of_day(sub, today)
+            k = f"{t}|DTL|alert"
+            msg = None
+            if x["kind"] == "near":
+                line = x["line_next"]
+                scan.append(dict(ticker=t, list="DTL near", price=price, line=line, rvol=rv))
+                if price > line + C.DTL["break_atr"] * (x["atr"] or 0) and (rv or 0) >= C.DTL["live_rvol_min"]:
+                    msg, title = fmt_dtl_break(x, price, line, rv), "downtrend line break"
+            else:
+                b = buckets_65m(sub)
+                if len(b) < C.SMA65_LEN or b[-1][0] != today.isoformat():
+                    continue
+                sma = sum(q[2] for q in b[-C.SMA65_LEN:]) / C.SMA65_LEN
+                kb = f"{t}|DTL|below65"
+                scan.append(dict(ticker=t, list="DTL pullback", price=price, sma30_65m=round(sma, 2)))
+                if price <= sma:
+                    day[kb] = True                  # sotto la SMA30 65m: si aspetta il recupero
+                else:
+                    low = float(sub[sub.index.date == today].Low.min())
+                    # crossback: ieri o oggi il minimo è tornato sulle medie (EMA9 o EMA21)
+                    touched = x.get("on_emas") or low <= max(x["ema9"] or 0, x["ema21"] or 0) + C.DTL["ema_touch_atr"] * (x["atr"] or 0)
+                    if day.get(kb) and touched and price > (x["ema9"] or 0):
+                        msg, title = fmt_dtl_pullback(x, price, sma, rv), "wedge pop · pullback"
+            if not msg:
+                continue
+            img = None
+            if not dry_run and C.CHANNEL_CHART:
+                from .chart import channel_chart
+                img = channel_chart(dict(x, chart_title=title), None, price, None)
+            res = {"sent": True, "dry_run": True} if dry_run else send_alert(*msg, image=img)
+            if res.get("sent"):
+                day[k] = {"ts": datetime.now(ROME).isoformat(), "price": price, "kind": x["kind"]}
                 fired.append(k)
     for d in [d for d in state if d < (today - timedelta(days=7)).isoformat()]:
         del state[d]

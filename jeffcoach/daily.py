@@ -135,6 +135,38 @@ def channel_watch(rows: dict, s65: dict) -> list[dict]:
     return sorted(out, key=lambda x: (-(x["rs"] or 0), x["ticker"]))
 
 
+def dtl_watch(names, metrics, rows, earn_out, out_universe, grp) -> list[dict]:
+    """Trendline discendente [RONIN 09/10]. kind:
+      break    = rotta in chiusura con volume >= 1,5x la media (va nella card del giorno dopo);
+      near     = close sotto la linea entro 1,5 ATR (Sydney avvisa se la rompe in seduta con RVOL alto);
+      pullback = rotta nelle ultime 15 sedute (Sydney avvisa sul crossback: recupero della SMA30 65m sopra la EMA9).
+    Rotture in chiusura senza volume non vanno nella card ma restano seguite come pullback dal giorno dopo."""
+    from . import dtl as DT
+    out = []
+    for s in names:
+        if s in earn_out or s in out_universe:
+            continue
+        m = metrics[s]
+        kind = DT.state(m)
+        if kind == "break" and (m.get("dt_break_vol") or 0) < C.DTL["break_vol_min"]:
+            continue
+        r = rows.get(s)
+        out.append(dict(
+            ticker=s, kind=kind, list=(r.list if r else "Out"), rs=m.get("rs"), close=_r(m["close"]),
+            line_next=_r(m["dt_line_next"]), dist_atr=_r(m["dt_dist_atr"]), touches=m["dt_touches"],
+            start=m["dt_start"], start_high=_r(m["dt_start_high"]), slope=round(m["dt_slope"], 6),
+            break_date=m.get("dt_break_date"), break_vol=_r(m.get("dt_break_vol")), break_ago=m.get("dt_break_ago"),
+            ema9=_r(m["ema9"]), ema21=_r(m["ema21"]), atr=_r(m["atr"]), vcp=_r(m.get("vcp"), 1),
+            on_emas=bool(min(m["low"] - m["ema9"], m["low"] - m["ema21"]) <= C.DTL["ema_touch_atr"] * m["atr"]),
+            sma5=_r(m.get("sma5_dist_pct")), atr_ext=_r(m.get("ext")), above_sma200=m.get("above_sma200"),
+            sector=(grp.get(s) or {}).get("sector"), industry=(grp.get(s) or {}).get("industry"),
+            lines=dict(start=m["dt_start"], end=m["dt_start"], up0=m["dt_start_high"], up1=m["dt_start_high"],
+                       slope=m["dt_slope"]),
+        ))
+    order = {"break": 0, "pullback": 1, "near": 2}
+    return sorted(out, key=lambda x: (order.get(x["kind"], 9), -(x["rs"] or 0), x["ticker"]))
+
+
 def peg_watch(names, metrics, rows, earn, earn_out, out_universe, grp) -> list[dict]:
     """Reazione ritardata agli utili [RONIN 08/10]: gap confermato dalla data degli utili, prezzo tornato nel range
     del PEG, base stretta, sopra la SMA200. Fuori chi ha gli utili nella finestra o non passa l'universo."""
@@ -293,6 +325,9 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
     peg_names = [s for s in doc["num_ok"] if metrics[s].get("peg_ok") and (metrics[s].get("rs") or 0) >= C.PEG["rs_min"]]
     pre = [s for s, r in rows.items() if r.list != "Out" or _near(r) or _chan(r)]
     pre += [s for s in peg_names if s not in pre]
+    from . import dtl as DT                      # trendline discendente / wedge pop [RONIN 09/10]
+    dtl_names = [s for s in doc["num_ok"] if DT.state(metrics[s]) and (metrics[s].get("rs") or 0) >= C.DTL["rs_min"]]
+    pre += [s for s in dtl_names if s not in pre]
     need = [s for s in pre if s not in info or "err" in info[s]]
     if need:
         info.update(D.fetch_info(need))
@@ -315,6 +350,7 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
     # utili: tutti i nomi che finirebbero in lista
     listed = [s for s, r in rows.items() if r.list != "Out" or (_chan(r) and s not in out_universe)]
     listed += [s for s in peg_names if s not in listed and s not in out_universe]
+    listed += [s for s in dtl_names if s not in listed and s not in out_universe]
     window = sessions_from(session, C.EARNINGS_SESSIONS)
     lo, hi = window[0].isoformat(), window[-1].isoformat()
     earn = dict(earn or {})
@@ -342,6 +378,7 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             rows[s].out_reason = f"earnings {earn_out[s]}"
     pegw = peg_watch(peg_names, metrics, rows, earn, earn_out, out_universe, grp)
     chan = channel_watch(rows, s65)
+    dtlw = dtl_watch(dtl_names, metrics, rows, earn_out, out_universe, grp)
 
     # revisione a occhio del bot [RONIN 09/10]: DECLASSA un Focus a Stalk, oppure PROMUOVE a Focus uno Stalk il cui
     # unico gate aperto è il pattern (le letture A/B non lo vedono ma il grafico sì). Mai sopra un gate numerico.
@@ -433,6 +470,7 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
         top_groups=top_groups(groups, rows),
         channel_watch=chan,
         peg_watch=pegw,
+        dtl_watch=dtlw,
         triangles=[dict(ticker=t, list=r.list, top=_r(r.m["t_top"]), support_next=_r(r.m["t_support_next"]),
                         touches_top=r.m["t_touch_top"], length=r.m["t_len"], rs=r.m.get("rs"))
                    for t, r in sorted(rows.items()) if r.m.get("t_ok") and not r.out_reason
@@ -536,6 +574,21 @@ def summary_it(res: dict, doc: dict) -> str:
             L.append("  sopra SMA30 65m ed EMA9: " + "; ".join(f(c) for c in ok))
         if wait:
             L.append("  sotto la SMA30 65m (alert se la recupera): " + "; ".join(f(c) for c in wait))
+    dw = a.get("dtl_watch") or []
+    if dw:
+        L.append(f"Trendline discendente (wedge pop) ({len(dw)}):")
+        b = [d for d in dw if d["kind"] == "break"]
+        pb = [d for d in dw if d["kind"] == "pullback"]
+        nr = [d for d in dw if d["kind"] == "near"]
+        if b:
+            L.append("  rotta in chiusura con volume: " + "; ".join(
+                f"{d['ticker']} (vol {d['break_vol']}x, linea dal picco {d['start'][5:]} a {d['start_high']})" for d in b))
+        if pb:
+            L.append("  rotta da poco, si segue il pullback (alert sul crossback: tocco di EMA9/21 e recupero della SMA30 65m sopra la EMA9): " + "; ".join(
+                f"{d['ticker']} (rotta il {d['break_date'][5:]}, vol {d['break_vol']}x)" for d in pb))
+        if nr:
+            L.append("  sotto la linea e vicina, entro 1 ATR (alert se la rompe con RVOL >= 1,5): " + "; ".join(
+                f"{d['ticker']} (linea {d['line_next']}, {abs(d['dist_atr'])} ATR)" for d in nr))
     pw = a.get("peg_watch") or []
     if pw:
         L.append(f"Reazione ritardata agli utili ({len(pw)}): " + "; ".join(
@@ -609,7 +662,8 @@ def main(argv=None) -> int:
     sb = [r["ticker"] for r in by_sector([r for r in res["spub"] if r["ticker"] not in up])]
     txt = tv_txt([(t, exch_of(t, doc)) for t in fo], [(t, exch_of(t, doc)) for t in so],
                  [(t, exch_of(t, doc)) for t in sb])
-    descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"], res.get("sectors"))
+    descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"], res.get("sectors"),
+                              dtl_breaks=[d for d in (res["agreed"].get("dtl_watch") or []) if d["kind"] == "break"])
     card = {"embeds": [{"description": d, "color": C.CARD_COLOR} for d in descs], "allowed_mentions": {"parse": []}}
     summ = summary_it(res, doc)
     write_atomic(work / "card.json", card)

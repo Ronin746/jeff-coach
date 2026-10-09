@@ -148,6 +148,28 @@ CHANNEL = dict(
 )
 CHANNEL_RS_MIN = 80              # lista "canale": solo RS >= 80 [RONIN 08/10]
 CHANNEL_ALERT = True             # Sydney: alert quando un nome del canale recupera la SMA30 65m in seduta
+# Trendline discendente e sua rottura ("wedge pop", Kell) [RONIN 09/10] — vedi dtl.py
+DTL = dict(
+    lookback=200,            # i massimi si cercano nelle ultime 200 sedute
+    pivot_k=3,               # massimo = il più alto su 3 barre per lato
+    min_gap=8,               # tra il picco e il secondo punto almeno 8 sedute
+    min_slope_atr=0.03,      # la linea scende di almeno 0,03 ATR a seduta
+    tol_atr=0.3,             # un massimo può superare la linea di 0,3 ATR (spike) ...
+    max_violations=3,        # ... al massimo 3 volte; i close mai
+    break_atr=0.1,           # rottura = close sopra la linea di almeno 0,1 ATR
+    touch_atr=0.6,           # un massimo a meno di 0,6 ATR dalla linea è un tocco
+    min_touches=2,           # picco + almeno un altro massimo
+    min_drop_pct=15.0,       # dal picco il prezzo è sceso almeno del 15% (una vera discesa)
+    min_span=20,             # la linea dura almeno 20 sedute
+    break_vol_min=1.5,       # rottura in chiusura da segnalare: volume >= 1,5x la media a 50 giorni [RONIN 09/10]
+    near_atr=1.0,            # "vicina": close sotto la linea entro 1 ATR (alert di rottura in seduta)
+    pullback_max_days=10,    # dopo la rottura, per 10 sedute si segue il pullback (crossback e SMA30 65m)
+    failed_atr=1.0,          # ricaduto più di 1 ATR sotto la linea = rottura fallita, non si segue più
+    ema_touch_atr=0.3,       # crossback: il minimo torna a meno di 0,3 ATR dalla EMA9 o dalla EMA21
+    live_rvol_min=1.5,       # rottura in seduta: RVOL all'ora del giorno >= 1,5 [RONIN 09/10]
+    rs_min=80,               # RS minima per le liste della trendline (come il resto della lista)
+)
+DTL_ALERT = True               # alert Sydney sulla trendline discendente (rottura con RVOL, wedge pop) [RONIN 09/10]
 CHANNEL_CHART = True           # grafico (daily con le linee del canale + 65m) allegato all'alert Channel [RONIN 09/10]
 CHANNEL_POLL_SEC = 300           # la SMA30 65m live dei nomi del canale si riscarica ogni 5 minuti
 

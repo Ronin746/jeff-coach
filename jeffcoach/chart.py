@@ -86,12 +86,13 @@ def channel_chart(c: dict, buckets: Optional[list] = None, price: Optional[float
                 s_i = idx.index(ln["start"]) if ln["start"] in idx else 0
                 off = len(df) - len(d)
                 xs = [max(s_i - off, 0), len(d) - 1]
-                for v1 in (ln["up1"], ln["lo1"]):
+                for v1 in [v for v in (ln.get("up1"), ln.get("lo1")) if v is not None]:
                     ys = [v1 + ln["slope"] * ((xx + off) - e_i) for xx in xs]
                     ax.plot(xs, ys, color="#e0e0e0", lw=1.2, ls="--")
         if price is not None:
             ax.axhline(price, color="#f39c12", lw=0.8, ls=":")
-        ax.set_title(f"{c['ticker']} · daily · channel: {c.get('state', '')}", color=FG, fontsize=10, loc="left")
+        ax.set_title(f"{c['ticker']} · daily · {c.get('chart_title') or 'channel: ' + str(c.get('state', ''))}",
+                     color=FG, fontsize=10, loc="left")
         ticks = list(range(0, len(d), max(len(d) // 6, 1)))
         ax.set_xticks(ticks, [d.index[i].strftime("%d/%m") for i in ticks])
         ax.legend(loc="upper left", fontsize=7, facecolor=BG, labelcolor=FG, framealpha=0.6)
