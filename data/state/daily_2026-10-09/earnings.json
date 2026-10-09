@@ -1309,5 +1309,55 @@
       "2026-07-23"
     ],
     "errors": []
+  },
+  "CORT": {
+    "calendar": [],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "EXEL": {
+    "calendar": [],
+    "earnings_dates": [
+      "2026-10-27"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "HALO": {
+    "calendar": [],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "IBRX": {
+    "calendar": [],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "KOD": {
+    "calendar": [],
+    "earnings_dates": [
+      "2026-11-12"
+    ],
+    "past_dates": [
+      "2026-08-13"
+    ],
+    "errors": []
   }
 }
