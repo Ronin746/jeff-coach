@@ -53,7 +53,9 @@ def _request(url: str, method: str, body: bytes, ctype: str) -> dict[str, Any]:
         r = urllib.request.urlopen(req, timeout=30)
         raw = r.read()
         d = json.loads(raw) if raw else {}
-        return {"ok": True, "status": r.status, "message_id": d.get("id"), "channel_id": d.get("channel_id")}
+        att = d.get("attachments") or []
+        return {"ok": True, "status": r.status, "message_id": d.get("id"), "channel_id": d.get("channel_id"),
+                "file_url": att[0].get("url") if att else None}
     except urllib.error.HTTPError as e:
         return {"ok": False, "status": e.code, "error": e.read().decode(errors="replace")[:400]}
     except Exception as e:
@@ -112,7 +114,17 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     if fres.get("ok"):
         state["file_message_id"] = fres.get("message_id")
     res["file_ok"] = bool(fres.get("ok"))
-    write_atomic(state_p, state)
+
+    # 3) tasto in fondo alla card che apre il file ospitato da Discord (quello del messaggio sotto) [RONIN 09/10]
+    if fres.get("file_url"):
+        btn = [{"type": 1, "components": [{"type": 2, "style": 5, "label": f"⬇ {fname}", "url": fres["file_url"]}]}]
+        bres = _request(f"{base}/messages/{state['message_id']}?with_components=true", "PATCH",
+                        json.dumps({"components": btn}).encode(), "application/json")
+        res["button"] = bool(bres.get("ok"))
+        if not bres.get("ok"):
+            res["button_error"] = bres.get("error")
+    state.pop("file_url", None)
+    write_atomic(state_p, {k: v for k, v in state.items() if k not in ("file_url", "button", "button_error")})
     return res
 
 
