@@ -1,0 +1,30 @@
+# TradingView watchlist 327715885 (read-only shared; NEVER modify on TV) [Ronin 2026-10-09]
+# Synced: 2026-10-09 12:38 Rome via sync_pivot_wl.py (27 symbols, 0 ETF excluded)
+# Re-sync: .venv/bin/python sync_pivot_wl.py --from-file <dump>
+NASDAQ:META
+NASDAQ:AEHR
+NASDAQ:NBIS
+NYSE:GLW
+NASDAQ:TER
+NYSE:EROC
+NASDAQ:SWKS
+NASDAQ:AXTI
+NASDAQ:AAOI
+NASDAQ:QLYS
+NYSE:NET
+NYSE:RBRK
+NYSE:BB
+NASDAQ:LRCX
+NASDAQ:BAND
+NYSE:DOCN
+NASDAQ:ZBRA
+NYSE:MOG.A
+NYSE:PBF
+NASDAQ:ARM
+NASDAQ:SMCI
+NYSE:WT
+NYSE:CRGY
+NASDAQ:SANM
+NASDAQ:PI
+NYSE:CLS
+NYSE:ETN

@@ -8,7 +8,7 @@ di New York (festività, chiusure anticipate e settimane con l'apertura alle 14:
   - Scanner di Remy: una scansione 20 s dopo la chiusura di ogni barra da 5 minuti (30m pivot crossback),
     con il suo codice invariato.
   - Watchlist di Remy: alle 15:00 di Roma dei giorni di borsa rilegge le due watchlist TradingView
-    pubbliche (Main e Focus) e aggiorna i file locali. Non le modifica mai su TradingView.
+    pubbliche (Main, Focus e la 327715885) e aggiorna i file locali. Non le modifica mai su TradingView.
 
 Uso:
   avvia.py               normale (manda su Discord)
@@ -44,7 +44,8 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 TV = BASE / "tv-scanner"
-REMY_WL = {"323848747": "pivot_wl_323848747.txt", "318147906": "pivot_wl_318147906.txt"}
+REMY_WL = {"323848747": "pivot_wl_323848747.txt", "318147906": "pivot_wl_318147906.txt",
+           "327715885": "pivot_wl_327715885.txt"}     # [RONIN 09/10] terza lista
 REPO_RAW = "https://raw.githubusercontent.com/Ronin746/jeff-coach/main/data/coach-agreed/today.json"
 
 
