@@ -363,5 +363,5 @@ Ronin: Sydney segnalava "Channel" anche dove il canale non c'è. Rivisti i 32 no
 - **i tocchi devono alternarsi tra le due linee almeno 3 volte** (il prezzo va su e giù dentro il canale), non tutti da una parte;
 - **backtest della linea rotta solo per canali che salgono** e solo dopo una rottura vera (almeno 3 close sopra la
   linea alta): niente più canali discendenti o piatti (ARM, PWR, STM, DVN, SNOW) chiamati "backtest".
-Risultato sul 09/10: 18 nomi su 32 restano; NET, RNG, RBRK (gli esempi di Ronin) restano canali.
+Risultato sul 09/10: 19 nomi su 32 restano; NET, RNG, RBRK (gli esempi di Ronin) restano canali.
 Il grafico dell'alert ricalcola le linee se la lista del giorno non le ha (RBRK del 09/10 era senza linee).
