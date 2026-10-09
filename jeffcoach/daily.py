@@ -164,8 +164,12 @@ def group_strength(doc: dict) -> tuple[dict, dict]:
         med = {g: float(np.median([metrics[s]["rs"] for s in v])) for g, v in groups.items() if len(v) >= C.GROUP_MIN_MEMBERS}
         order = sorted(med, key=lambda g: med[g])
         k = max(1, len(order) - 1)
+        def r1m(v):
+            x = [metrics[s]["ret21_pct"] for s in v if metrics[s].get("ret21_pct") is not None]
+            return round(float(np.median(x)), 1) if x else None
         return {g: dict(pctl=round(i / k * 100), median_rs=round(med[g]), n=len(groups[g]),
-                        strong=sum(1 for s in groups[g] if metrics[s]["rs"] >= 90)) for i, g in enumerate(order)}
+                        strong=sum(1 for s in groups[g] if metrics[s]["rs"] >= 90), ret1m=r1m(groups[g]))
+                for i, g in enumerate(order)}
     gi, gs = pctl(by_ind), pctl(by_sec)
     lead = {}
     for key, lab in (("ret21_pct", "1m"), ("ret63_pct", "3m"), ("ret126_pct", "6m")):
@@ -383,7 +387,8 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                                        metrics={k: (_r(v, 4) if isinstance(v, float) else v) for k, v in r.m.items()},
                                        sma30_65m=s65.get(r.ticker), next_earnings=earn_next.get(r.ticker))
                         for r in rows.values() if r.list != "Out" or r.out_reason})
-    return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn)
+    return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn,
+                sectors=groups.get("sectors") or {})
 
 
 def pattern_c_compare(rows: dict) -> dict:
@@ -537,7 +542,7 @@ def main(argv=None) -> int:
     sb = [r["ticker"] for r in by_sector([r for r in res["spub"] if r["ticker"] not in up])]
     txt = tv_txt([(t, exch_of(t, doc)) for t in fo], [(t, exch_of(t, doc)) for t in so],
                  [(t, exch_of(t, doc)) for t in sb])
-    descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"])
+    descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"], res.get("sectors"))
     card = {"embeds": [{"description": d, "color": C.CARD_COLOR} for d in descs], "allowed_mentions": {"parse": []}}
     summ = summary_it(res, doc)
     write_atomic(work / "card.json", card)

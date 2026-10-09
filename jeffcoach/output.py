@@ -55,7 +55,19 @@ def above_sma65(r: dict) -> bool:
     return "sma65" not in (r.get("open_gates") or [])
 
 
-def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict]) -> list[str]:
+def sector_line(name: str, st: Optional[dict]) -> str:
+    """Intestazione del settore con le sue statistiche, come per i titoli [RONIN 09/10]:
+    RS mediana del settore nell'universo · percentile tra gli 11 settori · rendimento mediano a 1 mese ·
+    quanti titoli con RS >= 90 sul totale."""
+    if not st:
+        return f"__{name}__"
+    r1 = st.get("ret1m")
+    return (f"__{name}__ — RS {st['median_rs']} · pctl {st['pctl']} · 1M {'n/a' if r1 is None else f'{r1:+.1f}%'} · "
+            f"RS≥90 {st['strong']}/{st['n']}")
+
+
+def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
+                      sectors: Optional[dict] = None) -> list[str]:
     """Card: FOCUS, STALK sopra la SMA30 65m, STALK sotto [RONIN 04/10, 09/10]. Niente tabelle: una voce per nome
     con statistiche e descrizione. Ogni sezione è un embed a sé dello stesso messaggio (Discord: 4096 caratteri per
     embed, 6000 in tutto); oltre si accorciano le frasi, prima degli Stalk.
@@ -66,7 +78,8 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict]) -> 
     def sect(title: str, rows: list[dict], lim: Optional[int]) -> str:
         if not rows:
             return f"**{title}**\n• none"
-        blocks = [f"__{sec}__\n" + "\n".join(card_line(r, lim) for r in rr) for sec, rr in sector_groups(rows)]
+        blocks = [sector_line(sec, (sectors or {}).get(sec)) + "\n" + "\n".join(card_line(r, lim) for r in rr)
+                  for sec, rr in sector_groups(rows)]
         return f"**{title}**\n" + "\n\n".join(blocks)
 
     def build(f_lim, s_lim) -> list[str]:
