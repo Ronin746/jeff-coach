@@ -28,7 +28,7 @@ from . import channel as CH
 from . import peg as PG
 from . import patterns as P
 from .calendar_us import ROME, is_session, prev_session, sessions_from, today_rome, last_sessions
-from .output import card_description, tv_txt, write_atomic
+from .output import card_descriptions, tv_txt, write_atomic
 
 log = logging.getLogger("jeffcoach.daily")
 
@@ -525,8 +525,8 @@ def main(argv=None) -> int:
 
     a = res["agreed"]
     txt = tv_txt([(t, exch_of(t, doc)) for t in a["focus"]], [(t, exch_of(t, doc)) for t in a["stalk"]])
-    desc = card_description(session.isoformat(), res["fpub"], res["spub"])
-    card = {"embeds": [{"description": desc, "color": C.CARD_COLOR}], "allowed_mentions": {"parse": []}}
+    descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"])
+    card = {"embeds": [{"description": d, "color": C.CARD_COLOR} for d in descs], "allowed_mentions": {"parse": []}}
     summ = summary_it(res, doc)
     write_atomic(work / "card.json", card)
     write_atomic(work / "summary_it.md", summ, as_json=False)
