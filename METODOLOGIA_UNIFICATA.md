@@ -259,7 +259,7 @@ Può anche dare il nome al pattern (flag, pennant, box…) e riscrivere la frase
 ## 10. Card Discord
 
 - **Formato (dal 09/10) [RONIN 09/10]:** niente tabelle. Una voce per nome: in grassetto il ticker con RS · VCP · SMA5 · Atr Ext, e subito sotto (`↳`) la descrizione, per Focus e Stalk. Gli Stalk sono divisi in due sezioni: **sopra** e **sotto** la SMA30 65m. Ogni sezione (Focus, Stalk sopra, Stalk sotto) è un riquadro a sé dello stesso messaggio. Nella descrizione degli Stalk, `lagging` = la lettura B non vede una spinta recente (nessun +3 ATR negli ultimi 15 giorni).
-- **File txt per TradingView [RONIN 09/10]:** in un messaggio subito sotto la card (in un messaggio solo Discord metterebbe il file sopra i riquadri). Sezioni `###FOCUS`, `###STALK ABOVE 65m SMA30`, `###STALK BELOW 65m SMA30`.
+- **File txt per TradingView [RONIN 09/10]:** allegato allo stesso messaggio della card (Discord lo mostra sopra i riquadri). Sezioni `###FOCUS`, `###STALK ABOVE 65m SMA30`, `###STALK BELOW 65m SMA30`.
 
 **Struttura:**
 - un solo messaggio e un solo embed;

@@ -72,8 +72,8 @@ def _multipart(payload: dict, filename: str, content: bytes) -> tuple[bytes, str
 
 
 def post_card(session: date, dry_run: bool = False) -> dict:
-    """Card (riquadri) e, subito sotto, un secondo messaggio con il solo file txt per TradingView, così il file
-    da scaricare sta in fondo alla card [RONIN 09/10]. Stesso giorno: si correggono i due messaggi, mai nuovi post."""
+    """Card (riquadri) con il file txt per TradingView allegato allo stesso messaggio [RONIN 09/10: download unito
+    al resto]. Stesso giorno: si corregge il messaggio, mai un secondo post."""
     work = C.STATE / f"daily_{session}"
     card = json.loads((work / "card.json").read_text(encoding="utf-8"))
     txt_path = C.AGREED / f"watchlist_{session}.txt"
@@ -88,35 +88,23 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     if not url:
         return {"ok": False, "error": "webhook card non configurato"}
     base, q = url.split("?")[0], ("&" if "?" in url else "?")
-
-    # 1) la card, senza allegati né tasti (attachments/components vuoti tolgono quelli di versioni precedenti)
-    payload = {"username": C.CARD_USERNAME, **card, "attachments": [], "components": []}
-    body = json.dumps(payload).encode()
+    payload = {"username": C.CARD_USERNAME, **card, "components": [], "attachments": [{"id": 0, "filename": fname}]}
+    body, ctype = _multipart(payload, fname, txt_path.read_bytes())
     if prev.get("message_id"):
-        res = _request(f"{base}/messages/{prev['message_id']}?with_components=true", "PATCH", body, "application/json")
+        res = _request(f"{base}/messages/{prev['message_id']}?with_components=true", "PATCH", body, ctype)
         res["method"] = "PATCH"
         res.setdefault("message_id", prev["message_id"])
     else:
-        res = _request(url + q + "wait=true", "POST", body, "application/json")
+        res = _request(url + q + "wait=true", "POST", body, ctype)
         res["method"] = "POST"
     if not res.get("ok"):
         return res
-    state = {**prev, **{k: v for k, v in res.items() if v is not None}, "session": str(session)}
-
-    # 2) il file, in un messaggio subito sotto la card
-    fpay = {"username": C.CARD_USERNAME, "allowed_mentions": {"parse": []}, "attachments": [{"id": 0, "filename": fname}]}
-    fbody, ctype = _multipart(fpay, fname, txt_path.read_bytes())
-    if prev.get("file_message_id"):
-        fres = _request(f"{base}/messages/{prev['file_message_id']}", "PATCH", fbody, ctype)
-        fres.setdefault("message_id", prev["file_message_id"])
-    else:
-        fres = _request(url + q + "wait=true", "POST", fbody, ctype)
-    if fres.get("ok"):
-        state["file_message_id"] = fres.get("message_id")
-    res["file_ok"] = bool(fres.get("ok"))
-
-    state.pop("file_url", None)
-    write_atomic(state_p, {k: v for k, v in state.items() if k not in ("file_url", "button", "button_error")})
+    state = {**prev, **{k: v for k, v in res.items() if v is not None and k != "file_url"}, "session": str(session)}
+    if state.get("file_message_id"):          # messaggio separato col file (versione del 09/10 mattina): si toglie
+        d = _request(f"{base}/messages/{state['file_message_id']}", "DELETE", b"", "application/json")
+        if d.get("ok") or d.get("status") == 404:
+            state.pop("file_message_id")
+    write_atomic(state_p, state)
     return res
 
 
