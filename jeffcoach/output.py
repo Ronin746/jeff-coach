@@ -56,14 +56,11 @@ def above_sma65(r: dict) -> bool:
 
 
 def sector_line(name: str, st: Optional[dict]) -> str:
-    """Intestazione del settore con le sue statistiche, come per i titoli [RONIN 09/10]:
-    RS mediana del settore nell'universo · percentile tra gli 11 settori · rendimento mediano a 1 mese ·
-    quanti titoli con RS >= 90 sul totale."""
+    """Intestazione del settore con le stesse statistiche dei titoli, misurate sull'ETF del settore [RONIN 09/10]."""
     if not st:
         return f"__{name}__"
-    r1 = st.get("ret1m")
-    return (f"__{name}__ — RS {st['median_rs']} · pctl {st['pctl']} · 1M {'n/a' if r1 is None else f'{r1:+.1f}%'} · "
-            f"RS≥90 {st['strong']}/{st['n']}")
+    return (f"__{name}__ ({st['etf']}) — RS {_fmt(st.get('rs'), '{}')} · VCP {_fmt(st.get('vcp'), '{:.1f}')} · "
+            f"SMA5 {_fmt(st.get('sma5'), '{:+.1f}%')} · Atr Ext {_fmt(st.get('atr_ext'), '{:.2f}×')}")
 
 
 def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],

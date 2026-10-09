@@ -164,12 +164,8 @@ def group_strength(doc: dict) -> tuple[dict, dict]:
         med = {g: float(np.median([metrics[s]["rs"] for s in v])) for g, v in groups.items() if len(v) >= C.GROUP_MIN_MEMBERS}
         order = sorted(med, key=lambda g: med[g])
         k = max(1, len(order) - 1)
-        def r1m(v):
-            x = [metrics[s]["ret21_pct"] for s in v if metrics[s].get("ret21_pct") is not None]
-            return round(float(np.median(x)), 1) if x else None
         return {g: dict(pctl=round(i / k * 100), median_rs=round(med[g]), n=len(groups[g]),
-                        strong=sum(1 for s in groups[g] if metrics[s]["rs"] >= 90), ret1m=r1m(groups[g]))
-                for i, g in enumerate(order)}
+                        strong=sum(1 for s in groups[g] if metrics[s]["rs"] >= 90)) for i, g in enumerate(order)}
     gi, gs = pctl(by_ind), pctl(by_sec)
     lead = {}
     for key, lab in (("ret21_pct", "1m"), ("ret63_pct", "3m"), ("ret126_pct", "6m")):
@@ -188,6 +184,27 @@ def group_strength(doc: dict) -> tuple[dict, dict]:
         per[s] = dict(industry=i_, sector=se, group_pctl=(g or {}).get("pctl"), group_n=len(by_ind.get(i_, [])),
                       group_level="industry" if i_ in gi else "sector", leader=lead.get(s, []))
     return per, dict(industries=gi, sectors=gs)
+
+
+def sector_etf_stats(doc: dict) -> dict:
+    """Per la card: RS, VCP, SMA5 e Atr Ext dell'ETF di ogni settore, con le stesse formule dei titoli [RONIN 09/10].
+    I dati si scaricano una volta e restano nel compute.pkl del giorno (doc["sector_etf"])."""
+    if doc.get("sector_etf") is None:
+        out = {}
+        try:
+            etfs = list(C.SECTOR_ETF.values())
+            daily = D.download_daily(etfs + ["^GSPC"], (doc["as_of"] - timedelta(days=800)).isoformat(), doc["as_of"])
+            spx = daily.get("^GSPC")
+            for sec, etf in C.SECTOR_ETF.items():
+                df = daily.get(etf)
+                m = E.compute_metrics(df, spx.Close) if df is not None and spx is not None else None
+                if m:
+                    out[sec] = dict(etf=etf, rs=m.get("rs"), vcp=_r(m.get("vcp"), 1), sma5=_r(m.get("sma5_dist_pct")),
+                                    atr_ext=_r(m.get("ext")))
+        except Exception as e:
+            log.warning("ETF di settore non disponibili: %s", e)
+        doc["sector_etf"] = out
+    return doc["sector_etf"]
 
 
 def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict:
@@ -388,7 +405,7 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                                        sma30_65m=s65.get(r.ticker), next_earnings=earn_next.get(r.ticker))
                         for r in rows.values() if r.list != "Out" or r.out_reason})
     return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn,
-                sectors=groups.get("sectors") or {})
+                sectors=sector_etf_stats(doc))
 
 
 def pattern_c_compare(rows: dict) -> dict:

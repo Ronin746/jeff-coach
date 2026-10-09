@@ -67,6 +67,10 @@ BUCKET_MIN = 65
 #    con 3+ gate aperti, RS < 80, sotto la SMA200 o utili in finestra esce.
 # (impl.) Calibrato sulle liste reali di Dua e Sydney (5-8/10): copre 35 dei 41 Stalk pubblici dell'08/10.
 # Gate numerici = tutti tranne "pattern".
+# ETF di settore per le statistiche del gruppo nella card (stesse misure dei titoli) [RONIN 09/10]
+SECTOR_ETF = {"Technology": "XLK", "Energy": "XLE", "Consumer Cyclical": "XLY", "Healthcare": "XLV",
+              "Industrials": "XLI", "Basic Materials": "XLB", "Communication Services": "XLC",
+              "Consumer Defensive": "XLP", "Financial Services": "XLF", "Utilities": "XLU", "Real Estate": "XLRE"}
 STALK_RS_MIN = 80
 STALK_RS_THEME_MIN = 70        # RS 70-79 entra in Stalk solo se TUTTI gli altri gate sono chiusi [RONIN 04/10: tema forte]
 STALK_NEW_MAX_NUMERIC_OPEN = 1
