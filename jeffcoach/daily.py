@@ -231,7 +231,12 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
     for s in pre:
         if "err" in info.get(s, {}):
             info_missing.append(s)
-        why = E.universe_check(rows[s].m if s in rows else metrics[s], info.get(s, {}), s)
+        inf = dict(info.get(s, {}))
+        if not inf.get("industry") and (doc.get("industry") or {}).get(s):
+            # Yahoo non ha risposto (es. "Invalid Crumb"): l'industria viene dalla mappa settimanale salvata,
+            # così un biotech non passa per un errore di rete [09/10: CORT, EXEL, KOD]
+            inf["industry"] = doc["industry"][s].get("industry")
+        why = E.universe_check(rows[s].m if s in rows else metrics[s], inf, s)
         if why:
             out_universe[s] = why
             if s in rows:

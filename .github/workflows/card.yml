@@ -51,6 +51,7 @@ jobs:
           if [ "${{ github.event_name }}" = "schedule" ] && [ -f "data/state/daily_$S/discord_post.json" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"; echo "Card già pubblicata"; else echo "skip=false" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/cache/restore@v4
+        id: cache
         if: steps.s.outputs.session != 'none' && steps.chk.outputs.skip != 'true'
         with:
           path: data/state/daily_${{ steps.s.outputs.session }}/compute.pkl
@@ -63,6 +64,12 @@ jobs:
           python -m jeffcoach.daily --session $S --from-cache
           python -m jeffcoach.discord card --session $S | tee /tmp/card.txt
           grep -q '"ok": true' /tmp/card.txt || (echo "Card NON pubblicata"; exit 1)
+      - name: Salva i dati calcolati se non c'erano, così i giri dopo non riscaricano niente
+        if: steps.s.outputs.session != 'none' && steps.chk.outputs.skip != 'true' && steps.cache.outputs.cache-matched-key == ''
+        uses: actions/cache/save@v4
+        with:
+          path: data/state/daily_${{ steps.s.outputs.session }}/compute.pkl
+          key: compute-${{ steps.s.outputs.session }}-${{ github.run_id }}
       - name: Commit
         if: steps.s.outputs.session != 'none' && steps.chk.outputs.skip != 'true'
         run: |
