@@ -188,12 +188,12 @@ def group_strength(doc: dict) -> tuple[dict, dict]:
 
 
 def rs_week_ago(doc: dict) -> dict:
-    """RS di ogni titolo dell'universo 5 sedute fa. Dai metrics se c'è (liste nuove), altrimenti si scarica una volta
-    e resta nel compute.pkl (doc["rs_w1"]) [RONIN 09/10]."""
+    """RS di ogni titolo dell'universo alla chiusura della settimana precedente. Dai metrics se c'è (liste nuove),
+    altrimenti si scarica una volta e resta nel compute.pkl (doc["rs_wk"]) [RONIN 09/10]."""
     metrics = doc["metrics"]
     if all("rs_w1" in m for m in metrics.values()):
         return {s: m["rs_w1"] for s, m in metrics.items()}
-    if doc.get("rs_w1") is None:
+    if doc.get("rs_wk") is None:
         out = {}
         try:
             syms = [s for s, m in metrics.items() if m.get("rs") is not None]
@@ -204,16 +204,17 @@ def rs_week_ago(doc: dict) -> dict:
                 if df is None or spx is None or len(df) < 262:
                     continue
                 ref = spx.Close.reindex(df.index).ffill()
-                if ref.notna().all():
-                    out[s] = I.rs_rating(I.rs_raw(list(df.Close.values[:-5]), list(ref.values[:-5])))
+                k = E.prev_week_cut(df.index)
+                if k and ref.notna().all():
+                    out[s] = I.rs_rating(I.rs_raw(list(df.Close.values[:k]), list(ref.values[:k])))
         except Exception as e:
             log.warning("RS di una settimana fa non disponibile: %s", e)
-        doc["rs_w1"] = out
-    return doc["rs_w1"]
+        doc["rs_wk"] = out
+    return doc["rs_wk"]
 
 
 def sector_strong_w1(doc: dict) -> dict:
-    """Per settore: quanti titoli dell'universo avevano RS >= 90 una settimana fa (stesso universo dei gruppi)."""
+    """Per settore: quanti titoli dell'universo avevano RS >= 90 alla chiusura della settimana precedente."""
     ind, metrics, meta = doc.get("industry") or {}, doc["metrics"], doc["meta"]
     w1 = rs_week_ago(doc)
     out: dict = {}

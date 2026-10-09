@@ -63,8 +63,8 @@ def sector_line(name: str, st: Optional[dict]) -> str:
          f"SMA5 {_fmt(st.get('sma5'), '{:+.1f}%')} · Atr Ext {_fmt(st.get('atr_ext'), '{:.2f}×')}")
     if st.get("n"):      # titoli del settore con RS >= 90 sul totale dell'universo [RONIN 09/10]
         s += f" · RS≥90 {st.get('strong', 0)}/{st['n']}"
-        if st.get("strong_w1") is not None:         # variazione rispetto a 5 sedute fa [RONIN 09/10]
-            s += f" ({st.get('strong', 0) - st['strong_w1']:+d})"
+        if st.get("strong_w1") is not None:         # rispetto alla chiusura della settimana prima [RONIN 09/10]
+            s += f" ({st.get('strong', 0) - st['strong_w1']:+d} vs last wk)"
     return s
 
 

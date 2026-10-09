@@ -21,6 +21,17 @@ def _r(x, n=2):
 
 
 # ------------------------------------------------------------------ metriche per titolo
+def prev_week_cut(index) -> Optional[int]:
+    """Quante barre tenere per fermarsi alla chiusura della settimana precedente a quella dell'ultima barra."""
+    if len(index) == 0:
+        return None
+    last = index[-1].isocalendar()[:2]
+    for i in range(len(index) - 1, -1, -1):
+        if index[i].isocalendar()[:2] != last:
+            return i + 1
+    return None
+
+
 def compute_metrics(df: pd.DataFrame, spx_close: pd.Series) -> Optional[dict]:
     """df = daily RTH del titolo fino al close di riferimento compreso."""
     if df is None or len(df) < 60:
@@ -39,8 +50,11 @@ def compute_metrics(df: pd.DataFrame, spx_close: pd.Series) -> Optional[dict]:
     vcp = I.vcp_series(df)
     ref = spx_close.reindex(df.index).ffill()
     raw = I.rs_raw(list(c.values), list(ref.values)) if ref.notna().all() else None
-    # RS di una settimana fa (5 sedute), per la variazione dei titoli forti per settore nella card [RONIN 09/10]
-    raw_w1 = I.rs_raw(list(c.values[:-5]), list(ref.values[:-5])) if ref.notna().all() and len(c) > 260 else None
+    # RS alla chiusura della settimana precedente (ultima seduta della settimana prima), per la variazione dei
+    # titoli forti per settore nella card [RONIN 09/10]
+    k = prev_week_cut(df.index)
+    raw_w1 = (I.rs_raw(list(c.values[:k]), list(ref.values[:k]))
+              if k and ref.notna().all() and k > 255 else None)
     rng = I.range_pct(df)
     adr = I.adr_pct(df)
     adr_last = float(adr.iloc[-1]) if pd.notna(adr.iloc[-1]) else None
