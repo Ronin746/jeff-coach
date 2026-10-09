@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-08",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-09 11:27 CEST",
+  "asof_rome": "2026-10-09 11:35 CEST",
   "focus": [
     "RNG",
     "FIVN",
@@ -2291,7 +2291,7 @@
       "upper_line_next": 88.2,
       "pos": 0.27,
       "width_atr": 4.4,
-      "sma30_65m": 74.53,
+      "sma30_65m": 74.54,
       "above_sma30_65m": false,
       "ema9": 75.14,
       "under_ema9": true,
@@ -5930,7 +5930,7 @@
         "carry_days": 0
       },
       "sma30_65m": {
-        "sma30_65m": 69.28099619547525,
+        "sma30_65m": 69.28032964070638,
         "n_buckets": 36,
         "last_bucket": "2026-10-08#5",
         "incomplete": 0,
