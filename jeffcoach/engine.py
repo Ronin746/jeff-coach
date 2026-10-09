@@ -39,6 +39,8 @@ def compute_metrics(df: pd.DataFrame, spx_close: pd.Series) -> Optional[dict]:
     vcp = I.vcp_series(df)
     ref = spx_close.reindex(df.index).ffill()
     raw = I.rs_raw(list(c.values), list(ref.values)) if ref.notna().all() else None
+    # RS di una settimana fa (5 sedute), per la variazione dei titoli forti per settore nella card [RONIN 09/10]
+    raw_w1 = I.rs_raw(list(c.values[:-5]), list(ref.values[:-5])) if ref.notna().all() and len(c) > 260 else None
     rng = I.range_pct(df)
     adr = I.adr_pct(df)
     adr_last = float(adr.iloc[-1]) if pd.notna(adr.iloc[-1]) else None
@@ -56,7 +58,7 @@ def compute_metrics(df: pd.DataFrame, spx_close: pd.Series) -> Optional[dict]:
         vcp=float(vcp.iloc[-1]) if pd.notna(vcp.iloc[-1]) else None,
         vcp_prev=float(vcp.iloc[-2]) if pd.notna(vcp.iloc[-2]) else None,
         compression_days=I.compression_days(df),
-        rs_raw=raw, rs=I.rs_rating(raw),
+        rs_raw=raw, rs=I.rs_rating(raw), rs_w1=I.rs_rating(raw_w1),
         adr_pct=adr_last, last_range_adr=(float(rng.iloc[-1]) / adr_last) if adr_last else None,
         off_52w_high_pct=(close / float(h.iloc[-252:].max()) - 1) * 100,
         n_bars=len(df),

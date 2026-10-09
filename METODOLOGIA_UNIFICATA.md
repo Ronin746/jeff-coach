@@ -259,8 +259,9 @@ Può anche dare il nome al pattern (flag, pennant, box…) e riscrivere la frase
 ## 10. Card Discord
 
 - **Formato (dal 09/10) [RONIN 09/10]:** niente tabelle. Una voce per nome: in grassetto il ticker con RS · VCP · SMA5 · Atr Ext, e subito sotto (`↳`) la descrizione, per Focus e Stalk. Gli Stalk sono divisi in due sezioni: **sopra** e **sotto** la SMA30 65m. Ogni sezione (Focus, Stalk sopra, Stalk sotto) è un riquadro a sé dello stesso messaggio. Nella descrizione degli Stalk, `lagging` = la lettura B non vede una spinta recente (nessun +3 ATR negli ultimi 15 giorni).
-- **Raggruppati per settore [RONIN 09/10]:** dentro Focus, Stalk sopra e Stalk sotto i nomi sono divisi per settore Yahoo (prima i settori con più nomi); nel txt i nomi di ogni sezione seguono lo stesso ordine. Ogni settore ha sull'intestazione le stesse statistiche dei titoli (RS · VCP · SMA5 · Atr Ext), misurate sull'ETF del settore (XLK, XLE, XLY, XLV, XLI, XLB, XLC, XLP, XLF, XLU, XLRE; `config.SECTOR_ETF`), e in fondo quanti titoli del settore hanno RS ≥ 90 sul totale dell'universo (`RS≥90 44/115`).
-- **File txt per TradingView [RONIN 09/10]:** allegato allo stesso messaggio della card (Discord lo mostra sopra i riquadri). Sezioni `###FOCUS`, `###STALK ABOVE 65m SMA30`, `###STALK BELOW 65m SMA30`.
+- **Raggruppati per settore [RONIN 09/10]:** dentro Focus, Stalk sopra e Stalk sotto i nomi sono divisi per settore Yahoo (prima i settori con più nomi); nel txt i nomi di ogni sezione seguono lo stesso ordine. Ogni settore ha sull'intestazione le stesse statistiche dei titoli (RS · VCP · SMA5 · Atr Ext), misurate sull'ETF del settore (XLK, XLE, XLY, XLV, XLI, XLB, XLC, XLP, XLF, XLU, XLRE; `config.SECTOR_ETF`), e in fondo quanti titoli del settore hanno RS ≥ 90 sul totale dell'universo, con la variazione rispetto a 5 sedute prima (`RS≥90 44/115 (+3)`).
+- **File txt per TradingView [RONIN 09/10]:** allegato allo stesso messaggio della card (Discord lo mostra sopra i riquadri).
+- **Lunghezza:** Discord accetta al massimo 6000 caratteri per messaggio. Se la card li supera, l'ultima sezione continua in un messaggio subito sotto, senza tagliare le descrizioni. Sezioni `###FOCUS`, `###STALK ABOVE 65m SMA30`, `###STALK BELOW 65m SMA30`.
 
 **Struttura:**
 - un solo messaggio e un solo embed;

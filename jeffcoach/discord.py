@@ -71,9 +71,25 @@ def _multipart(payload: dict, filename: str, content: bytes) -> tuple[bytes, str
     return body, f"multipart/form-data; boundary={b}"
 
 
+def _split_embeds(embeds: list[dict], limit: int = 6000) -> list[list[dict]]:
+    """Discord: al massimo 6000 caratteri di testo per messaggio. I riquadri che non ci stanno vanno nel messaggio dopo."""
+    out, cur, n = [], [], 0
+    for e in embeds:
+        k = len(e.get("description") or "") + len(e.get("title") or "")
+        if cur and n + k > limit:
+            out.append(cur)
+            cur, n = [], 0
+        cur.append(e)
+        n += k
+    if cur:
+        out.append(cur)
+    return out
+
+
 def post_card(session: date, dry_run: bool = False) -> dict:
-    """Card (riquadri) con il file txt per TradingView allegato allo stesso messaggio [RONIN 09/10: download unito
-    al resto]. Stesso giorno: si corregge il messaggio, mai un secondo post."""
+    """Card (riquadri) con il file txt per TradingView allegato al primo messaggio [RONIN 09/10]. Se la card supera
+    i 6000 caratteri di un messaggio, i riquadri in più vanno in un messaggio subito sotto. Stesso giorno: si
+    correggono gli stessi messaggi, mai post nuovi (tranne la continuazione quando serve la prima volta)."""
     work = C.STATE / f"daily_{session}"
     card = json.loads((work / "card.json").read_text(encoding="utf-8"))
     txt_path = C.AGREED / f"watchlist_{session}.txt"
@@ -82,13 +98,18 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     fname = f"watchlist_{session}.txt"
     state_p = work / "discord_post.json"
     prev = json.loads(state_p.read_text(encoding="utf-8")) if state_p.exists() else {}
+    parts = _split_embeds(card.get("embeds") or [])
     if dry_run:
-        return {"dry_run": True, "would": "PATCH" if prev.get("message_id") else "POST"}
+        return {"dry_run": True, "would": "PATCH" if prev.get("message_id") else "POST", "messages": len(parts)}
     url = load_webhook(C.CARD_WEBHOOK_ENV)
     if not url:
         return {"ok": False, "error": "webhook card non configurato"}
     base, q = url.split("?")[0], ("&" if "?" in url else "?")
-    payload = {"username": C.CARD_USERNAME, **card, "components": [], "attachments": [{"id": 0, "filename": fname}]}
+    extra = {k: v for k, v in card.items() if k != "embeds"}
+
+    # 1) primo messaggio: primi riquadri + file
+    payload = {"username": C.CARD_USERNAME, **extra, "embeds": parts[0] if parts else [], "components": [],
+               "attachments": [{"id": 0, "filename": fname}]}
     body, ctype = _multipart(payload, fname, txt_path.read_bytes())
     if prev.get("message_id"):
         res = _request(f"{base}/messages/{prev['message_id']}?with_components=true", "PATCH", body, ctype)
@@ -100,7 +121,25 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     if not res.get("ok"):
         return res
     state = {**prev, **{k: v for k, v in res.items() if v is not None and k != "file_url"}, "session": str(session)}
-    if state.get("file_message_id"):          # messaggio separato col file (versione del 09/10 mattina): si toglie
+
+    # 2) continuazione (se serve), stesso stile; se non serve più si cancella
+    old_more = list(prev.get("more_message_ids") or [])
+    more = []
+    for i, emb in enumerate(parts[1:]):
+        pl = json.dumps({"username": C.CARD_USERNAME, **extra, "embeds": emb}).encode()
+        if i < len(old_more):
+            r = _request(f"{base}/messages/{old_more[i]}", "PATCH", pl, "application/json")
+            r.setdefault("message_id", old_more[i])
+        else:
+            r = _request(url + q + "wait=true", "POST", pl, "application/json")
+        if r.get("ok"):
+            more.append(r["message_id"])
+    for mid in old_more[len(parts) - 1:]:
+        _request(f"{base}/messages/{mid}", "DELETE", b"", "application/json")
+    state["more_message_ids"] = more
+    res["messages"] = 1 + len(more)
+
+    if state.get("file_message_id"):          # messaggio separato col solo file (versione del 09/10 mattina)
         d = _request(f"{base}/messages/{state['file_message_id']}", "DELETE", b"", "application/json")
         if d.get("ok") or d.get("status") == 404:
             state.pop("file_message_id")

@@ -35,7 +35,7 @@ def card_line(r: dict, lim: Optional[int] = None) -> str:
     why = r.get("reason_en") or ""
     if lim is not None and len(why) > lim:
         why = why[: lim - 1].rstrip(" ;,") + "…" if lim > 0 else ""
-    return s + (f"\n  ↳ {why}" if why else "")
+    return s + (f"\n↳ {why}" if why else "")
 
 
 def sector_groups(rows: list[dict]) -> list[tuple[str, list[dict]]]:
@@ -63,6 +63,8 @@ def sector_line(name: str, st: Optional[dict]) -> str:
          f"SMA5 {_fmt(st.get('sma5'), '{:+.1f}%')} · Atr Ext {_fmt(st.get('atr_ext'), '{:.2f}×')}")
     if st.get("n"):      # titoli del settore con RS >= 90 sul totale dell'universo [RONIN 09/10]
         s += f" · RS≥90 {st.get('strong', 0)}/{st['n']}"
+        if st.get("strong_w1") is not None:         # variazione rispetto a 5 sedute fa [RONIN 09/10]
+            s += f" ({st.get('strong', 0) - st['strong_w1']:+d})"
     return s
 
 
@@ -87,9 +89,11 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
                  sect(f"STALK — above 65m SMA30 ({len(up)})", up, s_lim),
                  sect(f"STALK — below 65m SMA30 ({len(down)})", down, s_lim)]
         return parts                                # una sezione per embed, sempre [RONIN 09/10]
+    # oltre i 6000 caratteri a messaggio la card continua in un secondo messaggio (discord.post_card): le frasi
+    # si accorciano solo se una singola sezione supera i 4096 caratteri di un riquadro
     for f_lim, s_lim in ((None, None), (None, 70), (None, 45), (80, 30), (60, 0), (0, 0)):
         d = build(f_lim, s_lim)
-        if all(len(x) <= CARD_LIMIT for x in d) and sum(len(x) for x in d) <= CARD_TOTAL_LIMIT:
+        if all(len(x) <= CARD_LIMIT for x in d):
             return d
     return [x[:CARD_LIMIT] for x in d]
 

@@ -24,6 +24,7 @@ from datetime import date, datetime, timedelta
 from . import config as C
 from . import data as D
 from . import engine as E
+from . import indicators as I
 from . import channel as CH
 from . import peg as PG
 from . import patterns as P
@@ -184,6 +185,43 @@ def group_strength(doc: dict) -> tuple[dict, dict]:
         per[s] = dict(industry=i_, sector=se, group_pctl=(g or {}).get("pctl"), group_n=len(by_ind.get(i_, [])),
                       group_level="industry" if i_ in gi else "sector", leader=lead.get(s, []))
     return per, dict(industries=gi, sectors=gs)
+
+
+def rs_week_ago(doc: dict) -> dict:
+    """RS di ogni titolo dell'universo 5 sedute fa. Dai metrics se c'è (liste nuove), altrimenti si scarica una volta
+    e resta nel compute.pkl (doc["rs_w1"]) [RONIN 09/10]."""
+    metrics = doc["metrics"]
+    if all("rs_w1" in m for m in metrics.values()):
+        return {s: m["rs_w1"] for s, m in metrics.items()}
+    if doc.get("rs_w1") is None:
+        out = {}
+        try:
+            syms = [s for s, m in metrics.items() if m.get("rs") is not None]
+            daily = D.download_daily(syms + ["^GSPC"], (doc["as_of"] - timedelta(days=420)).isoformat(), doc["as_of"])
+            spx = daily.get("^GSPC")
+            for s in syms:
+                df = daily.get(s)
+                if df is None or spx is None or len(df) < 262:
+                    continue
+                ref = spx.Close.reindex(df.index).ffill()
+                if ref.notna().all():
+                    out[s] = I.rs_rating(I.rs_raw(list(df.Close.values[:-5]), list(ref.values[:-5])))
+        except Exception as e:
+            log.warning("RS di una settimana fa non disponibile: %s", e)
+        doc["rs_w1"] = out
+    return doc["rs_w1"]
+
+
+def sector_strong_w1(doc: dict) -> dict:
+    """Per settore: quanti titoli dell'universo avevano RS >= 90 una settimana fa (stesso universo dei gruppi)."""
+    ind, metrics, meta = doc.get("industry") or {}, doc["metrics"], doc["meta"]
+    w1 = rs_week_ago(doc)
+    out: dict = {}
+    for s, m in metrics.items():
+        if s in meta and m.get("rs") is not None and s in ind and w1.get(s) is not None:
+            sec = ind[s]["sector"]
+            out[sec] = out.get(sec, 0) + (1 if w1[s] >= 90 else 0)
+    return out
 
 
 def sector_etf_stats(doc: dict) -> dict:
@@ -404,8 +442,9 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                                        metrics={k: (_r(v, 4) if isinstance(v, float) else v) for k, v in r.m.items()},
                                        sma30_65m=s65.get(r.ticker), next_earnings=earn_next.get(r.ticker))
                         for r in rows.values() if r.list != "Out" or r.out_reason})
+    sw1 = sector_strong_w1(doc)
     return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn,
-                sectors={sec: {**(groups.get("sectors") or {}).get(sec, {}), **st}
+                sectors={sec: {**(groups.get("sectors") or {}).get(sec, {}), **st, "strong_w1": sw1.get(sec)}
                          for sec, st in sector_etf_stats(doc).items()})
 
 
