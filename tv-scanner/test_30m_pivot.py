@@ -36,6 +36,18 @@ from discord_notify import (
 ETZ = ZoneInfo("America/New_York")
 
 
+import pytest
+import scanner as _S
+
+
+@pytest.fixture(autouse=True)
+def _regole_meccanica(monkeypatch):
+    """Questi test controllano la meccanica del pivot con dati finti a 2 candele rosse: girano con le regole
+    di prima (2 rosse, senza filtro qualità). Il filtro del 09/10 ha i suoi test in fondo al file."""
+    monkeypatch.setattr(_S, "PIVOT30_MIN_REDS", 2)
+    monkeypatch.setattr(_S, "PIVOT30_QUALITY", False)
+
+
 def _ts(y, m, d, hh, mm) -> int:
     return int(datetime(y, m, d, hh, mm, tzinfo=ETZ).timestamp())
 
@@ -191,7 +203,7 @@ def test_two_reds_atr_qualified_fires():
     assert sig.pivot_drop == 15.0
     assert abs(sig.pivot_atr - 10.0) < 1e-6
     assert sig.pivot_ref == 120.0 and sig.pivot_ref_kind == "gap_up"
-    assert PIVOT30_MIN_REDS == 2 and __import__("scanner").PIVOT30_ATR_MULT == 0.5
+    assert _S.PIVOT30_MIN_REDS == 2 and __import__("scanner").PIVOT30_ATR_MULT == 0.5
 
 
 def test_gap_down_uses_prior_close():
@@ -932,3 +944,29 @@ def test_live_gap_down_flag_off_one_red_no_alert(monkeypatch):
     sig = detect_30m_pivot("NASDAQ:TEST", bars, _cross_ind(t, 87.8), now=t + 300,
                            daily_bars=_daily_atr(10.0, close=100.0))
     assert sig is None
+
+
+def test_filtro_qualita_pivot():
+    """Filtro del 09/10: scarta pivot troppo larghi (rischio > 0,3 ATR), crolli (> 1,5 ATR), titoli estesi
+    sulla SMA50, aperture in gap down e pivot sotto la chiusura di ieri; accetta il pivot stretto."""
+    day = datetime(2026, 9, 28, tzinfo=ZoneInfo("America/New_York"))
+    def dbar(i, c):
+        t = int((day - timedelta(days=80 - i)).timestamp())
+        return {"t": t, "o": c, "h": c + 1, "l": c - 1, "c": c, "v": 1}
+    daily = [dbar(i, 100.0) for i in range(60)]
+    b30 = [{"t": int(day.replace(hour=9, minute=30).timestamp()) + k * 1800, "o": 100, "h": 100.5, "l": 99.5, "c": 100, "v": 1}
+           for k in range(6)]
+    s5 = [{"t": b30[0]["t"], "o": 100.0, "h": 100.2, "l": 99.8, "c": 100.0, "v": 1}]
+    q = _S._pivot30_quality
+    _S.PIVOT30_QUALITY = True
+    try:
+        assert q(daily, b30, 5, 99.5, 1.0, 2.0, 100.0, s5) is None            # stretto: 0,25 ATR di rischio
+        assert q(daily, b30, 5, 99.0, 1.0, 2.0, 100.0, s5) == "risk"          # 0,5 ATR di rischio
+        assert q(daily, b30, 5, 99.5, 3.5, 2.0, 100.0, s5) == "drop"          # discesa 1,75 ATR
+        assert q(daily, b30, 5, 97.5, 1.0, 2.0, 98.0, s5) == "below_prior_close"
+        s5g = [dict(s5[0], o=98.5)]
+        assert q(daily, b30, 5, 99.5, 1.0, 2.0, 100.0, s5g) == "gap_down"
+        ext = [dbar(i, 100.0 + (12.0 if i == 59 else 0)) for i in range(60)]
+        assert q(ext, b30, 5, 111.5, 1.0, 2.0, 112.0, s5) == "ext50"
+    finally:
+        _S.PIVOT30_QUALITY = True

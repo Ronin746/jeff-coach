@@ -192,3 +192,25 @@ cd /workspace/tv-scanner
 - `pivot_wl_323848747.txt` (TV WL 323848747 "Main", 97) **+** `pivot_wl_318147906.txt` (TV WL 318147906 "Focus", 15 at sync; `###TRACKING` header skipped).
 - Union deduped by ticker → 108 symbols. `PIVOT_WL_PATHS` in scanner.py. Both WLs read-only on TV; re-sync via TradingView MCP into the files.
 - Alerts: 30m pivot only (break + crossback), no RS gate.
+
+## 30M PIVOT — filtro qualità (dal 2026-10-09, Ronin)
+
+Backtest su 58 sedute (21/07–09/10/2026), 362 titoli con RS ≥ 80 il giorno del segnale (WL di Remy + universo
+Jeff Coach), ~9.000 crossback EMA6/20 + MACD sui 5m. Esito: ingresso al close della 5m del segnale, stop sotto il
+minimo del pivot, conta se arriva prima +2R o lo stop (entro la seduta dopo). Script: `backtest/pivot30_backtest.py`.
+
+- Regola vecchia: ~56 segnali al giorno sulle WL di Remy, risultato atteso +0,12R a segnale, stop prima di 1R ~50%.
+- Nessun singolo fattore (livelli daily, VWAP, ora, volume, mercato) separa bene; un modello statistico non
+  generalizza. Regge in tutti e tre i periodi provati la combinazione qui sotto:
+  - **almeno 3 candele 30m rosse** prima del pivot (`PIVOT30_MIN_REDS = 3`, era 2; il gap down conta ancora come una);
+  - **filtro qualità** (`PIVOT30_QUALITY = True`), tutto in ATR(14) daily:
+    - close di ieri non oltre 4 ATR sopra la SMA50 (`PIVOT30_MAX_EXT50_ATR`);
+    - discesa prima del pivot ≤ 1,5 ATR (`PIVOT30_MAX_DROP_ATR`);
+    - rischio = prezzo del segnale − minimo del pivot ≤ 0,3 ATR (`PIVOT30_MAX_RISK_ATR`);
+    - apertura non sotto la chiusura di ieri di oltre 0,5 ATR (`PIVOT30_MIN_GAP_ATR`);
+    - minimo del pivot non oltre 1 ATR sotto la chiusura di ieri e non oltre 1 ATR sotto la EMA21 a 30m.
+- Con il filtro: ~12 segnali al giorno sulle WL di Remy, risultato atteso +0,26R a segnale (per periodo:
+  +0,20 / +0,16 / +0,35 contro +0,13 / +0,07 / +0,15). Gli esempi di @1ChartMaster (LITE 28/09, MRVL 28/09,
+  STX 28–29/09) restano segnalati.
+- Ingresso sulla rottura del massimo del pivot invece del crossback: risultati simili (+0,28R con il filtro).
+  Resta il crossback, come deciso il 06/10.

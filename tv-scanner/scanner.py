@@ -107,7 +107,10 @@ TRIGGER_30M_PIVOT = "30M PIVOT"
 MAX_30M_PIVOT_BREAKS = 3  # 1st + (2°) + (3°); no further breaks per pivot
 ENABLE_30M_PIVOT_BREAK = False  # 2026-10-06 19:11 Ronin: only crossback, no alerts on pivot-high touches
 RS_MIN_30M_PIVOT = None  # 2026-10-06 Ronin: no RS exclusion on WL 323848747 (RS shown as info only)
-PIVOT30_MIN_REDS = 2  # consecutive same-session red 30m bars before the green
+PIVOT30_MIN_REDS = 3  # consecutive same-session red 30m bars before the green
+# 2026-10-09 Ronin (backtest 58 sedute, 362 titoli RS>=80, ~27k segnali): 3 rosse invece di 2 + filtro qualità
+# sotto. Sulle WL di Remy: segnali da ~56 a ~12 al giorno, risultato atteso da +0,12R a +0,26R a segnale
+# (2R prima dello stop sotto il minimo del pivot), migliore in tutti e tre i periodi provati.
 # 2026-10-07 Ronin: a gap-down open (RTH open < prior close) counts as one red
 PIVOT30_GAP_DOWN_COUNTS_AS_RED = True
 # 2026-10-06 (proposed, calibrated on @1ChartMaster refs NBIS/LITE/STX/MRVL/CRDO):
@@ -122,6 +125,14 @@ PIVOT30_SAME_SESSION_ONLY = True
 # Max crossback alerts per pivot (counted from the 5m EMA6/20+MACD series after
 # the green, so restarts don't matter). None = unlimited.
 PIVOT30_MAX_CROSSES = 1
+# Filtro qualità del pivot (2026-10-09 Ronin, vedi backtest sopra). Tutte in ATR(14) daily.
+PIVOT30_QUALITY = True
+PIVOT30_MAX_EXT50_ATR = 4.0       # close daily di ieri non oltre 4 ATR sopra la SMA50 (non esteso)
+PIVOT30_MAX_DROP_ATR = 1.5        # la discesa prima del pivot non oltre 1,5 ATR (non un crollo)
+PIVOT30_MAX_RISK_ATR = 0.3        # prezzo del segnale − minimo del pivot <= 0,3 ATR (pivot stretto, rischio piccolo)
+PIVOT30_MIN_GAP_ATR = -0.5        # apertura non sotto la chiusura di ieri di oltre 0,5 ATR
+PIVOT30_MAX_BELOW_PDC_ATR = 1.0   # minimo del pivot non oltre 1 ATR sotto la chiusura di ieri
+PIVOT30_MAX_BELOW_E21_30_ATR = 1.0  # minimo del pivot non oltre 1 ATR sotto la EMA21 a 30 minuti
 SPX_DAILY_SYMBOL = "^GSPC"  # Yahoo SPX for RS Rating (not in scan universe)
 
 ROME = ZoneInfo("Europe/Rome")
@@ -1367,6 +1378,44 @@ def _find_latest_30m_pivot(
     return None
 
 
+def _pivot30_quality(
+    daily_bars: Optional[list[dict]],
+    bars_30: list[dict],
+    green_idx: int,
+    pivot_low: float,
+    pivot_drop: float,
+    atr: float,
+    price: float,
+    closed_5m: list[dict],
+) -> Optional[str]:
+    """Motivo per scartare il segnale (None = buono). Filtro del 09/10, calibrato col backtest."""
+    if not PIVOT30_QUALITY or not atr:
+        return None
+    if pivot_drop > PIVOT30_MAX_DROP_ATR * atr:
+        return "drop"
+    if price - pivot_low > PIVOT30_MAX_RISK_ATR * atr:
+        return "risk"
+    g_day = _et_day(int(bars_30[green_idx]["t"]))
+    prior = sorted((b for b in (daily_bars or []) if daily_session_date(int(b["t"])) < g_day), key=lambda b: int(b["t"]))
+    if len(prior) >= 50:
+        pc = float(prior[-1]["c"])
+        sma50 = sum(float(b["c"]) for b in prior[-50:]) / 50.0
+        if (pc - sma50) > PIVOT30_MAX_EXT50_ATR * atr:
+            return "ext50"
+        if pivot_low < pc - PIVOT30_MAX_BELOW_PDC_ATR * atr:
+            return "below_prior_close"
+        sess = [b for b in closed_5m if _et_day(int(b["t"])) == g_day]
+        if sess:
+            op = float(sorted(sess, key=lambda b: int(b["t"]))[0]["o"])
+            if op - pc < PIVOT30_MIN_GAP_ATR * atr:
+                return "gap_down"
+    closes = [float(b["c"]) for b in bars_30[: green_idx + 1]]
+    e21 = ema_series(closes, 21)[green_idx] if closes else None
+    if e21 is not None and pivot_low < e21 - PIVOT30_MAX_BELOW_E21_30_ATR * atr:
+        return "below_ema21_30m"
+    return None
+
+
 def detect_30m_pivot(
     symbol: str,
     bars_5m: list[dict],
@@ -1451,6 +1500,9 @@ def detect_30m_pivot(
             is_cross = False  # cap reached for this pivot
 
     if not is_break and not is_cross:
+        return None
+    px_now = float(break_resolved[0]["c"]) if is_break else float(ind.price)
+    if _pivot30_quality(daily_bars, bars_30, green_idx, pivot_low, pivot_drop, pivot_atr, px_now, closed):
         return None
 
     if is_break and is_cross:
