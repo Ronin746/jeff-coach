@@ -405,7 +405,8 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                                        sma30_65m=s65.get(r.ticker), next_earnings=earn_next.get(r.ticker))
                         for r in rows.values() if r.list != "Out" or r.out_reason})
     return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn,
-                sectors=sector_etf_stats(doc))
+                sectors={sec: {**(groups.get("sectors") or {}).get(sec, {}), **st}
+                         for sec, st in sector_etf_stats(doc).items()})
 
 
 def pattern_c_compare(rows: dict) -> dict:

@@ -59,8 +59,11 @@ def sector_line(name: str, st: Optional[dict]) -> str:
     """Intestazione del settore con le stesse statistiche dei titoli, misurate sull'ETF del settore [RONIN 09/10]."""
     if not st:
         return f"__{name}__"
-    return (f"__{name}__ ({st['etf']}) — RS {_fmt(st.get('rs'), '{}')} · VCP {_fmt(st.get('vcp'), '{:.1f}')} · "
-            f"SMA5 {_fmt(st.get('sma5'), '{:+.1f}%')} · Atr Ext {_fmt(st.get('atr_ext'), '{:.2f}×')}")
+    s = (f"__{name}__ ({st['etf']}) — RS {_fmt(st.get('rs'), '{}')} · VCP {_fmt(st.get('vcp'), '{:.1f}')} · "
+         f"SMA5 {_fmt(st.get('sma5'), '{:+.1f}%')} · Atr Ext {_fmt(st.get('atr_ext'), '{:.2f}×')}")
+    if st.get("n"):      # titoli del settore con RS >= 90 sul totale dell'universo [RONIN 09/10]
+        s += f" · RS≥90 {st.get('strong', 0)}/{st['n']}"
+    return s
 
 
 def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
