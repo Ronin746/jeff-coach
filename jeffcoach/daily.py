@@ -543,7 +543,7 @@ def main(argv=None) -> int:
             piv = [r["ticker"] for r in res["fpub"] + res["spub"] if (r["rs"] or 0) >= C.RS_FOCUS_MIN]
             write_atomic(C.REMY_PIVOT_FILE, f"date: {session}\n" + "\n".join(piv) + "\n", as_json=False)
     print(summ)
-    print(f"\ncard: {len(desc)} caratteri · dettaglio: {work}")
+    print(f"\ncard: {sum(len(d) for d in descs)} caratteri in {len(descs)} embed · dettaglio: {work}")
     return 0
 
 
