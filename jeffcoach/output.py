@@ -74,6 +74,14 @@ def tv_symbol(t: str, exch: Optional[str]) -> str:
     return f"{TV_EXCHANGE.get(exch or '', 'NASDAQ' if not exch else exch)}:{t.replace('-', '.')}"
 
 
-def tv_txt(focus: Iterable[tuple[str, str]], stalk: Iterable[tuple[str, str]]) -> str:
-    """###FOCUS,EXCH:T,...,###STALK,EXCH:T,... in una riga [RONIN 06/10]."""
-    return ",".join(["###FOCUS", *[tv_symbol(t, e) for t, e in focus], "###STALK", *[tv_symbol(t, e) for t, e in stalk]])
+def tv_txt(focus: Iterable[tuple[str, str]], stalk: Iterable[tuple[str, str]],
+           stalk_below: Optional[Iterable[tuple[str, str]]] = None) -> str:
+    """###FOCUS,EXCH:T,...,###STALK,... in una riga [RONIN 06/10]. Con stalk_below gli Stalk sono divisi in due
+    sezioni, sopra e sotto la SMA30 65m, come sulla card [RONIN 09/10]."""
+    out = ["###FOCUS", *[tv_symbol(t, e) for t, e in focus]]
+    if stalk_below is None:
+        out += ["###STALK", *[tv_symbol(t, e) for t, e in stalk]]
+    else:
+        out += ["###STALK ABOVE 65m SMA30", *[tv_symbol(t, e) for t, e in stalk],
+                "###STALK BELOW 65m SMA30", *[tv_symbol(t, e) for t, e in stalk_below]]
+    return ",".join(out)

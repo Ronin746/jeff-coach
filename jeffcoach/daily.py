@@ -28,7 +28,7 @@ from . import channel as CH
 from . import peg as PG
 from . import patterns as P
 from .calendar_us import ROME, is_session, prev_session, sessions_from, today_rome, last_sessions
-from .output import card_descriptions, tv_txt, write_atomic
+from .output import above_sma65, card_descriptions, tv_txt, write_atomic
 
 log = logging.getLogger("jeffcoach.daily")
 
@@ -529,7 +529,10 @@ def main(argv=None) -> int:
     work.joinpath("compute.pkl").write_bytes(pickle.dumps(doc))      # salva anche le info scaricate
 
     a = res["agreed"]
-    txt = tv_txt([(t, exch_of(t, doc)) for t in a["focus"]], [(t, exch_of(t, doc)) for t in a["stalk"]])
+    up = {r["ticker"] for r in res["spub"] if above_sma65(r)}
+    txt = tv_txt([(t, exch_of(t, doc)) for t in a["focus"]],
+                 [(t, exch_of(t, doc)) for t in a["stalk"] if t in up],
+                 [(t, exch_of(t, doc)) for t in a["stalk"] if t not in up])
     descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"])
     card = {"embeds": [{"description": d, "color": C.CARD_COLOR} for d in descs], "allowed_mentions": {"parse": []}}
     summ = summary_it(res, doc)
