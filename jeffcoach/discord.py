@@ -89,11 +89,11 @@ def post_card(session: date, dry_run: bool = False) -> dict:
         return {"ok": False, "error": "webhook card non configurato"}
     base, q = url.split("?")[0], ("&" if "?" in url else "?")
 
-    # 1) la card, senza allegati (attachments: [] toglie anche un file allegato da una versione precedente)
-    payload = {"username": C.CARD_USERNAME, **card, "attachments": []}
+    # 1) la card, senza allegati né tasti (attachments/components vuoti tolgono quelli di versioni precedenti)
+    payload = {"username": C.CARD_USERNAME, **card, "attachments": [], "components": []}
     body = json.dumps(payload).encode()
     if prev.get("message_id"):
-        res = _request(f"{base}/messages/{prev['message_id']}", "PATCH", body, "application/json")
+        res = _request(f"{base}/messages/{prev['message_id']}?with_components=true", "PATCH", body, "application/json")
         res["method"] = "PATCH"
         res.setdefault("message_id", prev["message_id"])
     else:
@@ -115,14 +115,6 @@ def post_card(session: date, dry_run: bool = False) -> dict:
         state["file_message_id"] = fres.get("message_id")
     res["file_ok"] = bool(fres.get("ok"))
 
-    # 3) tasto in fondo alla card che apre il file ospitato da Discord (quello del messaggio sotto) [RONIN 09/10]
-    if fres.get("file_url"):
-        btn = [{"type": 1, "components": [{"type": 2, "style": 5, "label": f"⬇ {fname}", "url": fres["file_url"]}]}]
-        bres = _request(f"{base}/messages/{state['message_id']}?with_components=true", "PATCH",
-                        json.dumps({"components": btn}).encode(), "application/json")
-        res["button"] = bool(bres.get("ok"))
-        if not bres.get("ok"):
-            res["button_error"] = bres.get("error")
     state.pop("file_url", None)
     write_atomic(state_p, {k: v for k, v in state.items() if k not in ("file_url", "button", "button_error")})
     return res
