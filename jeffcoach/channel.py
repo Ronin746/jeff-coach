@@ -70,7 +70,7 @@ def _parallel(h: np.ndarray, l: np.ndarray, ph: list[int], pl: list[int], lo: in
                     continue
                 key = (min(tu, 3) + min(tl, 3), tu + tl, end - i)
                 if best is None or key > best["key"]:
-                    best = dict(key=key, slope=s, up_i=up_i, lo_i=lo_i, tu=tu, tl=tl, start=i, anchor=kind)
+                    best = dict(key=key, slope=s, up_i=up_i, lo_i=lo_i, tu=tu, tl=tl, start=i, anchor=kind, ku=ku, kl=kl)
     return best
 
 
@@ -105,6 +105,9 @@ def read_channel(df: pd.DataFrame, atr: float) -> dict:
             width = (ch["up_i"] - ch["lo_i"]) / atr
             if width > p["max_width_atr"]:
                 continue
+            lab = [x[1] for x in sorted([(k, "U") for k in ch["ku"]] + [(k, "L") for k in ch["kl"]])]
+            if sum(1 for a, b in zip(lab, lab[1:]) if a != b) < p["min_alternations"]:
+                continue                              # tocchi tutti da una parte: non è un canale [RONIN 09/10]
             if excl:
                 k = np.arange(end + 1, n)
                 if not np.any(c[k] > ch["slope"] * k + ch["up_i"] + 0.3 * atr):
@@ -125,6 +128,7 @@ def read_channel(df: pd.DataFrame, atr: float) -> dict:
     closes_above = c[idx] > up_line + 0.3 * atr
     pos = (c[-1] - lo_now) / width
     broke = bool(closes_above.any())
+    n_above = int(closes_above.sum())
     out.update(
         d_ok_data=True, d_found=True, d_window=L, d_excluded_last=excl, d_span=int(t - ch["start"]),
         d_anchor=ch["anchor"], d_slope_atr=s / atr, d_touch_up=int(ch["tu"]), d_touch_lo=int(ch["tl"]),
@@ -132,7 +136,7 @@ def read_channel(df: pd.DataFrame, atr: float) -> dict:
         d_width_atr=width / atr, d_rise_width=float(s * (t - ch["start"]) / width), d_pos=float(pos), d_dist_upper_atr=float((c[-1] - up_now) / atr),
         d_dist_lower_atr=float((c[-1] - lo_now) / atr), d_low_vs_lower_atr=float((l[-1] - lo_now) / atr),
         d_broke_above=broke, d_broke_ago=int(n - 1 - idx[np.argmax(closes_above)]) if broke else None,
-        d_max_above_atr=float(np.max((c[idx] - up_line) / atr)) if broke else 0.0,
+        d_max_above_atr=float(np.max((c[idx] - up_line) / atr)) if broke else 0.0, d_closes_above=n_above,
         d_close_vs_ema21_atr=float((c[-1] - ema21[-1]) / atr), d_low_vs_ema21_atr=float((l[-1] - ema21[-1]) / atr),
         d_low_vs_ema10_atr=float((l[-1] - ema10[-1]) / atr),
         d_under_sma50=bool(c[-1] < sma50[-1]),
@@ -153,7 +157,8 @@ def state(m: dict) -> str:
     if m["d_dist_upper_atr"] > p["breakout_atr"]:
         return "breakout" if (m["d_broke_ago"] or 0) <= p["fresh_breakout_bars"] else "extended above"
     if m["d_broke_above"] and -p["backtest_band_atr"] <= m["d_dist_upper_atr"] <= p["backtest_band_atr"] + 0.3 \
-            and m["d_max_above_atr"] >= p["backtest_min_break_atr"]:
+            and m["d_max_above_atr"] >= p["backtest_min_break_atr"] \
+            and m.get("d_closes_above", 99) >= p["backtest_min_closes_above"] and m["d_slope_atr"] >= p["min_slope_atr"]:
         return "backtest of the broken line"                      # CRWD / FTNT
     if m["d_pos"] >= p["upper_zone"]:
         return "at the upper line"                                # RBRK: esteso, non si compra
@@ -173,7 +178,7 @@ def reading_d(m: dict) -> tuple[bool, list[str], list[str]]:
     if not m.get("d_ok_data") or not m.get("d_found"):
         return False, ["no clean channel"], ["no channel"]
     why, sh = [], []
-    if m["d_slope_atr"] < p["min_slope_atr"] and m.get("d_state") != "backtest of the broken line":
+    if m["d_slope_atr"] < p["min_slope_atr"]:            # anche il backtest: solo canali che salgono (ARM, PWR 09/10)
         why.append("channel not rising"); sh.append("not rising")
     if m.get("d_rise_width", 9) < p["min_rise_width"] and m.get("d_state") != "backtest of the broken line":
         why.append(f"channel rose only {m['d_rise_width']:.1f}x its width (sideways)"); sh.append("sideways")

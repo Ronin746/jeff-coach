@@ -129,7 +129,8 @@ CHANNEL = dict(
     max_violations=2,             # ... e al massimo 2 barre (spike) la bucano di più
     min_gap=10,                   # i due pivot che fanno la linea distano almeno 10 sedute
     min_touches_each=2, min_touches_total=6,  # tocchi = pivot sulla linea (le due linee sono parallele)
-    max_width_atr=8.0,            # oltre 8 ATR non è un canale ma un trend generico
+    max_width_atr=6.0,            # oltre 6 ATR non è un canale ma un trend generico (era 8; Ronin 09/10: troppi falsi canali)
+    min_alternations=3,           # i tocchi devono alternarsi tra le due linee almeno 3 volte (sale e scende dentro il canale)
     min_touch_spread=0.35,        # i tocchi di ogni linea coprono almeno il 35% della durata del canale
     min_span=25,                  # il canale copre almeno 25 sedute (5 settimane)
     width_penalty=0.25,           # tra i canali trovati: -0,25 punti per ogni ATR di larghezza
@@ -143,6 +144,7 @@ CHANNEL = dict(
     ema_pullback_max_pos=0.55,    # ... e il prezzo è nella metà bassa del canale
     breakout_atr=0.3, fresh_breakout_bars=3,
     backtest_band_atr=0.8, backtest_min_break_atr=0.8,
+    backtest_min_closes_above=3,  # rottura vera: almeno 3 close sopra la linea alta (+0,3 ATR), non uno spike (RBRK 09/10)
     failed_back_atr=0.5, failed_within=8,
     lost_lower_atr=0.5,
 )

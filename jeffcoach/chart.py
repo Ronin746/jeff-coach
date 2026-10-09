@@ -32,6 +32,24 @@ def _daily(ticker: str) -> Optional[pd.DataFrame]:
     return df.dropna(subset=["Close"])
 
 
+def _lines_now(df: pd.DataFrame) -> Optional[dict]:
+    """Linee del canale (lettura D) sulle daily chiuse fino a ieri, nello stesso formato di today.json."""
+    try:
+        from .channel import read_channel
+        d = df[df.index.normalize() < pd.Timestamp(date.today())].iloc[-260:]
+        tr = pd.concat([d.High - d.Low, (d.High - d.Close.shift()).abs(), (d.Low - d.Close.shift()).abs()], axis=1).max(axis=1)
+        atr = float(tr.ewm(alpha=1 / 14, adjust=False).mean().iloc[-1])
+        m = read_channel(d, atr)
+        if not m.get("d_found"):
+            return None
+        i0, u0, l0, i1, u1, l1 = m["d_lines"]
+        return dict(start=str(d.index[i0].date()), end=str(d.index[i1].date()), up0=u0, lo0=l0, up1=u1, lo1=l1,
+                    slope=(u1 - u0) / max(i1 - i0, 1))
+    except Exception as e:
+        log.info("linee del canale non ricalcolate: %s", e)
+        return None
+
+
 def channel_chart(c: dict, buckets: Optional[list] = None, price: Optional[float] = None,
                   sma65: Optional[float] = None, bars: int = 130) -> Optional[bytes]:
     try:
@@ -77,7 +95,7 @@ def channel_chart(c: dict, buckets: Optional[list] = None, price: Optional[float
         ax.plot(x, e21.iloc[-bars:].values, color="#f0ad4e", lw=1, label="EMA21")
         ax.plot(x, s50.iloc[-bars:].values, color="#b07cff", lw=1, label="SMA50")
 
-        ln = c.get("lines")
+        ln = c.get("lines") or _lines_now(df)     # lista fatta prima delle linee nel today.json: le ricalcolo [RONIN 09/10]
         if ln:
             # linee prolungate fino all'ultima barra: valore = valore all'ancora + pendenza × barre trascorse
             idx = [ts.date().isoformat() for ts in df.index]

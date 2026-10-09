@@ -18,12 +18,12 @@ def _channel_df(end_phase):
 
 def test_canale_bordo_basso_e_alto():
     low = _channel_df(-np.pi / 2)                   # ultimo close sul minimo dell'onda = bordo basso
-    m = CH.read_channel(low, atr=1.0)
+    m = CH.read_channel(low, atr=1.5)
     assert m["d_found"] and m["d_pos"] < 0.3, m.get("d_pos")
     ok, why, _ = CH.reading_d(m)
     assert ok, why
     high = _channel_df(np.pi / 2)                   # sul massimo dell'onda = bordo alto, non si compra
-    m = CH.read_channel(high, atr=1.0)
+    m = CH.read_channel(high, atr=1.5)
     ok, why, _ = CH.reading_d(m)
     assert not ok and m["d_state"] == "at the upper line", (m.get("d_state"), why)
 
