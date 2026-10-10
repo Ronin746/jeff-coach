@@ -33,7 +33,7 @@ OUT = BASE / "pivot_wl_auto.txt"
 INFO = BASE / "pivot_wl_auto.json"
 ET = ZoneInfo("America/New_York")
 
-MCAP_MIN = 500e6
+MCAP_MIN = 1e9          # Ronin 10/10 (era 500M)
 ADV_MIN = 50e6
 RS_MIN = 80
 MAX_EXT50_ATR = 5.5

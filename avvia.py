@@ -9,7 +9,7 @@ di New York (festività, chiusure anticipate e settimane con l'apertura alle 14:
     con il suo codice invariato.
   - Watchlist di Remy: alle 15:00 di Roma dei giorni di borsa rilegge le watchlist TradingView pubbliche
     (Main, Focus e la 327715885) e aggiorna i file locali (non le modifica mai su TradingView); poi
-    costruisce pivot_wl_auto.txt, i titoli in più con adv$ >= 50M, mcap > 500M e RS >= 80
+    costruisce pivot_wl_auto.txt, i titoli in più con adv$ >= 50M, mcap > 1 mld e RS >= 80
     (tv-scanner/universo_auto.py).
 
 Uso:
@@ -307,7 +307,7 @@ def remy_sync(dry: bool) -> None:
 
 
 def remy_universo(dry: bool) -> None:
-    """Ronin 09/10: titoli in più per Remy (adv$ >= 50M, mcap > 500M, RS >= 80) -> tv-scanner/pivot_wl_auto.txt."""
+    """Ronin 09/10: titoli in più per Remy (adv$ >= 50M, mcap > 1 mld, RS >= 80) -> tv-scanner/pivot_wl_auto.txt."""
     lg = logging.getLogger("remy-sync")
     if dry:
         lg.info("universo automatico: salto (prova)")

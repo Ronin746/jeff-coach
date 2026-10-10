@@ -76,7 +76,7 @@ PIVOT30_LIST_PATH = BASE_DIR / "pivot30_list.txt"  # legacy only (unused in wl m
 PIVOT_WL_PATH = BASE_DIR / "pivot_wl_323848747.txt"  # TV WL 323848747 "Main" (universe)
 PIVOT_WL_FOCUS_PATH = BASE_DIR / "pivot_wl_318147906.txt"  # TV WL 318147906 "Focus" (2026-10-06: both WLs)
 PIVOT_WL_EXTRA_PATH = BASE_DIR / "pivot_wl_327715885.txt"  # TV WL 327715885 (Ronin 2026-10-09: aggiunta)
-PIVOT_WL_AUTO_PATH = BASE_DIR / "pivot_wl_auto.txt"  # Ronin 09/10: titoli adv$>=50M, mcap>500M, RS>=80 (universo_auto.py)
+PIVOT_WL_AUTO_PATH = BASE_DIR / "pivot_wl_auto.txt"  # Ronin 09/10: titoli adv$>=50M, mcap>1 mld, RS>=80 (universo_auto.py)
 PIVOT_WL_PATHS = [PIVOT_WL_PATH, PIVOT_WL_FOCUS_PATH, PIVOT_WL_EXTRA_PATH, PIVOT_WL_AUTO_PATH]
 # Tickers never scanned even if present in the WL (user cannot trade ETFs).
 # sync_pivot_wl.py comments ETFs out of the WL file automatically; this is a

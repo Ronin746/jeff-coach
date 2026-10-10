@@ -31,7 +31,7 @@ CARD_COLOR = 15105570          # #E67E22 [RONIN 04/10]
 ALERT_COLOR = 0xF39C12
 
 # ---------------------------------------------------------------- universo [RONIN 04/10]
-MCAP_MIN = 500e6               # > $500M
+MCAP_MIN = 1e9                 # > $1 mld [RONIN 10/10] (era 500M)
 ADV_MIN = 50e6                 # adv$ = sma(volume[1]*close[1], 50) >= $50M
 ATR_PCT_MIN = 2.8              # Wilder ATR14 / close * 100, gate duro
 EXCHANGES = ("NMS", "NYQ", "ASE", "NGM", "NCM")

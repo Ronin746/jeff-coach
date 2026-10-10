@@ -34,7 +34,7 @@ UNIVERSE_FILE = C.STATE / "universe_meta.json"
 
 
 def build_universe(max_age_days: int = 6, force: bool = False) -> dict[str, dict]:
-    """Screener Yahoo: azioni USA, mcap > 500M, borse NMS/NYQ/ASE/NGM/NCM.
+    """Screener Yahoo: azioni USA, mcap > 1 mld, borse NMS/NYQ/ASE/NGM/NCM.
     Si rinnova se più vecchio di `max_age_days` (mcap e utili cambiano: non usare una foto ferma)."""
     if UNIVERSE_FILE.exists() and not force:
         doc = json.loads(UNIVERSE_FILE.read_text(encoding="utf-8"))

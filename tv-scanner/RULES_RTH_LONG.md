@@ -237,7 +237,7 @@ Script: `backtest/pivot30_livelli_target.py`, `backtest/pivot_rottura_swing.py`.
 
 ### Titoli in più oltre le watchlist
 `universo_auto.py` (lanciato da avvia.py con il sync delle 15:00 di Roma; il turno B in cloud lo fa all'avvio
-se manca) scrive `pivot_wl_auto.txt` con `date: AAAA-MM-GG`: azioni USA mcap > 500M, adv$ (media 50 giorni
+se manca) scrive `pivot_wl_auto.txt` con `date: AAAA-MM-GG`: azioni USA mcap > 1 mld, adv$ (media 50 giorni
 di volume × close) >= 50M, RS >= 80, non oltre 5,5 ATR sopra la SMA50, e candidate a una versione (trendline
 rotta <=10 giorni con volume, oppure EMA9 in salita con il close non oltre 3 ATR sopra). Lo scanner lo legge
 solo nella seduta di quella data. Le daily dei titoli si scaricano una volta al giorno (cache del giorno).

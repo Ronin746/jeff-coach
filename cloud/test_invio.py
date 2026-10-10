@@ -2,7 +2,7 @@
 qualche esempio su Discord, con "TEST" nel titolo.
 
   Remy:   30 minute pivot nelle tre versioni (DTL break + EMA9, DTL break 5d, EMA9 undercut), su watchlist +
-          titoli automatici (adv$ >= 50M, mcap > 500M, RS >= 80).
+          titoli automatici (adv$ >= 50M, mcap > 1 mld, RS >= 80).
   Sydney: un paio di "Channel" con il grafico, solo nomi che passano le regole nuove dei canali.
 
   python cloud/test_invio.py            calcola e stampa, non manda

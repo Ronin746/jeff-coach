@@ -28,14 +28,14 @@ L'ingresso è la rottura del **massimo dei primi 30 minuti** (30m ORH). Gli aler
 
 | Gate | Regola | Fonte |
 |---|---|---|
-| Market cap | > $500M | [RONIN 04/10] |
+| Market cap | > $1 mld | [RONIN 10/10] (era $500M) |
 | Liquidità | adv$ = `sma(volume[1]*close[1],50)` ≥ $50M | [RONIN] |
 | Volatilità | ATR% = Wilder ATR14 / close × 100 ≥ 2,8 | [RONIN 04/10] |
 | Strumenti | Solo azioni (quoteType EQUITY). Mai ETF. | [RONIN 01/10] |
 | Biotech | Esclusa l'industria Yahoo **Biotechnology** (più la lista manuale: ADPT). Il pharma resta. | [JS hard 3] [RONIN 08/10] |
 | Prezzi | Solo chiusure daily RTH completate, `auto_adjust=False`. Mai pre o after-market. | [RONIN 01/10] |
 
-**Da dove escono i nomi.** Lo screener Yahoo (mcap > 500M, borse NMS/NYQ/ASE/NGM/NCM) si rinnova ogni 6 giorni. A questo si aggiungono:
+**Da dove escono i nomi.** Lo screener Yahoo (mcap > 1 mld, borse NMS/NYQ/ASE/NGM/NCM) si rinnova ogni 6 giorni. A questo si aggiungono:
 - i simboli della cache daily di Remy, letta e non modificata;
 - i nomi della lista del giorno prima.
 
