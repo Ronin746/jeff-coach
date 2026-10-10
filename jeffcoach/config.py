@@ -160,7 +160,7 @@ DTL = dict(
     max_violations=3,        # ... al massimo 3 volte; i close mai
     break_atr=0.1,           # rottura = close sopra la linea di almeno 0,1 ATR
     touch_atr=0.6,           # un massimo a meno di 0,6 ATR dalla linea è un tocco
-    min_touches=2,           # picco + almeno un altro massimo
+    min_touches=3,           # picco + almeno altri 2 massimi (Ronin 10/10: tolte le linee a 2 tocchi)
     min_drop_pct=15.0,       # dal picco il prezzo è sceso almeno del 15% (una vera discesa)
     min_span=20,             # la linea dura almeno 20 sedute
     break_vol_min=1.5,       # rottura in chiusura da segnalare: volume >= 1,5x la media a 50 giorni [RONIN 09/10]
