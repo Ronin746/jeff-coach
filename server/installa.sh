@@ -31,19 +31,22 @@ if [ ! -f .env ]; then
 fi
 chmod 600 .env
 set -a; . ./.env; set +a
-if [ -z "${GITHUB_TOKEN:-}" ] || [ -z "${COACH_ALERT_DISCORD_WEBHOOK_URL:-}" ] || [ -z "${DISCORD_WEBHOOK_URL:-}" ] \
-   || [ -z "${COACH_CARD_DISCORD_WEBHOOK_URL:-}" ]; then
-  echo "   .env incompleto: apri nano .env, metti i 3 webhook e il token GitHub, poi rilancia bash server/installa.sh"
+if [ -z "${COACH_ALERT_DISCORD_WEBHOOK_URL:-}" ] || [ -z "${DISCORD_WEBHOOK_URL:-}" ]; then
+  echo "   .env incompleto: apri nano .env, metti almeno i webhook di Sydney e Remy, poi rilancia bash server/installa.sh"
   exit 1
 fi
 
-echo "== 4/5 git (push dei dati con il token, salvato solo in ~/.git-credentials)"
 git config user.name "jeff-coach-server"
 git config user.email "jeff-coach-server@users.noreply.github.com"
-git config credential.helper store
-printf 'https://x-access-token:%s@github.com\n' "$GITHUB_TOKEN" > ~/.git-credentials
-chmod 600 ~/.git-credentials
 git remote set-url origin https://github.com/Ronin746/jeff-coach.git
+if [ -n "${GITHUB_TOKEN:-}" ]; then
+  echo "== 4/5 git (push dei dati con il token, salvato solo in ~/.git-credentials)"
+  git config credential.helper store
+  printf 'https://x-access-token:%s@github.com\n' "$GITHUB_TOKEN" > ~/.git-credentials
+  chmod 600 ~/.git-credentials
+else
+  echo "== 4/5 nessun token GitHub: il server legge il repo ma non salva lista e card (servono solo sulle macchine grandi)"
+fi
 git fetch -q origin main && echo "   GitHub raggiungibile"
 
 echo "== 5/5 servizi e orari (systemd)"
