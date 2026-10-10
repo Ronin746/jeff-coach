@@ -168,7 +168,8 @@ DTL = dict(
     confirm_days=3,          # ... oppure confermata col volume >= 1,5x in uno dei 3 giorni dopo, sopra la linea (caso P)
     near_atr=1.0,            # "vicina": close sotto la linea entro 1 ATR (alert di rottura in seduta)
     pullback_max_days=10,    # dopo la rottura, per 10 sedute si segue il pullback (crossback e SMA30 65m)
-    failed_atr=1.0,          # ricaduto più di 1 ATR sotto la linea = rottura fallita, non si segue più
+    failed_atr=1.0,          # ricaduto più di 1 ATR sotto la linea = rottura fallita, non si segue più ...
+    max_false_breaks=2,      # ... ma la linea resta valida e si aspetta la rottura vera (AAOI agosto -> ottobre) [RONIN 10/10]
     ema_touch_atr=0.3,       # crossback: il minimo torna a meno di 0,3 ATR dalla EMA9 o dalla EMA21
     live_rvol_min=1.5,       # rottura in seduta: RVOL all'ora del giorno >= 1,5 [RONIN 09/10]
     rs_min=80,               # RS minima per le liste della trendline (come il resto della lista)

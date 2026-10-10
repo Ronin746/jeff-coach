@@ -50,13 +50,31 @@ def read_dtl(df: pd.DataFrame, atr: float) -> dict:
             # (MMED 08/10: 8x il volume, close appena sopra) [backtest 2017-2026, RONIN 10/10]
             hv = np.nan_to_num(v[b + 1:] / vol50[b + 1:], nan=0.0) >= p["break_vol_min"]
             thr = np.where(hv, p["break_atr_vol"], p["break_atr"]) * atr
-            above = np.where(c[b + 1:] > line[b + 1:] + thr)[0]
-            brk = int(b + 1 + above[0]) if len(above) else None
+            up = np.zeros(n, dtype=bool)
+            up[b + 1:] = c[b + 1:] > line[b + 1:] + thr
+            # falsa rottura [RONIN 10/10, AAOI agosto]: close sopra la linea, poi di nuovo sotto di almeno failed_atr.
+            # La linea resta quella e si aspetta la rottura vera (al massimo max_false_breaks volte).
+            brk, false_bars, i = None, np.zeros(n, dtype=bool), b + 1
+            while i < n:
+                if not up[i]:
+                    i += 1
+                    continue
+                back = np.where(c[i + 1:] < line[i + 1:] - p["failed_atr"] * atr)[0]
+                if len(back) and \
+                        int(np.sum(np.diff(np.r_[0, false_bars.astype(int)]) == 1)) < p["max_false_breaks"]:
+                    k = i + 1 + int(back[0])
+                    false_bars[i:k] = True
+                    i = k + 1
+                    continue
+                brk = i
+                break
             end = brk if brk is not None else n
-            seg = slice(a, end)
+            seg = np.zeros(n, dtype=bool)
+            seg[a:end] = True
+            seg &= ~false_bars
             # fino alla rottura i massimi stanno sotto la linea (qualche spike tollerato), i close sempre sotto
-            viol = int(np.sum(h[seg] > line[seg] + p["tol_atr"] * atr))
-            if viol > p["max_violations"] or np.any(c[a:end] > line[a:end] + p["break_atr"] * atr):
+            viol = int(np.sum(seg & (h > line + p["tol_atr"] * atr)))
+            if viol > p["max_violations"] or np.any(seg & (c > line + p["break_atr"] * atr)):
                 continue
             touches = [i for i in piv if a <= i < end and abs(h[i] - line[i]) <= p["touch_atr"] * atr]
             if len(touches) < p["min_touches"]:
