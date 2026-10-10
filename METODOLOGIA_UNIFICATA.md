@@ -365,3 +365,22 @@ Ronin: Sydney segnalava "Channel" anche dove il canale non c'è. Rivisti i 32 no
   linea alta): niente più canali discendenti o piatti (ARM, PWR, STM, DVN, SNOW) chiamati "backtest".
 Risultato sul 09/10: 19 nomi su 32 restano; NET, RNG, RBRK (gli esempi di Ronin) restano canali.
 Il grafico dell'alert ricalcola le linee se la lista del giorno non le ha (RBRK del 09/10 era senza linee).
+
+### Backtest daily 2017-2026 dei riconoscimenti (10/10)
+Universo: ~1.600 azioni USA di oggi (mcap > 500M; i titoli usciti di borsa mancano, quindi i numeri assoluti sono
+ottimistici: contano i confronti). Campione ogni 5 sedute dei titoli con RS (percentile vero del giorno) >= 70,
+sopra la SMA200, adv$ >= 50M: 118.000 campioni. Esito = close dopo 20 sedute in ATR (base: +0,26).
+- **Trendline discendente rotta** (6.500 rotture): +0,64, la lettura che rende di più. 3+ tocchi +0,70 (2 tocchi
+  +0,59: tolte). Rende di più se la discesa è >= 25% (+0,8 contro +0,4 tra 15-25%) e se la linea dura >= 40 sedute
+  (+0,75/+0,91 contro +0,41 tra 20-40). Il volume >= 1,5x abbassa le rotture fallite (33% contro 43%).
+  Ronin 10/10: si tengono anche le linee corte (P, MMED), stessa dicitura.
+- **Letture A, B, C, triangolo**: come stato del giorno, e anche dopo la rottura del massimo a 10 giorni, non fanno
+  meglio della base (A +0,28 dopo la rottura, base +0,25). Conta molto di più la RS (RS >= 90: +0,45).
+- **Canale (lettura D)**: zona di acquisto +0,16 contro +0,26; anche con l'ingresso sul recupero della SMA30 a 60m
+  (dal 2024) +0,61 contro +0,80 della base. Dai dati daily il canale non aggiunge vantaggio.
+- **Supporto bucato e recuperato (2B)**: +0,21, come la base.
+- **Volume asciutto nella base** (< 0,6 della media): +0,44 dopo la rottura contro +0,25: il segnale di qualità
+  più utile tra quelli della lettura C.
+- **Gap al ribasso aperto sopra**: +0,48 dopo la rottura, meglio della base: conferma che la regola del gap va
+  tenuta spenta.
+Script: tv-scanner/backtest/pattern_daily/.
