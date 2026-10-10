@@ -394,7 +394,7 @@ def run_once(dry_run: bool = False) -> dict:
             if x["kind"] == "near":
                 line = x["line_next"]
                 scan.append(dict(ticker=t, list="DTL near", price=price, line=line, rvol=rv))
-                if price > line + C.DTL["break_atr"] * (x["atr"] or 0) and (rv or 0) >= C.DTL["live_rvol_min"]:
+                if price > line + C.DTL["break_atr_vol"] * (x["atr"] or 0) and (rv or 0) >= C.DTL["live_rvol_min"]:
                     msg, title = fmt_dtl_break(x, price, line, rv), "downtrend line break"
             else:
                 b = buckets_65m(sub)

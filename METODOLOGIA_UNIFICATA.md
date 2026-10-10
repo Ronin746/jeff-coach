@@ -384,3 +384,13 @@ sopra la SMA200, adv$ >= 50M: 118.000 campioni. Esito = close dopo 20 sedute in 
 - **Gap al ribasso aperto sopra**: +0,48 dopo la rottura, meglio della base: conferma che la regola del gap va
   tenuta spenta.
 Script: tv-scanner/backtest/pattern_daily/.
+
+### Disegno della trendline rivisto con il backtest (10/10)
+Provate 11 varianti del disegno sugli stessi campioni 2017-2026 (tolleranza dei tocchi, barre che bucano la linea,
+massimi su 2/3/5 barre, distanza minima tra i punti, quanto deve chiudere sopra la linea). La resa delle rotture
+cambia poco (+0,65/+0,72 ATR a 20 sedute): il disegno era già solido. Adottato:
+- **massimi su 2 barre per lato** (era 3): +38% di linee trovate con la stessa resa (prende linee come DIOD, ALAB, HCC);
+- **rottura = close almeno 0,3 ATR sopra la linea** (era 0,1): rotture fallite entro 10 sedute dal 41% al 34%;
+  **0,1 ATR basta se quel giorno il volume è >= 1,5x** (MMED 08/10). L'alert in seduta di Sydney usa 0,1 (chiede già RVOL >= 1,5).
+Esito: 4.688 rotture in 9 anni (prima 3.391), +0,67 ATR a 20 sedute, fallite 34%. Gli esempi di Ronin (PWR, P, MMED,
+CIEN, MRVL, ALAB, AAOI) restano tutti.

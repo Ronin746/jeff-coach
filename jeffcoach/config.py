@@ -153,12 +153,13 @@ CHANNEL_ALERT = True             # Sydney: alert quando un nome del canale recup
 # Trendline discendente e sua rottura ("wedge pop", Kell) [RONIN 09/10] — vedi dtl.py
 DTL = dict(
     lookback=200,            # i massimi si cercano nelle ultime 200 sedute
-    pivot_k=3,               # massimo = il più alto su 3 barre per lato
+    pivot_k=2,               # massimo = il più alto su 2 barre per lato (era 3: backtest 2017-2026, +38% linee, stessa resa)
     min_gap=8,               # tra il picco e il secondo punto almeno 8 sedute
     min_slope_atr=0.03,      # la linea scende di almeno 0,03 ATR a seduta
     tol_atr=0.3,             # un massimo può superare la linea di 0,3 ATR (spike) ...
     max_violations=3,        # ... al massimo 3 volte; i close mai
-    break_atr=0.1,           # rottura = close sopra la linea di almeno 0,1 ATR
+    break_atr=0.3,           # rottura = close sopra la linea di almeno 0,3 ATR (era 0,1: rotture fallite 41% -> 34%) ...
+    break_atr_vol=0.1,       # ... o 0,1 ATR se quel giorno il volume è >= 1,5x la media (rottura con volume, caso MMED)
     touch_atr=0.6,           # un massimo a meno di 0,6 ATR dalla linea è un tocco
     min_touches=3,           # picco + almeno altri 2 massimi (Ronin 10/10: tolte le linee a 2 tocchi)
     min_drop_pct=15.0,       # dal picco il prezzo è sceso almeno del 15% (una vera discesa)

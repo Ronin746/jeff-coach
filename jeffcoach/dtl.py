@@ -46,7 +46,11 @@ def read_dtl(df: pd.DataFrame, atr: float) -> dict:
                 continue
             line = h[a] + s * (np.arange(n) - a)
             # rottura: primo close sopra la linea dopo l'ultimo tocco b
-            above = np.where(c[b + 1:] > line[b + 1:] + p["break_atr"] * atr)[0]
+            # rottura: close sopra la linea di break_atr ATR, o di break_atr_vol se quel giorno il volume è >= 1,5x
+            # (MMED 08/10: 8x il volume, close appena sopra) [backtest 2017-2026, RONIN 10/10]
+            hv = np.nan_to_num(v[b + 1:] / vol50[b + 1:], nan=0.0) >= p["break_vol_min"]
+            thr = np.where(hv, p["break_atr_vol"], p["break_atr"]) * atr
+            above = np.where(c[b + 1:] > line[b + 1:] + thr)[0]
             brk = int(b + 1 + above[0]) if len(above) else None
             end = brk if brk is not None else n
             seg = slice(a, end)
