@@ -8,6 +8,13 @@ DIR="$(cd "$(dirname "$0")/.." && pwd)"
 U="$(id -un)"
 cd "$DIR"
 
+MEM_MB=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
+if [ "$MEM_MB" -lt 2500 ] && [ ! -f /swapfile ]; then
+  echo "== 0/5 macchina piccola (${MEM_MB} MB): aggiungo 4 GB di memoria virtuale (swap)"
+  sudo fallocate -l 4G /swapfile && sudo chmod 600 /swapfile && sudo mkswap -q /swapfile && sudo swapon /swapfile
+  echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab >/dev/null
+fi
+
 echo "== 1/5 pacchetti di sistema"
 sudo apt-get update -qq
 sudo apt-get install -y -qq git python3-venv python3-dev build-essential tzdata >/dev/null
@@ -46,7 +53,14 @@ for f in server/systemd/*; do
 done
 sudo systemctl daemon-reload
 sudo systemctl enable --now jeffcoach-alert.service
-sudo systemctl enable --now jeffcoach-lista.timer jeffcoach-card.timer jeffcoach-settimana.timer jeffcoach-aggiorna.timer
+sudo systemctl enable --now jeffcoach-aggiorna.timer
+if [ "$MEM_MB" -ge 2500 ]; then
+  sudo systemctl enable --now jeffcoach-lista.timer jeffcoach-card.timer jeffcoach-settimana.timer
+else
+  # su 1 GB la lista (1.800 titoli) è troppo pesante insieme agli alert: lista, card e settimana restano su GitHub
+  sudo systemctl disable --now jeffcoach-lista.timer jeffcoach-card.timer jeffcoach-settimana.timer 2>/dev/null || true
+  echo "   macchina piccola: qui solo alert di Sydney e Remy; lista, card e settimana restano su GitHub"
+fi
 echo
 echo "Fatto. Controlli:"
 echo "  systemctl status jeffcoach-alert        (alert di Sydney e Remy, sempre acceso)"
