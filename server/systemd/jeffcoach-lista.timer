@@ -1,0 +1,9 @@
+[Unit]
+Description=Jeff Coach - orario: lista del mattino
+
+[Timer]
+OnCalendar=Mon..Fri 08:00 Europe/Rome
+Persistent=true
+
+[Install]
+WantedBy=timers.target

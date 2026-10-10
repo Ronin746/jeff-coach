@@ -1,0 +1,9 @@
+[Unit]
+Description=Jeff Coach - orario: card su Discord se manca
+
+[Timer]
+OnCalendar=Mon..Fri 12:00 Europe/Rome
+Persistent=true
+
+[Install]
+WantedBy=timers.target

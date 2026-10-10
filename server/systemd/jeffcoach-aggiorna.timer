@@ -1,0 +1,9 @@
+[Unit]
+Description=Jeff Coach - orario: aggiornamento del codice
+
+[Timer]
+OnCalendar=Mon..Fri 13:30 Europe/Rome
+Persistent=true
+
+[Install]
+WantedBy=timers.target

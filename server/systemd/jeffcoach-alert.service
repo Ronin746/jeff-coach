@@ -1,0 +1,15 @@
+[Unit]
+Description=Jeff Coach - alert di Sydney e scanner di Remy
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=@USER@
+WorkingDirectory=@DIR@
+Environment=AVVIA_LOG_STDOUT=1
+ExecStart=@DIR@/.venv/bin/python avvia.py
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

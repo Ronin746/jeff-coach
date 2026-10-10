@@ -1,0 +1,9 @@
+[Unit]
+Description=Jeff Coach - orario: riepilogo del lunedi
+
+[Timer]
+OnCalendar=Mon 08:20 Europe/Rome
+Persistent=true
+
+[Install]
+WantedBy=timers.target

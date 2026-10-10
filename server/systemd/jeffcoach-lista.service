@@ -1,0 +1,11 @@
+[Unit]
+Description=Jeff Coach - lista del mattino
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=@USER@
+WorkingDirectory=@DIR@
+ExecStart=@DIR@/server/fasi.sh lista
+
