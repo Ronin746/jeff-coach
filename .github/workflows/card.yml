@@ -1,12 +1,9 @@
 name: Card Discord
 
-# Parte quando la revisione (attività programmata di Claude) fa push di review.json.
-# Se la revisione non arriva, i cron di riserva pubblicano la card comunque prima dell'apertura USA:
+# La card esce dal server alle 10:45 di Roma, con la revisione già applicata se è arrivata [RONIN 11/10].
+# Qui restano solo i cron di riserva, che pubblicano la card se alle 12:30/13:30 di Roma non è ancora uscita:
 # 10:30 e 11:30 UTC = 12:30/13:30 Roma (ora legale), 11:30/12:30 (ora solare).
 on:
-  push:
-    paths:
-      - "data/state/daily_*/review.json"
   schedule:
     - cron: "30 10 * * 1-5"
     - cron: "30 11 * * 1-5"

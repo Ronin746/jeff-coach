@@ -3,7 +3,7 @@
 #
 #   fasi.sh aggiorna    codice nuovo da GitHub (+ librerie se cambiate)
 #   fasi.sh lista       lista Focus/Stalk del mattino -> commit su GitHub (la leggono alert e revisione di Claude)
-#   fasi.sh card        card su Discord se a mezzogiorno non è ancora uscita (di solito la manda GitHub dopo la revisione)
+#   fasi.sh card        card su Discord alle 10:45 di Roma, con la revisione se è arrivata (GitHub fa solo da riserva)
 #   fasi.sh settimana   riepilogo del lunedì
 #
 # I webhook e il token GitHub stanno in ~/jeff-coach/.env (mai nel repo).
