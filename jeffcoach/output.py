@@ -106,6 +106,36 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
     return [x[:CARD_LIMIT] for x in d]
 
 
+def short_card_descriptions(title_date: str, focus: list[dict], stalk: list[dict]) -> list[str]:
+    """Card SHORT [RONIN 12/10]: stesse voci del long, riquadri rossi. Per lo short il lato giusto è SOTTO la SMA30 65m,
+    quindi quegli Stalk vengono per primi. Niente statistiche degli ETF di settore (sono pensate per il long)."""
+    # nello short il gate "sma65" aperto vuol dire prezzo SOPRA la SMA30 65m (lato sbagliato)
+    dn = [r for r in stalk if above_sma65(r)]
+    up = [r for r in stalk if not above_sma65(r)]
+
+    def sect(title: str, rows: list[dict], lim: Optional[int]) -> str:
+        if not rows:
+            return f"**{title}**\n• none"
+        blocks = [f"__{sec}__\n" + "\n".join(card_line(r, lim) for r in rr) for sec, rr in sector_groups(rows)]
+        return f"**{title}**\n" + "\n\n".join(blocks)
+
+    for f_lim, s_lim in ((None, None), (None, 70), (None, 45), (80, 30), (60, 0), (0, 0)):
+        d = [f"**SHORT WATCHLIST — {title_date}**\n\n" + sect("SHORT FOCUS", focus, f_lim),
+             sect(f"SHORT STALK — below 65m SMA30 ({len(dn)})", dn, s_lim),
+             sect(f"SHORT STALK — above 65m SMA30 ({len(up)})", up, s_lim)]
+        if all(len(x) <= CARD_LIMIT for x in d):
+            return d
+    return [x[:CARD_LIMIT] for x in d]
+
+
+def short_tv_txt(focus, stalk_below, stalk_above) -> str:
+    """Sezioni short del txt TradingView, dopo quelle long nella stessa riga [RONIN 12/10]."""
+    out = ["###SHORT FOCUS", *[tv_symbol(t, e) for t, e in focus],
+           "###SHORT STALK BELOW 65m SMA30", *[tv_symbol(t, e) for t, e in stalk_below],
+           "###SHORT STALK ABOVE 65m SMA30", *[tv_symbol(t, e) for t, e in stalk_above]]
+    return ",".join(out)
+
+
 def card_description(title_date: str, focus: list[dict], stalk: list[dict]) -> str:
     """Compatibilità: tutto in un testo solo."""
     return "\n\n".join(card_descriptions(title_date, focus, stalk))

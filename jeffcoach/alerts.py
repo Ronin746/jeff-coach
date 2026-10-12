@@ -99,6 +99,18 @@ def load_rows(today: date) -> list[dict]:
     return rows
 
 
+def load_short_rows(today: date) -> list[dict]:
+    """Sezione short della lista [RONIN 12/10] (today.json è già stato aggiornato da load_rows)."""
+    p = C.AGREED / "today.json"
+    if not C.SHORT["enabled"] or not p.exists():
+        return []
+    d = json.loads(p.read_text(encoding="utf-8"))
+    if d.get("session_date") != today.isoformat():
+        return []
+    return [{"ticker": r["ticker"].upper(), "list": r["list"]} for r in d.get("short_tickers") or []
+            if r.get("list") in ("Focus", "Stalk") and r.get("ticker")]
+
+
 def load_channel(today: date) -> list[dict]:
     p = C.AGREED / "today.json"
     if not C.CHANNEL_ALERT or not p.exists():
@@ -289,6 +301,20 @@ def fmt_rvol(t, rvol, minutes, price):
     return f"{t} · RVOL", "\n".join([f"RVOL `{100 * rvol:.0f}%`", f"`{minutes:.0f}` minutes from the open", f"Price: `{price:.2f}`"])
 
 
+def fmt_short_entry(t, orl, price, rvol, rvol30, need=None, hod_atr=None, hod=None):
+    """Short [RONIN 12/10]: rottura del minimo dei primi 30 minuti, stop sul massimo del giorno."""
+    lines = [f"30m low `{orl:.2f}`", f"Price: `{price:.2f}`",
+             f"RVOL now: `{100 * rvol:.0f}%`", f"RVOL first 30m: `{'n/a' if rvol30 is None else f'{100 * rvol30:.0f}%'}`",
+             f"RVOL needed: `{'none (liquid)' if need is None else f'{100 * need:.0f}%'}`"]
+    if hod_atr is not None:
+        lines.append(f"HoD: `{100 * hod_atr:.0f}%` ATR" + (f" (stop `{hod:.2f}`)" if hod is not None else ""))
+    return f"{t} · SHORT · Focus", "\n".join(lines)
+
+
+def fmt_short_rvol(t, rvol, minutes, price):
+    return f"{t} · SHORT · RVOL", "\n".join([f"RVOL `{100 * rvol:.0f}%`", f"`{minutes:.0f}` minutes from the open", f"Price: `{price:.2f}`"])
+
+
 # ------------------------------------------------------------------ ciclo
 def recent_alert(day: dict, ticker: str) -> bool:
     """Vero se per questo titolo è già partito un alert (di qualsiasi tipo) negli ultimi ALERT_COOLDOWN_MIN minuti
@@ -309,9 +335,10 @@ def run_once(dry_run: bool = False) -> dict:
     today = now.date()
     mins = minutes_from_open(now)
     rows = load_rows(today)
-    if (not rows and not load_channel(today) and not load_dtl(today)) or mins is None or mins < 0:
+    srows = load_short_rows(today)
+    if (not rows and not srows and not load_channel(today) and not load_dtl(today)) or mins is None or mins < 0:
         return {"scanned": 0, "minutes": mins}
-    tickers = [r["ticker"] for r in rows]
+    tickers = sorted({r["ticker"] for r in rows} | {r["ticker"] for r in srows})
     refs = daily_refs(tickers, today) if tickers else {}
     bars = intraday(tickers, today) if tickers else {}
     state = json.loads(FIRED.read_text(encoding="utf-8")) if FIRED.exists() else {}
@@ -367,6 +394,47 @@ def run_once(dry_run: bool = False) -> dict:
             fired.append(k)
         else:
             log.warning("alert %s non inviato: %s", t, res.get("reason"))
+    # SHORT [RONIN 12/10]: stesse regole al contrario. RVOL nella prima ora (Focus e Stalk); ingresso solo Focus,
+    # dopo 30 minuti, rottura del minimo dei primi 30 minuti, massimo del giorno entro 0,7 ATR (stop sul massimo)
+    for r in srows:
+        t, lst = r["ticker"], r["list"]
+        b, ref = bars.get(t), refs.get(t)
+        if b is None or not ref or not ref.get("avg_vol_50"):
+            continue
+        price = float(b.Close.iloc[-1])
+        rvol = float(b.Volume.sum()) / ref["avg_vol_50"]
+        first = b[b.index < open_et(today) + timedelta(minutes=C.ORH_MINUTES)]
+        orl = float(first.Low.min()) if len(first) else None
+        rvol30 = float(first.Volume.sum()) / ref["avg_vol_50"] if len(first) and mins >= C.ORH_MINUTES else None
+        hod = float(b.High.max())
+        hod_atr = (hod - price) / ref["atr"] if ref.get("atr") else None
+        rec = dict(ticker=t, list=f"Short {lst}", price=price, rvol=round(rvol, 3), rvol30=rvol30, orl=orl,
+                   hod_atr=None if hod_atr is None else round(hod_atr, 2))
+        scan.append(rec)
+        k = f"{t}|Short{lst}|rvol-30"
+        if 0 < mins <= C.RVOL_ALERT_WINDOW_MIN and rvol >= C.RVOL_ALERT and k not in day and not recent_alert(day, t):
+            res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_short_rvol(t, rvol, mins, price), color=C.SHORT_COLOR)
+            if res.get("sent"):
+                day[k] = {"ts": datetime.now(ROME).isoformat(), "rvol": rvol, "price": price}
+                fired.append(k)
+        k = f"{t}|ShortFocus|30m-low"
+        if lst != "Focus" or orl is None or k in day or mins < C.ORH_MINUTES or price > orl:
+            continue
+        need = rvol_needed(ref)
+        if C.ENTRY_RVOL_REQUIRED and need is not None and rvol < need * max(1.0, mins / C.ORH_MINUTES):
+            rec["skipped"] = f"rvol {rvol:.0%}"
+            continue
+        if C.ENTRY_LOD_BLOCKS and hod_atr is not None and hod_atr > C.LOD_ATR_RONIN:
+            rec["skipped"] = f"HoD {hod_atr:.0%} ATR > 70%"
+            continue
+        if recent_alert(day, t):
+            rec["skipped"] = "cooldown"
+            continue
+        res = ({"sent": True, "dry_run": True} if dry_run
+               else send_alert(*fmt_short_entry(t, orl, price, rvol, rvol30, need, hod_atr, hod), color=C.SHORT_COLOR))
+        if res.get("sent"):
+            day[k] = {"ts": datetime.now(ROME).isoformat(), "price": price, "orl": orl, "rvol": rvol, "hod_atr": hod_atr}
+            fired.append(k)
     # canale: recupero della SMA30 65m (una volta per nome)
     chan = [c for c in load_channel(today) if f"{c['ticker']}|Channel|sma30-65m" not in day]
     if chan and mins >= 0:

@@ -27,8 +27,9 @@ ALERT_WEBHOOK_ENV = ("COACH_ALERT_DISCORD_WEBHOOK_URL", "SYDNEY_COACH_DISCORD_WE
 FORBIDDEN_WEBHOOK_ENV = ("DISCORD_WEBHOOK_URL", "SYDNEY_DISCORD_WEBHOOK_URL")   # Remy: mai
 CARD_USERNAME = os.environ.get("COACH_NAME", "Dua")
 ALERT_USERNAME = os.environ.get("COACH_ALERT_NAME", "Sydney")
-CARD_COLOR = 15105570          # #E67E22 [RONIN 04/10]
-ALERT_COLOR = 0xF39C12
+CARD_COLOR = 0x2ECC71          # long: bordo verde [RONIN 12/10] (era arancio #E67E22)
+ALERT_COLOR = 0x2ECC71         # long: bordo verde [RONIN 12/10]
+SHORT_COLOR = 0xE74C3C         # short: bordo rosso, lista e alert [RONIN 12/10]
 
 # ---------------------------------------------------------------- universo [RONIN 04/10]
 MCAP_MIN = 1e9                 # > $1 mld [RONIN 10/10] (era 500M)
@@ -231,6 +232,14 @@ LEADER_TOP_PCT = 2.0
 # Un nome resta in Stalk "per inerzia" (regola dei 2 gate aperti) al massimo per queste sedute di fila.
 # Se in quel tempo non torna a soddisfare la regola dei nuovi ingressi (1 gate aperto + pattern stretto), esce.
 STALK_CARRY_MAX_SESSIONS = 5
+
+# ---------------------------------------------------------------- short [RONIN 12/10]
+# Stesse regole del long sul grafico capovolto (vedi short.py). L'RS non è un gate.
+SHORT = dict(
+    enabled=True,
+    mirror_k=10000.0,          # prezzo capovolto = K / prezzo (K qualsiasi: conta solo per i livelli)
+    pre_max_numeric_open=2,    # la SMA30 65m si scarica solo per chi ha al massimo 2 gate numerici aperti (oltre a lei)
+)
 
 # ---------------------------------------------------------------- weekly [RONIN 06/10]
 WEEKLY_SMA25_DAILY_MAX_PCT = 5.0   # al posto della SMA30 65m: close entro ~5% dalla SMA25 giornaliera

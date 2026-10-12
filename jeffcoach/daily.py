@@ -29,7 +29,7 @@ from . import channel as CH
 from . import peg as PG
 from . import patterns as P
 from .calendar_us import ROME, is_session, prev_session, sessions_from, today_rome, last_sessions
-from .output import above_sma65, by_sector, card_descriptions, tv_txt, write_atomic
+from .output import above_sma65, by_sector, card_descriptions, short_card_descriptions, short_tv_txt, tv_txt, write_atomic
 
 log = logging.getLogger("jeffcoach.daily")
 
@@ -89,8 +89,25 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
                 log.warning("PEG %s: %s", s, e)
     info: dict = {}          # mcap/settore freschi: si scaricano in build() solo per i nomi che entrano in lista
     s65 = D.sma30_65m(cand, last_sessions(as_of, 6))
+    # SHORT [RONIN 12/10]: stesse metriche sul grafico capovolto, per i titoli sotto la SMA200
+    short_m, s65s = {}, {}
+    if C.SHORT["enabled"]:
+        from . import short as SH
+        for s in sorted(x for x in num_ok if not metrics[x]["above_sma200"]):
+            try:
+                m = SH.short_metrics(daily[s], spx.Close)
+            except Exception as e:
+                log.warning("metriche short %s: %s", s, e)
+                continue
+            if m and m["above_sma200"]:              # capovolto sopra la SMA200 = vero sotto la SMA200
+                short_m[s] = m
+        pre_s = [s for s, m in short_m.items()
+                 if len([g for g in SH.numeric_open(m, None) if g != "sma65"]) <= C.SHORT["pre_max_numeric_open"]]
+        if pre_s:
+            s65s = D.sma30_65m(pre_s, last_sessions(as_of, 6))
     doc = dict(session=session, as_of=as_of, meta=meta, metrics=metrics, info=info, sma65=s65, industry=industry,
-               n_downloaded=len(daily) - 1, stale=stale, num_ok=sorted(num_ok), cand=sorted(cand))
+               n_downloaded=len(daily) - 1, stale=stale, num_ok=sorted(num_ok), cand=sorted(cand),
+               short_metrics=short_m, sma65_short=s65s)
     cache.write_bytes(pickle.dumps(doc))
     return doc
 
@@ -406,6 +423,11 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
         if rv.get("reason_en"):
             r.m["reason_override"] = rv["reason_en"]
 
+    short = None
+    if C.SHORT["enabled"] and doc.get("short_metrics") is not None:
+        from . import short as SH
+        short = SH.build_short(doc, prev, info, earn, (lo, hi), D.fetch_info, D.fetch_earnings)
+
     def pub(r: E.Row) -> dict:
         m = r.m
         return dict(
@@ -480,6 +502,11 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
         gap_to_fill={t: _r(r.m["gap_top"]) for t, r in rows.items()
                      if r.list != "Out" and any(g.code == "gap" and not g.ok for g in r.gates)},
     )
+    if short is not None:                     # sezione short, separata e parallela [RONIN 12/10]
+        agreed.update(short_focus=[r["ticker"] for r in short["focus"]], short_stalk=[r["ticker"] for r in short["stalk"]],
+                      short_tickers=short["focus"] + short["stalk"],
+                      short_check=dict(candidates=short["candidates"], out_universe=short["out_universe"],
+                                       earnings_excluded=short["earnings_excluded"], stale_stalk=short["stale"]))
     detail = dict(agreed, funnel=dict(downloaded=doc["n_downloaded"], stale_last_bar=len(doc["stale"]),
                                       universe_numeric=len(doc["num_ok"]), candidates=len(doc["cand"]),
                                       out_universe=len(out_universe), focus=len(focus), stalk=len(stalk),
@@ -493,7 +520,7 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                                        sma30_65m=s65.get(r.ticker), next_earnings=earn_next.get(r.ticker))
                         for r in rows.values() if r.list != "Out" or r.out_reason})
     sw1 = sector_strong_w1(doc)
-    return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn,
+    return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn, short=short,
                 sectors={sec: {**(groups.get("sectors") or {}).get(sec, {}), **st, "strong_w1": sw1.get(sec)}
                          for sec, st in sector_etf_stats(doc).items()})
 
@@ -617,6 +644,13 @@ def summary_it(res: dict, doc: dict) -> str:
         L.append("Settore/market cap non verificati (Yahoo non ha risposto): " + ", ".join(a["info_not_verified"]))
     if a["review"]:
         L.append("Revisione: " + "; ".join(f"{t} {v}" for t, v in a["review"].items()))
+    if a.get("short_tickers") is not None:
+        sc = a.get("short_check") or {}
+        L += ["", f"**Short** (stesse regole al contrario, RS non decide; {sc.get('candidates', 0)} titoli sotto la SMA200 controllati)",
+              f"Short Focus ({len(a['short_focus'])}): {', '.join(a['short_focus']) or 'nessuno'}",
+              f"Short Stalk ({len(a['short_stalk'])}): {', '.join(a['short_stalk']) or 'nessuno'}"]
+        if sc.get("earnings_excluded"):
+            L.append("Short esclusi per utili: " + ", ".join(f"{t} {d}" for t, d in sorted(sc["earnings_excluded"].items())))
     return "\n".join(L)
 
 
@@ -666,7 +700,17 @@ def main(argv=None) -> int:
                  [(t, exch_of(t, doc)) for t in sb])
     descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"], res.get("sectors"),
                               dtl_breaks=[d for d in (res["agreed"].get("dtl_watch") or []) if d["kind"] == "break"])
-    card = {"embeds": [{"description": d, "color": C.CARD_COLOR} for d in descs], "allowed_mentions": {"parse": []}}
+    embeds = [{"description": d, "color": C.CARD_COLOR} for d in descs]
+    sh = res.get("short")
+    if sh is not None:                        # short: riquadri rossi dopo quelli long, sezioni a parte nel txt
+        sdescs = short_card_descriptions(session.isoformat(), sh["focus"], sh["stalk"])
+        embeds += [{"description": d, "color": C.SHORT_COLOR} for d in sdescs]
+        descs = descs + sdescs
+        dn = {r["ticker"] for r in sh["stalk"] if above_sma65(r)}   # short: gate sma65 chiuso = sotto la SMA30 65m, lato giusto
+        ex = lambda rr: [(r["ticker"], exch_of(r["ticker"], doc)) for r in by_sector(rr)]
+        txt += "," + short_tv_txt(ex(sh["focus"]), ex([r for r in sh["stalk"] if r["ticker"] in dn]),
+                                  ex([r for r in sh["stalk"] if r["ticker"] not in dn]))
+    card = {"embeds": embeds, "allowed_mentions": {"parse": []}}
     summ = summary_it(res, doc)
     write_atomic(work / "card.json", card)
     write_atomic(work / "summary_it.md", summ, as_json=False)

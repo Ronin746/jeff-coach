@@ -394,3 +394,18 @@ cambia poco (+0,65/+0,72 ATR a 20 sedute): il disegno era già solido. Adottato:
   **0,1 ATR basta se quel giorno il volume è >= 1,5x** (MMED 08/10). L'alert in seduta di Sydney usa 0,1 (chiede già RVOL >= 1,5).
 Esito: 4.688 rotture in 9 anni (prima 3.391), +0,67 ATR a 20 sedute, fallite 34%. Gli esempi di Ronin (PWR, P, MMED,
 CIEN, MRVL, ALAB, AAOI) restano tutti.
+
+## Sezione short (dal 12/10, Ronin)
+
+Stesse regole del long, al contrario, in una sezione separata e parallela (`jeffcoach/short.py`).
+- Il grafico di ogni titolo sotto la SMA200 si capovolge (prezzo -> 10000/prezzo) e passa dagli stessi gate e dalle
+  stesse letture A, B, C del long: sotto una SMA200 che scende, entro 1,5 ATR sotto la EMA9, estensione sotto la SMA50
+  entro 4, VCP stretto, giorni compressi, bear flag / base discendente, chiusura sotto la SMA30 65m.
+- L'RS non è un gate: si mostra quella vera e la lista si ordina dalla più bassa.
+- Universo, utili e market cap come nel long, sui prezzi veri. Stalk e scadenza come nel long.
+- Card: dopo i riquadri long (verdi) vengono i riquadri short (rossi): SHORT FOCUS, SHORT STALK sotto e sopra la SMA30 65m.
+  Nel txt TradingView le sezioni ###SHORT seguono quelle long.
+- Alert (bordo rosso): RVOL nella prima ora su Focus e Stalk short; ingresso solo Short Focus, dopo 30 minuti, sulla
+  rottura del minimo dei primi 30 minuti, con lo stesso RVOL richiesto del long e il massimo del giorno entro 0,7 ATR
+  (lo stop). Pausa di 60 minuti per titolo come nel long.
+- Per ora niente versione short di canale, trendline, PEG e pivot di Remy.

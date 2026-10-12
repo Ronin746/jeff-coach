@@ -147,12 +147,13 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     return res
 
 
-def send_alert(title: str, body: str, image: Optional[bytes] = None) -> dict:
-    """Alert intraday: un embed, niente content né menzioni. Con image (PNG) il grafico va dentro l'embed [RONIN 09/10]."""
+def send_alert(title: str, body: str, image: Optional[bytes] = None, color: Optional[int] = None) -> dict:
+    """Alert intraday: un embed, niente content né menzioni. Con image (PNG) il grafico va dentro l'embed [RONIN 09/10].
+    Bordo verde per il long, rosso per lo short (color=C.SHORT_COLOR) [RONIN 12/10]."""
     url = load_webhook(C.ALERT_WEBHOOK_ENV)
     if not url:
         return {"sent": False, "reason": "discord_not_configured"}
-    emb = {"title": title, "description": body, "color": C.ALERT_COLOR}
+    emb = {"title": title, "description": body, "color": color or C.ALERT_COLOR}
     payload = {"username": C.ALERT_USERNAME, "allowed_mentions": {"parse": []}, "embeds": [emb]}
     if image:
         emb["image"] = {"url": "attachment://chart.png"}
