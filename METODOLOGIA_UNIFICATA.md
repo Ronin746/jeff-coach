@@ -395,7 +395,7 @@ cambia poco (+0,65/+0,72 ATR a 20 sedute): il disegno era già solido. Adottato:
 Esito: 4.688 rotture in 9 anni (prima 3.391), +0,67 ATR a 20 sedute, fallite 34%. Gli esempi di Ronin (PWR, P, MMED,
 CIEN, MRVL, ALAB, AAOI) restano tutti.
 
-## Sezione short (dal 12/10, Ronin)
+## Sezione short (dal 12/10, Ronin) — SOSPESA dal 13/10 (`SHORT["enabled"] = False`)
 
 Stesse regole del long, al contrario, in una sezione separata e parallela (`jeffcoach/short.py`).
 - Il grafico di ogni titolo dell'universo si capovolge (prezzo -> 10000/prezzo) e passa dagli stessi gate e dalle

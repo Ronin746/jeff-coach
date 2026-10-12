@@ -236,7 +236,7 @@ STALK_CARRY_MAX_SESSIONS = 5
 # ---------------------------------------------------------------- short [RONIN 12/10]
 # Stesse regole del long sul grafico capovolto (vedi short.py). L'RS non è un gate.
 SHORT = dict(
-    enabled=True,
+    enabled=False,             # SOSPESO [RONIN 13/10]: niente lista, card e alert short finché non si riattiva
     mirror_k=10000.0,          # prezzo capovolto = K / prezzo (K qualsiasi: conta solo per i livelli)
     # SMA200 [RONIN 12/10]: non è un gate. Sotto la SMA200 è meglio (va prima in lista e la card lo scrive), ma
     # valgono anche i titoli sopra, per esempio quelli che stanno passando da stage 2-3 a stage 4.
