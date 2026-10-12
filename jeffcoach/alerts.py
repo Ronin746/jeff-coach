@@ -290,6 +290,20 @@ def fmt_rvol(t, rvol, minutes, price):
 
 
 # ------------------------------------------------------------------ ciclo
+def recent_alert(day: dict, ticker: str) -> bool:
+    """Vero se per questo titolo è già partito un alert (di qualsiasi tipo) negli ultimi ALERT_COOLDOWN_MIN minuti
+    [RONIN 12/10: niente alert a ridosso sullo stesso titolo]."""
+    lim = datetime.now(ROME) - timedelta(minutes=C.ALERT_COOLDOWN_MIN)
+    for k, v in day.items():
+        if k.startswith(f"{ticker}|") and isinstance(v, dict) and v.get("ts"):
+            try:
+                if datetime.fromisoformat(v["ts"]) >= lim:
+                    return True
+            except ValueError:
+                pass
+    return False
+
+
 def run_once(dry_run: bool = False) -> dict:
     now = now_et()
     today = now.date()
@@ -321,7 +335,8 @@ def run_once(dry_run: bool = False) -> dict:
         scan.append(rec)
         # RVOL 30% nella prima ora, Focus e Stalk
         k = f"{t}|{lst}|rvol-30"
-        if 0 < mins <= C.RVOL_ALERT_WINDOW_MIN and rvol >= C.RVOL_ALERT and k not in day:
+        if 0 < mins <= C.RVOL_ALERT_WINDOW_MIN and rvol >= C.RVOL_ALERT and k not in day \
+                and not recent_alert(day, t):
             res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_rvol(t, rvol, mins, price))
             if res.get("sent"):
                 day[k] = {"ts": datetime.now(ROME).isoformat(), "rvol": rvol, "price": price}
@@ -342,6 +357,9 @@ def run_once(dry_run: bool = False) -> dict:
         rec["rvol_needed"] = need
         if not ok:
             rec["skipped"] = why               # si riprova al giro dopo (il volume può arrivare)
+            continue
+        if recent_alert(day, t):
+            rec["skipped"] = "cooldown"        # alert su questo titolo da poco: si riprova dopo
             continue
         res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_entry(t, orh, price, rvol, rvol30, need, rec["lod_atr"]))
         if res.get("sent"):
@@ -365,6 +383,8 @@ def run_once(dry_run: bool = False) -> dict:
             if lv["price"] <= lv["sma"]:
                 continue
             k = f"{t}|Channel|sma30-65m"
+            if recent_alert(day, t):
+                continue
             img = None
             if not dry_run and C.CHANNEL_CHART:
                 from .chart import channel_chart          # grafico daily + 65m nell'alert [RONIN 09/10]
@@ -411,7 +431,7 @@ def run_once(dry_run: bool = False) -> dict:
                     touched = x.get("on_emas") or low <= max(x["ema9"] or 0, x["ema21"] or 0) + C.DTL["ema_touch_atr"] * (x["atr"] or 0)
                     if day.get(kb) and touched and price > (x["ema9"] or 0):
                         msg, title = fmt_dtl_pullback(x, price, sma, rv), "wedge pop · pullback"
-            if not msg:
+            if not msg or recent_alert(day, t):
                 continue
             img = None
             if not dry_run and C.CHANNEL_CHART:

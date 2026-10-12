@@ -259,3 +259,5 @@ MEGA_LIQUID_ADV = 2e9          # RVOL soft
 # None = disattivo (comportamento attuale). Da attivare solo se Ronin lo chiede.
 CHASE_MAX_ATR_ABOVE_ORH = None
 POLL_SEC = 90
+# Dopo un alert su un titolo, nessun altro alert sullo stesso titolo per questi minuti (qualsiasi tipo) [RONIN 12/10]
+ALERT_COOLDOWN_MIN = 60
