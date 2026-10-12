@@ -399,7 +399,7 @@ CIEN, MRVL, ALAB, AAOI) restano tutti.
 
 Stesse regole del long, al contrario, in una sezione separata e parallela (`jeffcoach/short.py`).
 - Il grafico di ogni titolo sotto la SMA200 si capovolge (prezzo -> 10000/prezzo) e passa dagli stessi gate e dalle
-  stesse letture A, B, C del long: sotto una SMA200 che scende, entro 1,5 ATR sotto la EMA9, estensione sotto la SMA50
+  stesse letture A, B, C del long: sotto la SMA200 (non serve che scenda: valgono anche i titoli appena passati da stage 2-3 a stage 4), entro 1,5 ATR sotto la EMA9, estensione sotto la SMA50
   entro 4, VCP stretto, giorni compressi, bear flag / base discendente, chiusura sotto la SMA30 65m.
 - L'RS non è un gate: si mostra quella vera e la lista si ordina dalla più bassa.
 - Universo, utili e market cap come nel long, sui prezzi veri. Stalk e scadenza come nel long.

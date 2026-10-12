@@ -6,6 +6,7 @@ scende", "entro 1,5 ATR sopra la EMA9" diventa "entro 1,5 ATR sotto la EMA9", un
 la base ascendente una base discendente, e così via, senza riscrivere le regole.
 
 Differenze volute:
+  - per la SMA200 basta essere sotto: non serve che scenda (anche chi è appena passato da stage 2-3 a stage 4);
   - l'RS non è un gate (Ronin: "non considerare necessariamente l'RS"); si mostra quella vera e si ordina dalla più bassa;
   - universo, utili e controvalore si controllano sui prezzi veri, come nel long;
   - lista, card e alert sono separati da quelli long (stessi canali, riquadri rossi invece che verdi).
@@ -45,10 +46,21 @@ def short_metrics(df: pd.DataFrame, spx_close: pd.Series) -> Optional[dict]:
     return m
 
 
+def short_gates(m: dict, s65: Optional[dict]) -> list[E.Gate]:
+    """Gate del long sul grafico capovolto, con due differenze: niente RS, e per la SMA200 basta essere sotto
+    (non serve che scenda: valgono anche i titoli appena passati da stage 2-3 a stage 4) [RONIN 12/10]."""
+    m["rs"] = 99                       # RS neutra (sul dizionario stesso: focus_gates ci scrive le letture del pattern)
+    gates = [g for g in E.focus_gates(m, s65) if g.code != "rs"]
+    if not C.SHORT["sma200_slope_required"]:
+        for g in gates:
+            if g.code == "sma200":
+                g.ok = bool(m["above_sma200"])
+    return gates
+
+
 def numeric_open(m: dict, s65: Optional[dict]) -> list[str]:
-    """Gate numerici aperti sul grafico capovolto, senza l'RS (sempre neutra nello short)."""
-    mm = dict(m, rs=99)
-    return [g.code for g in E.focus_gates(mm, s65) if not g.ok and g.code not in E.SOFT_GATES]
+    """Gate numerici aperti sul grafico capovolto."""
+    return [g.code for g in short_gates(dict(m), s65) if not g.ok and g.code not in E.SOFT_GATES]
 
 
 def mirror_s65(v: Optional[dict]) -> Optional[dict]:
@@ -103,7 +115,7 @@ def build_short(doc: dict, prev: Optional[dict], info: dict, earn: dict, window:
     stale = {}
     for s, m0 in sm.items():
         m = dict(m0, rs=99)                                 # RS neutra: non decide nello short
-        gates = [g for g in E.focus_gates(m, mirror_s65(s65.get(s))) if g.code != "rs"]
+        gates = short_gates(m, mirror_s65(s65.get(s)))
         lst = E.classify(m, gates, s in prev_listed)
         m["carry_days"] = 0
         if lst == "Stalk" and E.classify(m, gates, False) == "Out":
