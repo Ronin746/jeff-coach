@@ -93,13 +93,13 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
     short_m, s65s = {}, {}
     if C.SHORT["enabled"]:
         from . import short as SH
-        for s in sorted(x for x in num_ok if not metrics[x]["above_sma200"]):
+        for s in sorted(num_ok):                     # SMA200 non è un gate per lo short [RONIN 12/10]
             try:
                 m = SH.short_metrics(daily[s], spx.Close)
             except Exception as e:
                 log.warning("metriche short %s: %s", s, e)
                 continue
-            if m and m["above_sma200"]:              # capovolto sopra la SMA200 = vero sotto la SMA200
+            if m:
                 short_m[s] = m
         pre_s = [s for s, m in short_m.items()
                  if len([g for g in SH.numeric_open(m, None) if g != "sma65"]) <= C.SHORT["pre_max_numeric_open"]]
@@ -646,7 +646,7 @@ def summary_it(res: dict, doc: dict) -> str:
         L.append("Revisione: " + "; ".join(f"{t} {v}" for t, v in a["review"].items()))
     if a.get("short_tickers") is not None:
         sc = a.get("short_check") or {}
-        L += ["", f"**Short** (stesse regole al contrario, RS non decide; {sc.get('candidates', 0)} titoli sotto la SMA200 controllati)",
+        L += ["", f"**Short** (stesse regole al contrario, RS e SMA200 non decidono; {sc.get('candidates', 0)} titoli controllati)",
               f"Short Focus ({len(a['short_focus'])}): {', '.join(a['short_focus']) or 'nessuno'}",
               f"Short Stalk ({len(a['short_stalk'])}): {', '.join(a['short_stalk']) or 'nessuno'}"]
         if sc.get("earnings_excluded"):

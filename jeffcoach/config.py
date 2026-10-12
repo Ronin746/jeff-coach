@@ -237,8 +237,10 @@ STALK_CARRY_MAX_SESSIONS = 5
 # Stesse regole del long sul grafico capovolto (vedi short.py). L'RS non è un gate.
 SHORT = dict(
     enabled=True,
-    mirror_k=10000.0,
-    sma200_slope_required=False,   # basta il prezzo sotto la SMA200, anche se la 200 sale ancora (stage 2-3 -> 4) [RONIN 12/10]          # prezzo capovolto = K / prezzo (K qualsiasi: conta solo per i livelli)
+    mirror_k=10000.0,          # prezzo capovolto = K / prezzo (K qualsiasi: conta solo per i livelli)
+    # SMA200 [RONIN 12/10]: non è un gate. Sotto la SMA200 è meglio (va prima in lista e la card lo scrive), ma
+    # valgono anche i titoli sopra, per esempio quelli che stanno passando da stage 2-3 a stage 4.
+    sma200_gate=False,
     pre_max_numeric_open=2,    # la SMA30 65m si scarica solo per chi ha al massimo 2 gate numerici aperti (oltre a lei)
 )
 

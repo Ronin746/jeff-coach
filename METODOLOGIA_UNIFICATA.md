@@ -398,10 +398,10 @@ CIEN, MRVL, ALAB, AAOI) restano tutti.
 ## Sezione short (dal 12/10, Ronin)
 
 Stesse regole del long, al contrario, in una sezione separata e parallela (`jeffcoach/short.py`).
-- Il grafico di ogni titolo sotto la SMA200 si capovolge (prezzo -> 10000/prezzo) e passa dagli stessi gate e dalle
-  stesse letture A, B, C del long: sotto la SMA200 (non serve che scenda: valgono anche i titoli appena passati da stage 2-3 a stage 4), entro 1,5 ATR sotto la EMA9, estensione sotto la SMA50
+- Il grafico di ogni titolo dell'universo si capovolge (prezzo -> 10000/prezzo) e passa dagli stessi gate e dalle
+  stesse letture A, B, C del long: SMA200 non obbligatoria (sotto è meglio: quei nomi vanno prima in lista; sopra la card scrive "above SMA200"), entro 1,5 ATR sotto la EMA9, estensione sotto la SMA50
   entro 4, VCP stretto, giorni compressi, bear flag / base discendente, chiusura sotto la SMA30 65m.
-- L'RS non è un gate: si mostra quella vera e la lista si ordina dalla più bassa.
+- L'RS non è un gate: si mostra quella vera. Ordine: prima i nomi sotto la SMA200, poi RS dalla più bassa.
 - Universo, utili e market cap come nel long, sui prezzi veri. Stalk e scadenza come nel long.
 - Card: dopo i riquadri long (verdi) vengono i riquadri short (rossi): SHORT FOCUS, SHORT STALK sotto e sopra la SMA30 65m.
   Nel txt TradingView le sezioni ###SHORT seguono quelle long.

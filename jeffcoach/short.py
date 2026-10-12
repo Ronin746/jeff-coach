@@ -47,14 +47,12 @@ def short_metrics(df: pd.DataFrame, spx_close: pd.Series) -> Optional[dict]:
 
 
 def short_gates(m: dict, s65: Optional[dict]) -> list[E.Gate]:
-    """Gate del long sul grafico capovolto, con due differenze: niente RS, e per la SMA200 basta essere sotto
-    (non serve che scenda: valgono anche i titoli appena passati da stage 2-3 a stage 4) [RONIN 12/10]."""
+    """Gate del long sul grafico capovolto, senza RS e senza SMA200 [RONIN 12/10]: la SMA200 non decide
+    (sotto è meglio, ma valgono anche i titoli sopra, es. da stage 2-3 a stage 4)."""
     m["rs"] = 99                       # RS neutra (sul dizionario stesso: focus_gates ci scrive le letture del pattern)
     gates = [g for g in E.focus_gates(m, s65) if g.code != "rs"]
-    if not C.SHORT["sma200_slope_required"]:
-        for g in gates:
-            if g.code == "sma200":
-                g.ok = bool(m["above_sma200"])
+    if not C.SHORT["sma200_gate"]:
+        gates = [g for g in gates if g.code != "sma200"]
     return gates
 
 
@@ -115,6 +113,9 @@ def build_short(doc: dict, prev: Optional[dict], info: dict, earn: dict, window:
     stale = {}
     for s, m0 in sm.items():
         m = dict(m0, rs=99)                                 # RS neutra: non decide nello short
+        m["under_sma200"] = bool(m0["above_sma200"])        # capovolto sopra = vero sotto la SMA200
+        if not C.SHORT["sma200_gate"]:
+            m["above_sma200"] = True                         # classify() non deve scartare chi è sopra la SMA200
         gates = short_gates(m, mirror_s65(s65.get(s)))
         lst = E.classify(m, gates, s in prev_listed)
         m["carry_days"] = 0
@@ -165,14 +166,16 @@ def build_short(doc: dict, prev: Optional[dict], info: dict, earn: dict, window:
         return dict(
             ticker=r.ticker, list=r.list, side="short", rs=o.get("rs"), vcp=E._r(m["vcp"]),
             sma5=E._r(o["sma5_dist_pct"]), atr_ext=E._r(o["ext"]),
-            reason_en=reason_short(r.list, m, r.gates, o),
+            reason_en=reason_short(r.list, m, r.gates, o) + ("" if m["under_sma200"] else " · above SMA200"),
+            under_sma200=m["under_sma200"],
             pattern_a=("tight" if m.get("pattern_a_ok") else "wide"), pattern_b=("tight" if m.get("pattern_b_ok") else "wide"),
             open_gates=[g.code for g in r.fails], extreme_rvol_ok=False, prior_day_low=E._r(o["low"]),
             industry=inf.get("industry") or meta.get("industry"), sector=inf.get("sector") or meta.get("sector"),
             carry_days=m.get("carry_days", 0),
         )
 
-    key = lambda r: ((metrics[r.ticker].get("rs") or 0), r.ticker)      # RS più bassa prima
+    # prima chi è sotto la SMA200 (meglio per lo short), poi RS più bassa
+    key = lambda r: (not r.m["under_sma200"], (metrics[r.ticker].get("rs") or 0), r.ticker)
     focus = sorted([r for r in rows.values() if r.list == "Focus"], key=key)
     stalk = sorted([r for r in rows.values() if r.list == "Stalk"], key=key)
     return dict(focus=[pub(r) for r in focus], stalk=[pub(r) for r in stalk], stale=stale,
