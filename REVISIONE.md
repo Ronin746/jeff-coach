@@ -22,7 +22,7 @@ I numeri li decide il motore; tu guardi i grafici. Il tuo lavoro:
    - i Focus e gli Stalk in `data/watchlists/focus_OGGI.json`: le liste in `focus` e `stalk`, e per ogni nome in `rows.<TICKER>` metriche, gate (`gates.<codice>.ok`) e letture A/B del pattern;
    - la lettura C (trendline) negli stessi `metrics`: `c_shape`, `c_kind`, `pattern_c_ok`, `pattern_c_why`, `c_upper_next` (livello della linea alta). È un aiuto per guardare il grafico, non cambia le regole.
    - la lettura D (canale rialzista): `d_state`, `pattern_d_ok`, `d_lower_next`/`d_upper_next` (linee del canale per la prossima seduta), `d_pos` (0 = linea bassa, 1 = linea alta). Anche questa solo per guardare.
-4. **Revisione di tutta la lista.** Per ogni Focus e ogni Stalk, guarda le barre daily degli ultimi 3 mesi (yfinance, `auto_adjust=False`, fino al close di ieri) e chiediti se è un pattern di continuation long ammesso:
+4. **Revisione di tutta la lista.** Per ogni Focus e ogni Stalk, guarda le barre daily degli ultimi 3 mesi fino al close di ieri e chiediti se è un pattern di continuation long ammesso:
    - flag (canale stretto dopo la spinta);
    - pennant;
    - box con range che si riducono;
@@ -30,6 +30,8 @@ I numeri li decide il motore; tu guardi i grafici. Il tuo lavoro:
    - base o trendline ascendente;
    - VCP.
    
+   **Fonte dei grafici.** Usa il connettore MCP di TradingView (strumenti `mcp__*tradingview*`, da cercare con ToolSearch "tradingview"): grafico daily, solo sessione regolare. Yahoo/yfinance dalla sessione cloud è bloccato dal proxy, va usato solo se TradingView manca e Yahoo risponde (`auto_adjust=False`). Se non riesci ad aprire nessun grafico, non declassare e non promuovere nessuno: `review.json` resta `{}` e nel riepilogo scrivi "grafici non guardati: TradingView non disponibile". Se ne apri solo una parte, nel riepilogo di' quali.
+
    **Non sono ammessi:**
    - rising wedge;
    - pattern ribassisti;
