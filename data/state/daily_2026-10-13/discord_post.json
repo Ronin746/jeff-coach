@@ -3,7 +3,9 @@
   "status": 200,
   "message_id": "1559487122769977364",
   "channel_id": "1554804937928736828",
-  "method": "POST",
+  "method": "PATCH",
   "session": "2026-10-13",
-  "more_message_ids": []
+  "more_message_ids": [
+    "1559549192400142354"
+  ]
 }

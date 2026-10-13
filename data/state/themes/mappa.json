@@ -1,0 +1,6997 @@
+{
+ "built_utc": "2026-10-13T12:39:48.189012+00:00",
+ "sources": {
+  "baskets": "https://www.tradingview.com/watchlists/325428425/",
+  "etf_list": "https://docs.google.com/spreadsheets/d/1OSC1ovj4y5I-Yb_xBsMNvexgAOSUbLJRzbQU9W9uCNM/export?format=csv&gid=305077282",
+  "etf_holdings": "https://raw.githubusercontent.com/i-manage-risk/NEL/main/data/etf_holdings_cache.json"
+ },
+ "n_baskets": 49,
+ "n_etf": 170,
+ "tickers": {
+  "RKLB": {
+   "primary": "Space",
+   "themes": [
+    "Defense",
+    "Robotics",
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "LUNR": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "PL": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "SIDU": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "FLY": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "VOYG": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "YSS": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "SATL": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "ASTS": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "RDW": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "IRDM": {
+   "primary": "Space",
+   "themes": [
+    "Space",
+    "Telecom"
+   ],
+   "source": "basket"
+  },
+  "BKSY": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "DXYZ": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "KRMN": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "MRCY": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "VSAT": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "TSAT": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "SPIR": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "MDA": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "HWM": {
+   "primary": "Space",
+   "themes": [
+    "Defense",
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "UMAC": {
+   "primary": "Aviation - Drones",
+   "themes": [
+    "Aviation - Drones"
+   ],
+   "source": "basket"
+  },
+  "RCAT": {
+   "primary": "Aviation - Drones",
+   "themes": [
+    "Aviation - Drones"
+   ],
+   "source": "basket"
+  },
+  "DPRO": {
+   "primary": "Aviation - Drones",
+   "themes": [
+    "Aviation - Drones"
+   ],
+   "source": "basket"
+  },
+  "KTOS": {
+   "primary": "Aviation - Drones",
+   "themes": [
+    "Aviation - Drones",
+    "Robotics",
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "AVAV": {
+   "primary": "Aviation - Drones",
+   "themes": [
+    "Aviation - Drones",
+    "Defense",
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "ESLT": {
+   "primary": "Aviation - Drones",
+   "themes": [
+    "Aviation - Drones"
+   ],
+   "source": "basket"
+  },
+  "BA": {
+   "primary": "Aviation - Drones",
+   "themes": [
+    "Aviation - Drones",
+    "Defense"
+   ],
+   "source": "basket"
+  },
+  "EH": {
+   "primary": "Aviation - Drones",
+   "themes": [
+    "Aviation - Drones"
+   ],
+   "source": "basket"
+  },
+  "FTAI": {
+   "primary": "Aviation - Drones",
+   "themes": [
+    "Aviation - Drones"
+   ],
+   "source": "basket"
+  },
+  "WDC": {
+   "primary": "Memories",
+   "themes": [
+    "Memories"
+   ],
+   "source": "basket"
+  },
+  "STX": {
+   "primary": "Memories",
+   "themes": [
+    "Memories"
+   ],
+   "source": "basket"
+  },
+  "SNDK": {
+   "primary": "Memories",
+   "themes": [
+    "Memories"
+   ],
+   "source": "basket"
+  },
+  "MU": {
+   "primary": "Memories",
+   "themes": [
+    "AI",
+    "Datacenter",
+    "Generative AI",
+    "Memories",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "LRCX": {
+   "primary": "Memories",
+   "themes": [
+    "AI",
+    "Memories",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "SKHY": {
+   "primary": "Memories",
+   "themes": [
+    "Datacenter",
+    "Memories"
+   ],
+   "source": "basket"
+  },
+  "AXTI": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "WYFI": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "LWLG": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "WOLF": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "OPTX": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "VECO": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "LPTH": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "ALMU": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "SMTC": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "AAOI": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "LASR": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "VIAV": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking",
+    "Telecom"
+   ],
+   "source": "basket"
+  },
+  "ONTO": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "IPGP": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "ALAB": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Generative AI",
+    "Optical Networking",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "POET": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "NOK": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "LITE": {
+   "primary": "Optical Networking",
+   "themes": [
+    "AI",
+    "Optical Networking",
+    "Telecom"
+   ],
+   "source": "basket"
+  },
+  "COHR": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "CIEN": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking",
+    "Telecom"
+   ],
+   "source": "basket"
+  },
+  "GLW": {
+   "primary": "Optical Networking",
+   "themes": [
+    "Optical Networking"
+   ],
+   "source": "basket"
+  },
+  "CBRS": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "NVTS": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "AEHR": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "AOSL": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "AMKR": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "KOPN": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "VICR": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "ARM": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "RMBS": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "QCOM": {
+   "primary": "Semiconductors",
+   "themes": [
+    "EV",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "ICHR": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "MRVL": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "SWKS": {
+   "primary": "Semiconductors",
+   "themes": [
+    "EV",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "KLAC": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "TTMI": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "QRVO": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "MCHP": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "TSEM": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "CAMT": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "NVMI": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "FORM": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "HPQ": {
+   "primary": "Semiconductors",
+   "themes": [
+    "3D printing",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "COHU": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "KLIC": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "AMD": {
+   "primary": "Semiconductors",
+   "themes": [
+    "AI",
+    "Crypto",
+    "Datacenter",
+    "Generative AI",
+    "Quantum Computing",
+    "Robotics",
+    "Semiconductors",
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "ASML": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Generative AI",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "AEIS": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Electrification & Renewables",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "SITM": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "AMAT": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "SIMO": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "INTC": {
+   "primary": "Semiconductors",
+   "themes": [
+    "AI",
+    "EV",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "TXN": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "NVDA": {
+   "primary": "Semiconductors",
+   "themes": [
+    "AI",
+    "Datacenter",
+    "EV",
+    "Generative AI",
+    "Humanoid robotics",
+    "Robotaxis",
+    "Robotics",
+    "Semiconductors",
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "MPWR": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "GFS": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "HPE": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Quantum Computing",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "SYM": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "TER": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Robotics",
+    "Semiconductors",
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "AVGO": {
+   "primary": "Semiconductors",
+   "themes": [
+    "AI",
+    "Cybersecurity",
+    "Datacenter",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "TSM": {
+   "primary": "Semiconductors",
+   "themes": [
+    "AI",
+    "Robotics",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "ADI": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "DELL": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Crypto",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "GOOGL": {
+   "primary": "Semiconductors",
+   "themes": [
+    "EV",
+    "Generative AI",
+    "Robotaxis",
+    "Semiconductors",
+    "Social media",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "SANM": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "ASX": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "DGXX": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "APLD": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "NBIS": {
+   "primary": "Datacenter",
+   "themes": [
+    "Crypto",
+    "Datacenter",
+    "Generative AI"
+   ],
+   "source": "basket"
+  },
+  "CIFR": {
+   "primary": "Datacenter",
+   "themes": [
+    "Crypto",
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "IREN": {
+   "primary": "Datacenter",
+   "themes": [
+    "Crypto",
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "WULF": {
+   "primary": "Datacenter",
+   "themes": [
+    "Crypto",
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "CLSK": {
+   "primary": "Datacenter",
+   "themes": [
+    "Crypto",
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "HUT": {
+   "primary": "Datacenter",
+   "themes": [
+    "Crypto",
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "CRWV": {
+   "primary": "Datacenter",
+   "themes": [
+    "Crypto",
+    "Datacenter",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "ORCL": {
+   "primary": "Datacenter",
+   "themes": [
+    "AI",
+    "Datacenter",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "DOCN": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "CRDO": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "GDS": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "VRT": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "ETN": {
+   "primary": "Datacenter",
+   "themes": [
+    "Construction & Engineering",
+    "Datacenter",
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "MOD": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter",
+    "Housing"
+   ],
+   "source": "basket"
+  },
+  "CLS": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "basket"
+  },
+  "RDDT": {
+   "primary": "Software",
+   "themes": [
+    "Social media",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "RZLV": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "APP": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "FSLY": {
+   "primary": "Software",
+   "themes": [
+    "Datacenter",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "CRM": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "MGNI": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "RNG": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "TWLO": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "PATH": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "YELP": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "NAVN": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "HUBS": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "FTNT": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "PANW": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "CRWD": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "FFIV": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity"
+   ],
+   "source": "basket"
+  },
+  "NET": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Quantum Computing",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "ATEN": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity"
+   ],
+   "source": "basket"
+  },
+  "BB": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity"
+   ],
+   "source": "basket"
+  },
+  "S": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "DDOG": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "ZS": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "VRNS": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity"
+   ],
+   "source": "basket"
+  },
+  "PLTR": {
+   "primary": "Defense",
+   "themes": [
+    "AI",
+    "Defense",
+    "Finance",
+    "Quantum Computing",
+    "Robotics",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "LMT": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "basket"
+  },
+  "CACI": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "basket"
+  },
+  "NOC": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "basket"
+  },
+  "LHX": {
+   "primary": "Defense",
+   "themes": [
+    "Defense",
+    "Space"
+   ],
+   "source": "basket"
+  },
+  "HII": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "basket"
+  },
+  "RVI": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "HTZ": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "CAR": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "HOOD": {
+   "primary": "Finance",
+   "themes": [
+    "Capital markets",
+    "Crypto",
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "WT": {
+   "primary": "Finance",
+   "themes": [
+    "Capital markets",
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "GS": {
+   "primary": "Finance",
+   "themes": [
+    "Capital markets",
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "LMND": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "VIRT": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "PYPL": {
+   "primary": "Finance",
+   "themes": [
+    "Finance",
+    "Online retail"
+   ],
+   "source": "basket"
+  },
+  "AFRM": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "OSCR": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "LFMD": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "HIMS": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare",
+    "Healthcare services",
+    "Online retail"
+   ],
+   "source": "basket"
+  },
+  "VIR": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "UNH": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare",
+    "Healthcare providers"
+   ],
+   "source": "basket"
+  },
+  "IMMX": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "SLS": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "NVAX": {
+   "primary": "Healthcare",
+   "themes": [
+    "Biotechnology",
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "ACHC": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "LLY": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare",
+    "Pharmaceuticals",
+    "Psychedelics",
+    "Weight loss"
+   ],
+   "source": "basket"
+  },
+  "MRNA": {
+   "primary": "Healthcare",
+   "themes": [
+    "Biotechnology",
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "ALMS": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "ALLO": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "NTLA": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "TEVA": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "MANE": {
+   "primary": "Healthcare",
+   "themes": [
+    "Healthcare",
+    "Pharmaceuticals"
+   ],
+   "source": "basket"
+  },
+  "ABSI": {
+   "primary": "Healthcare",
+   "themes": [
+    "Genomics",
+    "Healthcare"
+   ],
+   "source": "basket"
+  },
+  "INFQ": {
+   "primary": "Quantum Computing",
+   "themes": [
+    "Quantum Computing"
+   ],
+   "source": "basket"
+  },
+  "RGTI": {
+   "primary": "Quantum Computing",
+   "themes": [
+    "Quantum Computing"
+   ],
+   "source": "basket"
+  },
+  "IONQ": {
+   "primary": "Quantum Computing",
+   "themes": [
+    "Electrification & Renewables",
+    "Quantum Computing",
+    "Semiconductors"
+   ],
+   "source": "basket"
+  },
+  "QUBT": {
+   "primary": "Quantum Computing",
+   "themes": [
+    "Quantum Computing"
+   ],
+   "source": "basket"
+  },
+  "ARQQ": {
+   "primary": "Quantum Computing",
+   "themes": [
+    "Quantum Computing"
+   ],
+   "source": "basket"
+  },
+  "IBM": {
+   "primary": "Quantum Computing",
+   "themes": [
+    "Quantum Computing",
+    "Software"
+   ],
+   "source": "basket"
+  },
+  "MSTR": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "basket"
+  },
+  "BKKT": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "basket"
+  },
+  "CRCL": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto",
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "COIN": {
+   "primary": "Crypto",
+   "themes": [
+    "Capital markets",
+    "Crypto",
+    "Finance"
+   ],
+   "source": "basket"
+  },
+  "GEMI": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "basket"
+  },
+  "FIGR": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "basket"
+  },
+  "BBBY": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "basket"
+  },
+  "AEVA": {
+   "primary": "Lidar",
+   "themes": [
+    "Lidar"
+   ],
+   "source": "basket"
+  },
+  "VELO": {
+   "primary": "Lidar",
+   "themes": [
+    "Lidar"
+   ],
+   "source": "basket"
+  },
+  "OUST": {
+   "primary": "Lidar",
+   "themes": [
+    "Lidar",
+    "Robotaxis"
+   ],
+   "source": "basket"
+  },
+  "MBLY": {
+   "primary": "Lidar",
+   "themes": [
+    "Lidar"
+   ],
+   "source": "basket"
+  },
+  "HSAI": {
+   "primary": "Lidar",
+   "themes": [
+    "Lidar"
+   ],
+   "source": "basket"
+  },
+  "NIO": {
+   "primary": "EV",
+   "themes": [
+    "EV"
+   ],
+   "source": "basket"
+  },
+  "TSLA": {
+   "primary": "EV",
+   "themes": [
+    "AI",
+    "EV",
+    "Humanoid robotics",
+    "Lithium",
+    "Robotaxis",
+    "Robotics"
+   ],
+   "source": "basket"
+  },
+  "RIVN": {
+   "primary": "EV",
+   "themes": [
+    "EV"
+   ],
+   "source": "basket"
+  },
+  "LCID": {
+   "primary": "EV",
+   "themes": [
+    "EV"
+   ],
+   "source": "basket"
+  },
+  "LEA": {
+   "primary": "Automotive",
+   "themes": [
+    "Automotive"
+   ],
+   "source": "basket"
+  },
+  "XPEV": {
+   "primary": "Automotive",
+   "themes": [
+    "Automotive"
+   ],
+   "source": "basket"
+  },
+  "F": {
+   "primary": "Automotive",
+   "themes": [
+    "Automotive"
+   ],
+   "source": "basket"
+  },
+  "MGA": {
+   "primary": "Automotive",
+   "themes": [
+    "Automotive"
+   ],
+   "source": "basket"
+  },
+  "CVNA": {
+   "primary": "Automotive",
+   "themes": [
+    "Automotive"
+   ],
+   "source": "basket"
+  },
+  "GM": {
+   "primary": "Automotive",
+   "themes": [
+    "Automotive"
+   ],
+   "source": "basket"
+  },
+  "OSK": {
+   "primary": "Automotive",
+   "themes": [
+    "Automotive"
+   ],
+   "source": "basket"
+  },
+  "BW": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "AMSC": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "ENS": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "PCT": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "RRX": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "POWL": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "FPS": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "GEV": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "GNRC": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "SEDG": {
+   "primary": "Solar",
+   "themes": [
+    "Solar"
+   ],
+   "source": "basket"
+  },
+  "NXT": {
+   "primary": "Solar",
+   "themes": [
+    "Electrification & Renewables",
+    "Solar"
+   ],
+   "source": "basket"
+  },
+  "ARRY": {
+   "primary": "Solar",
+   "themes": [
+    "Electrification & Renewables",
+    "Solar"
+   ],
+   "source": "basket"
+  },
+  "FSLR": {
+   "primary": "Solar",
+   "themes": [
+    "Electrification & Renewables",
+    "Solar"
+   ],
+   "source": "basket"
+  },
+  "CWEN": {
+   "primary": "Solar",
+   "themes": [
+    "Solar"
+   ],
+   "source": "basket"
+  },
+  "SHLS": {
+   "primary": "Solar",
+   "themes": [
+    "Solar"
+   ],
+   "source": "basket"
+  },
+  "ENPH": {
+   "primary": "Solar",
+   "themes": [
+    "Electrification & Renewables",
+    "Solar"
+   ],
+   "source": "basket"
+  },
+  "CSIQ": {
+   "primary": "Solar",
+   "themes": [
+    "Electrification & Renewables",
+    "Solar"
+   ],
+   "source": "basket"
+  },
+  "RUN": {
+   "primary": "Solar",
+   "themes": [
+    "Solar"
+   ],
+   "source": "basket"
+  },
+  "TEN": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "TNK": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "STNG": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "DHT": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "LPG": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "INSW": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping",
+    "Marine Shipping"
+   ],
+   "source": "basket"
+  },
+  "NVGS": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "ECO": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "TRMD": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "ASC": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "NAT": {
+   "primary": "Energy Shipping",
+   "themes": [
+    "Energy Shipping"
+   ],
+   "source": "basket"
+  },
+  "FLNC": {
+   "primary": "Energy",
+   "themes": [
+    "Electrification & Renewables",
+    "Energy"
+   ],
+   "source": "basket"
+  },
+  "KOS": {
+   "primary": "Energy",
+   "themes": [
+    "Energy"
+   ],
+   "source": "basket"
+  },
+  "NESR": {
+   "primary": "Energy",
+   "themes": [
+    "Energy"
+   ],
+   "source": "basket"
+  },
+  "BLDP": {
+   "primary": "Fuel Cells",
+   "themes": [
+    "Fuel Cells"
+   ],
+   "source": "basket"
+  },
+  "FCEL": {
+   "primary": "Fuel Cells",
+   "themes": [
+    "Fuel Cells"
+   ],
+   "source": "basket"
+  },
+  "PLUG": {
+   "primary": "Fuel Cells",
+   "themes": [
+    "Electrification & Renewables",
+    "Fuel Cells"
+   ],
+   "source": "basket"
+  },
+  "BE": {
+   "primary": "Fuel Cells",
+   "themes": [
+    "EV",
+    "Electrification & Renewables",
+    "Fuel Cells"
+   ],
+   "source": "basket"
+  },
+  "LAC": {
+   "primary": "Lithium",
+   "themes": [
+    "Lithium"
+   ],
+   "source": "basket"
+  },
+  "LAR": {
+   "primary": "Lithium",
+   "themes": [
+    "Lithium"
+   ],
+   "source": "basket"
+  },
+  "SLI": {
+   "primary": "Lithium",
+   "themes": [
+    "Lithium"
+   ],
+   "source": "basket"
+  },
+  "SGML": {
+   "primary": "Lithium",
+   "themes": [
+    "Lithium"
+   ],
+   "source": "basket"
+  },
+  "ALB": {
+   "primary": "Lithium",
+   "themes": [
+    "Lithium",
+    "Rare Earths"
+   ],
+   "source": "basket"
+  },
+  "SQM": {
+   "primary": "Lithium",
+   "themes": [
+    "Lithium",
+    "Rare Earths"
+   ],
+   "source": "basket"
+  },
+  "AMPX": {
+   "primary": "Batteries",
+   "themes": [
+    "Batteries"
+   ],
+   "source": "basket"
+  },
+  "MVST": {
+   "primary": "Batteries",
+   "themes": [
+    "Batteries"
+   ],
+   "source": "basket"
+  },
+  "TE": {
+   "primary": "Batteries",
+   "themes": [
+    "Batteries",
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "EOSE": {
+   "primary": "Batteries",
+   "themes": [
+    "Batteries"
+   ],
+   "source": "basket"
+  },
+  "ENVX": {
+   "primary": "Batteries",
+   "themes": [
+    "Batteries"
+   ],
+   "source": "basket"
+  },
+  "ABAT": {
+   "primary": "Batteries",
+   "themes": [
+    "Batteries"
+   ],
+   "source": "basket"
+  },
+  "SLDP": {
+   "primary": "Batteries",
+   "themes": [
+    "Batteries"
+   ],
+   "source": "basket"
+  },
+  "SMR": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "OKLO": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "NNE": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "LEU": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "UROY": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "UUUU": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "UEC": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "DNN": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "URG": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "NXE": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "CCJ": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "LTBR": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "MIR": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "TLN": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "BWXT": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "CEG": {
+   "primary": "Nuclear",
+   "themes": [
+    "Datacenter",
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "CW": {
+   "primary": "Nuclear",
+   "themes": [
+    "Defense",
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "BEPC": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "VST": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "SOLS": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "basket"
+  },
+  "TMC": {
+   "primary": "Rare Earths",
+   "themes": [
+    "Rare Earths"
+   ],
+   "source": "basket"
+  },
+  "USAR": {
+   "primary": "Rare Earths",
+   "themes": [
+    "Rare Earths"
+   ],
+   "source": "basket"
+  },
+  "UAMY": {
+   "primary": "Rare Earths",
+   "themes": [
+    "Rare Earths"
+   ],
+   "source": "basket"
+  },
+  "NB": {
+   "primary": "Rare Earths",
+   "themes": [
+    "Rare Earths"
+   ],
+   "source": "basket"
+  },
+  "PPTA": {
+   "primary": "Rare Earths",
+   "themes": [
+    "Rare Earths"
+   ],
+   "source": "basket"
+  },
+  "MP": {
+   "primary": "Rare Earths",
+   "themes": [
+    "Rare Earths"
+   ],
+   "source": "basket"
+  },
+  "CRML": {
+   "primary": "Rare Earths",
+   "themes": [
+    "Rare Earths"
+   ],
+   "source": "basket"
+  },
+  "AU": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "IAG": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "GFI": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "KGC": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "ORLA": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "AEM": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "NEM": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "SSRM": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "OR": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "RGLD": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "GOLD": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "basket"
+  },
+  "CDE": {
+   "primary": "Silver",
+   "themes": [
+    "Gold",
+    "Silver"
+   ],
+   "source": "basket"
+  },
+  "PAAS": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "basket"
+  },
+  "AG": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "basket"
+  },
+  "WPM": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "basket"
+  },
+  "SVM": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "basket"
+  },
+  "FNV": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "basket"
+  },
+  "ATI": {
+   "primary": "Titanium",
+   "themes": [
+    "Titanium"
+   ],
+   "source": "basket"
+  },
+  "TROX": {
+   "primary": "Titanium",
+   "themes": [
+    "Titanium"
+   ],
+   "source": "basket"
+  },
+  "KRO": {
+   "primary": "Titanium",
+   "themes": [
+    "Titanium"
+   ],
+   "source": "basket"
+  },
+  "CC": {
+   "primary": "Titanium",
+   "themes": [
+    "Titanium"
+   ],
+   "source": "basket"
+  },
+  "ALM": {
+   "primary": "Tungsten",
+   "themes": [
+    "Rare Earths",
+    "Tungsten"
+   ],
+   "source": "basket"
+  },
+  "GD": {
+   "primary": "Tungsten",
+   "themes": [
+    "Defense",
+    "Tungsten"
+   ],
+   "source": "basket"
+  },
+  "RTX": {
+   "primary": "Tungsten",
+   "themes": [
+    "Defense",
+    "Tungsten"
+   ],
+   "source": "basket"
+  },
+  "NEXA": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "basket"
+  },
+  "HBM": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "basket"
+  },
+  "AUGO": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "basket"
+  },
+  "ERO": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "basket"
+  },
+  "FCX": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "basket"
+  },
+  "SCCO": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "basket"
+  },
+  "TECK": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "basket"
+  },
+  "ASTL": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "basket"
+  },
+  "MT": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "basket"
+  },
+  "RIO": {
+   "primary": "Steel",
+   "themes": [
+    "Lithium",
+    "Steel"
+   ],
+   "source": "basket"
+  },
+  "GGB": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "basket"
+  },
+  "STLD": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "basket"
+  },
+  "TX": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "basket"
+  },
+  "NWPX": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "basket"
+  },
+  "CENX": {
+   "primary": "Aluminium",
+   "themes": [
+    "Aluminium"
+   ],
+   "source": "basket"
+  },
+  "AA": {
+   "primary": "Aluminium",
+   "themes": [
+    "Aluminium"
+   ],
+   "source": "basket"
+  },
+  "KALU": {
+   "primary": "Aluminium",
+   "themes": [
+    "Aluminium"
+   ],
+   "source": "basket"
+  },
+  "CSTM": {
+   "primary": "Aluminium",
+   "themes": [
+    "Aluminium"
+   ],
+   "source": "basket"
+  },
+  "AREC": {
+   "primary": "Coal",
+   "themes": [
+    "Coal"
+   ],
+   "source": "basket"
+  },
+  "BTU": {
+   "primary": "Coal",
+   "themes": [
+    "Coal"
+   ],
+   "source": "basket"
+  },
+  "HCC": {
+   "primary": "Coal",
+   "themes": [
+    "Coal"
+   ],
+   "source": "basket"
+  },
+  "AMR": {
+   "primary": "Coal",
+   "themes": [
+    "Coal"
+   ],
+   "source": "basket"
+  },
+  "METC": {
+   "primary": "Coal",
+   "themes": [
+    "Coal"
+   ],
+   "source": "basket"
+  },
+  "CCL": {
+   "primary": "Cruises",
+   "themes": [
+    "Cruises"
+   ],
+   "source": "basket"
+  },
+  "VIK": {
+   "primary": "Cruises",
+   "themes": [
+    "Cruises",
+    "Leisure"
+   ],
+   "source": "basket"
+  },
+  "NCLH": {
+   "primary": "Cruises",
+   "themes": [
+    "Cruises"
+   ],
+   "source": "basket"
+  },
+  "RCL": {
+   "primary": "Cruises",
+   "themes": [
+    "Cruises"
+   ],
+   "source": "basket"
+  },
+  "LIND": {
+   "primary": "Cruises",
+   "themes": [
+    "Cruises"
+   ],
+   "source": "basket"
+  },
+  "SBLK": {
+   "primary": "Marine Shipping",
+   "themes": [
+    "Marine Shipping"
+   ],
+   "source": "basket"
+  },
+  "TDW": {
+   "primary": "Marine Shipping",
+   "themes": [
+    "Marine Shipping"
+   ],
+   "source": "basket"
+  },
+  "BWLP": {
+   "primary": "Marine Shipping",
+   "themes": [
+    "Marine Shipping"
+   ],
+   "source": "basket"
+  },
+  "HAFN": {
+   "primary": "Marine Shipping",
+   "themes": [
+    "Marine Shipping"
+   ],
+   "source": "basket"
+  },
+  "MATX": {
+   "primary": "Marine Shipping",
+   "themes": [
+    "Marine Shipping"
+   ],
+   "source": "basket"
+  },
+  "KEX": {
+   "primary": "Marine Shipping",
+   "themes": [
+    "Marine Shipping"
+   ],
+   "source": "basket"
+  },
+  "ZIM": {
+   "primary": "Marine Shipping",
+   "themes": [
+    "Marine Shipping"
+   ],
+   "source": "basket"
+  },
+  "HUBG": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "basket"
+  },
+  "TK": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "basket"
+  },
+  "FDX": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "basket"
+  },
+  "CHRW": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "basket"
+  },
+  "ARCB": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "basket"
+  },
+  "JBHT": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "basket"
+  },
+  "ZTO": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "basket"
+  },
+  "PBI": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "basket"
+  },
+  "FWRD": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "basket"
+  },
+  "FRPT": {
+   "primary": "Retailers",
+   "themes": [
+    "Pet industry",
+    "Retailers"
+   ],
+   "source": "basket"
+  },
+  "VSCO": {
+   "primary": "Retailers",
+   "themes": [
+    "Retailers"
+   ],
+   "source": "basket"
+  },
+  "FIGS": {
+   "primary": "Retailers",
+   "themes": [
+    "Retailers"
+   ],
+   "source": "basket"
+  },
+  "PWR": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering",
+    "Electrification & Renewables"
+   ],
+   "source": "basket"
+  },
+  "CAT": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "basket"
+  },
+  "PLPC": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "basket"
+  },
+  "FLR": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "basket"
+  },
+  "EME": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "basket"
+  },
+  "MLM": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "basket"
+  },
+  "FBYD": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "basket"
+  },
+  "CDNL": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "basket"
+  },
+  "MKSI": {
+   "primary": "Industrial Machinery",
+   "themes": [
+    "Industrial Machinery"
+   ],
+   "source": "basket"
+  },
+  "ENTG": {
+   "primary": "Industrial Machinery",
+   "themes": [
+    "Industrial Machinery"
+   ],
+   "source": "basket"
+  },
+  "JBL": {
+   "primary": "Industrial Machinery",
+   "themes": [
+    "Industrial Machinery"
+   ],
+   "source": "basket"
+  },
+  "GIC": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution"
+   ],
+   "source": "basket"
+  },
+  "TRNS": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution"
+   ],
+   "source": "basket"
+  },
+  "WCC": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution"
+   ],
+   "source": "basket"
+  },
+  "AIT": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution"
+   ],
+   "source": "basket"
+  },
+  "FERG": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution",
+    "Water"
+   ],
+   "source": "basket"
+  },
+  "GWW": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution"
+   ],
+   "source": "basket"
+  },
+  "DXPE": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution"
+   ],
+   "source": "basket"
+  },
+  "MSM": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution",
+    "Online retail"
+   ],
+   "source": "basket"
+  },
+  "CNM": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution"
+   ],
+   "source": "basket"
+  },
+  "TITN": {
+   "primary": "Industrial Distribution",
+   "themes": [
+    "Industrial Distribution"
+   ],
+   "source": "basket"
+  },
+  "NTR": {
+   "primary": "Fertilizers",
+   "themes": [
+    "Fertilizers"
+   ],
+   "source": "basket"
+  },
+  "MOS": {
+   "primary": "Fertilizers",
+   "themes": [
+    "Fertilizers"
+   ],
+   "source": "basket"
+  },
+  "CF": {
+   "primary": "Fertilizers",
+   "themes": [
+    "Agriculture",
+    "Fertilizers"
+   ],
+   "source": "basket"
+  },
+  "FMC": {
+   "primary": "Fertilizers",
+   "themes": [
+    "Fertilizers"
+   ],
+   "source": "basket"
+  },
+  "SMG": {
+   "primary": "Fertilizers",
+   "themes": [
+    "Fertilizers"
+   ],
+   "source": "basket"
+  },
+  "HP": {
+   "primary": "Contract Drilling",
+   "themes": [
+    "Contract Drilling"
+   ],
+   "source": "basket"
+  },
+  "NE": {
+   "primary": "Contract Drilling",
+   "themes": [
+    "Contract Drilling",
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "PTEN": {
+   "primary": "Contract Drilling",
+   "themes": [
+    "Contract Drilling"
+   ],
+   "source": "basket"
+  },
+  "NBR": {
+   "primary": "Contract Drilling",
+   "themes": [
+    "Contract Drilling"
+   ],
+   "source": "basket"
+  },
+  "PDS": {
+   "primary": "Contract Drilling",
+   "themes": [
+    "Contract Drilling"
+   ],
+   "source": "basket"
+  },
+  "RIG": {
+   "primary": "Contract Drilling",
+   "themes": [
+    "Contract Drilling",
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "BORR": {
+   "primary": "Contract Drilling",
+   "themes": [
+    "Contract Drilling"
+   ],
+   "source": "basket"
+  },
+  "PBF": {
+   "primary": "Oil and Gas Downstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Downstream"
+   ],
+   "source": "basket"
+  },
+  "CVI": {
+   "primary": "Oil and Gas Downstream",
+   "themes": [
+    "Oil and Gas Downstream"
+   ],
+   "source": "basket"
+  },
+  "MPC": {
+   "primary": "Oil and Gas Downstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Downstream"
+   ],
+   "source": "basket"
+  },
+  "VLO": {
+   "primary": "Oil and Gas Downstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Downstream"
+   ],
+   "source": "basket"
+  },
+  "DINO": {
+   "primary": "Oil and Gas Downstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Downstream"
+   ],
+   "source": "basket"
+  },
+  "PSX": {
+   "primary": "Oil and Gas Downstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Downstream"
+   ],
+   "source": "basket"
+  },
+  "DK": {
+   "primary": "Oil and Gas Downstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Downstream"
+   ],
+   "source": "basket"
+  },
+  "PARR": {
+   "primary": "Oil and Gas Downstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Downstream"
+   ],
+   "source": "basket"
+  },
+  "FRO": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Marine Shipping",
+    "Oil and Gas Midstream"
+   ],
+   "source": "basket"
+  },
+  "TRGP": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "basket"
+  },
+  "KNTK": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "basket"
+  },
+  "CHRD": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "OVV": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "SHEL": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "XOM": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "MTDR": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "CVX": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "TTE": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "DVN": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "AR": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "TPL": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Upstream"
+   ],
+   "source": "basket"
+  },
+  "RES": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "LBRT": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "AESI": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "VAL": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "HAL": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "FET": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "FTI": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "WTTR": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "AROC": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "KGS": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "basket"
+  },
+  "VG": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Liquefied Natural Gas"
+   ],
+   "source": "basket"
+  },
+  "CQP": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Liquefied Natural Gas",
+    "Oil and Gas Midstream"
+   ],
+   "source": "basket"
+  },
+  "E": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Liquefied Natural Gas"
+   ],
+   "source": "basket"
+  },
+  "GLNG": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Liquefied Natural Gas"
+   ],
+   "source": "basket"
+  },
+  "LNG": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Liquefied Natural Gas",
+    "Oil and Gas Midstream"
+   ],
+   "source": "basket"
+  },
+  "OKE": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Liquefied Natural Gas"
+   ],
+   "source": "basket"
+  },
+  "FLNG": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Liquefied Natural Gas"
+   ],
+   "source": "basket"
+  },
+  "WMB": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Construction & Engineering",
+    "Liquefied Natural Gas",
+    "Oil and Gas Midstream"
+   ],
+   "source": "basket"
+  },
+  "SRE": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Liquefied Natural Gas"
+   ],
+   "source": "basket"
+  },
+  "KMI": {
+   "primary": "Liquefied Natural Gas",
+   "themes": [
+    "Liquefied Natural Gas",
+    "Oil and Gas Midstream"
+   ],
+   "source": "basket"
+  },
+  "PBR": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "basket"
+  },
+  "VALE": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil",
+    "Steel"
+   ],
+   "source": "basket"
+  },
+  "CIG": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "basket"
+  },
+  "ITUB": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "basket"
+  },
+  "UGP": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "basket"
+  },
+  "ABEV": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "basket"
+  },
+  "VIV": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "basket"
+  },
+  "TIMB": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "basket"
+  },
+  "SBS": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "basket"
+  },
+  "PAGS": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "basket"
+  },
+  "CEPU": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "EDN": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "BBAR": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "YPF": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "LOMA": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "TGS": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "PAM": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "IRS": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "CRESY": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "TEO": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "basket"
+  },
+  "DFTX": {
+   "primary": "Psychedelics",
+   "themes": [
+    "Psychedelics"
+   ],
+   "source": "etf"
+  },
+  "CMPS": {
+   "primary": "Psychedelics",
+   "themes": [
+    "Psychedelics"
+   ],
+   "source": "etf"
+  },
+  "HELP-NE": {
+   "primary": "Psychedelics",
+   "themes": [
+    "Psychedelics"
+   ],
+   "source": "etf"
+  },
+  "RLMD": {
+   "primary": "Psychedelics",
+   "themes": [
+    "Psychedelics"
+   ],
+   "source": "etf"
+  },
+  "NBIX": {
+   "primary": "Psychedelics",
+   "themes": [
+    "Psychedelics"
+   ],
+   "source": "etf"
+  },
+  "ABBV": {
+   "primary": "Psychedelics",
+   "themes": [
+    "Biotechnology",
+    "Psychedelics"
+   ],
+   "source": "etf"
+  },
+  "NRXP": {
+   "primary": "Psychedelics",
+   "themes": [
+    "Psychedelics"
+   ],
+   "source": "etf"
+  },
+  "GHRS": {
+   "primary": "Psychedelics",
+   "themes": [
+    "Psychedelics"
+   ],
+   "source": "etf"
+  },
+  "JNJ": {
+   "primary": "Psychedelics",
+   "themes": [
+    "Psychedelics"
+   ],
+   "source": "etf"
+  },
+  "SPCX": {
+   "primary": "Space",
+   "themes": [
+    "AI",
+    "Robotics",
+    "Space",
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "SNOW": {
+   "primary": "Software",
+   "themes": [
+    "AI",
+    "Quantum Computing",
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "NTRA": {
+   "primary": "Genomics",
+   "themes": [
+    "Biotechnology",
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "GH": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics",
+    "Healthcare services"
+   ],
+   "source": "etf"
+  },
+  "TWST": {
+   "primary": "Genomics",
+   "themes": [
+    "Biotechnology",
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "KRYS": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "ADPT": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "LGND": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics",
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "BBIO": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "TVTX": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "MEDP": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "VRTX": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology",
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "COP": {
+   "primary": "Oil & gas",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Upstream"
+   ],
+   "source": "etf"
+  },
+  "EOG": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Upstream"
+   ],
+   "source": "etf"
+  },
+  "HESM": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream",
+    "Oil and Gas Upstream"
+   ],
+   "source": "etf"
+  },
+  "WES": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream",
+    "Oil and Gas Upstream"
+   ],
+   "source": "etf"
+  },
+  "OXY": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil and Gas Upstream"
+   ],
+   "source": "etf"
+  },
+  "FANG": {
+   "primary": "Oil & gas",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Upstream"
+   ],
+   "source": "etf"
+  },
+  "EQT": {
+   "primary": "Oil & gas",
+   "themes": [
+    "Oil & gas",
+    "Oil and Gas Upstream"
+   ],
+   "source": "etf"
+  },
+  "PR": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil and Gas Upstream"
+   ],
+   "source": "etf"
+  },
+  "APA": {
+   "primary": "Oil and Gas Upstream",
+   "themes": [
+    "Oil and Gas Upstream"
+   ],
+   "source": "etf"
+  },
+  "EXE": {
+   "primary": "Oil & gas",
+   "themes": [
+    "Oil & gas"
+   ],
+   "source": "etf"
+  },
+  "WAWI-OL": {
+   "primary": "Marine Shipping",
+   "themes": [
+    "Marine Shipping"
+   ],
+   "source": "etf"
+  },
+  "SEI": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "etf"
+  },
+  "SDRL": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "etf"
+  },
+  "OII": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "etf"
+  },
+  "WHD": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "etf"
+  },
+  "SLB": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "etf"
+  },
+  "BKR": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "etf"
+  },
+  "TS": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "etf"
+  },
+  "WFRD": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "etf"
+  },
+  "NOV": {
+   "primary": "Oil and Gas Equipment and Services",
+   "themes": [
+    "Oil and Gas Equipment and Services"
+   ],
+   "source": "etf"
+  },
+  "ILMN": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology",
+    "Genomics",
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "BIIB": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "GILD": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "AMGN": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology",
+    "Weight loss"
+   ],
+   "source": "etf"
+  },
+  "RPRX": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "REGN": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "ECL": {
+   "primary": "Environment",
+   "themes": [
+    "Environment",
+    "Water"
+   ],
+   "source": "etf"
+  },
+  "WAT": {
+   "primary": "Water",
+   "themes": [
+    "Water"
+   ],
+   "source": "etf"
+  },
+  "IDXX": {
+   "primary": "Pet industry",
+   "themes": [
+    "Medical devices",
+    "Pet industry",
+    "Water"
+   ],
+   "source": "etf"
+  },
+  "ROP": {
+   "primary": "Water",
+   "themes": [
+    "Water"
+   ],
+   "source": "etf"
+  },
+  "A": {
+   "primary": "Water",
+   "themes": [
+    "Water"
+   ],
+   "source": "etf"
+  },
+  "TRMB": {
+   "primary": "Space",
+   "themes": [
+    "Space",
+    "Water"
+   ],
+   "source": "etf"
+  },
+  "VLTO": {
+   "primary": "Environment",
+   "themes": [
+    "Environment",
+    "Water"
+   ],
+   "source": "etf"
+  },
+  "AWK": {
+   "primary": "Water",
+   "themes": [
+    "Water"
+   ],
+   "source": "etf"
+  },
+  "XYL": {
+   "primary": "Environment",
+   "themes": [
+    "Environment",
+    "Water"
+   ],
+   "source": "etf"
+  },
+  "MXL": {
+   "primary": "Semiconductors",
+   "themes": [
+    "Semiconductors"
+   ],
+   "source": "etf"
+  },
+  "WM": {
+   "primary": "Environment",
+   "themes": [
+    "Environment"
+   ],
+   "source": "etf"
+  },
+  "RSG": {
+   "primary": "Environment",
+   "themes": [
+    "Environment"
+   ],
+   "source": "etf"
+  },
+  "WCN": {
+   "primary": "Environment",
+   "themes": [
+    "Environment"
+   ],
+   "source": "etf"
+  },
+  "VIE-PA": {
+   "primary": "Environment",
+   "themes": [
+    "Environment"
+   ],
+   "source": "etf"
+  },
+  "GFL": {
+   "primary": "Environment",
+   "themes": [
+    "Environment"
+   ],
+   "source": "etf"
+  },
+  "CLH": {
+   "primary": "Environment",
+   "themes": [
+    "Environment"
+   ],
+   "source": "etf"
+  },
+  "WMS": {
+   "primary": "Environment",
+   "themes": [
+    "Environment"
+   ],
+   "source": "etf"
+  },
+  "APH": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "etf"
+  },
+  "CCO-TO": {
+   "primary": "Nuclear",
+   "themes": [
+    "Datacenter",
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "PEG": {
+   "primary": "Nuclear",
+   "themes": [
+    "Datacenter",
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "PDD": {
+   "primary": "China consumer",
+   "themes": [
+    "China consumer",
+    "China internet"
+   ],
+   "source": "etf"
+  },
+  "YUMC": {
+   "primary": "China consumer",
+   "themes": [
+    "China consumer"
+   ],
+   "source": "etf"
+  },
+  "LUV": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines",
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "DAL": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines",
+    "Leisure",
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "AAL": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines",
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "UAL": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines",
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "ULCC": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines"
+   ],
+   "source": "etf"
+  },
+  "SKYW": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines",
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "ALGT": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines"
+   ],
+   "source": "etf"
+  },
+  "ALK": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines"
+   ],
+   "source": "etf"
+  },
+  "JBLU": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines"
+   ],
+   "source": "etf"
+  },
+  "AC-TO": {
+   "primary": "Airlines",
+   "themes": [
+    "Airlines"
+   ],
+   "source": "etf"
+  },
+  "ENLT-TA": {
+   "primary": "Solar",
+   "themes": [
+    "Solar"
+   ],
+   "source": "etf"
+  },
+  "DORL-TA": {
+   "primary": "Solar",
+   "themes": [
+    "Solar"
+   ],
+   "source": "etf"
+  },
+  "HASI": {
+   "primary": "Solar",
+   "themes": [
+    "Solar"
+   ],
+   "source": "etf"
+  },
+  "ARGX": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "RVMD": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "NXE-TO": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "KAP": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "XE": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "MELI": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "etf"
+  },
+  "VIST": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "etf"
+  },
+  "GGAL": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "etf"
+  },
+  "BMA": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "etf"
+  },
+  "FVI-TO": {
+   "primary": "Argentina",
+   "themes": [
+    "Argentina"
+   ],
+   "source": "etf"
+  },
+  "SSRM-TO": {
+   "primary": "Silver",
+   "themes": [
+    "Argentina",
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "CSCO": {
+   "primary": "Telecom",
+   "themes": [
+    "Cybersecurity",
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "ANET": {
+   "primary": "Telecom",
+   "themes": [
+    "Datacenter",
+    "Software",
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "VZ": {
+   "primary": "Telecom",
+   "themes": [
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "T": {
+   "primary": "Telecom",
+   "themes": [
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "MSI": {
+   "primary": "Telecom",
+   "themes": [
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "TMUS": {
+   "primary": "Telecom",
+   "themes": [
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "CMCSA": {
+   "primary": "Telecom",
+   "themes": [
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "MUR": {
+   "primary": "Oil & gas",
+   "themes": [
+    "Oil & gas"
+   ],
+   "source": "etf"
+  },
+  "IFX-DE": {
+   "primary": "EV",
+   "themes": [
+    "EV"
+   ],
+   "source": "etf"
+  },
+  "NXPI": {
+   "primary": "EV",
+   "themes": [
+    "EV"
+   ],
+   "source": "etf"
+  },
+  "UBER": {
+   "primary": "Logistics",
+   "themes": [
+    "EV",
+    "Logistics",
+    "Robotaxis",
+    "Travel technology"
+   ],
+   "source": "etf"
+  },
+  "APTV": {
+   "primary": "EV",
+   "themes": [
+    "EV"
+   ],
+   "source": "etf"
+  },
+  "ALV": {
+   "primary": "EV",
+   "themes": [
+    "EV"
+   ],
+   "source": "etf"
+  },
+  "BHP": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "etf"
+  },
+  "NUE": {
+   "primary": "Steel",
+   "themes": [
+    "Construction & Engineering",
+    "Steel"
+   ],
+   "source": "etf"
+  },
+  "RS": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "etf"
+  },
+  "RIO-AX": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "etf"
+  },
+  "PKX": {
+   "primary": "Steel",
+   "themes": [
+    "Steel"
+   ],
+   "source": "etf"
+  },
+  "DHL-DE": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "UNP": {
+   "primary": "Logistics",
+   "themes": [
+    "Construction & Engineering",
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "CNR-TO": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "CSX": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "NSC": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "CP-TO": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "AMS-MC": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "EXPD": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "UPS": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "CWR-L": {
+   "primary": "Fuel Cells",
+   "themes": [
+    "Fuel Cells"
+   ],
+   "source": "etf"
+  },
+  "F3C-DE": {
+   "primary": "Fuel Cells",
+   "themes": [
+    "Fuel Cells"
+   ],
+   "source": "etf"
+  },
+  "ITM-L": {
+   "primary": "Fuel Cells",
+   "themes": [
+    "Fuel Cells"
+   ],
+   "source": "etf"
+  },
+  "NEL-OL": {
+   "primary": "Fuel Cells",
+   "themes": [
+    "Fuel Cells"
+   ],
+   "source": "etf"
+  },
+  "BLDP-TO": {
+   "primary": "Fuel Cells",
+   "themes": [
+    "Fuel Cells"
+   ],
+   "source": "etf"
+  },
+  "MRK": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pet industry",
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "NVO": {
+   "primary": "Weight loss",
+   "themes": [
+    "Pharmaceuticals",
+    "Weight loss"
+   ],
+   "source": "etf"
+  },
+  "PFE": {
+   "primary": "Weight loss",
+   "themes": [
+    "Pharmaceuticals",
+    "Weight loss"
+   ],
+   "source": "etf"
+  },
+  "BMY": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "TEVA-TA": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "GSK": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "MCK": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "COR": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "HLN": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "DHI": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding"
+   ],
+   "source": "etf"
+  },
+  "PHM": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding",
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "LEN": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding",
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "NVR": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding",
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "TOL": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding",
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "SHW": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding"
+   ],
+   "source": "etf"
+  },
+  "LOW": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding",
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "HD": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding",
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "MAS": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding"
+   ],
+   "source": "etf"
+  },
+  "LII": {
+   "primary": "Homebuilding",
+   "themes": [
+    "Homebuilding"
+   ],
+   "source": "etf"
+  },
+  "GLXY": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "etf"
+  },
+  "OPRA": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "etf"
+  },
+  "MOG-A": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "etf"
+  },
+  "HONA": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "etf"
+  },
+  "WWD": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "etf"
+  },
+  "HEI": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "etf"
+  },
+  "TDG": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "etf"
+  },
+  "NDX1-DE": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "EDPR-LS": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "VWS-CO": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "ERG-MI": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "MSFT": {
+   "primary": "Software",
+   "themes": [
+    "AI",
+    "EV",
+    "Generative AI",
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "RIO-L": {
+   "primary": "EV",
+   "themes": [
+    "EV"
+   ],
+   "source": "etf"
+  },
+  "SUN": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "MPLX": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "PAA": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "ET": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "EPD": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "USAC": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "GEL": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "ORA": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "JKS": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "SN": {
+   "primary": "Housing",
+   "themes": [
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "CVCO": {
+   "primary": "Housing",
+   "themes": [
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "SKY": {
+   "primary": "Housing",
+   "themes": [
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "JCI": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables",
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "W": {
+   "primary": "Online retail",
+   "themes": [
+    "Housing",
+    "Online retail"
+   ],
+   "source": "etf"
+  },
+  "TT": {
+   "primary": "Housing",
+   "themes": [
+    "Construction & Engineering",
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "ALLE": {
+   "primary": "Housing",
+   "themes": [
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "WSM": {
+   "primary": "Housing",
+   "themes": [
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "EQIX": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter",
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "AMT": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter",
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "SBAC": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "etf"
+  },
+  "UNIT": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "etf"
+  },
+  "CCI": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "etf"
+  },
+  "NTAP": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "etf"
+  },
+  "SMCI": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "etf"
+  },
+  "EXTR": {
+   "primary": "Datacenter",
+   "themes": [
+    "Datacenter"
+   ],
+   "source": "etf"
+  },
+  "GE": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "etf"
+  },
+  "DE": {
+   "primary": "Agriculture",
+   "themes": [
+    "Agriculture",
+    "Construction & Engineering",
+    "Space"
+   ],
+   "source": "etf"
+  },
+  "FAST": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "EMR": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "PH": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "ROK": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering",
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "ABT": {
+   "primary": "Medical devices",
+   "themes": [
+    "Medical devices"
+   ],
+   "source": "etf"
+  },
+  "ISRG": {
+   "primary": "Medical devices",
+   "themes": [
+    "Medical devices",
+    "Medical equipment",
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "MDT": {
+   "primary": "Medical devices",
+   "themes": [
+    "Medical devices"
+   ],
+   "source": "etf"
+  },
+  "DXCM": {
+   "primary": "Medical devices",
+   "themes": [
+    "Medical devices"
+   ],
+   "source": "etf"
+  },
+  "EW": {
+   "primary": "Medical devices",
+   "themes": [
+    "Medical devices"
+   ],
+   "source": "etf"
+  },
+  "SYK": {
+   "primary": "Medical devices",
+   "themes": [
+    "Medical devices"
+   ],
+   "source": "etf"
+  },
+  "BDX": {
+   "primary": "Medical devices",
+   "themes": [
+    "Medical devices"
+   ],
+   "source": "etf"
+  },
+  "RMD": {
+   "primary": "Medical devices",
+   "themes": [
+    "Medical devices"
+   ],
+   "source": "etf"
+  },
+  "BSX": {
+   "primary": "Medical devices",
+   "themes": [
+    "Medical devices"
+   ],
+   "source": "etf"
+  },
+  "VKTX": {
+   "primary": "Weight loss",
+   "themes": [
+    "Weight loss"
+   ],
+   "source": "etf"
+  },
+  "KLRA": {
+   "primary": "Weight loss",
+   "themes": [
+    "Weight loss"
+   ],
+   "source": "etf"
+  },
+  "UBSI": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "FIBK": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "ONB": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "HWC": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "EWBC": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "EBC": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "FULT": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "FHB": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "AUB": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "COLB": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "AMZN": {
+   "primary": "Space",
+   "themes": [
+    "Finance",
+    "Generative AI",
+    "Robotaxis",
+    "Software",
+    "Space"
+   ],
+   "source": "etf"
+  },
+  "NTES": {
+   "primary": "Video games",
+   "themes": [
+    "Gaming",
+    "Social media",
+    "Video games"
+   ],
+   "source": "etf"
+  },
+  "TTWO": {
+   "primary": "Video games",
+   "themes": [
+    "Gaming",
+    "Video games"
+   ],
+   "source": "etf"
+  },
+  "RBLX": {
+   "primary": "Video games",
+   "themes": [
+    "Gaming",
+    "Video games"
+   ],
+   "source": "etf"
+  },
+  "GME": {
+   "primary": "Gaming",
+   "themes": [
+    "Gaming"
+   ],
+   "source": "etf"
+  },
+  "ALL-AX": {
+   "primary": "Gaming",
+   "themes": [
+    "Gaming"
+   ],
+   "source": "etf"
+  },
+  "CDR-WA": {
+   "primary": "Gaming",
+   "themes": [
+    "Gaming"
+   ],
+   "source": "etf"
+  },
+  "BAYN-DE": {
+   "primary": "Agriculture",
+   "themes": [
+    "Agriculture"
+   ],
+   "source": "etf"
+  },
+  "CTVA": {
+   "primary": "Agriculture",
+   "themes": [
+    "Agriculture",
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "NTR-TO": {
+   "primary": "Agriculture",
+   "themes": [
+    "Agriculture"
+   ],
+   "source": "etf"
+  },
+  "ADM": {
+   "primary": "Agriculture",
+   "themes": [
+    "Agriculture",
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "ZTS": {
+   "primary": "Pet industry",
+   "themes": [
+    "Agriculture",
+    "Pet industry"
+   ],
+   "source": "etf"
+  },
+  "TSN": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Agriculture",
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "BG": {
+   "primary": "Agriculture",
+   "themes": [
+    "Agriculture"
+   ],
+   "source": "etf"
+  },
+  "BAND": {
+   "primary": "Telecom",
+   "themes": [
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "DGII": {
+   "primary": "Telecom",
+   "themes": [
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "UI": {
+   "primary": "Telecom",
+   "themes": [
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "NTCT": {
+   "primary": "Telecom",
+   "themes": [
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "GSAT": {
+   "primary": "Space",
+   "themes": [
+    "Space",
+    "Telecom"
+   ],
+   "source": "etf"
+  },
+  "ITUB4": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "etf"
+  },
+  "NU": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "etf"
+  },
+  "PETR4": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "etf"
+  },
+  "BBDC4": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "etf"
+  },
+  "BPAC11": {
+   "primary": "Brazil",
+   "themes": [
+    "Brazil"
+   ],
+   "source": "etf"
+  },
+  "NOW": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "ADBE": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "GOOG": {
+   "primary": "Robotics",
+   "themes": [
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "IOVA": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "UTHR": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "HALO": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "SYRE": {
+   "primary": "Biotechnology",
+   "themes": [
+    "Biotechnology"
+   ],
+   "source": "etf"
+  },
+  "AENA-MC": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "TCL-AX": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "NEE": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "IBE-MC": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "PAC": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "AIA-NZ": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "ENB-TO": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Construction & Engineering",
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "GET-PA": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "SO": {
+   "primary": "Construction & Engineering",
+   "themes": [
+    "Construction & Engineering"
+   ],
+   "source": "etf"
+  },
+  "BA-L": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "etf"
+  },
+  "RHM-DE": {
+   "primary": "Defense",
+   "themes": [
+    "Defense"
+   ],
+   "source": "etf"
+  },
+  "EDP-LS": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "FGXXX": {
+   "primary": "Gambling",
+   "themes": [
+    "Cannabis",
+    "Datacenter",
+    "Gambling",
+    "Memories",
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "ALWN-AT": {
+   "primary": "Gambling",
+   "themes": [
+    "Gambling"
+   ],
+   "source": "etf"
+  },
+  "LTMC-MI": {
+   "primary": "Gambling",
+   "themes": [
+    "Gambling"
+   ],
+   "source": "etf"
+  },
+  "LNW": {
+   "primary": "Gambling",
+   "themes": [
+    "Gambling"
+   ],
+   "source": "etf"
+  },
+  "SGHC": {
+   "primary": "Gambling",
+   "themes": [
+    "Gambling"
+   ],
+   "source": "etf"
+  },
+  "RSI": {
+   "primary": "Gambling",
+   "themes": [
+    "Gambling"
+   ],
+   "source": "etf"
+  },
+  "ESTC": {
+   "primary": "Quantum Computing",
+   "themes": [
+    "Quantum Computing"
+   ],
+   "source": "etf"
+  },
+  "HQ": {
+   "primary": "Quantum Computing",
+   "themes": [
+    "Quantum Computing"
+   ],
+   "source": "etf"
+  },
+  "NTNX": {
+   "primary": "Software",
+   "themes": [
+    "Quantum Computing",
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "KR": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "KDP": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "KO": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "SYY": {
+   "primary": "Leisure",
+   "themes": [
+    "Food & beverage",
+    "Leisure"
+   ],
+   "source": "etf"
+  },
+  "SBUX": {
+   "primary": "Leisure",
+   "themes": [
+    "Food & beverage",
+    "Leisure"
+   ],
+   "source": "etf"
+  },
+  "MNST": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "WMK": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "CHEF": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "TXG": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "TEM": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "CRSP": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "PSNL": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "CDNA": {
+   "primary": "Genomics",
+   "themes": [
+    "Genomics"
+   ],
+   "source": "etf"
+  },
+  "U-U-TO": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "PDN-AX": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "YCA-L": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "EFR-TO": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "DML-TO": {
+   "primary": "Nuclear",
+   "themes": [
+    "Nuclear"
+   ],
+   "source": "etf"
+  },
+  "CURA-TO": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "TRLV": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "CELT": {
+   "primary": "Robotics",
+   "themes": [
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "AMBA": {
+   "primary": "Robotics",
+   "themes": [
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "NOVT": {
+   "primary": "Robotics",
+   "themes": [
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "BFLY": {
+   "primary": "Medical equipment",
+   "themes": [
+    "Medical equipment"
+   ],
+   "source": "etf"
+  },
+  "ATEC": {
+   "primary": "Medical equipment",
+   "themes": [
+    "Medical equipment"
+   ],
+   "source": "etf"
+  },
+  "ASST": {
+   "primary": "Medical equipment",
+   "themes": [
+    "Medical equipment"
+   ],
+   "source": "etf"
+  },
+  "BBNX": {
+   "primary": "Medical equipment",
+   "themes": [
+    "Medical equipment"
+   ],
+   "source": "etf"
+  },
+  "NEOG": {
+   "primary": "Medical equipment",
+   "themes": [
+    "Medical equipment"
+   ],
+   "source": "etf"
+  },
+  "UFPT": {
+   "primary": "Medical equipment",
+   "themes": [
+    "Medical equipment"
+   ],
+   "source": "etf"
+  },
+  "ATRC": {
+   "primary": "Medical equipment",
+   "themes": [
+    "Medical equipment"
+   ],
+   "source": "etf"
+  },
+  "INSP": {
+   "primary": "Medical equipment",
+   "themes": [
+    "Medical equipment"
+   ],
+   "source": "etf"
+  },
+  "LMAT": {
+   "primary": "Medical equipment",
+   "themes": [
+    "Medical equipment"
+   ],
+   "source": "etf"
+  },
+  "ABBN-SW": {
+   "primary": "Robotics",
+   "themes": [
+    "Electrification & Renewables",
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "SU-PA": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "PRY-MI": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "NG-L": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "EOAN-DE": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "NVT": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "HUBB": {
+   "primary": "Electrification & Renewables",
+   "themes": [
+    "Electrification & Renewables"
+   ],
+   "source": "etf"
+  },
+  "RXO": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "LYFT": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "LSTR": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "XERS": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "AMRX": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "VTRS": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "INDV": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "PRGO": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "ANIP": {
+   "primary": "Pharmaceuticals",
+   "themes": [
+    "Pharmaceuticals"
+   ],
+   "source": "etf"
+  },
+  "OKTA": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "RBRK": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "SYBT": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "TRMK": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "SFNC": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "EQH": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "NBTB": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "CRBG": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "CVBF": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "FRME": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "CBC": {
+   "primary": "Banks",
+   "themes": [
+    "Banks"
+   ],
+   "source": "etf"
+  },
+  "MS": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "SCHW": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "ICE": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "MCO": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "CME": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "SPGI": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "NDAQ": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "SHOP": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "etf"
+  },
+  "XYZ": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "etf"
+  },
+  "META": {
+   "primary": "Social media",
+   "themes": [
+    "AI",
+    "Finance",
+    "Social media"
+   ],
+   "source": "etf"
+  },
+  "TOST": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "etf"
+  },
+  "USPH": {
+   "primary": "Healthcare services",
+   "themes": [
+    "Healthcare services"
+   ],
+   "source": "etf"
+  },
+  "NUTX": {
+   "primary": "Healthcare services",
+   "themes": [
+    "Healthcare services"
+   ],
+   "source": "etf"
+  },
+  "HNGE": {
+   "primary": "Healthcare services",
+   "themes": [
+    "Healthcare services"
+   ],
+   "source": "etf"
+  },
+  "CRVL": {
+   "primary": "Healthcare services",
+   "themes": [
+    "Healthcare services"
+   ],
+   "source": "etf"
+  },
+  "AMN": {
+   "primary": "Healthcare services",
+   "themes": [
+    "Healthcare services"
+   ],
+   "source": "etf"
+  },
+  "NEO": {
+   "primary": "Healthcare services",
+   "themes": [
+    "Healthcare services"
+   ],
+   "source": "etf"
+  },
+  "HCA": {
+   "primary": "Healthcare providers",
+   "themes": [
+    "Healthcare providers",
+    "Healthcare services"
+   ],
+   "source": "etf"
+  },
+  "MAR": {
+   "primary": "Leisure",
+   "themes": [
+    "Leisure"
+   ],
+   "source": "etf"
+  },
+  "LYV": {
+   "primary": "Leisure",
+   "themes": [
+    "Leisure"
+   ],
+   "source": "etf"
+  },
+  "ABNB": {
+   "primary": "Leisure",
+   "themes": [
+    "Leisure",
+    "Online retail",
+    "Travel technology"
+   ],
+   "source": "etf"
+  },
+  "EXPE": {
+   "primary": "Travel technology",
+   "themes": [
+    "Leisure",
+    "Travel technology"
+   ],
+   "source": "etf"
+  },
+  "AMC": {
+   "primary": "Leisure",
+   "themes": [
+    "Leisure"
+   ],
+   "source": "etf"
+  },
+  "PRSU": {
+   "primary": "Leisure",
+   "themes": [
+    "Leisure"
+   ],
+   "source": "etf"
+  },
+  "WLTH": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "SBET": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "AMG": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "PWP": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "MKTX": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "AAMI": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "VCTR": {
+   "primary": "Capital markets",
+   "themes": [
+    "Capital markets"
+   ],
+   "source": "etf"
+  },
+  "AEM-TO": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "ABX-TO": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "WPM-TO": {
+   "primary": "Silver",
+   "themes": [
+    "Gold",
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "FNV-TO": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "K-TO": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "NST-AX": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "PAAS-TO": {
+   "primary": "Silver",
+   "themes": [
+    "Gold",
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "VMRK": {
+   "primary": "Real estate",
+   "themes": [
+    "Housing",
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "WELL": {
+   "primary": "Real estate",
+   "themes": [
+    "Housing",
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "MHO": {
+   "primary": "Housing",
+   "themes": [
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "UMH": {
+   "primary": "Housing",
+   "themes": [
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "GRBK": {
+   "primary": "Housing",
+   "themes": [
+    "Housing"
+   ],
+   "source": "etf"
+  },
+  "HBM-TO": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "etf"
+  },
+  "BHP-AX": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "etf"
+  },
+  "ANTO-L": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "etf"
+  },
+  "GLEN-L": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "etf"
+  },
+  "KGH-WA": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "etf"
+  },
+  "FM-TO": {
+   "primary": "Copper",
+   "themes": [
+    "Copper"
+   ],
+   "source": "etf"
+  },
+  "CHWY": {
+   "primary": "Pet industry",
+   "themes": [
+    "Pet industry"
+   ],
+   "source": "etf"
+  },
+  "VIRP-PA": {
+   "primary": "Pet industry",
+   "themes": [
+    "Pet industry"
+   ],
+   "source": "etf"
+  },
+  "ODC": {
+   "primary": "Pet industry",
+   "themes": [
+    "Pet industry"
+   ],
+   "source": "etf"
+  },
+  "PETS-L": {
+   "primary": "Pet industry",
+   "themes": [
+    "Pet industry"
+   ],
+   "source": "etf"
+  },
+  "PET-TO": {
+   "primary": "Pet industry",
+   "themes": [
+    "Pet industry"
+   ],
+   "source": "etf"
+  },
+  "NESN-SW": {
+   "primary": "Pet industry",
+   "themes": [
+    "Pet industry"
+   ],
+   "source": "etf"
+  },
+  "PLD": {
+   "primary": "Real estate",
+   "themes": [
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "SPG": {
+   "primary": "Real estate",
+   "themes": [
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "DLR": {
+   "primary": "Real estate",
+   "themes": [
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "O": {
+   "primary": "Real estate",
+   "themes": [
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "PSA": {
+   "primary": "Real estate",
+   "themes": [
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "VTR": {
+   "primary": "Real estate",
+   "themes": [
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "PAYC": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "WDAY": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "QLYS": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "HL": {
+   "primary": "Silver",
+   "themes": [
+    "Gold",
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "AG-TO": {
+   "primary": "Silver",
+   "themes": [
+    "Gold",
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "BOL-ST": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "AYA-TO": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "EXK": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "BVN": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "PPTA-TO": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "ODFL": {
+   "primary": "Logistics",
+   "themes": [
+    "Logistics"
+   ],
+   "source": "etf"
+  },
+  "AGI-TO": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "EQX-TO": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "EDV-L": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "IMG-TO": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "GMIN-TO": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "DPM-TO": {
+   "primary": "Gold",
+   "themes": [
+    "Gold"
+   ],
+   "source": "etf"
+  },
+  "SABR": {
+   "primary": "Travel technology",
+   "themes": [
+    "Travel technology"
+   ],
+   "source": "etf"
+  },
+  "TRN-L": {
+   "primary": "Travel technology",
+   "themes": [
+    "Travel technology"
+   ],
+   "source": "etf"
+  },
+  "HBX-MC": {
+   "primary": "Travel technology",
+   "themes": [
+    "Travel technology"
+   ],
+   "source": "etf"
+  },
+  "OTB-L": {
+   "primary": "Travel technology",
+   "themes": [
+    "Travel technology"
+   ],
+   "source": "etf"
+  },
+  "TCOM": {
+   "primary": "Travel technology",
+   "themes": [
+    "Travel technology"
+   ],
+   "source": "etf"
+  },
+  "SDR-AX": {
+   "primary": "Travel technology",
+   "themes": [
+    "Travel technology"
+   ],
+   "source": "etf"
+  },
+  "PLS-AX": {
+   "primary": "Rare Earths",
+   "themes": [
+    "Rare Earths"
+   ],
+   "source": "etf"
+  },
+  "LYC-AX": {
+   "primary": "Rare Earths",
+   "themes": [
+    "Rare Earths"
+   ],
+   "source": "etf"
+  },
+  "CVS": {
+   "primary": "Healthcare providers",
+   "themes": [
+    "Healthcare providers"
+   ],
+   "source": "etf"
+  },
+  "ELV": {
+   "primary": "Healthcare providers",
+   "themes": [
+    "Healthcare providers"
+   ],
+   "source": "etf"
+  },
+  "VEEV": {
+   "primary": "Healthcare providers",
+   "themes": [
+    "Healthcare providers",
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "CI": {
+   "primary": "Healthcare providers",
+   "themes": [
+    "Healthcare providers"
+   ],
+   "source": "etf"
+  },
+  "HUM": {
+   "primary": "Healthcare providers",
+   "themes": [
+    "Healthcare providers"
+   ],
+   "source": "etf"
+  },
+  "CNC": {
+   "primary": "Healthcare providers",
+   "themes": [
+    "Healthcare providers"
+   ],
+   "source": "etf"
+  },
+  "DGX": {
+   "primary": "Healthcare providers",
+   "themes": [
+    "Healthcare providers"
+   ],
+   "source": "etf"
+  },
+  "LH": {
+   "primary": "Healthcare providers",
+   "themes": [
+    "Healthcare providers"
+   ],
+   "source": "etf"
+  },
+  "BWIN": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "RGA": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "SPNT": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "EG": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "AIG": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "RNR": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "MET": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "PFG": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "MCY": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "WTM": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "WY": {
+   "primary": "Timber",
+   "themes": [
+    "Timber"
+   ],
+   "source": "etf"
+  },
+  "WFG-TO": {
+   "primary": "Timber",
+   "themes": [
+    "Timber"
+   ],
+   "source": "etf"
+  },
+  "MNDI-L": {
+   "primary": "Timber",
+   "themes": [
+    "Timber"
+   ],
+   "source": "etf"
+  },
+  "SW": {
+   "primary": "Timber",
+   "themes": [
+    "Timber"
+   ],
+   "source": "etf"
+  },
+  "OR-TO": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "FRES-L": {
+   "primary": "Silver",
+   "themes": [
+    "Silver"
+   ],
+   "source": "etf"
+  },
+  "LQDT": {
+   "primary": "Online retail",
+   "themes": [
+    "Online retail"
+   ],
+   "source": "etf"
+  },
+  "SPOT": {
+   "primary": "Social media",
+   "themes": [
+    "Online retail",
+    "Social media"
+   ],
+   "source": "etf"
+  },
+  "ETSY": {
+   "primary": "Online retail",
+   "themes": [
+    "Online retail"
+   ],
+   "source": "etf"
+  },
+  "DASH": {
+   "primary": "Online retail",
+   "themes": [
+    "Online retail"
+   ],
+   "source": "etf"
+  },
+  "CART": {
+   "primary": "Online retail",
+   "themes": [
+    "Online retail"
+   ],
+   "source": "etf"
+  },
+  "P": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "CGNX": {
+   "primary": "Robotics",
+   "themes": [
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "AUR": {
+   "primary": "Robotics",
+   "themes": [
+    "Robotics"
+   ],
+   "source": "etf"
+  },
+  "PINS": {
+   "primary": "Social media",
+   "themes": [
+    "Social media"
+   ],
+   "source": "etf"
+  },
+  "MTCH": {
+   "primary": "Social media",
+   "themes": [
+    "Social media"
+   ],
+   "source": "etf"
+  },
+  "NTSK": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "VIA": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "CDNS": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "SAIL": {
+   "primary": "Cybersecurity",
+   "themes": [
+    "Cybersecurity",
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "PD": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "DT": {
+   "primary": "Software",
+   "themes": [
+    "Software"
+   ],
+   "source": "etf"
+  },
+  "V": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "etf"
+  },
+  "MA": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "etf"
+  },
+  "AXP": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "etf"
+  },
+  "COF": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "etf"
+  },
+  "CPAY": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "etf"
+  },
+  "WSE": {
+   "primary": "Finance",
+   "themes": [
+    "Finance"
+   ],
+   "source": "etf"
+  },
+  "KEEL-TO": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "etf"
+  },
+  "HIVE-TO": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "etf"
+  },
+  "MARA": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "etf"
+  },
+  "RIOT": {
+   "primary": "Crypto",
+   "themes": [
+    "Crypto"
+   ],
+   "source": "etf"
+  },
+  "MDA-TO": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "etf"
+  },
+  "FTC-L": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "etf"
+  },
+  "GRMN": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "etf"
+  },
+  "ECHO": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "etf"
+  },
+  "SIRI": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "etf"
+  },
+  "BIDU": {
+   "primary": "Robotaxis",
+   "themes": [
+    "Robotaxis"
+   ],
+   "source": "etf"
+  },
+  "WRD": {
+   "primary": "Robotaxis",
+   "themes": [
+    "Robotaxis"
+   ],
+   "source": "etf"
+  },
+  "PONY": {
+   "primary": "Robotaxis",
+   "themes": [
+    "Robotaxis"
+   ],
+   "source": "etf"
+  },
+  "TRP-TO": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "PAGP": {
+   "primary": "Oil and Gas Midstream",
+   "themes": [
+    "Oil and Gas Midstream"
+   ],
+   "source": "etf"
+  },
+  "MISXX": {
+   "primary": "Real estate",
+   "themes": [
+    "Real estate"
+   ],
+   "source": "etf"
+  },
+  "MDLZ": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "PEP": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "KHC": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "HSY": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "STZ": {
+   "primary": "Food & beverage",
+   "themes": [
+    "Food & beverage"
+   ],
+   "source": "etf"
+  },
+  "PGR": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "CB": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "TRV": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "ALL": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "AFL": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "PRU": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "HIG": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "ACGL": {
+   "primary": "Insurance",
+   "themes": [
+    "Insurance"
+   ],
+   "source": "etf"
+  },
+  "OHB-DE": {
+   "primary": "Space",
+   "themes": [
+    "Space"
+   ],
+   "source": "etf"
+  },
+  "CRON-TO": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "TLRY": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "WEED-TO": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "VFF": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "SNDL": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "ACB-TO": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "HITI-V": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "OGI-TO": {
+   "primary": "Cannabis",
+   "themes": [
+    "Cannabis"
+   ],
+   "source": "etf"
+  },
+  "U": {
+   "primary": "Video games",
+   "themes": [
+    "Video games"
+   ],
+   "source": "etf"
+  },
+  "BICO-ST": {
+   "primary": "3D printing",
+   "themes": [
+    "3D printing"
+   ],
+   "source": "etf"
+  },
+  "DSY-PA": {
+   "primary": "3D printing",
+   "themes": [
+    "3D printing"
+   ],
+   "source": "etf"
+  },
+  "PTC": {
+   "primary": "3D printing",
+   "themes": [
+    "3D printing"
+   ],
+   "source": "etf"
+  },
+  "SNPS": {
+   "primary": "3D printing",
+   "themes": [
+    "3D printing"
+   ],
+   "source": "etf"
+  },
+  "SIE-DE": {
+   "primary": "3D printing",
+   "themes": [
+    "3D printing"
+   ],
+   "source": "etf"
+  },
+  "DDD": {
+   "primary": "3D printing",
+   "themes": [
+    "3D printing"
+   ],
+   "source": "etf"
+  },
+  "MTLS": {
+   "primary": "3D printing",
+   "themes": [
+    "3D printing"
+   ],
+   "source": "etf"
+  },
+  "ADSK": {
+   "primary": "3D printing",
+   "themes": [
+    "3D printing"
+   ],
+   "source": "etf"
+  },
+  "PRLB": {
+   "primary": "3D printing",
+   "themes": [
+    "3D printing"
+   ],
+   "source": "etf"
+  },
+  "CNH": {
+   "primary": "Agriculture",
+   "themes": [
+    "Agriculture"
+   ],
+   "source": "etf"
+  },
+  "DAR": {
+   "primary": "Agriculture",
+   "themes": [
+    "Agriculture"
+   ],
+   "source": "etf"
+  },
+  "MOWI-OL": {
+   "primary": "Agriculture",
+   "themes": [
+    "Agriculture"
+   ],
+   "source": "etf"
+  }
+ },
+ "themes": {
+  "Space": "basket",
+  "Aviation - Drones": "basket",
+  "Memories": "basket",
+  "Optical Networking": "basket",
+  "Semiconductors": "basket",
+  "Datacenter": "basket",
+  "Software": "basket",
+  "Cybersecurity": "basket",
+  "Defense": "basket",
+  "Finance": "basket",
+  "Healthcare": "basket",
+  "Quantum Computing": "basket",
+  "Crypto": "basket",
+  "Lidar": "basket",
+  "EV": "basket",
+  "Automotive": "basket",
+  "Electrification & Renewables": "basket",
+  "Solar": "basket",
+  "Energy Shipping": "basket",
+  "Energy": "basket",
+  "Fuel Cells": "basket",
+  "Lithium": "basket",
+  "Batteries": "basket",
+  "Nuclear": "basket",
+  "Rare Earths": "basket",
+  "Gold": "basket",
+  "Silver": "basket",
+  "Titanium": "basket",
+  "Tungsten": "basket",
+  "Copper": "basket",
+  "Steel": "basket",
+  "Aluminium": "basket",
+  "Coal": "basket",
+  "Cruises": "basket",
+  "Marine Shipping": "basket",
+  "Logistics": "basket",
+  "Retailers": "basket",
+  "Construction & Engineering": "basket",
+  "Industrial Machinery": "basket",
+  "Industrial Distribution": "basket",
+  "Fertilizers": "basket",
+  "Contract Drilling": "basket",
+  "Oil and Gas Downstream": "basket",
+  "Oil and Gas Midstream": "basket",
+  "Oil and Gas Upstream": "basket",
+  "Oil and Gas Equipment and Services": "basket",
+  "Liquefied Natural Gas": "basket",
+  "Brazil": "basket",
+  "Argentina": "basket",
+  "Psychedelics": "etf",
+  "AI": "etf",
+  "Genomics": "etf",
+  "Oil & gas": "etf",
+  "Biotechnology": "etf",
+  "Water": "etf",
+  "China healthcare": "etf",
+  "Environment": "etf",
+  "China consumer": "etf",
+  "Airlines": "etf",
+  "Telecom": "etf",
+  "Pharmaceuticals": "etf",
+  "Homebuilding": "etf",
+  "Housing": "etf",
+  "Medical devices": "etf",
+  "China internet": "etf",
+  "Weight loss": "etf",
+  "Banks": "etf",
+  "Gaming": "etf",
+  "Agriculture": "etf",
+  "Robotics": "etf",
+  "Gambling": "etf",
+  "Food & beverage": "etf",
+  "Cannabis": "etf",
+  "Medical equipment": "etf",
+  "Capital markets": "etf",
+  "Healthcare services": "etf",
+  "Leisure": "etf",
+  "Pet industry": "etf",
+  "Vice industries": "etf",
+  "Real estate": "etf",
+  "Travel technology": "etf",
+  "Healthcare providers": "etf",
+  "Insurance": "etf",
+  "Timber": "etf",
+  "Online retail": "etf",
+  "Social media": "etf",
+  "Robotaxis": "etf",
+  "Generative AI": "etf",
+  "Humanoid robotics": "etf",
+  "Video games": "etf",
+  "3D printing": "etf"
+ }
+}
