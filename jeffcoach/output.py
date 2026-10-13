@@ -6,6 +6,8 @@ import os
 from pathlib import Path
 from typing import Iterable, Optional
 
+from . import config as C
+
 TV_EXCHANGE = {"NMS": "NASDAQ", "NGM": "NASDAQ", "NCM": "NASDAQ", "NAS": "NASDAQ", "NYQ": "NYSE", "NYS": "NYSE",
                "ASE": "AMEX", "PCX": "AMEX", "BTS": "CBOE"}
 CARD_LIMIT = 4096
@@ -32,6 +34,10 @@ def card_line(r: dict, lim: Optional[int] = None) -> str:
     """Una voce per nome: statistiche sulla prima riga, descrizione subito sotto (restano insieme) [RONIN 09/10]."""
     s = (f"• **{r['ticker']}** — RS {_fmt(r.get('rs'), '{}')} · VCP {_fmt(r.get('vcp'), '{:.1f}')} · "
          f"SMA5 {_fmt(r.get('sma5'), '{:+.1f}%')} · Atr Ext {_fmt(r.get('atr_ext'), '{:.2f}×')}")
+    if r.get("theme"):                    # tema [RONIN 13/10]: ★ = tema leading in uptrend
+        s += f"\n  {'★ ' if r.get('theme_leading') else ''}{r['theme']}" + (" (uptrend)" if r.get("theme_trend") == "up" and not r.get("theme_leading") else "")
+    if r.get("against_regime"):
+        s += " · ⚠ against the regime"
     why = r.get("reason_en") or ""
     if lim is not None and len(why) > lim:
         why = why[: lim - 1].rstrip(" ;,") + "…" if lim > 0 else ""
@@ -68,8 +74,38 @@ def sector_line(name: str, st: Optional[dict]) -> str:
     return s
 
 
+def regime_line(reg: Optional[dict]) -> str:
+    """Riga del regime in testa alla card [RONIN 13/10], come Martin-coach."""
+    if not reg:
+        return ""
+    mm = reg.get("market_monitor") or {}
+    s = f"Regime **{ {'SHORT': 'DEFENSIVE'}.get(reg['bias'], reg['bias']) }**"
+    if mm:
+        s += (f" — Market Monitor {mm['state']} (4% up {mm['up4']:.0f} / down {mm['down4']:.0f}, 10d ratio {mm['ratio10']:.2f}"
+              + (f", T2108 {mm['t2108']:.0f}" if mm.get("t2108") is not None else "") + ")")
+    else:
+        s += f" — index score {reg.get('score'):+d} (Market Monitor n/a)"
+    if reg["bias"] == "MIXED":
+        s += f" · max {C.REGIME_MIXED_MAX_FOCUS} Focus"
+    elif reg["bias"] == "SHORT":
+        s += f" · Focus only with a leading theme (max {C.REGIME_DEFENSIVE_MAX_FOCUS})"
+    return s + "\n"
+
+
+def themes_section(th: Optional[dict]) -> Optional[str]:
+    if not th or not th.get("n_themes"):
+        return None
+    L = [f"**THEMES** — ★ leading in uptrend ({len(th['leading'])} of {th['n_themes']})"]
+    L += [f"★ {t['theme']} — score {t['score']} · 1M {t['ret21']:+.1f}% · vs S&P {t['rs21']:+.1f}%" for t in th["leading"][:10]]
+    if th.get("downtrend"):
+        dt = th["downtrend"]
+        L.append(f"Downtrend, names excluded ({len(dt)}): " + ", ".join(dt[:25]) + (" …" if len(dt) > 25 else ""))
+    return "\n".join(L)[:3900]
+
+
 def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
-                      sectors: Optional[dict] = None, dtl_breaks: Optional[list[dict]] = None) -> list[str]:
+                      sectors: Optional[dict] = None, dtl_breaks: Optional[list[dict]] = None,
+                      regime: Optional[dict] = None, themes: Optional[dict] = None) -> list[str]:
     """Card: FOCUS, STALK sopra la SMA30 65m, STALK sotto [RONIN 04/10, 09/10]. Niente tabelle: una voce per nome
     con statistiche e descrizione. Ogni sezione è un embed a sé dello stesso messaggio (Discord: 4096 caratteri per
     embed, 6000 in tutto); oltre si accorciano le frasi, prima degli Stalk.
@@ -85,7 +121,7 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
         return f"**{title}**\n" + "\n\n".join(blocks)
 
     def build(f_lim, s_lim) -> list[str]:
-        parts = [f"**WATCHLIST — {title_date}**\n\n" + sect("FOCUS", focus, f_lim),
+        parts = [f"**WATCHLIST — {title_date}**\n{regime_line(regime)}\n" + sect("FOCUS", focus, f_lim),
                  sect(f"STALK — above 65m SMA30 ({len(up)})", up, s_lim),
                  sect(f"STALK — below 65m SMA30 ({len(down)})", down, s_lim)]
         if dtl_breaks:          # rotture della trendline discendente in chiusura con volume >= 1,5x [RONIN 09/10]
@@ -96,6 +132,9 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
                                       + ("" if d.get("above_sma200") else " · under SMA200"))
                     for d in dtl_breaks]
             parts.append(sect(f"DOWNTREND LINE BREAK — vol ≥1.5× ({len(rows)})", rows, s_lim))
+        ts = themes_section(themes)
+        if ts:
+            parts.append(ts)
         return parts                                # una sezione per embed, sempre [RONIN 09/10]
     # oltre i 6000 caratteri a messaggio la card continua in un secondo messaggio (discord.post_card): le frasi
     # si accorciano solo se una singola sezione supera i 4096 caratteri di un riquadro

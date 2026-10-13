@@ -53,14 +53,15 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
         industry = {}
     syms = set(meta) | D.extra_symbols()
     start = (as_of - timedelta(days=800)).isoformat()
-    daily = D.download_daily(list(syms) + ["^GSPC"], start, as_of)
+    idx_syms = [x for x in C.REGIME_INDICES if x not in syms]      # QQQ/IWM per il regime [RONIN 13/10]
+    daily = D.download_daily(list(syms) + ["^GSPC"] + idx_syms, start, as_of)
     spx = daily.get("^GSPC")
     if spx is None or spx.index[-1].date() != as_of:
         raise SystemExit(f"S&P 500 senza la barra del {as_of}: dati non pronti, non invento la lista")
 
     metrics, stale = {}, []
     for s, df in daily.items():
-        if s == "^GSPC":
+        if s == "^GSPC" or s in idx_syms:
             continue
         if df.index[-1].date() != as_of:
             stale.append(s)
@@ -105,11 +106,33 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
                  if len([g for g in SH.numeric_open(m, None) if g != "sma65"]) <= C.SHORT["pre_max_numeric_open"]]
         if pre_s:
             s65s = D.sma30_65m(pre_s, last_sessions(as_of, 6))
+    themes, reg = themes_and_regime(daily, spx, metrics, industry, as_of)
     doc = dict(session=session, as_of=as_of, meta=meta, metrics=metrics, info=info, sma65=s65, industry=industry,
-               n_downloaded=len(daily) - 1, stale=stale, num_ok=sorted(num_ok), cand=sorted(cand),
-               short_metrics=short_m, sma65_short=s65s)
+               n_downloaded=len(daily) - 1 - len(idx_syms), stale=stale, num_ok=sorted(num_ok), cand=sorted(cand),
+               short_metrics=short_m, sma65_short=s65s, themes=themes, regime=reg)
     cache.write_bytes(pickle.dumps(doc))
     return doc
+
+
+def themes_and_regime(daily: dict, spx, metrics: dict, industry: dict, as_of) -> tuple[dict, dict]:
+    """Temi (themes.py) e regime di mercato come Martin-coach (regime.py) [RONIN 13/10]. Se una fonte non risponde
+    la lista si fa lo stesso: senza temi nessuno esce per il tema, senza Market Monitor decide il punteggio indici."""
+    from . import regime as RG
+    from . import themes as TH
+    from . import themes_map as TM
+    try:
+        tmap = TM.refresh()
+        themes = TH.build(daily, spx.Close, set(metrics), metrics, industry, tmap)
+    except Exception as e:
+        log.warning("temi non disponibili: %s", e)
+        themes = {"rows": [], "ticker": {}, "error": str(e)}
+    try:
+        mm = RG.market_monitor(RG.fetch_market_monitor(), as_of)
+    except Exception as e:
+        log.warning("Market Monitor non disponibile: %s", e)
+        mm = None
+    reg = RG.regime({k: RG.index_state(daily.get(k)) for k in C.REGIME_INDICES}, mm)
+    return themes, reg
 
 
 def add_channel(m: dict, df) -> None:
@@ -423,6 +446,40 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
         if rv.get("reason_en"):
             r.m["reason_override"] = rv["reason_en"]
 
+    # temi e regime [RONIN 13/10]: fuori chi ha il tema in downtrend; prima chi ha un tema leading in uptrend;
+    # regime come Martin-coach (MIXED: al massimo 3 Focus; DEFENSIVE: solo Focus con tema leading, al massimo 3,
+    # segnati "against the regime"); gli altri Focus restano in Stalk col motivo
+    th = doc.get("themes") or {"rows": [], "ticker": {}}
+    trow = {r["theme"]: r for r in th["rows"]}
+    reg = doc.get("regime") or {"bias": "LONG", "why": ["regime non calcolato"], "score": None}
+    theme_out = {}
+    for s, r in rows.items():
+        t = trow.get(th["ticker"].get(s))
+        r.m["theme"] = t["theme"] if t else None
+        r.m["theme_trend"] = t["trend"] if t else None
+        r.m["theme_leading"] = bool(t and t["leading"])
+        r.m["theme_rank"] = t["rank"] if t else None
+        if C.THEME_EXCLUDE_DOWNTREND and t and t["trend"] == "down" and r.list != "Out":
+            theme_out[s] = t["theme"]
+            r.list = "Out"
+            r.out_reason = f"theme in downtrend: {t['theme']}"
+    rank_key = lambda r: (not r.m.get("theme_leading"), -(r.m["rs"] or 0), r.ticker)
+    regime_held = {}
+    cap = {"MIXED": C.REGIME_MIXED_MAX_FOCUS, "SHORT": C.REGIME_DEFENSIVE_MAX_FOCUS}.get(reg["bias"])
+    if cap is not None:
+        fl = sorted([r for r in rows.values() if r.list == "Focus"], key=rank_key)
+        ok = fl if reg["bias"] == "MIXED" else [r for r in fl if r.m.get("theme_leading")]
+        keep = {r.ticker for r in ok[:cap]}
+        for r in fl:
+            if r.ticker in keep:
+                r.m["against_regime"] = reg["bias"] == "SHORT"
+                continue
+            r.list = "Stalk"
+            why = (f"regime {reg['bias']}: max {cap} Focus" if reg["bias"] == "MIXED"
+                   else f"regime DEFENSIVE: Focus only with a leading theme (max {cap})")
+            r.gates.append(E.Gate("regime", False, why))
+            regime_held[r.ticker] = why
+
     short = None
     if C.SHORT["enabled"] and doc.get("short_metrics") is not None:
         from . import short as SH
@@ -443,10 +500,12 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             channel_lower_next=_r(m.get("d_lower_next")),
             gap_to_fill=_r(m.get("gap_top")) if C.GAP_GATE_ON and m.get("gap_open") else None,
             triangle_top=_r(m.get("t_top")) if m.get("t_ok") else None,
+            theme=m.get("theme"), theme_trend=m.get("theme_trend"), theme_leading=bool(m.get("theme_leading")),
+            theme_rank=m.get("theme_rank"), against_regime=bool(m.get("against_regime")),
         )
 
-    focus = sorted([r for r in rows.values() if r.list == "Focus"], key=lambda r: (-(r.m["rs"] or 0), r.ticker))
-    stalk = sorted([r for r in rows.values() if r.list == "Stalk"], key=lambda r: (-(r.m["rs"] or 0), r.ticker))
+    focus = sorted([r for r in rows.values() if r.list == "Focus"], key=rank_key)     # tema leading prima, poi RS
+    stalk = sorted([r for r in rows.values() if r.list == "Stalk"], key=rank_key)
     fpub, spub = [pub(r) for r in focus], [pub(r) for r in stalk]
 
     prev_f = set((prev or {}).get("focus", []))
@@ -499,6 +558,12 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                         touches_top=r.m["t_touch_top"], length=r.m["t_len"], rs=r.m.get("rs"))
                    for t, r in sorted(rows.items()) if r.m.get("t_ok") and not r.out_reason
                    and (r.m.get("rs") or 0) >= C.RS_FOCUS_MIN],
+        regime=dict(bias=reg["bias"], score=reg.get("score"), score_bias=reg.get("score_bias"), why=reg["why"],
+                    market_monitor=reg.get("market_monitor"), focus_held_by_regime=regime_held),
+        themes=dict(leading=[dict(theme=r["theme"], score=round(r["score"]), n=r["n"], ret21=_r(r["ret21"], 1),
+                                  rs21=_r(r["rs21"], 1)) for r in th["rows"] if r["leading"]],
+                    downtrend=[r["theme"] for r in th["rows"] if r["trend"] == "down"],
+                    excluded=theme_out, n_themes=len(th["rows"]), map_built=th.get("map_built")),
         gap_to_fill={t: _r(r.m["gap_top"]) for t, r in rows.items()
                      if r.list != "Out" and any(g.code == "gap" and not g.ok for g in r.gates)},
     )
@@ -507,10 +572,11 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                       short_tickers=short["focus"] + short["stalk"],
                       short_check=dict(candidates=short["candidates"], out_universe=short["out_universe"],
                                        earnings_excluded=short["earnings_excluded"], stale_stalk=short["stale"]))
-    detail = dict(agreed, funnel=dict(downloaded=doc["n_downloaded"], stale_last_bar=len(doc["stale"]),
+    detail = dict(agreed, theme_table=[{k: (_r(v, 3) if isinstance(v, float) else v) for k, v in r.items()}
+                                       for r in th["rows"]], funnel=dict(downloaded=doc["n_downloaded"], stale_last_bar=len(doc["stale"]),
                                       universe_numeric=len(doc["num_ok"]), candidates=len(doc["cand"]),
                                       out_universe=len(out_universe), focus=len(focus), stalk=len(stalk),
-                                      out_earnings=len(earn_out)),
+                                      out_earnings=len(earn_out), out_theme_downtrend=len(theme_out)),
                   out_universe=out_universe,
                   near_misses={r.ticker: "; ".join(g.text for g in r.fails) for r in rows.values()
                                if not r.out_reason and _near(r)},
@@ -634,6 +700,22 @@ def summary_it(res: dict, doc: dict) -> str:
     nm = res["detail"].get("near_misses") or {}
     if nm:
         L.append(f"Numeri ok ma senza pattern di continuation (fuori lista): {', '.join(sorted(nm))}")
+    rg = a.get("regime") or {}
+    if rg:
+        L.append(f"Regime: {rg['bias']} — " + "; ".join(rg.get("why") or []))
+        if rg.get("focus_held_by_regime"):
+            L.append("Focus tenuti in Stalk dal regime: " + ", ".join(sorted(rg["focus_held_by_regime"])))
+    tm = a.get("themes") or {}
+    if tm.get("n_themes"):
+        L.append(f"Temi leading in uptrend ({len(tm['leading'])} su {tm['n_themes']}): " +
+                 (", ".join(t["theme"] for t in tm["leading"]) or "nessuno"))
+        if tm.get("excluded"):
+            L.append("Esclusi per tema in downtrend: " + "; ".join(f"{t} ({v})" for t, v in sorted(tm["excluded"].items())))
+        lf = [r["ticker"] for r in res["fpub"] if r.get("theme_leading")]
+        if lf:
+            L.append("Focus con tema leading: " + ", ".join(lf))
+    elif tm.get("map_built") is None and a.get("themes") is not None:
+        L.append("Temi non disponibili oggi: nessuno escluso per il tema")
     e = a["earnings_check"]
     L.append(f"Utili {e['window']}: " + (", ".join(f"{t} {d}" for t, d in sorted(e["excluded"].items())) or "nessun nome escluso") +
              (f" · senza data: {', '.join(e['missing_dates'])}" if e["missing_dates"] else ""))
@@ -699,7 +781,8 @@ def main(argv=None) -> int:
     txt = tv_txt([(t, exch_of(t, doc)) for t in fo], [(t, exch_of(t, doc)) for t in so],
                  [(t, exch_of(t, doc)) for t in sb])
     descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"], res.get("sectors"),
-                              dtl_breaks=[d for d in (res["agreed"].get("dtl_watch") or []) if d["kind"] == "break"])
+                              dtl_breaks=[d for d in (res["agreed"].get("dtl_watch") or []) if d["kind"] == "break"],
+                              regime=res["agreed"].get("regime"), themes=res["agreed"].get("themes"))
     embeds = [{"description": d, "color": C.CARD_COLOR} for d in descs]
     sh = res.get("short")
     if sh is not None:                        # short: riquadri rossi dopo quelli long, sezioni a parte nel txt

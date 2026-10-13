@@ -95,7 +95,8 @@ def load_rows(today: date) -> list[dict]:
     rows = []
     for r in d.get("tickers") or []:
         if r.get("list") in ("Focus", "Stalk") and r.get("ticker"):
-            rows.append({"ticker": r["ticker"].upper(), "list": r["list"], "extreme_rvol_ok": bool(r.get("extreme_rvol_ok"))})
+            rows.append({"ticker": r["ticker"].upper(), "list": r["list"], "extreme_rvol_ok": bool(r.get("extreme_rvol_ok")),
+                         "against_regime": bool(r.get("against_regime"))})
     return rows
 
 
@@ -279,13 +280,13 @@ def entry_checks(price: float, lod: float, rvol: float, mins: float, ref: dict) 
 
 
 # ------------------------------------------------------------------ messaggi (formato invariato)
-def fmt_entry(t, orh, price, rvol, rvol30, need=None, lod_atr=None):
+def fmt_entry(t, orh, price, rvol, rvol30, need=None, lod_atr=None, against=False):
     lines = [f"30m high `{orh:.2f}`", f"Price: `{price:.2f}`",
              f"RVOL now: `{100 * rvol:.0f}%`", f"RVOL first 30m: `{'n/a' if rvol30 is None else f'{100 * rvol30:.0f}%'}`",
              f"RVOL needed: `{'none (liquid)' if need is None else f'{100 * need:.0f}%'}`"]
     if lod_atr is not None:
         lines.append(f"LoD: `{100 * lod_atr:.0f}%` ATR")
-    return f"{t} · Focus", "\n".join(lines)
+    return f"{t} · Focus" + (" · against the regime" if against else ""), "\n".join(lines)
 
 
 def fmt_channel(c, price, sma):
@@ -388,7 +389,8 @@ def run_once(dry_run: bool = False) -> dict:
         if recent_alert(day, t):
             rec["skipped"] = "cooldown"        # alert su questo titolo da poco: si riprova dopo
             continue
-        res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_entry(t, orh, price, rvol, rvol30, need, rec["lod_atr"]))
+        res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_entry(t, orh, price, rvol, rvol30, need, rec["lod_atr"],
+                                                                                            r.get("against_regime")))
         if res.get("sent"):
             day[k] = {"ts": datetime.now(ROME).isoformat(), "price": price, "orh": orh, "rvol": rvol, "lod_atr": rec["lod_atr"]}
             fired.append(k)

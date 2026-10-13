@@ -273,3 +273,40 @@ CHASE_MAX_ATR_ABOVE_ORH = None
 POLL_SEC = 90
 # Dopo un alert su un titolo, nessun altro alert sullo stesso titolo per questi minuti (qualsiasi tipo) [RONIN 12/10]
 ALERT_COOLDOWN_MIN = 60
+
+# ---------------------------------------------------------------- temi [RONIN 13/10]
+# Mappa dei temi come in Martin-coach (themes_map.py): basket "🐭Baskets" di TradingView, ETF tematici del foglio di
+# Andrea con le partecipazioni dal repo di NEL, modifiche a mano (state/themes/manuale.json); industria Yahoo come riserva.
+THEME_BASKETS_URL = "https://www.tradingview.com/watchlists/325428425/"
+THEME_ETF_SHEET_CSV = "https://docs.google.com/spreadsheets/d/1OSC1ovj4y5I-Yb_xBsMNvexgAOSUbLJRzbQU9W9uCNM/export?format=csv&gid=305077282"
+THEME_ETF_HOLDINGS_URL = "https://raw.githubusercontent.com/i-manage-risk/NEL/main/data/etf_holdings_cache.json"
+THEME_DV_MIN = 75e6              # un titolo conta in un tema con controvalore medio >= 75M$ (come Martin)
+THEME_MIN_MEMBERS = 3            # un tema entra in classifica con almeno 3 titoli liquidi
+# Trend del tema: indice a pesi uguali dei suoi titoli (mediana delle variazioni giornaliere).
+#   uptrend   = indice > EMA50 > EMA150 e EMA50 in salita su 5 sedute
+#   downtrend = indice < EMA50 < EMA150  -> i titoli di quel tema ESCONO da Focus e Stalk [RONIN 13/10]
+THEME_EMA_FAST, THEME_EMA_SLOW, THEME_SLOPE_BARS = 50, 150, 5
+THEME_EXCLUDE_DOWNTREND = True
+# Tema "leading": in uptrend e nel 30% più alto della classifica (punteggio = media dei ranghi di rendimento a 1 e
+# 3 mesi, forza rispetto all'S&P a 1 mese, quota di titoli Leading e quota sopra la EMA21). Premio: va prima in lista,
+# vince i posti quando il regime limita i Focus, e la card lo segna [RONIN 13/10].
+THEME_LEADING_PCTL = 0.70
+
+# ---------------------------------------------------------------- regime di mercato [RONIN 13/10] (come Martin-coach)
+# Market Monitor di Stockbee letto dal repo pubblico di NEL (regole NEL "marketRead"); punteggio sugli indici come
+# contesto e riserva se manca la riga del giorno (QQQ e IWM: trend EMA9/21 e EMA50; stato MM ±1; T2108 a 5 sedute ±1).
+MM_URLS = ("https://raw.githubusercontent.com/i-manage-risk/NEL/main/outputs/breadth_market_monitor.json",
+           "https://i-manage-risk.github.io/NEL/outputs/breadth_market_monitor.json")
+MM_DEF_DOWN4, MM_DEF_RATIO10, MM_DEF_RATIO5 = 300, 0.85, 0.70
+MM_EXP_RATIO10, MM_EXP_RATIO5, MM_EXP_UP4, MM_EXP_DOWN4 = 1.25, 1.10, 180, 150
+MM_T2108_DELTA = 5.0
+MM_BIAS = {"Expansion": "LONG", "Defensive": "SHORT", "Mixed": "MIXED"}
+REGIME_INDICES = ("QQQ", "IWM")
+BIAS_LONG_MIN, BIAS_SHORT_MAX = 2, -2
+# Gestione (JeffCoach è solo long, lo short è sospeso):
+#   LONG  (Expansion): tutti i Focus;
+#   MIXED (Mixed): al massimo 3 Focus, i migliori (tema leading prima, poi forza del tema, poi RS); gli altri in Stalk;
+#   SHORT (Defensive): niente Focus normali; restano al massimo 3 Focus "against the regime", solo con tema leading
+#                      in uptrend, e i loro alert portano la nota "against the regime".
+REGIME_MIXED_MAX_FOCUS = 3
+REGIME_DEFENSIVE_MAX_FOCUS = 3

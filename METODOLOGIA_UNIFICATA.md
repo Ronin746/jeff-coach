@@ -409,3 +409,17 @@ Stesse regole del long, al contrario, in una sezione separata e parallela (`jeff
   rottura del minimo dei primi 30 minuti, con lo stesso RVOL richiesto del long e il massimo del giorno entro 0,7 ATR
   (lo stop). Pausa di 60 minuti per titolo come nel long.
 - Per ora niente versione short di canale, trendline, PEG e pivot di Remy.
+
+## Temi e regime di mercato (dal 13/10, Ronin)
+
+**Temi** (`jeffcoach/themes_map.py`, `jeffcoach/themes.py`, stessa mappa di Martin-coach):
+- Mappa dei temi: watchlist TradingView "🐭Baskets" + ETF tematici del foglio di Andrea (gid 305077282) con le loro partecipazioni (repo NEL) + `state/themes/manuale.json`; si riscarica il lunedì o se ha più di 6 giorni. Chi non ha tema usa l'industria Yahoo.
+- Indice del tema: mediana delle variazioni giornaliere dei titoli del tema con controvalore medio ≥ 75M$ (almeno 3 titoli).
+- Trend dell'indice: **uptrend** = indice > EMA50 > EMA150 con EMA50 in salita (5 sedute); **downtrend** = indice < EMA50 < EMA150; altrimenti neutro.
+- Punteggio (0-100): media dei ranghi di rendimento a 1 e 3 mesi, forza contro l'S&P a 1 mese, quota di titoli Leading (close > EMA50 > EMA150) e quota sopra la EMA21. **Leading** = uptrend e nel 30% più alto.
+- Uso: i titoli col tema in **downtrend escono** dalla lista (motivo "theme in downtrend"); Focus e Stalk sono ordinati con i **temi leading prima**, poi per RS. Card: ★ tema accanto al nome e riquadro THEMES (temi leading, temi in downtrend).
+
+**Regime** (`jeffcoach/regime.py`, logica di Martin-coach):
+- Market Monitor di Stockbee (repo NEL, copia salvata in `state/market_monitor.json`) sulla seduta di riferimento: Defensive se 4% down ≥ 300 o ratio 10g < 0,85 o (ratio 5g < 0,70 e down > 2× up); Expansion se ratio 10g ≥ 1,25, ratio 5g ≥ 1,10, up ≥ 180 e down < 150; altrimenti Mixed.
+- Bias: Expansion → LONG, Mixed → MIXED, Defensive → DEFENSIVE. Punteggio indici (QQQ trend EMA9/21 e EMA50, IWM trend, MM ±1, T2108 a 5 sedute ±1) come contesto; decide solo se manca il Market Monitor.
+- Gestione (JeffCoach è solo long): LONG nessun limite; MIXED al massimo 3 Focus (prima i temi leading, poi RS); DEFENSIVE solo Focus con tema leading, al massimo 3, segnati **"against the regime"** sulla card e negli alert di Sydney. Gli altri Focus restano in Stalk col motivo "regime".
