@@ -8,9 +8,8 @@ Watchlist Focus/Stalk sul metodo di Jeff Sun (@jfsrev), costruita ogni giorno di
 
 | Quando (Roma) | Dove | Cosa |
 |---|---|---|
-| lun–ven, ~08:00–09:00 | GitHub Actions: `lista.yml` | Calcola la lista: universo Yahoo, gate, doppia lettura del pattern, utili. Fa commit in `data/`. |
-| lun–ven, ~10:15 | Attività programmata di Claude ([REVISIONE.md](REVISIONE.md)) | Revisione a occhio dei Focus: può solo declassare. Push di `review.json` e riepilogo a Ronin. |
-| subito dopo | GitHub Actions: `card.yml` | Applica la revisione e pubblica la card Discord con il txt TradingView (POST la prima volta, poi PATCH). Se la revisione non arriva, la card parte comunque verso le 12:30–13:30. |
+| lun–ven, mattino | Server (`fasi.sh lista`) | Calcola la lista: universo Yahoo, gate, lettura unica del pattern, utili. Fa commit in `data/`. |
+| lun–ven, 10:45 | Server (`fasi.sh card`) | Pubblica la card Discord con il txt TradingView (POST la prima volta, poi PATCH). GitHub `card.yml` fa da riserva alle 12:30–13:30. |
 | lunedì, ~09:00 | GitHub Actions: `weekly.yml` | Weekly sul close del venerdì, niente Discord. |
 | in seduta USA | PC di Ronin ([cartella locale](#parte-locale)) | Alert di ingresso (30m ORH) e RVOL, più lo scanner di Remy |
 
@@ -22,8 +21,8 @@ I cron di GitHub sono in UTC e possono partire con qualche minuto di ritardo. Pe
 data/coach-agreed/today.json          lista pubblica del giorno (la leggono gli alert)
 data/coach-agreed/YYYY-MM-DD.json     storico
 data/coach-agreed/watchlist_*.txt     import TradingView (###FOCUS,...,###STALK,...)
-data/watchlists/focus_YYYY-MM-DD.json dettaglio: ogni gate di ogni nome, metriche, letture A/B
-data/state/daily_YYYY-MM-DD/          card.json, summary_it.md, earnings.json, review.json, discord_post.json
+data/watchlists/focus_YYYY-MM-DD.json dettaglio: ogni gate di ogni nome, metriche, lettura del pattern
+data/state/daily_YYYY-MM-DD/          card.json, summary_it.md, earnings.json, discord_post.json
 data/coach-agreed/weekly_*.json       weekly
 ```
 

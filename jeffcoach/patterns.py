@@ -1,4 +1,9 @@
-"""Lettura C del pattern: struttura con pivot e trendline, come si guarda un grafico a mano.
+"""Pattern: la lettura unica [RONIN 13/10]. Struttura con pivot e trendline, come si guarda un grafico a mano.
+
+Sostituisce le letture A (Dua, range su ADR) e B (Sydney, in ATR), che misuravano solo ampiezze e quindi non
+distinguevano un flag da un rising wedge o da un triangolo discendente, e davano esiti diversi sugli stessi grafici
+(A misurava 10 sedute che comprendevano la fine della spinta; B cercava la spinta solo negli ultimi 15 giorni).
+Qui la spinta si misura prima della base, la base dal picco a oggi, e la forma si legge dalle linee.
 
 Fonti:
   - Qullamaggie, "breakout": spinta forte nei 1-3 mesi prima, poi consolidamento ordinato con minimi
@@ -18,7 +23,7 @@ Come lavora:
      lista chiusa di Ronin);
   4. controlla che si stia stringendo, che il close sia vicino alla linea alta e non già oltre,
      che le medie reggano.
-Tutte le soglie sono in config.PATTERN_C.
+Tutte le soglie sono in config.PATTERN. Il giudizio è `reading()`: tight, forming o none.
 """
 from __future__ import annotations
 
@@ -77,12 +82,12 @@ def _best_line(idx: list[int], y: np.ndarray, series: np.ndarray, start: int, en
 
 
 def read_structure(df: pd.DataFrame, atr: float) -> dict:
-    """Misure grezze della struttura. Nessun giudizio qui: lo dà reading_c."""
-    p = C.PATTERN_C
+    """Misure grezze della struttura. Nessun giudizio qui: lo dà reading()."""
+    p = C.PATTERN
     c, h, l, v = (df[k].to_numpy(dtype=float) for k in ("Close", "High", "Low", "Volume"))
     n = len(c)
     out: dict = {"c_ok_data": False}
-    if n < 120 or not atr:
+    if n < 90 or not atr:                             # ~4 mesi di storia: bastano anche per le IPO (base a U)
         return out
     ema10, ema20 = I.ema(df.Close, 10).to_numpy(), I.ema(df.Close, 20).to_numpy()
     sma50 = I.sma(df.Close, 50).to_numpy()
@@ -243,7 +248,7 @@ def describe_triangle(m: dict) -> str:
 
 
 def shape(m: dict) -> str:
-    p = C.PATTERN_C
+    p = C.PATTERN
     su, sl, flat = m["c_slope_up_atr"], m["c_slope_lo_atr"], p["flat_slope_atr"]
     conv = m["c_width_atr"] < m["c_width0_atr"] - 0.3
     if abs(su) <= flat and abs(sl) <= flat:
@@ -263,7 +268,7 @@ def shape(m: dict) -> str:
     if su > flat and sl > flat:
         if conv:
             return "rising wedge"
-        return "tight channel up" if m["c_width_atr"] <= C.PATTERN_C["channel_ok_width_atr"] else "channel up"
+        return "tight channel up" if m["c_width_atr"] <= C.PATTERN["channel_ok_width_atr"] else "channel up"
     if su > flat and sl <= flat:
         return "broadening"
     return "box"
@@ -272,49 +277,74 @@ def shape(m: dict) -> str:
 BAD_SHAPES = {"rising wedge", "channel up", "broadening", "descending triangle"}   # lista chiusa di Ronin (METODOLOGIA §6)
 
 
-def reading_c(m: dict) -> tuple[bool, list[str], list[str]]:
-    """Giudizio della lettura C. Ritorna ok, motivi (detail), motivi brevi (card).
-    Il triangolo ascendente è un modo in più per passare: se la base non va ma il triangolo sì, C è stretta."""
-    ok, why, sh = _reading_c_base(m)
-    if not ok and m.get("t_ok"):
+def reading(m: dict) -> tuple[str, list[str], list[str]]:
+    """Giudizio unico sul pattern. Ritorna (stato, motivi, motivi brevi per la card).
+      tight   = pattern ammesso, già stretto e vicino alla linea alta (il gate pattern è chiuso);
+      forming = pattern ammesso ma non ancora pronto: basta per lo Stalk, non per il Focus;
+      none    = nessun pattern di continuation ammesso.
+    Il triangolo ascendente è un modo in più per essere ammessi [RONIN 08/10]: se la base non passa ma il
+    triangolo sì, il pattern è il triangolo."""
+    state, why, sh = _reading_base(m)
+    if state != "tight" and m.get("t_ok"):
         m["c_shape_base"] = m.get("c_shape")
         m["c_shape"] = "ascending triangle"
-        return True, [], []
-    return ok, why, sh
+        tw, tsh = _bar_and_volume(m)
+        return ("forming" if tw else "tight"), tw, tsh
+    if state == "none" and m.get("t_found") and not any("50-day" in w or "support" in w for w in m.get("t_why") or []):
+        m["c_shape_base"] = m.get("c_shape")
+        m["c_shape"] = "ascending triangle"
+        tw = list(m.get("t_why") or [])
+        return "forming", tw, tw
+    return state, why, sh
 
 
-def _reading_c_base(m: dict) -> tuple[bool, list[str], list[str]]:
-    p = C.PATTERN_C
+def _reading_base(m: dict) -> tuple[str, list[str], list[str]]:
+    p = C.PATTERN
     if not m.get("c_ok_data"):
-        return False, ["short history"], ["short history"]
-    why, sh = [], []
+        return "none", ["short history"], ["short history"]
+    hard, hard_sh, soft, soft_sh = [], [], [], []
     if m["c_thrust_pct"] < p["thrust_min_pct"] and m["c_thrust_atr"] < p["thrust_min_atr"]:
-        why.append(f"no real prior thrust (+{m['c_thrust_pct']:.0f}%, {m['c_thrust_atr']:.1f} ATR)"); sh.append("no prior thrust")
+        hard.append(f"no real prior thrust (+{m['c_thrust_pct']:.0f}%, {m['c_thrust_atr']:.1f} ATR)"); hard_sh.append("no prior thrust")
     if m["c_base_len"] < p["base_min_bars"] - (1 if m.get("c_kind") == "tight at the highs" else 0):
-        why.append(f"still running, {m['c_base_len']} bars off the high"); sh.append("no base yet")
         m["c_shape"] = "no base"
-        return False, why, sh
+        return "none", hard + [f"still running, {m['c_base_len']} bars off the high"], hard_sh + ["still running"]
     if m["c_retrace"] > p["retrace_max"] or m["c_depth_pct"] > p["depth_max_pct"]:
-        why.append(f"pullback {m['c_depth_pct']:.0f}% ({m['c_retrace'] * 100:.0f}% of the thrust), too deep"); sh.append("pullback too deep")
+        hard.append(f"pullback {m['c_depth_pct']:.0f}% ({m['c_retrace'] * 100:.0f}% of the thrust), too deep"); hard_sh.append("pullback too deep")
     s = shape(m)
     m["c_shape"] = s
     if s in BAD_SHAPES:
-        why.append(s); sh.append(s)
+        hard.append(s); hard_sh.append(s)
+    if m["c_close_vs_sma50_atr"] < 0 or m["c_closes_under_sma50"] >= p["sma50_max_closes_under"]:
+        hard.append("lost the 50-day during the base"); hard_sh.append("lost the 50")
+    # da qui in poi: pattern ammesso ma non ancora pronto
     if m["c_width_atr"] > p["width_max_atr"]:
-        why.append(f"range between the lines {m['c_width_atr']:.1f} ATR, wide"); sh.append(f"wide ({m['c_width_atr']:.1f} ATR)")
-    tight = m["c_range5_atr"] <= p["range5_max_atr"] or m["c_atr5_atr20"] <= p["atr5_atr20_max"]
-    if not tight:
-        why.append(f"not tightening (5-day range {m['c_range5_atr']:.1f} ATR)"); sh.append("not tightening")
+        soft.append(f"range between the lines {m['c_width_atr']:.1f} ATR, wide"); soft_sh.append(f"wide ({m['c_width_atr']:.1f} ATR)")
+    if m["c_range5_atr"] > p["range5_max_atr"]:
+        soft.append(f"not tightening (5-day range {m['c_range5_atr']:.1f} ATR)"); soft_sh.append(f"5d range {m['c_range5_atr']:.1f} ATR")
+    w, wsh = _bar_and_volume(m)
+    soft += w; soft_sh += wsh
     d = m["c_dist_upper_atr"]
     if d < -p["broken_above_atr"]:
-        why.append(f"already {abs(d):.1f} ATR above the trendline"); sh.append("already broken out")
+        soft.append(f"already {abs(d):.1f} ATR above the trendline"); soft_sh.append("already broken out")
     elif d > p["dist_upper_max_atr"]:
-        why.append(f"{d:.1f} ATR under the trendline"); sh.append(f"{d:.1f} ATR under the line")
+        soft.append(f"{d:.1f} ATR under the trendline"); soft_sh.append(f"{d:.1f} ATR under the line")
     if m["c_close_vs_ema20_atr"] < -p["ema20_tol_atr"]:
-        why.append("closed under the 20 EMA"); sh.append("under 20 EMA")
-    if m["c_close_vs_sma50_atr"] < 0 or m["c_closes_under_sma50"] >= p["sma50_max_closes_under"]:
-        why.append("lost the 50-day during the base"); sh.append("lost the 50")
-    return (not why), why, sh
+        soft.append("closed under the 20 EMA"); soft_sh.append("under 20 EMA")
+    if hard:
+        return "none", hard + soft, hard_sh + soft_sh
+    return ("forming" if soft else "tight"), soft, soft_sh
+
+
+def _bar_and_volume(m: dict) -> tuple[list[str], list[str]]:
+    """Jeff: si passa a Focus solo dopo sedute strette con volume in calo, mai dopo una seduta larga."""
+    p, why, sh = C.PATTERN, [], []
+    lr = m.get("last_range_adr")
+    if lr is not None and lr > p["last_range_adr_max"]:
+        why.append(f"last bar {lr:.1f}× ADR, wide"); sh.append(f"last bar {lr:.1f}× ADR")
+    vd = m.get("c_vol_dryup")
+    if vd is not None and vd >= p["vol_contract_max"]:
+        why.append(f"volume not contracting ({vd:.2f}× the average)"); sh.append("volume not drying up")
+    return why, sh
 
 
 def describe(m: dict) -> str:
@@ -325,7 +355,7 @@ def describe(m: dict) -> str:
     extra = []
     if m.get("c_undercut_reclaim"):
         extra.append("undercut & reclaim")
-    if m.get("c_vol_dryup") is not None and m["c_vol_dryup"] < 0.8:
+    if m.get("c_vol_dryup") is not None and m["c_vol_dryup"] < C.PATTERN["dryup_note"]:
         extra.append("volume drying up")
     line = m.get("c_upper_next")
     lvl = "" if line is None else f", line {line:.2f}"

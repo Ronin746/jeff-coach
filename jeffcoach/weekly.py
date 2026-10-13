@@ -1,7 +1,7 @@
 """Weekly watchlist del lunedì, sul close del venerdì [RONIN 06/10].
 
 Stessi gate della daily, con queste differenze:
-  - pattern, VCP (5/20/50), compressione ed EMA 9 letti su barre SETTIMANALI (W-FRI);
+  - pattern (lettura unica), VCP (5/20/50), compressione ed EMA 9 letti su barre SETTIMANALI (W-FRI);
   - close entro 1,5 ATR settimanali dalla EMA 9 settimanale (scarto 9/21 irrilevante);
   - al posto della SMA30 65m: close entro ~5% dalla SMA 25 giornaliera;
   - RS = quello daily (pine_replay, >= 80); universo, ATR%, adv$, Atr Ext (SMA50 daily), SMA200 e utili come la daily.
@@ -23,6 +23,7 @@ import pandas as pd
 from . import config as C
 from . import data as D
 from . import engine as E
+from . import patterns as P
 from .calendar_us import ROME, is_session, next_session, prev_session, sessions_from, today_rome
 from .output import write_atomic
 
@@ -56,12 +57,10 @@ def weekly_gates(md: dict, mw: dict) -> list[E.Gate]:
                     "loose weekly VCP" if v is not None else "weekly VCP n/a"))
     cd = mw["compression_days"]
     g.append(E.Gate("compw", cd >= C.COMPRESSION_DAYS_MIN, f"{cd} tight weeks in the last {C.COMPRESSION_WINDOW}", f"{cd} tight weeks"))
-    a_ok, a_why, a_sh = E.reading_a(mw)
-    b_ok, b_why, b_sh = E.reading_b(mw)
-    mw.update(pattern_a_ok=a_ok, pattern_a_why=a_why, pattern_b_ok=b_ok, pattern_b_why=b_why)
-    p_ok = (a_ok and b_ok) if C.WEEKLY_PATTERN_REQUIRE_BOTH else (a_ok or b_ok)
-    g.append(E.Gate("pattern", p_ok, "weekly pattern: " + "; ".join(a_why[:1] + b_why[:1]),
-                    "weekly pattern " + ", ".join(a_sh[:1] + b_sh[:1])))
+    st, why, sh = P.reading(mw)
+    mw.update(pattern_state=st, pattern_why=why, pattern_ok=st == "tight")
+    g.append(E.Gate("pattern", st == "tight", "weekly pattern: " + "; ".join(why[:2]),
+                    "weekly pattern " + ", ".join(sh[:2])))
     return g
 
 
@@ -123,7 +122,7 @@ def main(argv=None) -> int:
         if E.universe_check(md, doc["info"].get(s, {}), s):
             continue
         gates = weekly_gates(md, mw)
-        m = {**md, **{k: mw[k] for k in ("pattern_a_ok", "pattern_b_ok", "pattern_a_why", "pattern_b_why")}}
+        m = {**md, **{k: mw[k] for k in ("pattern_state", "pattern_ok", "pattern_why")}}
         lst = E.classify(m, gates, s in prev_listed)
         if lst != "Out":
             rows[s] = (lst, md, mw, gates)
@@ -142,10 +141,10 @@ def main(argv=None) -> int:
         lst, md, mw, gates = rows[s]
         fails = [g for g in gates if not g.ok]
         reason = "; ".join(g.short for g in fails if g.code != "pattern") or "; ".join(g.short for g in fails) or \
-            f"{E.pattern_label(mw)} on the weekly, {mw['compression_days']} tight weeks"
+            f"{P.describe(mw)} on the weekly, {mw['compression_days']} tight weeks"
         return dict(ticker=s, list=lst, rs=md["rs"], vcp_weekly=E._r(mw["vcp"]), sma25_dist=E._r((md["close"] / md["sma25"] - 1) * 100),
                     atr_ext=E._r(md["ext"]), ema9w_dist_atr=E._r(mw["ema9_dist_atr"]), reason_en=reason,
-                    pattern_a=("tight" if mw["pattern_a_ok"] else "wide"), pattern_b=("tight" if mw["pattern_b_ok"] else "wide"),
+                    pattern=mw["pattern_state"], pattern_shape=mw.get("c_shape"),
                     open_gates=[g.code for g in fails])
     key = lambda s: (-(rows[s][1]["rs"] or 0), s)
     focus = sorted([s for s in rows if rows[s][0] == "Focus"], key=key)
@@ -158,11 +157,11 @@ def main(argv=None) -> int:
     if not a.dry_run:
         write_atomic(C.WATCHLISTS / f"weekly_{monday}.json", out)
         write_atomic(C.AGREED / f"weekly_{monday}.json", out)
-    dis = [f"{t['ticker']} (A {t['pattern_a']} / B {t['pattern_b']})" for t in out["tickers"]
-           if t["list"] == "Stalk" and t["pattern_a"] != t["pattern_b"] and t["open_gates"] == ["pattern"]]
+    forming = [f"{t['ticker']} ({t['pattern_shape']})" for t in out["tickers"]
+               if t["list"] == "Stalk" and t["pattern"] == "forming" and t["open_gates"] == ["pattern"]]
     summ = (f"**Weekly {monday}** (close {as_of.strftime('%d/%m')})\nFocus ({len(focus)}): {', '.join(focus) or 'nessuno'}\n"
             f"Stalk ({len(stalk)}): {', '.join(stalk) or 'nessuno'}\n"
-            + (f"Pattern settimanale, letture discordanti: {'; '.join(dis)}\n" if dis else "")
+            + (f"Pattern settimanale in formazione (numeri ok, manca solo il pattern): {'; '.join(forming)}\n" if forming else "")
             + f"Utili {lo}..{hi}: " + (", ".join(f"{t} {d}" for t, d in excluded.items()) or "nessun nome escluso"))
     write_atomic(work / "summary_it.md", summ, as_json=False)
     print(summ)

@@ -1,4 +1,4 @@
-"""Controlli minimi su lettura C, forza del gruppo e scadenza degli Stalk (dati sintetici)."""
+"""Controlli minimi sulla lettura unica del pattern, forza del gruppo e scadenza degli Stalk (dati sintetici)."""
 import numpy as np
 import pandas as pd
 
@@ -18,22 +18,24 @@ def test_flag_dopo_spinta_e_stretto():
     thrust = list(np.linspace(52, 80, 25))                 # +54% in 25 sedute
     flag = [79.5, 79, 78.6, 78.9, 78.4, 78.7, 78.5, 78.8]  # pausa stretta sotto il massimo
     df = _df(base + thrust + flag)
+    df.loc[df.index[-5:], "Volume"] = 6e5                 # volume in calo nella pausa
     m = P.read_structure(df, atr=float(df.Close.iloc[-1] * 0.02))
-    ok, why, _ = P.reading_c(m)
-    assert ok, why
+    m["last_range_adr"] = 0.6
+    st, why, _ = P.reading(m)
+    assert st == "tight", why
     assert m["c_thrust_pct"] > 25
 
 
 def test_niente_spinta_niente_pattern():
     df = _df(list(np.linspace(50, 55, 160)))
     m = P.read_structure(df, atr=1.0)
-    ok, why, _ = P.reading_c(m)
-    assert not ok
+    st, why, _ = P.reading(m)
+    assert st == "none"
 
 
 def test_scadenza_stalk_carry():
     gates = [E.Gate("rs", True), E.Gate("ext", False, "x"), E.Gate("sma5", False, "y"), E.Gate("pattern", False, "p")]
-    m = {"above_sma200": True, "rs": 90, "pattern_a_ok": False, "pattern_b_ok": False}
+    m = {"above_sma200": True, "rs": 90, "pattern_state": "none"}
     assert E.classify(m, gates, was_listed=True) == "Stalk"     # tenuto solo dalla regola dei 2 gate
     assert E.classify(m, gates, was_listed=False) == "Out"      # come nuovo non entrerebbe: conta la scadenza
 
@@ -52,3 +54,10 @@ def test_group_strength_percentili():
                         **{f"B{i}": {"industry": "Debole", "sector": "S"} for i in range(3)}}}
     per, groups = group_strength(doc)
     assert per["A0"]["group_pctl"] == 100 and per["B0"]["group_pctl"] == 0
+
+
+def test_stalk_nuovo_con_pattern_in_formazione():
+    gates = [E.Gate("rs", True), E.Gate("ext", False, "x"), E.Gate("pattern", False, "p")]
+    m = {"above_sma200": True, "rs": 90, "pattern_state": "forming"}
+    assert E.classify(m, gates) == "Stalk"                       # un gate numerico aperto + pattern ammesso
+    assert E.classify(dict(m, pattern_state="none"), gates) == "Out"

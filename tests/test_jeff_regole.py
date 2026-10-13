@@ -65,19 +65,34 @@ def test_gap_spento():
     assert C.GAP_GATE_ON is False          # [RONIN 08/10] da rifare prima di usarlo
 
 
-def test_base_dopo_ritracciamento_sul_pivot_e_stretta():
-    """Caso HPQ 08/10 (Focus di Jeff, mini triangolo ascendente): base nuova dopo un ritracciamento,
-    prezzo sul pivot della base ma oltre 10% sotto il vecchio massimo. A e B devono vederla stretta."""
-    from jeffcoach import engine as E
-    m = dict(a_range10_adr=1.6, a_off_high20_pct=-10.5, last_range_adr=0.5,
-             a_close5_adr=0.7, a_thrust60_pct=55.0, b_rally20_atr=4.6, b_pullback_atr=4.4, b_thrust_atr=7.5,
-             c_retrace=0.39, b_slope_h8=0.13, b_slope_l8=0.13, b_last_range_atr=0.53, ret1_pct=0.6,
-             b_range5_atr=1.35, b_dist_hi10_atr=0.32)
-    assert E.reading_a(m)[0] and E.reading_b(m)[0]
-    m2 = dict(m, c_retrace=0.7)               # ha restituito più di metà della spinta: non è più una base
-    assert not E.reading_b(m2)[0]
-    m3 = dict(m, a_off_high20_pct=-31.0)       # oltre 30% sotto il massimo a 20 giorni
-    assert not E.reading_a(m3)[0]
+def _base(**kw):
+    """Misure della lettura unica per una base ascendente stretta sul pivot (caso HPQ 08/10, Focus di Jeff)."""
+    m = dict(c_ok_data=True, c_kind="pullback base", c_thrust_pct=40.0, c_thrust_atr=9.0, c_base_len=20,
+             c_retrace=0.39, c_depth_pct=12.0, c_slope_up_atr=0.0, c_slope_lo_atr=0.10, c_width_atr=1.8,
+             c_width0_atr=4.0, c_range5_atr=1.35, last_range_adr=0.5, c_dist_upper_atr=0.3,
+             c_close_vs_ema20_atr=0.2, c_close_vs_sma50_atr=2.0, c_closes_under_sma50=0, c_vol_dryup=0.7)
+    m.update(kw)
+    return m
+
+
+def test_lettura_unica_base_stretta_sul_pivot():
+    """Base nuova dopo un ritracciamento, prezzo sul pivot e stretta: pattern tight (Focus possibile)."""
+    st, why, _ = P.reading(_base())
+    assert st == "tight", why
+
+
+def test_lettura_unica_tre_esiti():
+    assert P.reading(_base(c_retrace=0.7))[0] == "none"            # ha restituito più di metà della spinta
+    assert P.reading(_base(c_thrust_pct=10.0, c_thrust_atr=3.0))[0] == "none"   # nessuna spinta prima della base
+    assert P.reading(_base(c_close_vs_sma50_atr=-0.5))[0] == "none"  # persa la 50 durante la base
+    st, why, _ = P.reading(_base(c_slope_up_atr=-0.10, c_slope_lo_atr=0.0))
+    assert st == "none" and "descending triangle" in why           # forma esclusa (casi RNG, FIVN, SN del 09/10)
+    st, why, _ = P.reading(_base(c_slope_up_atr=0.10, c_slope_lo_atr=0.20, c_width_atr=1.0))
+    assert st == "none" and "rising wedge" in why
+    assert P.reading(_base(c_range5_atr=2.6))[0] == "forming"       # ammesso ma non ancora stretto: Stalk
+    assert P.reading(_base(last_range_adr=1.6))[0] == "forming"     # Jeff: mai dopo una seduta larga
+    assert P.reading(_base(c_dist_upper_atr=2.0))[0] == "forming"   # lontano dal pivot
+    assert P.reading(_base(c_vol_dryup=1.2))[0] == "forming"        # Jeff: volume in calo prima del Focus
 
 
 def test_trendline_discendente_rotta_con_volume():

@@ -1,6 +1,6 @@
 name: Card Discord
 
-# La card esce dal server alle 10:45 di Roma, con la revisione già applicata se è arrivata [RONIN 11/10].
+# La card esce dal server alle 10:45 di Roma [RONIN 11/10]. La revisione a occhio è stata tolta [RONIN 13/10].
 # Qui restano solo i cron di riserva, che pubblicano la card se alle 12:30/13:30 di Roma non è ancora uscita:
 # 10:30 e 11:30 UTC = 12:30/13:30 Roma (ora legale), 11:30/12:30 (ora solare).
 on:
@@ -40,7 +40,7 @@ jobs:
           S=$(python -c "from jeffcoach.calendar_us import today_rome,is_session;d=today_rome();print(d if is_session(d) else 'none')")
           if [ "$S" != "none" ] && [ ! -f "data/coach-agreed/$S.json" ]; then echo "Lista $S non ancora pronta"; S=none; fi
           echo "session=$S" >> "$GITHUB_OUTPUT"
-      - name: Card già pubblicata senza nuova revisione?
+      - name: Card già pubblicata?
         id: chk
         if: steps.s.outputs.session != 'none'
         run: |
@@ -54,7 +54,7 @@ jobs:
           path: data/state/daily_${{ steps.s.outputs.session }}/compute.pkl
           key: compute-${{ steps.s.outputs.session }}-
           restore-keys: compute-${{ steps.s.outputs.session }}-
-      - name: Applica la revisione e pubblica
+      - name: Ricalcola dalla cache e pubblica
         if: steps.s.outputs.session != 'none' && steps.chk.outputs.skip != 'true'
         run: |
           S=${{ steps.s.outputs.session }}

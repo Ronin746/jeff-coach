@@ -24,7 +24,9 @@ from . import engine as E
 log = logging.getLogger("jeffcoach.short")
 
 K = C.SHORT["mirror_k"]
-LABELS = {"flag": "bear flag", "pennant": "bear pennant", "ascending base": "descending base", "box": "box"}
+LABELS = {"bull flag": "bear flag", "pennant": "bear pennant", "ascending base": "descending base", "box": "box",
+          "flat base": "flat base", "falling wedge": "rising wedge (bear)", "tight channel up": "tight channel down",
+          "ascending triangle": "descending triangle (bear)"}
 
 
 def mirror(df: pd.DataFrame) -> pd.DataFrame:
@@ -84,7 +86,7 @@ def gate_short_text(g: E.Gate, m: dict) -> str:
     if g.code == "sma200" and not m["above_sma200"]:
         return "above the SMA200"
     if g.code == "pattern":
-        return "pattern " + g.short.replace("pattern ", "").replace("still trending", "still falling")
+        return "pattern " + g.short.replace("pattern ", "").replace("still running", "still falling")
     return SHORT_TEXT.get(g.code, g.short)
 
 
@@ -92,7 +94,7 @@ def reason_short(lst: str, m: dict, gates: list[E.Gate], orig: dict) -> str:
     if lst == "Focus":
         lab = LABELS.get(E.pattern_label(m), "box")
         lo, hi = K / m["range10_hi"], K / m["range10_lo"]
-        x = m["a_off_high20_pct"] / 100                  # capovolto: sotto il massimo a 20 giorni
+        x = m["off_high20_pct"] / 100                  # capovolto: sotto il massimo a 20 giorni
         above_low = (1 / (1 + x) - 1) * 100                 # vero: sopra il minimo a 20 giorni
         return (f"{lab} {E._px(lo)}–{E._px(hi)}, {above_low:.1f}% above the 20-day low, "
                 f"{m['compression_days']} tight days")
@@ -168,7 +170,7 @@ def build_short(doc: dict, prev: Optional[dict], info: dict, earn: dict, window:
             sma5=E._r(o["sma5_dist_pct"]), atr_ext=E._r(o["ext"]),
             reason_en=reason_short(r.list, m, r.gates, o) + ("" if m["under_sma200"] else " · above SMA200"),
             under_sma200=m["under_sma200"],
-            pattern_a=("tight" if m.get("pattern_a_ok") else "wide"), pattern_b=("tight" if m.get("pattern_b_ok") else "wide"),
+            pattern=m.get("pattern_state"), pattern_shape=m.get("c_shape"),
             open_gates=[g.code for g in r.fails], extreme_rvol_ok=False, prior_day_low=E._r(o["low"]),
             industry=inf.get("industry") or meta.get("industry"), sector=inf.get("sector") or meta.get("sector"),
             carry_days=m.get("carry_days", 0),

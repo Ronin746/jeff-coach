@@ -77,48 +77,40 @@ STALK_RS_THEME_MIN = 70        # RS 70-79 entra in Stalk solo se TUTTI gli altri
 STALK_NEW_MAX_NUMERIC_OPEN = 1
 STALK_CARRY_MAX_NUMERIC_OPEN = 2
 
-# ---------------------------------------------------------------- lettura pattern (impl.)
-# Due letture indipendenti, come facevano Dua e Sydney. Focus solo se le danno stretto ENTRAMBE;
-# se una dice largo -> Stalk [RONIN 04/10: "se non siete d'accordo lo mettete in stalk"].
-PATTERN_A = dict(            # lettura "Dua" (range vs ADR20)
-    range10_adr_max=2.5,       # range 10 sedute (in % del close) / ADR20%
-    off_high20_min_pct=-30.0,  # close entro 30% dal massimo a 20 giorni [RONIN 08/10] (era 6%: tagliava HPQ, Focus di Jeff)
-    last_range_adr_max=1.3,    # ultima barra <= 1.3 ADR
-    close5_adr_max=1.3,        # escursione dei close a 5 giorni <= 1.3 ADR
-    thrust60_min_pct=15.0,     # spinta >= 15% nelle ultime 60 barre (minimo -> massimo successivo)
-)
-PATTERN_B = dict(            # lettura "Sydney" (in ATR)
-    rally20_min_atr=3.0,       # spinta: rally dei close in 20 barre (nelle ultime 15) >= 3 ATR
-    range5_max_atr=2.0,        # range 5 sedute <= 2 ATR
-    retrace_max=0.5,           # la base non restituisce più di metà della spinta (Qullamaggie, come la lettura C) [RONIN 08/10]
-                               # (sostituisce "pullback <= 3,5 ATR": una base ascendente dopo un ritracciamento è un
-                               #  setup di Jeff, es. HPQ "mini ascending triangle base" l'08/10)
-    trend_slope_atr=0.25,      # pendenze massimi E minimi a 8 barre >= 0.25 ATR/barra = ancora in trend, non consolidato
-    # [RONIN 08/10] tolte: "close entro 1 ATR dal massimo a 10 giorni" e "niente barra di espansione ieri"
-)
-
-# Lettura C (impl., 08/10): struttura con pivot e trendline (Qullamaggie breakout, Kell, Monis). Vedi patterns.py.
-PATTERN_C = dict(
+# ---------------------------------------------------------------- pattern: lettura unica [RONIN 13/10]
+# Un solo metodo al posto delle letture A (Dua), B (Sydney) e C: la struttura disegnata con pivot e trendline,
+# come si guarda un grafico a mano (vedi patterns.py e METODOLOGIA §6). Tre esiti:
+#   "tight"   = pattern ammesso e già stretto vicino alla linea alta -> il gate pattern è chiuso (Focus possibile);
+#   "forming" = pattern ammesso ma non ancora pronto (largo, lontano dalla linea, ultima barra larga...) -> Stalk;
+#   "none"    = nessun pattern di continuation ammesso (niente spinta, base troppo profonda, forma esclusa, 50 persa).
+# Fonti: Jeff (spinta, poi base stretta sulle medie corte; mai dopo una seduta larga), Qullamaggie (spinta 1-3 mesi,
+# consolidamento ordinato che non restituisce più di metà della spinta), Kell (flag/pennant, 2B), Monis (trendline
+# sui pivot, ingresso sulla rottura della linea alta), Mancini (failed breakdown). Valori già concordati con Ronin
+# nelle letture precedenti; dove A/B/C dicevano cose diverse si tiene il valore indicato accanto.
+PATTERN = dict(
     base_max_bars=50,          # il picco della spinta si cerca nelle ultime 50 sedute (consolidamento fino a ~2,5 mesi)
-    base_min_bars=4,           # almeno 4 sedute dal picco, altrimenti sta ancora correndo
+    base_min_bars=4,           # almeno 4 sedute dal picco, altrimenti sta ancora correndo (era "still trending" di B)
     shelf_max_atr=2.5,         # pausa stretta sui massimi: la base è la finestra con range <= 2,5 ATR (>= 3 sedute)
     thrust_lookback=60,        # la spinta parte dal minimo dei 60 giorni prima del picco (1-3 mesi)
-    thrust_min_pct=25.0,       # spinta >= 25% ...
-    thrust_min_atr=6.0,        # ... oppure >= 6 ATR (titoli grandi e lenti)
-    retrace_max=0.5,           # il consolidamento non restituisce più di metà della spinta
-    depth_max_pct=30.0,        # e non scende più del 30% dal picco
+    thrust_min_pct=25.0,       # spinta >= 25% ... (sostituisce il 15% in 60 barre di A e i 3 ATR in 15 giorni di B:
+    thrust_min_atr=6.0,        # ... oppure >= 6 ATR    la spinta si misura PRIMA della base, non negli ultimi giorni)
+    retrace_max=0.5,           # la base non restituisce più di metà della spinta [RONIN 08/10]
+    depth_max_pct=30.0,        # e non scende più del 30% dal picco [RONIN 08/10: era il "30% dal massimo" di A]
     line_tol_atr=0.3,          # tolleranza delle trendline (una barra può bucarle di 0,3 ATR)
     flat_slope_atr=0.04,       # |pendenza| <= 0,04 ATR al giorno = linea piatta
-    width_max_atr=3.5,         # oggi le due linee distano al massimo 3,5 ATR
-    range5_max_atr=2.5,        # stretto: range degli ultimi 5 giorni <= 2,5 ATR ...
-    atr5_atr20_max=0.8,        # ... oppure ATR5/ATR20 <= 0,8 (volatilità che si contrae)
-    dist_upper_max_atr=1.5,    # close entro 1,5 ATR sotto la linea alta
-    broken_above_atr=0.5,      # oltre 0,5 ATR sopra la linea = già rotto
+    width_max_atr=3.5,         # stretto: oggi le due linee distano al massimo 3,5 ATR
+    range5_max_atr=2.0,        # stretto: range degli ultimi 5 giorni <= 2 ATR (valore di B, concordato con Ronin)
+    last_range_adr_max=1.3,    # stretto: l'ultima seduta non è larga, <= 1,3 ADR (Jeff: mai dopo una seduta larga)
+    dist_upper_max_atr=1.5,    # vicino al pivot: close entro 1,5 ATR sotto la linea alta
+    broken_above_atr=0.5,      # oltre 0,5 ATR sopra la linea = già rotto (Stalk, si aspetta il retest)
     ema20_tol_atr=0.3,         # close non sotto la EMA20 (tolleranza 0,3 ATR)
     sma50_tol_atr=0.5,         # la SMA50 si può toccare (Qullamaggie): conta come persa una chiusura oltre 0,5 ATR sotto
     sma50_max_closes_under=3,  # ... e la base è rotta con 3 chiusure così, o con il close di oggi sotto la SMA50
     channel_ok_width_atr=2.5,  # canale che sale ma stretto (<= 2,5 ATR) = gradini sui massimi, accettato
     undercut_min_atr=0.2,      # 2B / failed breakdown: minimo sotto il supporto di almeno 0,2 ATR, poi recuperato
+    vol_contract_max=1.0,      # stretto: volume medio degli ultimi 5 giorni sotto la media dei 50 prima ("volume in calo",
+                               # Jeff nei post per abbonati; il volume asciutto è il segnale migliore nel backtest del 10/10)
+    dryup_note=0.8,            # sotto 0,8 della media la card scrive "volume drying up"
 )
 # Lettura D (impl., 08/10): canale rialzista lungo comprato nella PARTE BASSA del range (grafici di Ronin). Vedi channel.py.
 CHANNEL = dict(
@@ -208,14 +200,9 @@ TRIANGLE = dict(
     min_lo_share=0.5,                  # il supporto parte dalla prima metà del triangolo
     sma50_tol_atr=0.3,                 # sopra una SMA50 che non scende
     converge=0.75,                     # larghezza oggi <= 75% di quella all'inizio
-    width_max_atr=3.5, dist_top_max_atr=1.5, above_top_max_atr=0.3, range5_max_atr=2.5,
+    width_max_atr=3.5, dist_top_max_atr=1.5, above_top_max_atr=0.3, range5_max_atr=2.0,
 )
 
-# Come entra la lettura C nella decisione (da scegliere con Ronin dopo la galleria del 08/10):
-#   "AB"  = come oggi, Focus solo se A e B sono d'accordo (C solo mostrata)
-#   "C"   = decide C da sola (A e B mostrate)
-#   "C+1" = Focus se C dice stretto e almeno una tra A e B è d'accordo
-PATTERN_MODE = "AB"
 
 # ---------------------------------------------------------------- forza del gruppo (impl., 08/10) [Kell, Jeff: temi e gruppi leader]
 # Industria Yahoo (circa 145 gruppi). Forza del gruppo = mediana dell'RS dei suoi titoli nell'universo,
@@ -247,10 +234,7 @@ SHORT = dict(
 # ---------------------------------------------------------------- weekly [RONIN 06/10]
 WEEKLY_SMA25_DAILY_MAX_PCT = 5.0   # al posto della SMA30 65m: close entro ~5% dalla SMA25 giornaliera
 WEEKLY_EMA9_MAX_ATR = 1.5          # entro 1,5 ATR settimanali dalla EMA9 settimanale
-# Stessa regola della daily: Focus solo se le due letture del pattern concordano, altrimenti Stalk.
-# Le soglie delle letture sono calibrate sulle barre daily: sulla weekly vanno riviste con Ronin dopo le prime
-# weekly regolari (dal 12/10). Con False basta una lettura (più Focus, meno filtro).
-WEEKLY_PATTERN_REQUIRE_BOTH = True
+# Pattern: stessa lettura unica della daily, sulle barre settimanali (soglie in ATR settimanali).
 
 # ---------------------------------------------------------------- alert [RONIN 30/09, 04/10]
 RVOL_ALERT = 0.30              # 30% della media 50gg, solo nella prima ora, Focus+Stalk

@@ -1,8 +1,8 @@
 # Metodologia del bot unico: Focus/Stalk alla Jeff Sun per Ronin
 
-Stato all'**8 ottobre 2026**. Sostituisce le due metodologie di Dua e di Sydney.
+Stato al **13 ottobre 2026**. Sostituisce le due metodologie di Dua e di Sydney.
 
-- Le regole sono quelle chiuse da Ronin fino al 06/10, più le tre decisioni dell'08/10 (§13).
+- Le regole sono quelle chiuse da Ronin fino al 06/10, più le decisioni dell'08/10 e del 13/10 (§13).
 - Ogni numero sta in `jeffcoach/config.py`, con la fonte accanto. Questo documento e il codice devono sempre dire la stessa cosa.
 
 Principi di metodo:
@@ -67,7 +67,7 @@ L'ingresso è la rottura del **massimo dei primi 30 minuti** (30m ORH). Gli aler
 | 6 | EMA 9 | `0 < (close − EMA9)/ATR14 ≤ 1,5`. **La EMA 21 è solo contesto.** | [RONIN 06/10, 08/10] |
 | 7 | VCP | VCP Tightness ≤ 25 (script 5/20/50) | [RONIN 04/10] |
 | 8 | Compressione | almeno **2 delle ultime 3** barre con range% < ADR20% (un solo giorno largo non azzera i precedenti, caso PLTR) | [JS hard 15] [RONIN 08/10] |
-| 9 | Pattern | continuation long già stretto: le **due letture** (§6) devono dirlo **tutte e due** | [RONIN 04/10] |
+| 9 | Pattern | continuation long ammesso e già stretto secondo la **lettura unica** (§6): esito `tight` | [RONIN 13/10] |
 
 - **Nessun taglio sul numero:** tutti i nomi che chiudono i 9 gate sono Focus. [RONIN 06/10]
 - **Distanza dai massimi a 52 settimane:** solo nota, non decide. [RONIN 01/10]
@@ -80,15 +80,15 @@ Un nome entra in Stalk se:
 - sta **sopra la SMA200** (anche se la 200 scende: in quel caso è Stalk, mai Focus);
 - ha almeno un gate Focus aperto;
 - e vale una di queste condizioni:
-  - **nome nuovo:** al massimo **1 gate numerico** aperto (gate 1–8) e almeno **una** delle due letture vede un pattern stretto. In pratica: il pattern c'è, manca un gate;
+  - **nome nuovo:** al massimo **1 gate numerico** aperto (gate 1–8) e un pattern **ammesso** per la lettura unica (`tight` o `forming`). In pratica: il pattern c'è, anche se non è ancora pronto, e manca al massimo un gate;
   - **nome già in lista ieri:** resta in Stalk finché ha al massimo **2 gate numerici** aperti. Con 3 o più esce;
   - **RS 70–79** con tutti gli altri gate chiusi: è il tema forte con RS appena sotto. [RONIN 04/10]
 
-**Scadenza (dal 09/10).** Un nome che resta in Stalk solo per la regola "già in lista" (cioè come nome nuovo non entrerebbe) ha un contatore di sedute (`carry_days` nella lista pubblica). Dopo **5 sedute di fila** così esce, con il motivo "stale Stalk". Se nel frattempo torna a soddisfare la regola dei nomi nuovi (1 gate aperto più un pattern stretto), il contatore torna a zero. Serve a tenere la lista corta: senza scadenza i nomi entrati una volta restano finché non aprono 3 gate. La soglia è `STALK_CARRY_MAX_SESSIONS` in `config.py`.
+**Scadenza (dal 09/10).** Un nome che resta in Stalk solo per la regola "già in lista" (cioè come nome nuovo non entrerebbe) ha un contatore di sedute (`carry_days` nella lista pubblica). Dopo **5 sedute di fila** così esce, con il motivo "stale Stalk". Se nel frattempo torna a soddisfare la regola dei nomi nuovi (1 gate aperto più un pattern ammesso), il contatore torna a zero. Serve a tenere la lista corta: senza scadenza i nomi entrati una volta restano finché non aprono 3 gate. La soglia è `STALK_CARRY_MAX_SESSIONS` in `config.py`.
 
 **Chi resta fuori:**
 - **Sotto la SMA200:** mai in lista, finché non la riprende e ricostruisce la struttura. [RONIN 01/10]
-- **Numeri ok ma nessuna delle due letture vede un pattern di continuation** (ancora in trend, senza spinta, base dopo un pullback profondo): fuori lista, ma **elencati nel riepilogo** perché Ronin li veda.
+- **Numeri ok ma nessun pattern di continuation ammesso** (ancora in corsa, senza spinta, base dopo un pullback profondo, forma esclusa, SMA50 persa): fuori lista, ma **elencati nel riepilogo** perché Ronin li veda.
 
 **Come si legge lo Stalk sulla card:**
 - ogni riga ha i gate aperti in inglese (es. `under 65m SMA30 (-0.9%)`, `loose VCP`, `extended`, `1 tight day`);
@@ -96,72 +96,64 @@ Un nome entra in Stalk se:
 
 *(Calibrazione, 08/10: con queste regole lo Stalk dell'08/10 viene di 37 nomi, 35 dei quali erano nello Stalk pubblico di Dua e Sydney.)*
 
-## 6. Pattern: lista chiusa e doppia lettura
+## 6. Pattern: lista chiusa e lettura unica [RONIN 13/10]
 
 **Ammessi (continuation long):**
 - flag: il canale stretto dopo la spinta, il mini flag di Jeff;
 - pennant: linee che convergono;
-- box o rettangolo rialzista con range che si riducono;
+- box o rettangolo rialzista con range che si riducono (base piatta);
 - falling wedge di continuazione;
 - base o trendline ascendente (il triangolo ascendente è questa);
+- canale stretto che sale a gradini (le due linee entro 2,5 ATR);
 - VCP.
 
 **Fuori:**
-- rising wedge, rettangolo e pennant ribassisti, triangolo discendente;
+- rising wedge, rettangolo e pennant ribassisti, triangolo discendente, allargamento, canale largo che sale;
 - tutta la riga Reversal e il falling wedge da fondo;
 - la ripresa a V senza base.
 
 La trendline discendente singola non è un ingresso. Non si usano entry, stop e target del foglio. [RONIN 04/10]
 
-"Pattern già stretto" si misura con due letture indipendenti, quelle che usavano Dua e Sydney, scritte in `config.py` (implementazione, non gate nuovi):
+### Un solo metodo al posto di due letture
 
-| Lettura A (ex Dua, su ADR20) | Lettura B (ex Sydney, in ATR) |
-|---|---|
-| range 10 sedute ≤ 2,5× ADR | spinta: rally dei close in 20 barre ≥ 3 ATR |
-| close entro 30% dal massimo a 20 giorni [RONIN 08/10] | range 5 sedute ≤ 2 ATR |
-| ultima barra ≤ 1,3× ADR | |
-| escursione dei close a 5 giorni ≤ 1,3× ADR | la base non restituisce più di metà della spinta (come la lettura C) [RONIN 08/10] |
-| spinta ≥ 15% nelle ultime 60 barre | non ancora in trend: pendenze di massimi e minimi a 8 barre non entrambe ≥ 0,25 ATR/barra |
+Fino al 12/10 "pattern già stretto" voleva dire che lo dicevano **due letture** insieme: A (ex Dua, ampiezze in ADR) e B (ex Sydney, in ATR). Non concordavano su un nome su tre (17 nomi in disaccordo il 13/10) per due motivi di costruzione, non di giudizio:
+- **A** misurava il range di 10 sedute, che dopo una spinta recente comprende la fine della spinta: una pausa di 5 giorni sui massimi risultava "larga" (ZETA, PBF, PI, U, GGB il 13/10);
+- **B** cercava la spinta solo negli ultimi 15 giorni: ogni base più lunga di tre settimane risultava "lagging" (MATX, CXW, ERO, WPM, HCC il 13/10), anche i triangoli che Jeff compra;
+- **nessuna delle due guardava la forma**: un triangolo discendente o un allargamento passava se era stretto (RNG, FIVN, SN Focus il 09/10; CAKE il 12/10). Per questo serviva la revisione a occhio.
 
-- **Focus** solo se A **e** B sono strette.
-- **Se non concordano**, il nome va in Stalk e il riepilogo lo scrive ("A tight / B lagging"). È la regola "se non siete d'accordo lo mettete in stalk che li guardo io" [RONIN 04/10], applicata in automatico.
+Dal 13/10 c'è **una sola lettura**, quella che disegna il grafico come lo si guarda a mano (ex lettura C, `jeffcoach/patterns.py`, soglie in `config.PATTERN`). Fonti: Jeff (spinta, poi base stretta sulle medie corte; si passa a Focus solo dopo sedute strette con volume in calo, mai dopo una seduta larga), il setup "breakout" di Qullamaggie, il ciclo del prezzo di Kell (Base n' Break, EMA crossback, 2B), le trendline di Monis e il failed breakdown di Mancini.
 
-### Lettura C: trendline (dal 09/10, per ora solo mostrata)
+1. **Spinta**, misurata **prima** della base: dal minimo dei 60 giorni prima al picco, almeno **+25%** oppure **6 ATR**.
+2. **Base**, dal picco a oggi, almeno 4 sedute (altrimenti "sta ancora correndo").
+   - Se il massimo è di 1–3 giorni fa, la base è la pausa stretta sui massimi: la finestra più lunga con range ≤ 2,5 ATR (PLTR, SIG, SIMO l'08/10).
+   - Non restituisce più di **metà della spinta** e non scende più del **30%** dal picco. [RONIN 08/10]
+3. **Forma**, dalle trendline: linea alta sui pivot massimi rispettando il picco, linea bassa sull'ultimo pivot minimo e su uno precedente. Le pendenze danno flag, pennant, base piatta, base ascendente, falling wedge, canale stretto; quelle fuori dalla lista chiusa (rising wedge, triangolo discendente, allargamento, canale largo) **non sono ammesse**.
+4. **Medie:** la SMA50 si può toccare ma non perdere (close di oggi sopra, al massimo 2 chiusure oltre 0,5 ATR sotto durante la base).
+5. **Già stretto e pronto:**
+   - le due linee distano al massimo **3,5 ATR**;
+   - range degli ultimi 5 giorni ≤ **2 ATR** (il valore di B);
+   - ultima seduta ≤ **1,3 ADR** (il valore di A; Jeff: mai dopo una seduta larga);
+   - **volume in calo:** media degli ultimi 5 giorni sotto quella dei 50 prima (Jeff; il volume asciutto è anche il segnale migliore nel backtest del 10/10);
+   - close entro **1,5 ATR sotto la linea alta** e non oltre di 0,5 ATR;
+   - close non sotto la EMA20 (tolleranza 0,3 ATR).
+6. **Triangolo ascendente** (`read_triangle`, sotto): è un modo in più per essere ammessi. Se la base non passa ma il triangolo sì, il pattern è il triangolo (con lo stesso controllo su ultima seduta e volume).
+7. **Note che non decidono:** "undercut & reclaim" (2B / failed breakdown), "volume drying up" (sotto 0,8 della media), il **livello della linea alta per la seduta dopo** (`trendline_next`).
 
-Una terza lettura, scritta in `jeffcoach/patterns.py`, guarda il grafico come lo si guarda a mano. Le fonti sono il setup "breakout" di Qullamaggie, il ciclo del prezzo di Kell (Base n' Break, EMA crossback, 2B), le trendline di Monis e il failed breakdown di Mancini.
+**Tre esiti** (`pattern` nella lista pubblica):
 
-1. **Spinta:** il massimo della spinta e il minimo da cui è partita nei 1–3 mesi prima. Deve valere almeno **+25%** oppure **6 ATR**.
-2. **Base:** dal massimo a oggi.
-   - Se il massimo è di 1–3 giorni fa, la base è la pausa stretta sui massimi: la finestra più lunga con range ≤ 2,5 ATR. È il caso tipico dei Focus di Jeff, come PLTR, SIG e SIMO l'08/10.
-   - La base non deve restituire più di metà della spinta, né scendere più del 30%.
-3. **Trendline:**
-   - linea alta sui pivot massimi, rispettando il picco;
-   - linea bassa sull'ultimo pivot minimo e su uno precedente;
-   - dalle due pendenze viene la forma: flag, pennant, base piatta, base ascendente, falling wedge, canale stretto che sale.
-   - Sono fuori, come nella lista chiusa: rising wedge, triangolo discendente, canale largo, allargamento.
-4. **Stretto:**
-   - le due linee distano al massimo 3,5 ATR;
-   - il range a 5 giorni è ≤ 2,5 ATR, oppure ATR5/ATR20 ≤ 0,8.
-5. **Posizione:**
-   - close entro 1,5 ATR sotto la linea alta, e non già oltre di 0,5 ATR;
-   - sopra la EMA20;
-   - la SMA50 si può toccare, ma non perdere.
-6. **Informazioni in più** (non bloccano):
-   - "undercut & reclaim", cioè un minimo sotto il supporto recuperato (2B / failed breakdown);
-   - "volume drying up";
-   - il **livello della trendline per la seduta dopo** (`trendline_next`), utile come alert su TradingView.
+| Esito | Quando | Effetto |
+|---|---|---|
+| `tight` | punti 1–5 tutti ok (o triangolo ok) | il gate pattern è chiuso: Focus se lo sono anche gli altri 8 |
+| `forming` | forma ammessa (1–4 ok) ma manca qualcosa del punto 5 | Stalk se manca al massimo 1 gate numerico; sulla card il motivo (es. `pattern wide (4.1 ATR)`, `last bar 1.5× ADR`, `already broken out`) |
+| `none` | niente spinta, base troppo profonda, forma esclusa o SMA50 persa | non entra come nome nuovo |
 
-Il modo è in `PATTERN_MODE`:
-- `AB`: decidono A e B come prima, C è solo mostrata. È il modo attivo.
-- `C`: decide C da sola.
-- `C+1`: Focus se C è stretta e almeno una tra A e B è d'accordo.
+Le stesse soglie valgono sulla weekly, lette sulle barre settimanali (§12).
 
-Sull'08/10:
-- `AB` dà 3 Focus (SIMO, PLTR, SIG);
-- `C+1` dà 7 Focus;
-- `C` ne dà 16.
-
-Si sceglie con Ronin dopo qualche settimana di confronto. Il riepilogo ogni giorno elenca dove C non è d'accordo con la decisione.
+**Verifica sui dati salvati (09–13/10), stessi gate numerici:**
+- 09/10: Focus AB = RNG, FIVN, SN, HPQ, ELF → lettura unica = DELL, ELF, ESTC, HPQ, JXN, MANH, NSIT, PARR, SBLK, SIG, SNOW, TENB, VEEV, VRNS. Escono RNG, FIVN e SN (triangolo discendente).
+- 12/10: Focus AB = RNG, CAKE, SN → CHEF, CVLT, DELL, ESTC, NSIT, SIG, VRNS. Escono CAKE (allargamento, SMA50 persa), RNG e SN.
+- 13/10: Focus AB = nessuno (CAKE e SIG tenuti fuori da tema e regime) → ERO, MATX, PBF, PI, SIG, ZETA; CXW resta Stalk per il volume (1,24× la media).
+- I Focus diventano di più (7–14 al giorno prima del regime), perché A e B insieme erano un'intersezione: tagliavano anche le basi buone. Il regime (§ Temi e regime) ne tiene al massimo 3 in MIXED e DEFENSIVE.
 
 ### Lettura D: canale rialzista, si compra nella parte bassa (dal 09/10, lista a parte) [RONIN 08/10]
 
@@ -191,7 +183,7 @@ Codice: `jeffcoach/dtl.py`, soglie in `config.DTL`. Sul daily, come la si disegn
 ### Regole dai post per abbonati di Jeff (dal 09/10) [RONIN 08/10]
 
 - **Gap da riempire — SPENTO** (`GAP_GATE_ON = False`, [RONIN 08/10]: da rifare meglio prima di usarlo). Com'è scritto oggi (`gap` in `focus_gates`, gate "soft"): un gap al ribasso degli ultimi 60 giorni ancora aperto sopra il prezzo, entro 3 ATR, tiene il nome in **Stalk** finché un massimo non torna al minimo del giorno prima del gap (XLK, ESTC, NOW, FRSH). Nel riepilogo: "Gap al ribasso da riempire".
-- **Triangolo ascendente** (`patterns.read_triangle`): tetto piatto toccato almeno 2 volte (al massimo 2 spike sopra, nessun close sopra nelle ultime 3 sedute), supporto che sale (0,03–0,15 ATR a seduta) dalla prima metà del triangolo, larghezza che si stringe (≤ 75% di quella iniziale, ≤ 3,5 ATR), durata ≥ 15 sedute, close entro 1,5 ATR sotto il tetto, range 5 giorni ≤ 2,5 ATR, sopra una SMA50 che non scende. È **in più** alla lettura C: se la base non passa ma il triangolo sì, C è stretta; e il triangolo basta come pattern per lo Stalk. Nel riepilogo: "Triangoli ascendenti".
+- **Triangolo ascendente** (`patterns.read_triangle`): tetto piatto toccato almeno 2 volte (al massimo 2 spike sopra, nessun close sopra nelle ultime 3 sedute), supporto che sale (0,03–0,15 ATR a seduta) dalla prima metà del triangolo, larghezza che si stringe (≤ 75% di quella iniziale, ≤ 3,5 ATR), durata ≥ 15 sedute, close entro 1,5 ATR sotto il tetto, range 5 giorni ≤ 2 ATR (come la lettura unica), sopra una SMA50 che non scende. È **in più** alla base della lettura unica: se la base non passa ma il triangolo sì, il pattern è il triangolo; un triangolo trovato ma non ancora pronto è `forming` e basta per lo Stalk. Nel riepilogo: "Triangoli ascendenti".
 - **Reazione ritardata agli utili** (`peg.py`, lista `peg_watch`): gap ≥ 4% (o 1 ATR) con volume ≥ 1,5× la media (o gap ≥ 8%) di 4–45 sedute fa, **confermato dalla data degli utili**; prezzo tornato nel range del PEG (dal close prima del gap al massimo del giorno del gap), base stretta, sopra la SMA200, RS ≥ 60. Lista a parte nel riepilogo, non cambia Focus/Stalk.
 
 ## 6b. Forza del gruppo (dal 09/10, per ora solo mostrata)
@@ -204,15 +196,7 @@ Il riepilogo mostra i gruppi più forti con i nomi in lista e il percentile del 
 
 C'è un gate pronto ma spento: `GROUP_FOCUS_MIN_PCTL` (es. 40), che non farebbe essere Focus un nome di un gruppo debole (resta Stalk). Va acceso solo dopo averlo visto sui dati. Sull'08/10 avrebbe tolto SIG, che è in un gruppo al 10° percentile ed era un Focus di Jeff.
 
-**Revisione a occhio del bot.** Dopo il calcolo il bot guarda tutta la lista, Focus e Stalk (`state/daily_<data>/review.json`) [RONIN 09/10]:
-- un Focus che non è un pattern ammesso lo **declassa** a Stalk con un motivo in inglese;
-- uno Stalk lo **promuove** a Focus solo se l'unico gate aperto è il pattern (le letture A/B non lo vedono, il grafico sì). Con un gate numerico aperto il motore rifiuta la promozione e lo scrive nel riepilogo.
-
-Il bot:
-- **non può** aggiungere nomi che non sono in lista;
-- **non può** toccare i gate.
-
-Può anche dare il nome al pattern (flag, pennant, box…) e riscrivere la frase.
+**Revisione a occhio:** tolta il 13/10 [RONIN 13/10]. La forma del pattern la giudica il motore (§6); nessuno sposta più nomi a mano tra Focus e Stalk.
 
 ## 7. Misure (formule)
 
@@ -263,8 +247,7 @@ Può anche dare il nome al pattern (flag, pennant, box…) e riscrivere la frase
 | Ora | Dove | Cosa |
 |---|---|---|
 | ~08:00–09:00 | GitHub Actions (`lista.yml`) | Calcolo completo della lista; commit in `data/` |
-| ~10:15 | Attività programmata di Claude (`REVISIONE.md`) | Revisione dei Focus (solo declassare), push di `review.json`, riepilogo a Ronin |
-| subito dopo | GitHub Actions (`card.yml`) | Card Discord con il txt TradingView. Se la revisione non arriva: card di riserva alle 12:30–13:30 |
+| 10:45 | Server (`fasi.sh card`) | Card Discord con il txt TradingView. GitHub `card.yml` è la riserva alle 12:30–13:30 |
 | lunedì ~09:00 | GitHub Actions (`weekly.yml`) | Weekly, niente Discord |
 | in seduta USA | PC di Ronin (`JeffCoach-locale`) | Alert d'ingresso e RVOL, scanner di Remy |
 
@@ -318,25 +301,33 @@ Stessi gate e stessa regola dello Stalk della daily, con queste differenze [RONI
 - al posto della SMA30 65m: close entro **~5% dalla SMA 25 giornaliera**;
 - **RS daily** ≥ 80; universo, Atr Ext daily, SMA200 e utili come la daily.
 
-**Uscita:** riepilogo nel messaggio della revisione del lunedì; niente Discord, niente alert. File: `data/coach-agreed/weekly_<lunedì>.json`.
+**Uscita:** `data/state/weekly_<lunedì>/summary_it.md`; niente Discord, niente alert. File: `data/coach-agreed/weekly_<lunedì>.json`.
 
-**Nota:** le soglie delle due letture del pattern sono calibrate sulle barre daily. Sulla weekly vanno riviste con Ronin dopo le prime weekly regolari. Con `WEEKLY_PATTERN_REQUIRE_BOTH=False` basta una lettura.
+**Nota:** il pattern è la stessa lettura unica (§6) sulle barre settimanali, con le soglie in ATR settimanali; servono almeno 90 settimane di storia. Le soglie vanno riviste con Ronin dopo le prime weekly regolari.
 
 ## 13. Decisioni dell'08/10 (bot unico)
 
 | Punto | Decisione |
 |---|---|
-| Struttura | Un bot unico: motore deterministico più revisione a occhio che può solo declassare |
+| Struttura | Un bot unico: motore deterministico (la revisione a occhio è stata tolta il 13/10) |
 | EMA 21 | Solo contesto. Gate = close sopra la EMA 9 ed entro 1,5 ATR |
 | Compressione | Almeno 2 delle ultime 3 barre sotto l'ADR20, più VCP ≤ 25 |
 | Biotech | Esclusa solo l'industria Biotechnology (il pharma resta) |
-| Confronto Dua/Sydney | Sostituito dalla doppia lettura del pattern nel codice: il disaccordo va in Stalk |
+| Confronto Dua/Sydney | Sostituito dalla doppia lettura del pattern nel codice; dal 13/10 da una lettura unica |
 | Stalk portati avanti | Scadenza dopo 5 sedute solo "per inerzia" |
 | Forza del gruppo | Calcolata e mostrata, gate spento |
-| Lettura C (trendline) | Calcolata e mostrata, modo `AB` finché Ronin non sceglie |
+| Lettura C (trendline) | Dal 13/10 è la lettura unica del pattern (§6) |
 | Canale rialzista (lettura D) | Lista a parte, alert Sydney sul recupero della SMA30 65m anche sotto la EMA9 |
 | Regole di Jeff dai post abbonati | RVOL e LoD bloccano l'alert d'ingresso; gap da riempire spento (da rifare); triangolo ascendente in più; lista PEG |
 | Letture A e B misurano la base nuova | A: entro 30% dal massimo a 20 giorni invece di 6%; B: la base tiene almeno metà della spinta invece di pullback ≤ 3,5 ATR. Caso HPQ, Focus di Jeff l'08/10 (mini triangolo ascendente) |
+
+### Decisioni del 13/10 [RONIN 13/10]
+
+| Punto | Decisione |
+|---|---|
+| Revisione a occhio | Tolta: niente più attività programmata delle 10:15, niente `review.json` |
+| Pattern | Un solo metodo (lettura unica, §6) al posto delle letture A e B; esiti `tight` / `forming` / `none` |
+| Stalk nuovi | Al massimo 1 gate numerico aperto e pattern ammesso (`tight` o `forming`) |
 
 ## 14. Regole superate (per non riaprirle)
 
@@ -356,6 +347,10 @@ Stessi gate e stessa regola dello Stalk della daily, con queste differenze [RONI
 | Lettura B: pullback dal massimo ≤ 3,5 ATR | La base non restituisce più di metà della spinta | 08/10 |
 | Lettura B: close entro 1 ATR dal massimo a 10 giorni; niente barra di espansione ieri | Tolte | 08/10 |
 | Copiare i Focus di Jeff da X, controllo abbonati | Lista costruita dal processo; controllo FERMO | 04–05/10 |
+| Due letture del pattern A e B, Focus solo se concordano; `PATTERN_MODE` | Lettura unica (§6) | 13/10 |
+| Lettura A: range 10 sedute ≤ 2,5 ADR, close 5 giorni ≤ 1,3 ADR, spinta ≥ 15% in 60 barre | Base misurata dal picco, linee entro 3,5 ATR, range 5 giorni ≤ 2 ATR; spinta ≥ 25% o 6 ATR prima della base | 13/10 |
+| Lettura B: spinta ≥ 3 ATR negli ultimi 15 giorni ("lagging"), pendenze a 8 barre | Spinta misurata prima della base; "ancora in corsa" se la base ha meno di 4 sedute | 13/10 |
+| Revisione a occhio delle 10:15 (declassa/promuove) | Tolta: la forma la giudica il motore | 13/10 |
 
 ### Lettura D, correzioni del 09/10 (canali riconosciuti per sbaglio)
 Ronin: Sydney segnalava "Channel" anche dove il canale non c'è. Rivisti i 32 nomi della lista canale del 09/10:
@@ -380,7 +375,7 @@ sopra la SMA200, adv$ >= 50M: 118.000 campioni. Esito = close dopo 20 sedute in 
   (dal 2024) +0,61 contro +0,80 della base. Dai dati daily il canale non aggiunge vantaggio.
 - **Supporto bucato e recuperato (2B)**: +0,21, come la base.
 - **Volume asciutto nella base** (< 0,6 della media): +0,44 dopo la rottura contro +0,25: il segnale di qualità
-  più utile tra quelli della lettura C.
+  più utile tra quelli della lettura C (dal 13/10 è un requisito della lettura unica: volume in calo).
 - **Gap al ribasso aperto sopra**: +0,48 dopo la rottura, meglio della base: conferma che la regola del gap va
   tenuta spenta.
 Script: tv-scanner/backtest/pattern_daily/.
@@ -399,7 +394,7 @@ CIEN, MRVL, ALAB, AAOI) restano tutti.
 
 Stesse regole del long, al contrario, in una sezione separata e parallela (`jeffcoach/short.py`).
 - Il grafico di ogni titolo dell'universo si capovolge (prezzo -> 10000/prezzo) e passa dagli stessi gate e dalle
-  stesse letture A, B, C del long: SMA200 non obbligatoria (sotto è meglio: quei nomi vanno prima in lista; sopra la card scrive "above SMA200"), entro 1,5 ATR sotto la EMA9, estensione sotto la SMA50
+  stessa lettura del pattern del long: SMA200 non obbligatoria (sotto è meglio: quei nomi vanno prima in lista; sopra la card scrive "above SMA200"), entro 1,5 ATR sotto la EMA9, estensione sotto la SMA50
   entro 4, VCP stretto, giorni compressi, bear flag / base discendente, chiusura sotto la SMA30 65m.
 - L'RS non è un gate: si mostra quella vera. Ordine: prima i nomi sotto la SMA200, poi RS dalla più bassa.
 - Universo, utili e market cap come nel long, sui prezzi veri. Stalk e scadenza come nel long.

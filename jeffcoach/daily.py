@@ -3,7 +3,7 @@
 Uso:
   python -m jeffcoach.daily                 # seduta di oggi (ora di Roma), close RTH precedente
   python -m jeffcoach.daily --session 2026-10-08 --dry-run
-  python -m jeffcoach.daily --from-cache    # riusa i dati già scaricati e riapplica review.json
+  python -m jeffcoach.daily --from-cache    # riusa i dati già scaricati (la card del server lo usa alle 10:45)
 
 Scrive (se non --dry-run):
   watchlists/focus_<SEDUTA>.json + focus_today.json        dettaglio completo, ogni gate di ogni nome
@@ -27,7 +27,6 @@ from . import engine as E
 from . import indicators as I
 from . import channel as CH
 from . import peg as PG
-from . import patterns as P
 from .calendar_us import ROME, is_session, prev_session, sessions_from, today_rome, last_sessions
 from .output import above_sma65, by_sector, card_descriptions, short_card_descriptions, short_tv_txt, tv_txt, write_atomic
 
@@ -329,7 +328,7 @@ def sector_etf_stats(doc: dict) -> dict:
     return doc["sector_etf"]
 
 
-def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict:
+def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
     session, as_of, metrics, info, s65, meta = (doc[k] for k in ("session", "as_of", "metrics", "info", "sma65", "meta"))
     rows: dict[str, E.Row] = {}
     out_universe = {}
@@ -422,30 +421,6 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
     chan = channel_watch(rows, s65)
     dtlw = dtl_watch(dtl_names, metrics, rows, earn_out, out_universe, grp)
 
-    # revisione a occhio del bot [RONIN 09/10]: DECLASSA un Focus a Stalk, oppure PROMUOVE a Focus uno Stalk il cui
-    # unico gate aperto è il pattern (le letture A/B non lo vedono ma il grafico sì). Mai sopra un gate numerico.
-    review_applied = {}
-    for s, rv in (review or {}).items():
-        r = rows.get(s)
-        if not r or r.list == "Out":
-            continue
-        if rv.get("demote") and r.list == "Focus":
-            r.list = "Stalk"
-            r.gates.append(E.Gate("review", False, "pattern review: " + rv["demote"]))
-            review_applied[s] = "demoted: " + rv["demote"]
-        elif rv.get("promote") and r.list == "Stalk":
-            numeric = [g.code for g in r.fails if g.code not in E.SOFT_GATES]
-            if not numeric and [g.code for g in r.fails] and all(g.code == "pattern" for g in r.fails):
-                r.list = "Focus"
-                r.gates = [g for g in r.gates if g.code != "pattern"]
-                review_applied[s] = "promoted: " + rv["promote"]
-            else:
-                review_applied[s] = "promote refused (open gates: " + ", ".join(g.code for g in r.fails) + ")"
-        if rv.get("pattern"):
-            r.m["pattern"] = rv["pattern"]
-        if rv.get("reason_en"):
-            r.m["reason_override"] = rv["reason_en"]
-
     # temi e regime [RONIN 13/10]: fuori chi ha il tema in downtrend; prima chi ha un tema leading in uptrend;
     # regime come Martin-coach (MIXED: al massimo 3 Focus; DEFENSIVE: solo Focus con tema leading, al massimo 3,
     # segnati "against the regime"); gli altri Focus restano in Stalk col motivo
@@ -489,10 +464,9 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
         m = r.m
         return dict(
             ticker=r.ticker, list=r.list, rs=m["rs"], vcp=_r(m["vcp"]), sma5=_r(m["sma5_dist_pct"]),
-            atr_ext=_r(m["ext"]), reason_en=m.get("reason_override") or E.reason_en(r, s65.get(r.ticker)),
-            pattern_a=("tight" if m["pattern_a_ok"] else "wide"), pattern_b=("tight" if m["pattern_b_ok"] else "wide"),
+            atr_ext=_r(m["ext"]), reason_en=E.reason_en(r, s65.get(r.ticker)),
+            pattern=m.get("pattern_state"), pattern_shape=m.get("c_shape"),
             open_gates=[g.code for g in r.fails], extreme_rvol_ok=False, prior_day_high=_r(m["high"]),
-            pattern_c=("tight" if m.get("pattern_c_ok") else "wide"), pattern_c_shape=m.get("c_shape"),
             trendline_next=_r(m.get("c_upper_next")), industry=m.get("industry"), sector=m.get("sector"),
             group_pctl=m.get("group_pctl"),
             leader=m.get("leader") or [], carry_days=m.get("carry_days", 0),
@@ -529,27 +503,20 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
             left_why[t] = "outside the universe gates (ATR%/adv$/mcap) or no data"
     changes["why_left"] = left_why
 
-    disagree = {r.ticker: dict(a=("tight" if r.m["pattern_a_ok"] else "; ".join(r.m["pattern_a_why"])),
-                               b=("tight" if r.m["pattern_b_ok"] else "; ".join(r.m["pattern_b_why"])))
-                for r in stalk if r.m["pattern_a_ok"] != r.m["pattern_b_ok"]
-                and [g.code for g in r.fails] == ["pattern"]}
-
     now = datetime.now(ROME).strftime("%Y-%m-%d %H:%M %Z")
     agreed = dict(
         session_date=session.isoformat(), as_of_close=as_of.isoformat(), ranking_bar=as_of.isoformat(),
         ranking_bar_status="completed_rth_daily", timezone="Europe/Rome", asof_rome=now,
         focus=[r.ticker for r in focus], stalk=[r.ticker for r in stalk], tickers=fpub + spub,
-        notes=("Single deterministic engine. Focus = every closed gate passes and BOTH pattern readings call it tight; "
+        notes=("Single deterministic engine. Focus = every closed gate passes and the pattern reading calls it tight; "
                "Stalk = universe + earnings + RS>=80, above the SMA200, new names with at most "
-               f"{C.STALK_NEW_MAX_NUMERIC_OPEN} numeric gate open and a tight pattern on at least one reading, names already listed "
+               f"{C.STALK_NEW_MAX_NUMERIC_OPEN} numeric gate open and an admitted pattern (tight or forming), names already listed "
                f"while at most {C.STALK_CARRY_MAX_NUMERIC_OPEN} numeric gates are open (or RS 70-79 with everything else closed). "
                "Alerts: entries on Focus only."),
         earnings_check=dict(window=f"{lo}..{hi}", excluded=earn_out, missing_dates=sorted(earn_missing),
                             reported_on_reference_day=sorted(earn_on_ref)),
         info_not_verified=sorted(info_missing),
-        pattern_disagreements=disagree, review=review_applied, changes_vs_previous=changes,
-        pattern_mode=C.PATTERN_MODE, stale_stalk=stale_stalk,
-        pattern_c_vs_decision=pattern_c_compare(rows),
+        changes_vs_previous=changes, stale_stalk=stale_stalk,
         top_groups=top_groups(groups, rows),
         channel_watch=chan,
         peg_watch=pegw,
@@ -591,21 +558,6 @@ def build(doc: dict, review: dict, prev: dict | None, earn: dict | None) -> dict
                          for sec, st in sector_etf_stats(doc).items()})
 
 
-def pattern_c_compare(rows: dict) -> dict:
-    """Dove la lettura C (trendline) non è d'accordo con la decisione di oggi: serve a Ronin per scegliere il modo."""
-    out = {"c_tight_not_focus": {}, "focus_c_wide": {}}
-    for t, r in rows.items():
-        m = r.m
-        if r.out_reason:
-            continue
-        numeric_ok = not [g for g in r.fails if g.code not in E.SOFT_GATES]
-        if r.list == "Focus" and not m.get("pattern_c_ok"):
-            out["focus_c_wide"][t] = "; ".join(m.get("pattern_c_why") or [])
-        elif r.list != "Focus" and m.get("pattern_c_ok") and numeric_ok and m["above_sma200"] and (m["rs"] or 0) >= C.RS_FOCUS_MIN:
-            out["c_tight_not_focus"][t] = P.describe(m)
-    return out
-
-
 def top_groups(groups: dict, rows: dict, n: int = 8) -> list[dict]:
     gi = groups.get("industries") or {}
     listed = {}
@@ -631,9 +583,6 @@ def summary_it(res: dict, doc: dict) -> str:
     if ch["joined_focus"] or ch["left_focus"]:
         L.append("Entrano in Focus: " + (", ".join(ch["joined_focus"]) or "nessuno") +
                  " · Escono: " + (", ".join(f"{t} ({ch['why_left'].get(t, 'Stalk')})" for t in ch["left_focus"]) or "nessuno"))
-    if a["pattern_disagreements"]:
-        L.append("Pattern: le due letture non concordano (restano in Stalk, da guardare): " +
-                 "; ".join(f"{t} (A {v['a']} / B {v['b']})" for t, v in a["pattern_disagreements"].items()))
     if a.get("stale_stalk"):
         L.append("Stalk scaduti (troppe sedute senza stringere): " +
                  ", ".join(f"{t} ({d})" for t, d in sorted(a["stale_stalk"].items())))
@@ -644,14 +593,6 @@ def summary_it(res: dict, doc: dict) -> str:
     fg = [f"{r['ticker']} {r['group_pctl']}" for r in res["fpub"] if r.get("group_pctl") is not None]
     if fg:
         L.append("Forza del gruppo dei Focus (percentile): " + ", ".join(fg))
-    cc = a.get("pattern_c_vs_decision") or {}
-    if cc.get("c_tight_not_focus") or cc.get("focus_c_wide"):
-        parts = []
-        if cc.get("c_tight_not_focus"):
-            parts.append("stretti per le trendline ma non Focus: " + "; ".join(f"{t} ({v})" for t, v in sorted(cc["c_tight_not_focus"].items())))
-        if cc.get("focus_c_wide"):
-            parts.append("Focus che le trendline non vedono stretti: " + "; ".join(f"{t} ({v})" for t, v in sorted(cc["focus_c_wide"].items())))
-        L.append(f"Lettura C (modo {a.get('pattern_mode')}): " + " · ".join(parts))
     cw = a.get("channel_watch") or []
     if cw:
         rec = [c for c in cw if c["above_sma30_65m"] and c["under_ema9"]]
@@ -724,8 +665,6 @@ def summary_it(res: dict, doc: dict) -> str:
     L.append(f"Remy: {len(piv)} nomi" + (f" (fuori per RS<80: {', '.join(low)})" if low else ""))
     if a.get("info_not_verified"):
         L.append("Settore/market cap non verificati (Yahoo non ha risposto): " + ", ".join(a["info_not_verified"]))
-    if a["review"]:
-        L.append("Revisione: " + "; ".join(f"{t} {v}" for t, v in a["review"].items()))
     if a.get("short_tickers") is not None:
         sc = a.get("short_check") or {}
         L += ["", f"**Short** (stesse regole al contrario, RS e SMA200 non decidono; {sc.get('candidates', 0)} titoli controllati)",
@@ -757,8 +696,6 @@ def main(argv=None) -> int:
     work.mkdir(parents=True, exist_ok=True)
     doc = compute(session, work, args.from_cache)
 
-    review_p = work / "review.json"
-    review = json.loads(review_p.read_text(encoding="utf-8")) if review_p.exists() else {}
     earn_p = work / "earnings.json"
     earn = json.loads(earn_p.read_text(encoding="utf-8")) if (args.from_cache and earn_p.exists()) else None
     prev = None
@@ -768,7 +705,7 @@ def main(argv=None) -> int:
             if j.get("session_date") != session.isoformat():
                 prev = j
                 break
-    res = build(doc, review, prev, earn)
+    res = build(doc, prev, earn)
     write_atomic(earn_p, res["earn"])
     work.joinpath("compute.pkl").write_bytes(pickle.dumps(doc))      # salva anche le info scaricate
 

@@ -2,8 +2,8 @@
 # Fasi di Jeff Coach sul server (Oracle, Ubuntu). Le lancia systemd con i timer installati da installa.sh.
 #
 #   fasi.sh aggiorna    codice nuovo da GitHub (+ librerie se cambiate)
-#   fasi.sh lista       lista Focus/Stalk del mattino -> commit su GitHub (la leggono alert e revisione di Claude)
-#   fasi.sh card        card su Discord alle 10:45 di Roma, con la revisione se è arrivata (GitHub fa solo da riserva)
+#   fasi.sh lista       lista Focus/Stalk del mattino -> commit su GitHub (la leggono gli alert)
+#   fasi.sh card        card su Discord alle 10:45 di Roma (GitHub fa solo da riserva)
 #   fasi.sh settimana   riepilogo del lunedì
 #
 # I webhook e il token GitHub stanno in ~/jeff-coach/.env (mai nel repo).
