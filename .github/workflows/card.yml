@@ -20,7 +20,7 @@ env:
   JEFF_COACH_HOME: ${{ github.workspace }}/data
   JEFF_COACH_AGREED: ${{ github.workspace }}/data/coach-agreed
   JEFF_COACH_REMY_FILE: ${{ github.workspace }}/data/remy/pivot30_list.txt
-  COACH_CARD_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_CARD_DISCORD_WEBHOOK_URL }}
+  COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_ALERT_DISCORD_WEBHOOK_URL }}   # tutto su Sydney [RONIN 14/10]
   PYTHONUTF8: "1"
 
 jobs:

@@ -22,11 +22,11 @@ REMY_DAILY_CACHE = Path("/workspace/tv-scanner/cache/daily")   # solo lettura, s
 SECRETS_FILE = Path(os.environ.get("JEFF_COACH_SECRETS", "/home/box/agent-data/box-secrets.json"))
 
 # Webhook: si legge il primo nome presente (env o file segreti). Mai stamparli.
-CARD_WEBHOOK_ENV = ("COACH_CARD_DISCORD_WEBHOOK_URL", "DUA_COACH_DISCORD_WEBHOOK_URL")
 ALERT_WEBHOOK_ENV = ("COACH_ALERT_DISCORD_WEBHOOK_URL", "SYDNEY_COACH_DISCORD_WEBHOOK_URL")
+CARD_WEBHOOK_ENV = ALERT_WEBHOOK_ENV      # [RONIN 14/10] tutto su Sydney: il webhook di Dua non si usa più
 FORBIDDEN_WEBHOOK_ENV = ("DISCORD_WEBHOOK_URL", "SYDNEY_DISCORD_WEBHOOK_URL")   # Remy: mai
-CARD_USERNAME = os.environ.get("COACH_NAME", "Dua")
 ALERT_USERNAME = os.environ.get("COACH_ALERT_NAME", "Sydney")
+CARD_USERNAME = ALERT_USERNAME            # [RONIN 14/10] card e riepiloghi col nome di Sydney
 CARD_COLOR = 0x2ECC71          # long: bordo verde [RONIN 12/10] (era arancio #E67E22)
 ALERT_COLOR = 0x2ECC71         # long: bordo verde [RONIN 12/10]
 SHORT_COLOR = 0xE74C3C         # short: bordo rosso, lista e alert [RONIN 12/10]

@@ -115,6 +115,12 @@ def post_card(session: date, dry_run: bool = False) -> dict:
         res = _request(f"{base}/messages/{prev['message_id']}?with_components=true", "PATCH", body, ctype)
         res["method"] = "PATCH"
         res.setdefault("message_id", prev["message_id"])
+        if not res.get("ok") and res.get("status") in (401, 403, 404):
+            # messaggio di un altro webhook (es. Dua prima del 14/10): non si può correggere, se ne pubblica uno nuovo
+            prev = {k: v for k, v in prev.items() if k not in ("message_id", "more_message_ids")}
+            body, ctype = _multipart(payload, fname, txt_path.read_bytes())
+            res = _request(url + q + "wait=true", "POST", body, ctype)
+            res["method"] = "POST"
     else:
         res = _request(url + q + "wait=true", "POST", body, ctype)
         res["method"] = "POST"

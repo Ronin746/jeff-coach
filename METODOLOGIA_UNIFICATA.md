@@ -281,7 +281,7 @@ C'è un gate pronto ma spento: `GROUP_FOCUS_MIN_PCTL` (es. 40), che non farebbe 
 **Allegato:** `watchlist_<data>.txt` in una riga sola: `###FOCUS,NASDAQ:SIMO,...,###STALK,...`. Borse: NMS/NGM/NCM → NASDAQ, NYQ → NYSE, ASE/PCX → AMEX. `MOG-A` diventa `MOG.A`.
 
 **Webhook:**
-- la card usa `COACH_CARD_DISCORD_WEBHOOK_URL`, un segreto del repo GitHub;
+- la card usa `COACH_ALERT_DISCORD_WEBHOOK_URL` (Sydney, come gli alert; dal 14/10 Dua non si usa più), un segreto del repo GitHub;
 - gli alert usano `COACH_ALERT_DISCORD_WEBHOOK_URL`, che sta nel file `.env` del PC;
 - mai quelli di Remy, mai stampati.
 

@@ -29,7 +29,7 @@ data/coach-agreed/weekly_*.json       weekly
 ## Segreti
 
 Va impostato un solo segreto: **Settings → Secrets and variables → Actions → New repository secret**.
-- `COACH_CARD_DISCORD_WEBHOOK_URL`: il webhook del canale della card (quello di Dua).
+- Card e alert usano entrambi `COACH_ALERT_DISCORD_WEBHOOK_URL` (Sydney) dal 14/10; il webhook di Dua non si usa più.
 
 I webhook degli alert e di Remy restano solo sul PC, nel file `.env`.
 
