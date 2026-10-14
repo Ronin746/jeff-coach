@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "status": 200,
+  "message_id": "1559849507569668180",
+  "channel_id": "1554804937928736828",
+  "method": "POST",
+  "session": "2026-10-14",
+  "more_message_ids": [
+    "1559849509628936213"
+  ]
+}
