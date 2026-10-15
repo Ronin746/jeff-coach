@@ -20,21 +20,30 @@ MM_FILE = C.STATE / "market_monitor.json"
 
 
 def fetch_market_monitor() -> list[dict]:
-    """Righe del Market Monitor dalla più recente; se la rete non risponde, l'ultima copia salvata."""
+    """Copia di Martin-coach [RONIN 15/10]. Righe dalla più recente; fonti in ordine:
+    1. il Google Sheet pubblico di Stockbee (stockbee.py: la fonte da cui legge anche NEL);
+    2. il file già pronto nel repo pubblico di NEL;
+    3. l'archivio nel repo (data/breadth/market_monitor_nel.json), a cui ogni download riuscito si aggiunge;
+    4. se manca la riga del giorno, la replica nostra (daily.themes_and_regime)."""
     import urllib.request
+    from . import breadth as B
+    from . import stockbee as SB
+    try:
+        return B.archive_nel(SB.fetch())[:300]
+    except Exception as e:
+        log.warning("Market Monitor dal foglio Stockbee: %s", e)
     for url in C.MM_URLS:
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "JeffCoach/2.0"})
             rows = json.loads(urllib.request.urlopen(req, timeout=60).read())
             if isinstance(rows, list) and rows and "date" in rows[0]:
-                rows = rows[:300]
-                C.STATE.mkdir(parents=True, exist_ok=True)
-                tmp = MM_FILE.with_suffix(".tmp")
-                tmp.write_text(json.dumps(rows), encoding="utf-8")
-                tmp.replace(MM_FILE)
-                return rows
+                return B.archive_nel(rows)[:300]
         except Exception as e:
             log.warning("Market Monitor %s: %s", url, e)
+    arch = B.nel_archive()
+    if arch:
+        log.warning("Market Monitor: NEL non raggiungibile, uso l'archivio (ultima riga %s)", arch[0]["date"])
+        return arch[:300]
     if MM_FILE.exists():
         log.warning("Market Monitor: uso la copia salvata")
         return json.loads(MM_FILE.read_text(encoding="utf-8"))
@@ -65,7 +74,8 @@ def market_monitor(rows: list[dict], as_of) -> Optional[dict]:
     old = rows[i + 5] if i + 5 < len(rows) else None
     d5 = (r["t2108"] - old["t2108"]) if (old and r.get("t2108") is not None and old.get("t2108") is not None) else None
     return dict(date=day, state=st, up4=r["up4"], down4=r["down4"], ratio5=r["ratio5"], ratio10=r["ratio10"],
-                t2108=r.get("t2108"), t2108_d5=None if d5 is None else round(d5, 2))
+                t2108=r.get("t2108"), t2108_d5=None if d5 is None else round(d5, 2), up25q=r.get("up25q"),
+                down25q=r.get("down25q"))
 
 
 def index_state(df: Optional[pd.DataFrame]) -> dict:

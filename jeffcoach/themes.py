@@ -1,6 +1,7 @@
 """Analisi dei temi [RONIN 13/10].
 
-Per ogni tema (mappa di themes_map.py, con l'industria Yahoo come riserva per i titoli senza tema):
+Per ogni tema (mappa di themes_map.py, copiata da Martin-coach: solo gruppi degli ETF tematici della lista di Andrea
+con le partecipazioni complete SEC N-PORT; niente industria Yahoo) [RONIN 15/10]:
   - indice a pesi uguali dei titoli liquidi del tema (mediana delle variazioni giornaliere, ~1 anno);
   - trend dell'indice: uptrend (indice > EMA50 > EMA150 e EMA50 in salita), downtrend (indice < EMA50 < EMA150),
     altrimenti neutro;
@@ -31,7 +32,7 @@ def _member_stats(df: pd.DataFrame) -> Optional[dict]:
 
 
 def theme_table(groups: dict[str, list[str]], daily: dict[str, pd.DataFrame], spx: pd.Series,
-                source: dict[str, str]) -> list[dict]:
+                source: dict[str, str], min_one: set = frozenset()) -> list[dict]:
     rets = {}
     stats = {}
     for mem in groups.values():
@@ -45,7 +46,7 @@ def theme_table(groups: dict[str, list[str]], daily: dict[str, pd.DataFrame], sp
     rows = []
     for name, mem in groups.items():
         mem = [t for t in mem if t in R.columns and stats.get(t)]
-        if len(mem) < C.THEME_MIN_MEMBERS:
+        if len(mem) < (1 if name in min_one else C.THEME_MIN_MEMBERS):
             continue
         r = R[mem].median(axis=1, skipna=True).fillna(0.0)
         idx = (1 + r).cumprod()
@@ -59,7 +60,7 @@ def theme_table(groups: dict[str, list[str]], daily: dict[str, pd.DataFrame], sp
         ret63 = idx.iloc[-1] / idx.iloc[-64] - 1
         rs21 = ret21 - (sp.iloc[-1] / sp.iloc[-22] - 1)
         st = [stats[t] for t in mem]
-        rows.append(dict(theme=name, n=len(mem), members=sorted(mem), source=source.get(name, "industria Yahoo"),
+        rows.append(dict(theme=name, n=len(mem), members=sorted(mem), source=source.get(name, "etf"),
                          trend="up" if up else "down" if down else "neutral",
                          ret21=float(ret21 * 100), ret63=float(ret63 * 100), rs21=float(rs21 * 100),
                          lead_share=float(np.mean([s["leading"] for s in st])),
@@ -87,34 +88,74 @@ def theme_table(groups: dict[str, list[str]], daily: dict[str, pd.DataFrame], sp
     return out
 
 
-def build(doc_daily: dict[str, pd.DataFrame], spx: pd.Series, universe: set[str], metrics: dict[str, dict],
-          industry: dict, tmap: dict) -> dict:
-    """Tabella dei temi e tema principale di ogni titolo. Ritorna {"rows": [...], "ticker": {t: tema}}."""
+def break_ties(closes: pd.DataFrame, theme_groups: dict[str, list[str]], ties: dict[str, list[str]],
+               window: int = 60, min_members: int = 3) -> dict[str, str]:
+    """Copia di Martin-coach: titolo in pari merito tra più temi (stesso numero di ETF), vince il tema con cui si
+    muove di più (correlazione delle variazioni % con la mediana degli altri membri del tema) [RONIN 15/10]."""
+    rets = closes.pct_change(fill_method=None).iloc[-window:]
+    out = {}
+    for t, cand in ties.items():
+        if t not in rets.columns or rets[t].isna().sum() > window // 4:
+            continue
+        best, best_c = None, -2.0
+        for th in cand:
+            cols = [x for x in theme_groups.get(th, []) if x in rets.columns and x != t]
+            if len(cols) < min_members:
+                continue
+            c = rets[t].corr(rets[cols].median(axis=1))
+            if c == c and c > best_c:
+                best, best_c = th, c
+        if best:
+            out[t] = best
+    return out
+
+
+def _dv(df: pd.DataFrame) -> float:
+    d = df.iloc[-20:]
+    return float((d.Close * d.Volume).mean())
+
+
+def build(daily: dict[str, pd.DataFrame], spx: pd.Series, universe: set[str], metrics: dict[str, dict], tmap: dict) -> dict:
+    """Temi come Martin-coach [RONIN 15/10]: solo ETF tematici della lista di Andrea (tutti i gruppi, nomi invariati)
+    con le partecipazioni complete; niente basket, niente industria Yahoo: chi non è in un ETF tematico resta senza tema.
+    Gruppi generici in classifica ma mai tema di un titolo; ETF senza azioni (GLD, IBIT, USO...) membri del loro tema.
+    Ritorna {"rows": [...], "ticker": {titolo: tema}}."""
     from . import themes_map as TM
     liquid = {s for s in universe if (metrics.get(s) or {}).get("adv") and metrics[s]["adv"] >= C.THEME_DV_MIN}
     mapped = TM.groups_from_map(tmap, liquid)
     groups = {k: v for k, v in mapped.items() if len(v) >= C.THEME_MIN_MEMBERS}
-    in_map = {s for v in mapped.values() for s in v}
-    for s in liquid:                                   # riserva: industria Yahoo per chi non ha tema
-        i = (industry.get(s) or {}).get("industry")
-        if i and s not in in_map:
-            groups.setdefault(i, []).append(s)
-    groups = {k: v for k, v in groups.items() if len(v) >= C.THEME_MIN_MEMBERS}
-    rows = theme_table(groups, doc_daily, spx, tmap.get("themes") or {})
+    map_groups = dict(groups)
+    proxy_only = set()
+    for th, es in (tmap.get("proxy_etfs") or {}).items():          # ETF senza azioni: l'ETF è membro del tema
+        px = [e for e in es if e in daily and _dv(daily[e]) >= C.THEME_DV_MIN]
+        if px:
+            groups[th] = mapped.get(th, []) + px
+            if len(groups[th]) < C.THEME_MIN_MEMBERS:
+                proxy_only.add(th)
+    rows = theme_table(groups, daily, spx, tmap.get("themes") or {}, min_one=proxy_only)
     ranked = {r["theme"]: r for r in rows}
+    generic = frozenset(TM.GENERIC_GROUPS)
     tick: dict[str, str] = {}
-    for s in universe:                                 # tema principale della mappa se è in classifica
-        p = ((tmap.get("tickers") or {}).get(s) or {}).get("primary")
-        if p in ranked:
-            tick[s] = p
+    for r in sorted(rows, key=lambda x: -x["score"]):              # tema col punteggio più alto, mai un generico
+        if r["theme"] in generic:
             continue
-        cand = [r for r in rows if s in r["members"]]   # altrimenti il tema col punteggio più alto che lo contiene
-        if cand:
-            tick[s] = max(cand, key=lambda r: r["score"])["theme"]
-        else:
-            i = (industry.get(s) or {}).get("industry")
-            if i in ranked:
-                tick[s] = i
+        for t in r["members"]:
+            if t in universe:
+                tick.setdefault(t, r["theme"])
+    tinfo = tmap.get("tickers") or {}
+    for s, info in tinfo.items():                                 # tema principale della mappa, se è in classifica
+        if s in universe and info.get("primary") in ranked:
+            tick[s] = info["primary"]
+    try:                                                          # pari merito tra temi: decide l'andamento
+        ties = {s: [th for th in info["tied"] if th in ranked] for s, info in tinfo.items()
+                if s in universe and info.get("tied")}
+        ties = {s: v for s, v in ties.items() if len(v) > 1}
+        cols = sorted(({s for s in ties} | {x for v in map_groups.values() for x in v}) & set(daily))
+        closes = pd.DataFrame({s: daily[s].Close for s in cols}).iloc[-62:]
+        tick.update(break_ties(closes, map_groups, ties, min_members=C.THEME_MIN_MEMBERS))
+    except Exception as e:
+        import logging
+        logging.getLogger("jeffcoach.themes").warning("pari merito temi: %s", e)
     for r in rows:                                     # nel json bastano i primi nomi
         r["members"] = r["members"][:12]
     return {"rows": rows, "ticker": tick, "map_built": tmap.get("built_utc")}

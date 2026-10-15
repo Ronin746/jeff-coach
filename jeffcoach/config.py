@@ -261,7 +261,6 @@ ALERT_COOLDOWN_MIN = 60
 # ---------------------------------------------------------------- temi [RONIN 13/10]
 # Mappa dei temi come in Martin-coach (themes_map.py): basket "🐭Baskets" di TradingView, ETF tematici del foglio di
 # Andrea con le partecipazioni dal repo di NEL, modifiche a mano (state/themes/manuale.json); industria Yahoo come riserva.
-THEME_BASKETS_URL = "https://www.tradingview.com/watchlists/325428425/"
 THEME_ETF_SHEET_CSV = "https://docs.google.com/spreadsheets/d/1OSC1ovj4y5I-Yb_xBsMNvexgAOSUbLJRzbQU9W9uCNM/export?format=csv&gid=305077282"
 THEME_ETF_HOLDINGS_URL = "https://raw.githubusercontent.com/i-manage-risk/NEL/main/data/etf_holdings_cache.json"
 THEME_DV_MIN = 75e6              # un titolo conta in un tema con controvalore medio >= 75M$ (come Martin)

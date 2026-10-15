@@ -52,7 +52,14 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
         industry = {}
     syms = set(meta) | D.extra_symbols()
     start = (as_of - timedelta(days=800)).isoformat()
-    idx_syms = [x for x in C.REGIME_INDICES if x not in syms]      # QQQ/IWM per il regime [RONIN 13/10]
+    from . import themes_map as TM
+    try:
+        tmap = TM.refresh()
+    except Exception as e:
+        log.warning("mappa temi: %s", e)
+        tmap = {}
+    proxy = sorted({e for v in (tmap.get("proxy_etfs") or {}).values() for e in v})   # ETF senza azioni dei temi
+    idx_syms = [x for x in list(C.REGIME_INDICES) + proxy if x not in syms]    # QQQ/IWM per il regime, ETF dei temi
     daily = D.download_daily(list(syms) + ["^GSPC"] + idx_syms, start, as_of)
     spx = daily.get("^GSPC")
     if spx is None or spx.index[-1].date() != as_of:
@@ -105,7 +112,8 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
                  if len([g for g in SH.numeric_open(m, None) if g != "sma65"]) <= C.SHORT["pre_max_numeric_open"]]
         if pre_s:
             s65s = D.sma30_65m(pre_s, last_sessions(as_of, 6))
-    themes, reg = themes_and_regime(daily, spx, metrics, industry, as_of)
+    themes, reg = themes_and_regime(daily, spx, metrics, tmap, as_of,
+                                    {s: daily[s] for s in syms if s in daily})
     doc = dict(session=session, as_of=as_of, meta=meta, metrics=metrics, info=info, sma65=s65, industry=industry,
                n_downloaded=len(daily) - 1 - len(idx_syms), stale=stale, num_ok=sorted(num_ok), cand=sorted(cand),
                short_metrics=short_m, sma65_short=s65s, themes=themes, regime=reg)
@@ -113,24 +121,40 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
     return doc
 
 
-def themes_and_regime(daily: dict, spx, metrics: dict, industry: dict, as_of) -> tuple[dict, dict]:
-    """Temi (themes.py) e regime di mercato come Martin-coach (regime.py) [RONIN 13/10]. Se una fonte non risponde
-    la lista si fa lo stesso: senza temi nessuno esce per il tema, senza Market Monitor decide il punteggio indici."""
+def themes_and_regime(daily: dict, spx, metrics: dict, tmap: dict, as_of, stocks: dict) -> tuple[dict, dict]:
+    """Temi (themes.py) e regime di mercato come Martin-coach (regime.py) [RONIN 13/10, 15/10]. Se una fonte non
+    risponde la lista si fa lo stesso: senza temi nessuno esce per il tema. Market Monitor: foglio Stockbee → NEL →
+    archivio nel repo → replica completa nostra (notturna) → calcolo sui titoli della lista, calibrati su Stockbee."""
+    from . import breadth as B
     from . import regime as RG
     from . import themes as TH
-    from . import themes_map as TM
     try:
-        tmap = TM.refresh()
-        themes = TH.build(daily, spx.Close, set(metrics), metrics, industry, tmap)
+        themes = TH.build(daily, spx.Close, set(metrics), metrics, tmap)
     except Exception as e:
         log.warning("temi non disponibili: %s", e)
         themes = {"rows": [], "ticker": {}, "error": str(e)}
+    mm_rows = []
     try:
-        mm = RG.market_monitor(RG.fetch_market_monitor(), as_of)
+        mm_rows = RG.fetch_market_monitor()
     except Exception as e:
         log.warning("Market Monitor non disponibile: %s", e)
-        mm = None
+    own = []
+    try:                                  # ogni giorno, come Martin: archivio e calibrazione restano aggiornati
+        own = B.update(B.own_rows(stocks), B.nel_archive())
+    except Exception as e:
+        log.warning("Market Monitor nostro: %s", e)
+    mm = RG.market_monitor(mm_rows, as_of)
+    if mm:
+        mm["source"] = "Stockbee"
+    else:
+        for rows in (B.full_backup(), own):
+            mm = RG.market_monitor(rows, as_of)
+            if mm:
+                mm["source"] = "own"
+                break
     reg = RG.regime({k: RG.index_state(daily.get(k)) for k in C.REGIME_INDICES}, mm)
+    if mm and mm.get("source") == "own":
+        reg["why"].insert(0, "Market Monitor: own calculation (Stockbee unavailable)")
     return themes, reg
 
 

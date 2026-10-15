@@ -81,7 +81,7 @@ def regime_line(reg: Optional[dict]) -> str:
     mm = reg.get("market_monitor") or {}
     s = f"Regime **{ {'SHORT': 'DEFENSIVE'}.get(reg['bias'], reg['bias']) }**"
     if mm:
-        s += (f" — Market Monitor {mm['state']} (4% up {mm['up4']:.0f} / down {mm['down4']:.0f}, 10d ratio {mm['ratio10']:.2f}"
+        s += (f" — Market Monitor{' (own calc)' if mm.get('source') == 'own' else ''} {mm['state']} (4% up {mm['up4']:.0f} / down {mm['down4']:.0f}, 10d ratio {mm['ratio10']:.2f}"
               + (f", T2108 {mm['t2108']:.0f}" if mm.get("t2108") is not None else "") + ")")
     else:
         s += f" — index score {reg.get('score'):+d} (Market Monitor n/a)"

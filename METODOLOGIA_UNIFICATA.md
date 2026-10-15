@@ -407,14 +407,17 @@ Stesse regole del long, al contrario, in una sezione separata e parallela (`jeff
 
 ## Temi e regime di mercato (dal 13/10, Ronin)
 
-**Temi** (`jeffcoach/themes_map.py`, `jeffcoach/themes.py`, stessa mappa di Martin-coach):
-- Mappa dei temi: watchlist TradingView "🐭Baskets" + ETF tematici del foglio di Andrea (gid 305077282) con le loro partecipazioni (repo NEL) + `state/themes/manuale.json`; si riscarica il lunedì o se ha più di 6 giorni. Chi non ha tema usa l'industria Yahoo.
+**Temi** (`jeffcoach/themes_map.py`, `jeffcoach/etf_holdings.py`, `jeffcoach/themes.py`; dal 15/10 copia della mappa attuale di Martin-coach):
+- Solo ETF tematici della lista di Andrea (foglio gid 305077282): tema = colonna Group, nome invariato, tutti i gruppi. Membri = partecipazioni COMPLETE degli ETF dall'N-PORT depositato alla SEC (CUSIP → ticker con OpenFIGI, cache `data/themes/cusip_ticker.json`); riserva per gli ETF senza N-PORT: prime 10 dal repo di NEL (archiviate in `data/themes/etf_holdings_nel.json`).
+- Tema principale di un titolo = il gruppo con più ETF che lo tengono, mai un gruppo generico (Momentum, ESG, Meme stocks… contano solo in classifica); a parità di ETF vince il tema con cui il titolo si muove di più (correlazione a 60 sedute con la mediana del tema). Modifiche a mano in `data/themes/manuale.json`.
+- ETF senza azioni (GLD, SLV, IBIT, USO, TLT…): l'ETF stesso è membro del suo tema, che entra in classifica anche con un solo ETF; gli ETF restano contesto, mai in lista.
+- Niente basket TradingView, niente industria Yahoo: chi non è in un ETF tematico resta senza tema (e quindi non esce mai per il tema). Mappa riscaricata il lunedì.
 - Indice del tema: mediana delle variazioni giornaliere dei titoli del tema con controvalore medio ≥ 75M$ (almeno 3 titoli).
 - Trend dell'indice: **uptrend** = indice > EMA50 > EMA150 con EMA50 in salita (5 sedute); **downtrend** = indice < EMA50 < EMA150; altrimenti neutro.
 - Punteggio (0-100): media dei ranghi di rendimento a 1 e 3 mesi, forza contro l'S&P a 1 mese, quota di titoli Leading (close > EMA50 > EMA150) e quota sopra la EMA21. **Leading** = uptrend e nel 30% più alto.
 - Uso: i titoli col tema in **downtrend escono** dalla lista (motivo "theme in downtrend"); Focus e Stalk sono ordinati con i **temi leading prima**, poi per RS. Card: ★ tema accanto al nome e riquadro THEMES (temi leading, temi in downtrend).
 
 **Regime** (`jeffcoach/regime.py`, logica di Martin-coach):
-- Market Monitor di Stockbee (repo NEL, copia salvata in `state/market_monitor.json`) sulla seduta di riferimento: Defensive se 4% down ≥ 300 o ratio 10g < 0,85 o (ratio 5g < 0,70 e down > 2× up); Expansion se ratio 10g ≥ 1,25, ratio 5g ≥ 1,10, up ≥ 180 e down < 150; altrimenti Mixed.
+- Market Monitor di Stockbee (dal 15/10 come Martin-coach), fonti in ordine: foglio Google pubblico di Stockbee (`stockbee.py`) → file di NEL → archivio nel repo (`data/breadth/market_monitor_nel.json`, storico dal 2007) → replica completa nostra su ~5.700 azioni USA, calcolata ogni notte alle 00:00 di Roma (workflow "Market Monitor nostro", `data/breadth/market_monitor_full.json`) → calcolo sui titoli della lista; le repliche sono calibrate sulle ultime 120 sedute di Stockbee (stato uguale ~90%) e sulla card sono segnate "own calc". Sulla seduta di riferimento: Defensive se 4% down ≥ 300 o ratio 10g < 0,85 o (ratio 5g < 0,70 e down > 2× up); Expansion se ratio 10g ≥ 1,25, ratio 5g ≥ 1,10, up ≥ 180 e down < 150; altrimenti Mixed.
 - Bias: Expansion → LONG, Mixed → MIXED, Defensive → DEFENSIVE. Punteggio indici (QQQ trend EMA9/21 e EMA50, IWM trend, MM ±1, T2108 a 5 sedute ±1) come contesto; decide solo se manca il Market Monitor.
 - Gestione (JeffCoach è solo long): LONG nessun limite; MIXED al massimo 3 Focus (prima i temi leading, poi RS); DEFENSIVE solo Focus con tema leading, al massimo 3, segnati **"against the regime"** sulla card e negli alert di Sydney. Gli altri Focus restano in Stalk col motivo "regime".
