@@ -554,7 +554,8 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
         themes=dict(leading=[dict(theme=r["theme"], score=round(r["score"]), n=r["n"], ret21=_r(r["ret21"], 1),
                                   rs21=_r(r["rs21"], 1)) for r in th["rows"] if r["leading"]],
                     downtrend=[r["theme"] for r in th["rows"] if r["trend"] == "down"],
-                    excluded=theme_out, n_themes=len(th["rows"]), map_built=th.get("map_built")),
+                    excluded=theme_out, n_themes=len(th["rows"]), map_built=th.get("map_built"),
+                    line=themes_line(th["rows"], as_of)),
         gap_to_fill={t: _r(r.m["gap_top"]) for t, r in rows.items()
                      if r.list != "Out" and any(g.code == "gap" and not g.ok for g in r.gates)},
     )
@@ -580,6 +581,33 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
     return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn, short=short,
                 sectors={sec: {**(groups.get("sectors") or {}).get(sec, {}), **st, "strong_w1": sw1.get(sec)}
                          for sec, st in sector_etf_stats(doc).items()})
+
+
+def themes_line(rows: list[dict], as_of) -> str:
+    """Riga dei temi in testa alla card, come Martin-coach [RONIN 15/10]: i primi 3 della classifica con lo stato
+    (leading / uptrend / neutral / downtrend) e i temi in uptrend che risalgono di più rispetto a 5 sedute prima."""
+    if not rows:
+        return ""
+    tag = lambda r: "leading" if r["leading"] else {"up": "uptrend", "down": "downtrend"}.get(r["trend"], "neutral")
+    s = ", ".join(f"{r['theme']} ({tag(r)})" for r in rows[:3])
+    prev = {}
+    try:                                  # classifica di 5 sedute prima (la più vecchia disponibile se mancano)
+        for d in reversed(last_sessions(as_of, 6)[:-1]):
+            p = C.WATCHLISTS / f"focus_{d.isoformat()}.json"
+            if p.exists():
+                tt = json.loads(p.read_text(encoding="utf-8")).get("theme_table") or []
+                if tt:
+                    prev = {r["theme"]: r["rank"] for r in tt}
+                    break
+    except Exception as e:
+        log.warning("classifica temi precedente: %s", e)
+    n = len(rows)
+    rising = [r for r in rows[3:] if r["trend"] == "up" and r["theme"] in prev
+              and prev[r["theme"]] - r["rank"] >= max(3, n // 10)]
+    rising.sort(key=lambda r: r["rank"] - prev[r["theme"]])
+    if rising:
+        s += " · rising: " + ", ".join(r["theme"] for r in rising[:3])
+    return s
 
 
 def top_groups(groups: dict, rows: dict, n: int = 8) -> list[dict]:
@@ -743,7 +771,8 @@ def main(argv=None) -> int:
                  [(t, exch_of(t, doc)) for t in sb])
     descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"], res.get("sectors"),
                               dtl_breaks=[d for d in (res["agreed"].get("dtl_watch") or []) if d["kind"] == "break"],
-                              regime=res["agreed"].get("regime"), themes=res["agreed"].get("themes"))
+                              regime=res["agreed"].get("regime"), themes=res["agreed"].get("themes"),
+                              as_of=res["agreed"]["as_of_close"])
     embeds = [{"description": d, "color": C.CARD_COLOR} for d in descs]
     sh = res.get("short")
     if sh is not None:                        # short: riquadri rossi dopo quelli long, sezioni a parte nel txt

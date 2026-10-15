@@ -108,7 +108,7 @@ def regime(indices: dict[str, dict], mm: Optional[dict]) -> dict:
     score_bias = "LONG" if score >= C.BIAS_LONG_MIN else ("SHORT" if score <= C.BIAS_SHORT_MAX else "MIXED")
     if mm is not None:
         bias = C.MM_BIAS[mm["state"]]
-        why.insert(0, f"Market Monitor {mm['state']} → {bias}; index score {score:+d} ({score_bias})")
+        why.insert(0, f"Market Monitor {mm['state']} → {"DEFENSIVE" if bias == "SHORT" else bias}; index score {score:+d} ({score_bias})")
     else:
         bias = score_bias
         why.insert(0, f"Market Monitor unavailable: index score {score:+d} → {bias}")

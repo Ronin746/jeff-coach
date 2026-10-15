@@ -74,22 +74,23 @@ def sector_line(name: str, st: Optional[dict]) -> str:
     return s
 
 
-def regime_line(reg: Optional[dict]) -> str:
-    """Riga del regime in testa alla card [RONIN 13/10], come Martin-coach."""
+def regime_line(reg: Optional[dict], themes_line: Optional[str] = None) -> str:
+    """Intestazione del regime in testa alla card, nello stesso formato di Martin-coach [RONIN 13/10, 15/10]:
+    regime con i motivi, numeri del Market Monitor, temi."""
     if not reg:
         return ""
-    mm = reg.get("market_monitor") or {}
-    s = f"Regime **{ {'SHORT': 'DEFENSIVE'}.get(reg['bias'], reg['bias']) }**"
+    bias = {"SHORT": "DEFENSIVE"}.get(reg["bias"], reg["bias"])
+    rule = {"MIXED": f"max {C.REGIME_MIXED_MAX_FOCUS} Focus",
+            "SHORT": f"Focus only with a leading theme (max {C.REGIME_DEFENSIVE_MAX_FOCUS})"}.get(reg["bias"])
+    L = [f"Regime **{bias}**" + (f" · {rule}" if rule else "") + " — " + "; ".join(reg.get("why") or [])]
+    mm = reg.get("market_monitor")
     if mm:
-        s += (f" — Market Monitor{' (own calc)' if mm.get('source') == 'own' else ''} {mm['state']} (4% up {mm['up4']:.0f} / down {mm['down4']:.0f}, 10d ratio {mm['ratio10']:.2f}"
-              + (f", T2108 {mm['t2108']:.0f}" if mm.get("t2108") is not None else "") + ")")
-    else:
-        s += f" — index score {reg.get('score'):+d} (Market Monitor n/a)"
-    if reg["bias"] == "MIXED":
-        s += f" · max {C.REGIME_MIXED_MAX_FOCUS} Focus"
-    elif reg["bias"] == "SHORT":
-        s += f" · Focus only with a leading theme (max {C.REGIME_DEFENSIVE_MAX_FOCUS})"
-    return s + "\n"
+        L.append(f"Market Monitor **{mm['state']}**" + (" (own calc)" if mm.get("source") == "own" else "")
+                 + f" · ±4% `{mm['up4']:.0f}` / `{mm['down4']:.0f}` · 5D `{mm['ratio5']:.2f}` · 10D `{mm['ratio10']:.2f}`"
+                 + (f" · T2108 `{mm['t2108']:.0f}%`" if mm.get("t2108") is not None else ""))
+    if themes_line:
+        L.append(f"Themes: {themes_line}")
+    return "\n".join(L) + "\n"
 
 
 def themes_section(th: Optional[dict]) -> Optional[str]:
@@ -105,7 +106,7 @@ def themes_section(th: Optional[dict]) -> Optional[str]:
 
 def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
                       sectors: Optional[dict] = None, dtl_breaks: Optional[list[dict]] = None,
-                      regime: Optional[dict] = None, themes: Optional[dict] = None) -> list[str]:
+                      regime: Optional[dict] = None, themes: Optional[dict] = None, as_of: Optional[str] = None) -> list[str]:
     """Card: FOCUS, STALK sopra la SMA30 65m, STALK sotto [RONIN 04/10, 09/10]. Niente tabelle: una voce per nome
     con statistiche e descrizione. Ogni sezione è un embed a sé dello stesso messaggio (Discord: 4096 caratteri per
     embed, 6000 in tutto); oltre si accorciano le frasi, prima degli Stalk.
@@ -121,7 +122,8 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
         return f"**{title}**\n" + "\n\n".join(blocks)
 
     def build(f_lim, s_lim) -> list[str]:
-        parts = [f"**WATCHLIST — {title_date}**\n{regime_line(regime)}\n" + sect("FOCUS", focus, f_lim),
+        head = f"**WATCHLIST — {title_date}**" + (f" (close {as_of})" if as_of else "")
+        parts = [f"{head}\n{regime_line(regime, (themes or {}).get('line'))}\n" + sect("FOCUS", focus, f_lim),
                  sect(f"STALK — above 65m SMA30 ({len(up)})", up, s_lim),
                  sect(f"STALK — below 65m SMA30 ({len(down)})", down, s_lim)]
         if dtl_breaks:          # rotture della trendline discendente in chiusura con volume >= 1,5x [RONIN 09/10]
