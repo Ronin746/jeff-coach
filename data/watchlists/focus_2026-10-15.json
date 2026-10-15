@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-14",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-15 14:48 CEST",
+  "asof_rome": "2026-10-15 15:21 CEST",
   "focus": [
     "PBF"
   ],
@@ -3918,7 +3918,8 @@
       "W": "Housing"
     },
     "n_themes": 103,
-    "map_built": "2026-10-15T09:56:26.450988+00:00"
+    "map_built": "2026-10-15T09:56:26.450988+00:00",
+    "line": "Shipping (leading), Weight loss (leading), Healthcare providers (leading) · rising: Steel, Healthcare services"
   },
   "gap_to_fill": {},
   "theme_table": [
