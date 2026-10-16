@@ -315,8 +315,8 @@ THEME_ETF_DV_MIN = 250e3
 BASKET_WEIGHTS = {"price_performance": 0.25, "bullish_candles": 0.15, "ma_alignment": 0.15, "trend_consistency": 0.15,
                   "volatility": 0.10, "volume": 0.10, "relative_strength": 0.10}
 BASKET_BENCHMARK = "SPY"
-STAGE_LONG = ("LEADING", "BUILDING")      # long solo con tema LEADING o BUILDING (senza tema: nessun filtro)
-STAGE_FADING_LONG_DOWN20 = 200            # tema FADING aperto ai long con -20% >= 200 nelle ultime 10 sedute
+STAGE_LONG = ("LEADING", "BUILDING")      # temi premiati (prima in lista; i soli ammessi nei Focus in DEFENSIVE)
+STAGE_LONG_EXCLUDE = ("WEAK", "BEARISH")  # [RONIN 16/10] fuori dalla lista long solo i temi WEAK e BEARISH
 THEME_OVERWEIGHT_MIN = 5.0
 THEME_OVERWEIGHT_FRAC = 1 / 3
 THEME_MEMBERSHIP = "sovrappeso-5-1/3"     # se cambia, la mappa si ricostruisce

@@ -123,7 +123,7 @@ def themes_section(th: Optional[dict]) -> Optional[str]:
                  + (f" · vs S&P {t['rs21']:+.1f}%" if t.get("rs21") is not None else "") + tk)
     if th.get("downtrend"):
         dt = th["downtrend"]
-        L.append(f"Not for longs ({len(dt)}): " + ", ".join(dt[:25]) + (" …" if len(dt) > 25 else ""))
+        L.append(f"WEAK / BEARISH, names excluded ({len(dt)}): " + ", ".join(dt[:25]) + (" …" if len(dt) > 25 else ""))
     return "\n".join(L)[:3900]
 
 

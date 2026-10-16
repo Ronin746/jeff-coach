@@ -463,15 +463,14 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
     chan = channel_watch(rows, s65)
     dtlw = dtl_watch(dtl_names, metrics, rows, earn_out, out_universe, grp)
 
-    # temi e regime [RONIN 13/10, 16/10 come Martin]: long solo con tema LEADING o BUILDING (FADING con -20% >= 200
-    # nelle ultime 10 sedute; senza tema in classifica nessun filtro); prima LEADING, poi BUILDING, poi RS.
+    # temi e regime [RONIN 13/10, 16/10]: fuori solo i titoli con tema WEAK o BEARISH (senza tema nessun filtro);
+    # prima LEADING, poi BUILDING, poi gli altri, poi RS.
     # Regime: MIXED al massimo 3 Focus; DEFENSIVE solo Focus con tema LEADING/BUILDING, al massimo 3, segnati
     # "against the regime"; potential trend reversal verso gli acquisti: nessun limite. Gli altri Focus restano Stalk.
     th = doc.get("themes") or {"rows": [], "ticker": {}}
     trow = {r["theme"]: r for r in th["rows"]}
     reg = doc.get("regime") or {"bias": "LONG", "why": ["regime non calcolato"], "score": None}
     theme_out = {}
-    ok_stage = set(C.STAGE_LONG) | ({"FADING"} if (reg.get("down20_hi") or 0) >= C.STAGE_FADING_LONG_DOWN20 else set())
     for s, r in rows.items():
         t = trow.get(th["ticker"].get(s))
         r.m["theme"] = t["theme"] if t else None
@@ -479,7 +478,7 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
         r.m["theme_stage"] = t.get("stage") if t else None
         r.m["theme_leading"] = bool(t and t.get("stage") == "LEADING")
         r.m["theme_rank"] = t["rank"] if t else None
-        if t and t.get("stage") and t["stage"] not in ok_stage and r.list != "Out":
+        if t and t.get("stage") in C.STAGE_LONG_EXCLUDE and r.list != "Out":
             theme_out[s] = f"{t['theme']} {t['stage']}"
             r.list = "Out"
             r.out_reason = f"theme {t['stage']}: {t['theme']}"
@@ -583,7 +582,7 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
                                   tickers=r["members"][:5])
                              for r in th["rows"] if r.get("stage") in C.STAGE_LONG],
                     downtrend=[f"{r['theme']} ({r['stage']})" for r in th["rows"]
-                               if r.get("stage") in ("SLIPPING", "WEAK", "BEARISH", "FADING")],
+                               if r.get("stage") in C.STAGE_LONG_EXCLUDE],
                     excluded=theme_out, n_themes=len(th["rows"]), map_built=th.get("map_built"),
                     line=themes_line(th["rows"], as_of)),
         gap_to_fill={t: _r(r.m["gap_top"]) for t, r in rows.items()
@@ -719,7 +718,7 @@ def summary_it(res: dict, doc: dict) -> str:
         L.append(f"Temi LEADING/BUILDING ({len(tm['leading'])} su {tm['n_themes']}): " +
                  (", ".join(f"{t['theme']} ({t['stage']})" for t in tm["leading"]) or "nessuno"))
         if tm.get("excluded"):
-            L.append("Esclusi per stadio del tema (long solo LEADING/BUILDING): " + "; ".join(f"{t} ({v})" for t, v in sorted(tm["excluded"].items())))
+            L.append("Esclusi per stadio del tema (WEAK/BEARISH): " + "; ".join(f"{t} ({v})" for t, v in sorted(tm["excluded"].items())))
         rv = (a.get("regime") or {}).get("reversal")
         if rv:
             L.append(f"Potential trend reversal: flusso ±4% girato verso {rv['direction']} il {rv['date']} (giorno {rv['day']} di {C.REVERSAL_DAYS})")
