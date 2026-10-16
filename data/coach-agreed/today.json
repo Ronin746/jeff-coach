@@ -4,37 +4,29 @@
   "ranking_bar": "2026-10-15",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-16 10:45 CEST",
+  "asof_rome": "2026-10-16 13:40 CEST",
   "focus": [
     "CLMT"
   ],
   "stalk": [
     "TEAM",
     "APA",
-    "ATRC",
     "DK",
-    "HAE",
-    "HNGE",
-    "HTFL",
-    "HUM",
-    "LFST",
     "MPC",
     "PARR",
     "PBF",
     "ZETA",
-    "BTE",
     "FRSH",
-    "WAT",
-    "WDAY",
     "CVLT",
-    "INSP",
+    "HNGE",
+    "HTFL",
+    "HUM",
+    "BTE",
     "CDNA",
     "ANF",
-    "CRL",
-    "ILMN",
+    "ATRC",
+    "LFST",
     "MATX",
-    "NTRA",
-    "OSCR",
     "RVTY",
     "SN",
     "AVTR",
@@ -45,7 +37,7 @@
     "CNK",
     "PI",
     "GGB",
-    "JXN"
+    "INSP"
   ],
   "tickers": [
     {
@@ -72,11 +64,12 @@
       "channel_lower_next": 55.85,
       "gap_to_fill": null,
       "triangle_top": null,
-      "theme": "Oil & gas",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 16,
-      "against_regime": true
+      "theme": null,
+      "theme_trend": null,
+      "theme_leading": false,
+      "theme_stage": null,
+      "theme_rank": null,
+      "against_regime": false
     },
     {
       "ticker": "TEAM",
@@ -111,7 +104,8 @@
       "theme": "Software",
       "theme_trend": "up",
       "theme_leading": true,
-      "theme_rank": 13,
+      "theme_stage": "LEADING",
+      "theme_rank": 9,
       "against_regime": false
     },
     {
@@ -143,42 +137,8 @@
       "theme": "Oil & gas",
       "theme_trend": "up",
       "theme_leading": true,
-      "theme_rank": 16,
-      "against_regime": false
-    },
-    {
-      "ticker": "ATRC",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 25.87,
-      "sma5": 1.35,
-      "atr_ext": 2.68,
-      "reason_en": "loose VCP",
-      "pattern": "forming",
-      "pattern_shape": "flat base",
-      "open_gates": [
-        "vcp",
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 58.44,
-      "trendline_next": 61.7,
-      "industry": "Medical Instruments & Supplies",
-      "sector": "Healthcare",
-      "group_pctl": 70,
-      "leader": [
-        "3m"
-      ],
-      "carry_days": 0,
-      "channel": null,
-      "channel_buy_zone": false,
-      "channel_lower_next": null,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Medical equipment",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 9,
+      "theme_stage": "LEADING",
+      "theme_rank": 3,
       "against_regime": false
     },
     {
@@ -212,174 +172,8 @@
       "theme": "Oil & gas",
       "theme_trend": "up",
       "theme_leading": true,
-      "theme_rank": 16,
-      "against_regime": false
-    },
-    {
-      "ticker": "HAE",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 12.76,
-      "sma5": 0.26,
-      "atr_ext": 5.19,
-      "reason_en": "extended",
-      "pattern": "forming",
-      "pattern_shape": "flat base",
-      "open_gates": [
-        "ext",
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 122.46,
-      "trendline_next": 123.77,
-      "industry": "Medical Devices",
-      "sector": "Healthcare",
-      "group_pctl": 73,
-      "leader": [],
-      "carry_days": 0,
-      "channel": null,
-      "channel_buy_zone": false,
-      "channel_lower_next": null,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Medical equipment",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 9,
-      "against_regime": false
-    },
-    {
-      "ticker": "HNGE",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 29.58,
-      "sma5": 0.38,
-      "atr_ext": 3.36,
-      "reason_en": "loose VCP",
-      "pattern": "forming",
-      "pattern_shape": "flat base",
-      "open_gates": [
-        "vcp",
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 105.8,
-      "trendline_next": 107.0,
-      "industry": "Health Information Services",
-      "sector": "Healthcare",
-      "group_pctl": 98,
-      "leader": [
-        "6m"
-      ],
-      "carry_days": 0,
-      "channel": "extended above",
-      "channel_buy_zone": false,
-      "channel_lower_next": 92.16,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Healthcare providers",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 1,
-      "against_regime": false
-    },
-    {
-      "ticker": "HTFL",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 3.77,
-      "sma5": 1.41,
-      "atr_ext": 1.82,
-      "reason_en": "pattern descending triangle, last bar 1.7× ADR",
-      "pattern": "none",
-      "pattern_shape": "descending triangle",
-      "open_gates": [
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 51.84,
-      "trendline_next": 49.06,
-      "industry": "Health Information Services",
-      "sector": "Healthcare",
-      "group_pctl": 98,
-      "leader": [
-        "3m"
-      ],
-      "carry_days": 2,
-      "channel": "middle of the channel",
-      "channel_buy_zone": false,
-      "channel_lower_next": 47.12,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Healthcare providers",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 1,
-      "against_regime": false
-    },
-    {
-      "ticker": "HUM",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 25.9,
-      "sma5": 0.73,
-      "atr_ext": 2.37,
-      "reason_en": "loose VCP",
-      "pattern": "forming",
-      "pattern_shape": "flat base",
-      "open_gates": [
-        "vcp",
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 437.71,
-      "trendline_next": 456.5,
-      "industry": "Healthcare Plans",
-      "sector": "Healthcare",
-      "group_pctl": 81,
-      "leader": [],
-      "carry_days": 0,
-      "channel": "middle of the channel",
-      "channel_buy_zone": false,
-      "channel_lower_next": 390.89,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Healthcare providers",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 1,
-      "against_regime": false
-    },
-    {
-      "ticker": "LFST",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 9.3,
-      "sma5": -0.42,
-      "atr_ext": 0.12,
-      "reason_en": "under 65m SMA30 (-0.2%)",
-      "pattern": "tight",
-      "pattern_shape": "pennant",
-      "open_gates": [
-        "sma65"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 12.62,
-      "trendline_next": 12.55,
-      "industry": "Medical Care Facilities",
-      "sector": "Healthcare",
-      "group_pctl": 94,
-      "leader": [],
-      "carry_days": 0,
-      "channel": null,
-      "channel_buy_zone": false,
-      "channel_lower_next": null,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Healthcare providers",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 1,
+      "theme_stage": "LEADING",
+      "theme_rank": 3,
       "against_regime": false
     },
     {
@@ -412,7 +206,8 @@
       "theme": "Oil & gas",
       "theme_trend": "up",
       "theme_leading": true,
-      "theme_rank": 16,
+      "theme_stage": "LEADING",
+      "theme_rank": 3,
       "against_regime": false
     },
     {
@@ -446,7 +241,8 @@
       "theme": "Oil & gas",
       "theme_trend": "up",
       "theme_leading": true,
-      "theme_rank": 16,
+      "theme_stage": "LEADING",
+      "theme_rank": 3,
       "against_regime": false
     },
     {
@@ -478,7 +274,8 @@
       "theme": "Oil & gas",
       "theme_trend": "up",
       "theme_leading": true,
-      "theme_rank": 16,
+      "theme_stage": "LEADING",
+      "theme_rank": 3,
       "against_regime": false
     },
     {
@@ -511,41 +308,8 @@
       "theme": "Software",
       "theme_trend": "up",
       "theme_leading": true,
-      "theme_rank": 13,
-      "against_regime": false
-    },
-    {
-      "ticker": "BTE",
-      "list": "Stalk",
-      "rs": 97,
-      "vcp": 68.32,
-      "sma5": 3.45,
-      "atr_ext": 2.86,
-      "reason_en": "1.5 ATR over 9 EMA; loose VCP",
-      "pattern": "forming",
-      "pattern_shape": "flat base",
-      "open_gates": [
-        "ema9",
-        "vcp",
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 5.23,
-      "trendline_next": 5.23,
-      "industry": "Oil & Gas E&P",
-      "sector": "Energy",
-      "group_pctl": 89,
-      "leader": [],
-      "carry_days": 5,
-      "channel": null,
-      "channel_buy_zone": false,
-      "channel_lower_next": null,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Natural gas",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 20,
+      "theme_stage": "LEADING",
+      "theme_rank": 9,
       "against_regime": false
     },
     {
@@ -578,75 +342,8 @@
       "theme": "Software",
       "theme_trend": "up",
       "theme_leading": true,
-      "theme_rank": 13,
-      "against_regime": false
-    },
-    {
-      "ticker": "WAT",
-      "list": "Stalk",
-      "rs": 88,
-      "vcp": 46.41,
-      "sma5": 2.07,
-      "atr_ext": 2.05,
-      "reason_en": "loose VCP; 1 tight day",
-      "pattern": "forming",
-      "pattern_shape": "flat base",
-      "open_gates": [
-        "vcp",
-        "comp",
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 449.12,
-      "trendline_next": 454.54,
-      "industry": "Diagnostics & Research",
-      "sector": "Healthcare",
-      "group_pctl": 93,
-      "leader": [],
-      "carry_days": 1,
-      "channel": "middle of the channel",
-      "channel_buy_zone": false,
-      "channel_lower_next": 426.42,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Water",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 25,
-      "against_regime": false
-    },
-    {
-      "ticker": "WDAY",
-      "list": "Stalk",
-      "rs": 87,
-      "vcp": 42.22,
-      "sma5": 3.9,
-      "atr_ext": 0.81,
-      "reason_en": "SMA200 declining; loose VCP",
-      "pattern": "forming",
-      "pattern_shape": "ascending triangle",
-      "open_gates": [
-        "sma200",
-        "vcp",
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 200.23,
-      "trendline_next": 190.29,
-      "industry": "Software—Application",
-      "sector": "Technology",
-      "group_pctl": 81,
-      "leader": [],
-      "carry_days": 1,
-      "channel": "at the upper line",
-      "channel_buy_zone": false,
-      "channel_lower_next": 181.05,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Cloud",
-      "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 7,
+      "theme_stage": "LEADING",
+      "theme_rank": 9,
       "against_regime": false
     },
     {
@@ -678,40 +375,148 @@
       "theme": "Cybersecurity",
       "theme_trend": "up",
       "theme_leading": true,
+      "theme_stage": "LEADING",
+      "theme_rank": 6,
+      "against_regime": false
+    },
+    {
+      "ticker": "HNGE",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 29.58,
+      "sma5": 0.38,
+      "atr_ext": 3.36,
+      "reason_en": "loose VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 105.8,
+      "trendline_next": 107.0,
+      "industry": "Health Information Services",
+      "sector": "Healthcare",
+      "group_pctl": 98,
+      "leader": [
+        "6m"
+      ],
+      "carry_days": 0,
+      "channel": "extended above",
+      "channel_buy_zone": false,
+      "channel_lower_next": 92.16,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Healthcare services",
+      "theme_trend": "up",
+      "theme_leading": false,
+      "theme_stage": "BUILDING",
       "theme_rank": 23,
       "against_regime": false
     },
     {
-      "ticker": "INSP",
+      "ticker": "HTFL",
       "list": "Stalk",
-      "rs": 82,
-      "vcp": 10.51,
-      "sma5": 0.91,
-      "atr_ext": 1.37,
-      "reason_en": "SMA200 declining",
-      "pattern": "forming",
-      "pattern_shape": "falling wedge",
+      "rs": 98,
+      "vcp": 3.77,
+      "sma5": 1.41,
+      "atr_ext": 1.82,
+      "reason_en": "pattern descending triangle, last bar 1.7× ADR",
+      "pattern": "none",
+      "pattern_shape": "descending triangle",
       "open_gates": [
-        "sma200",
         "pattern"
       ],
       "extreme_rvol_ok": false,
-      "prior_day_high": 70.4,
-      "trendline_next": 71.39,
-      "industry": "Medical Devices",
+      "prior_day_high": 51.84,
+      "trendline_next": 49.06,
+      "industry": "Health Information Services",
       "sector": "Healthcare",
-      "group_pctl": 73,
-      "leader": [],
-      "carry_days": 0,
-      "channel": "lower part of the channel",
-      "channel_buy_zone": true,
-      "channel_lower_next": 68.12,
+      "group_pctl": 98,
+      "leader": [
+        "3m"
+      ],
+      "carry_days": 2,
+      "channel": "middle of the channel",
+      "channel_buy_zone": false,
+      "channel_lower_next": 47.12,
       "gap_to_fill": null,
       "triangle_top": null,
-      "theme": "Medical devices",
+      "theme": "Healthcare providers",
       "theme_trend": "up",
-      "theme_leading": true,
-      "theme_rank": 5,
+      "theme_leading": false,
+      "theme_stage": "BUILDING",
+      "theme_rank": 20,
+      "against_regime": false
+    },
+    {
+      "ticker": "HUM",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 25.9,
+      "sma5": 0.73,
+      "atr_ext": 2.37,
+      "reason_en": "loose VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 437.71,
+      "trendline_next": 456.5,
+      "industry": "Healthcare Plans",
+      "sector": "Healthcare",
+      "group_pctl": 81,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "middle of the channel",
+      "channel_buy_zone": false,
+      "channel_lower_next": 390.89,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Healthcare providers",
+      "theme_trend": "up",
+      "theme_leading": false,
+      "theme_stage": "BUILDING",
+      "theme_rank": 20,
+      "against_regime": false
+    },
+    {
+      "ticker": "BTE",
+      "list": "Stalk",
+      "rs": 97,
+      "vcp": 68.32,
+      "sma5": 3.45,
+      "atr_ext": 2.86,
+      "reason_en": "1.5 ATR over 9 EMA; loose VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9",
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 5.23,
+      "trendline_next": 5.23,
+      "industry": "Oil & Gas E&P",
+      "sector": "Energy",
+      "group_pctl": 89,
+      "leader": [],
+      "carry_days": 5,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Natural gas",
+      "theme_trend": "up",
+      "theme_leading": false,
+      "theme_stage": "BUILDING",
+      "theme_rank": 21,
       "against_regime": false
     },
     {
@@ -745,10 +550,11 @@
       "channel_lower_next": 64.32,
       "gap_to_fill": null,
       "triangle_top": null,
-      "theme": "Biotechnology",
-      "theme_trend": "neutral",
+      "theme": null,
+      "theme_trend": null,
       "theme_leading": false,
-      "theme_rank": 64,
+      "theme_stage": null,
+      "theme_rank": null,
       "against_regime": false
     },
     {
@@ -784,73 +590,77 @@
       "theme": null,
       "theme_trend": null,
       "theme_leading": false,
+      "theme_stage": null,
       "theme_rank": null,
       "against_regime": false
     },
     {
-      "ticker": "CRL",
+      "ticker": "ATRC",
       "list": "Stalk",
       "rs": 98,
-      "vcp": 2.85,
-      "sma5": 1.34,
-      "atr_ext": 1.67,
-      "reason_en": "1 tight day",
-      "pattern": "tight",
-      "pattern_shape": "ascending triangle",
-      "open_gates": [
-        "comp"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 309.48,
-      "trendline_next": 333.3,
-      "industry": "Diagnostics & Research",
-      "sector": "Healthcare",
-      "group_pctl": 93,
-      "leader": [],
-      "carry_days": 0,
-      "channel": "lower part of the channel",
-      "channel_buy_zone": true,
-      "channel_lower_next": 294.72,
-      "gap_to_fill": null,
-      "triangle_top": 310.53,
-      "theme": "Genomics",
-      "theme_trend": "neutral",
-      "theme_leading": false,
-      "theme_rank": 53,
-      "against_regime": false
-    },
-    {
-      "ticker": "ILMN",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 12.39,
-      "sma5": -1.91,
-      "atr_ext": 3.01,
-      "reason_en": "under 65m SMA30 (-1.2%); under 9 EMA",
+      "vcp": 25.87,
+      "sma5": 1.35,
+      "atr_ext": 2.68,
+      "reason_en": "loose VCP",
       "pattern": "forming",
       "pattern_shape": "flat base",
       "open_gates": [
-        "sma65",
-        "ema9",
+        "vcp",
         "pattern"
       ],
       "extreme_rvol_ok": false,
-      "prior_day_high": 275.49,
-      "trendline_next": 309.35,
-      "industry": "Diagnostics & Research",
+      "prior_day_high": 58.44,
+      "trendline_next": 61.7,
+      "industry": "Medical Instruments & Supplies",
       "sector": "Healthcare",
-      "group_pctl": 93,
-      "leader": [],
-      "carry_days": 1,
-      "channel": "backtest of the broken line",
-      "channel_buy_zone": true,
-      "channel_lower_next": 226.11,
+      "group_pctl": 70,
+      "leader": [
+        "3m"
+      ],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
       "gap_to_fill": null,
       "triangle_top": null,
-      "theme": "Biotechnology",
-      "theme_trend": "neutral",
+      "theme": null,
+      "theme_trend": null,
       "theme_leading": false,
-      "theme_rank": 64,
+      "theme_stage": null,
+      "theme_rank": null,
+      "against_regime": false
+    },
+    {
+      "ticker": "LFST",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 9.3,
+      "sma5": -0.42,
+      "atr_ext": 0.12,
+      "reason_en": "under 65m SMA30 (-0.2%)",
+      "pattern": "tight",
+      "pattern_shape": "pennant",
+      "open_gates": [
+        "sma65"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 12.62,
+      "trendline_next": 12.55,
+      "industry": "Medical Care Facilities",
+      "sector": "Healthcare",
+      "group_pctl": 94,
+      "leader": [],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": null,
+      "theme_trend": null,
+      "theme_leading": false,
+      "theme_stage": null,
+      "theme_rank": null,
       "against_regime": false
     },
     {
@@ -880,74 +690,11 @@
       "channel_lower_next": null,
       "gap_to_fill": null,
       "triangle_top": 240.87,
-      "theme": "Transportation",
-      "theme_trend": "neutral",
+      "theme": null,
+      "theme_trend": null,
       "theme_leading": false,
-      "theme_rank": 40,
-      "against_regime": false
-    },
-    {
-      "ticker": "NTRA",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 4.7,
-      "sma5": 1.52,
-      "atr_ext": 3.44,
-      "reason_en": "pattern last bar 1.5× ADR, 2.0 ATR under the line",
-      "pattern": "forming",
-      "pattern_shape": "ascending base",
-      "open_gates": [
-        "pattern"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 408.82,
-      "trendline_next": 437.41,
-      "industry": "Diagnostics & Research",
-      "sector": "Healthcare",
-      "group_pctl": 93,
-      "leader": [],
-      "carry_days": 0,
-      "channel": "lower part of the channel",
-      "channel_buy_zone": true,
-      "channel_lower_next": 389.2,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Biotechnology",
-      "theme_trend": "neutral",
-      "theme_leading": false,
-      "theme_rank": 64,
-      "against_regime": false
-    },
-    {
-      "ticker": "OSCR",
-      "list": "Stalk",
-      "rs": 98,
-      "vcp": 7.6,
-      "sma5": -0.95,
-      "atr_ext": 1.49,
-      "reason_en": "under 65m SMA30 (-0.6%)",
-      "pattern": "tight",
-      "pattern_shape": "flat base",
-      "open_gates": [
-        "sma65"
-      ],
-      "extreme_rvol_ok": false,
-      "prior_day_high": 33.9,
-      "trendline_next": 35.01,
-      "industry": "Healthcare Plans",
-      "sector": "Healthcare",
-      "group_pctl": 81,
-      "leader": [],
-      "carry_days": 0,
-      "channel": "at the upper line",
-      "channel_buy_zone": false,
-      "channel_lower_next": 28.65,
-      "gap_to_fill": null,
-      "triangle_top": null,
-      "theme": "Insurance",
-      "theme_trend": "up",
-      "theme_leading": false,
-      "theme_rank": 38,
+      "theme_stage": null,
+      "theme_rank": null,
       "against_regime": false
     },
     {
@@ -980,6 +727,7 @@
       "theme": null,
       "theme_trend": null,
       "theme_leading": false,
+      "theme_stage": null,
       "theme_rank": null,
       "against_regime": false
     },
@@ -1013,6 +761,7 @@
       "theme": null,
       "theme_trend": null,
       "theme_leading": false,
+      "theme_stage": null,
       "theme_rank": null,
       "against_regime": false
     },
@@ -1045,6 +794,7 @@
       "theme": null,
       "theme_trend": null,
       "theme_leading": false,
+      "theme_stage": null,
       "theme_rank": null,
       "against_regime": false
     },
@@ -1079,6 +829,7 @@
       "theme": null,
       "theme_trend": null,
       "theme_leading": false,
+      "theme_stage": null,
       "theme_rank": null,
       "against_regime": false
     },
@@ -1111,10 +862,11 @@
       "channel_lower_next": 14.86,
       "gap_to_fill": null,
       "triangle_top": null,
-      "theme": "Transportation",
-      "theme_trend": "neutral",
+      "theme": null,
+      "theme_trend": null,
       "theme_leading": false,
-      "theme_rank": 40,
+      "theme_stage": null,
+      "theme_rank": null,
       "against_regime": false
     },
     {
@@ -1148,6 +900,7 @@
       "theme": null,
       "theme_trend": null,
       "theme_leading": false,
+      "theme_stage": null,
       "theme_rank": null,
       "against_regime": false
     },
@@ -1181,6 +934,7 @@
       "theme": null,
       "theme_trend": null,
       "theme_leading": false,
+      "theme_stage": null,
       "theme_rank": null,
       "against_regime": false
     },
@@ -1212,10 +966,11 @@
       "channel_lower_next": null,
       "gap_to_fill": null,
       "triangle_top": null,
-      "theme": "Leisure",
-      "theme_trend": "neutral",
+      "theme": null,
+      "theme_trend": null,
       "theme_leading": false,
-      "theme_rank": 21,
+      "theme_stage": null,
+      "theme_rank": null,
       "against_regime": false
     },
     {
@@ -1246,10 +1001,11 @@
       "channel_lower_next": 184.75,
       "gap_to_fill": null,
       "triangle_top": null,
-      "theme": "Semiconductors",
-      "theme_trend": "neutral",
+      "theme": null,
+      "theme_trend": null,
       "theme_leading": false,
-      "theme_rank": 63,
+      "theme_stage": null,
+      "theme_rank": null,
       "against_regime": false
     },
     {
@@ -1280,42 +1036,45 @@
       "channel_lower_next": 4.48,
       "gap_to_fill": null,
       "triangle_top": null,
-      "theme": "Steel",
-      "theme_trend": "neutral",
+      "theme": null,
+      "theme_trend": null,
       "theme_leading": false,
-      "theme_rank": 55,
+      "theme_stage": null,
+      "theme_rank": null,
       "against_regime": false
     },
     {
-      "ticker": "JXN",
+      "ticker": "INSP",
       "list": "Stalk",
-      "rs": 85,
-      "vcp": 10.01,
-      "sma5": 0.65,
-      "atr_ext": -0.37,
-      "reason_en": "pattern descending triangle, lost the 50",
-      "pattern": "none",
-      "pattern_shape": "descending triangle",
+      "rs": 82,
+      "vcp": 10.51,
+      "sma5": 0.91,
+      "atr_ext": 1.37,
+      "reason_en": "SMA200 declining",
+      "pattern": "forming",
+      "pattern_shape": "falling wedge",
       "open_gates": [
+        "sma200",
         "pattern"
       ],
       "extreme_rvol_ok": false,
-      "prior_day_high": 131.64,
-      "trendline_next": 133.07,
-      "industry": "Insurance—Life",
-      "sector": "Financial Services",
-      "group_pctl": 66,
+      "prior_day_high": 70.4,
+      "trendline_next": 71.39,
+      "industry": "Medical Devices",
+      "sector": "Healthcare",
+      "group_pctl": 73,
       "leader": [],
-      "carry_days": 5,
-      "channel": "middle of the channel",
-      "channel_buy_zone": false,
-      "channel_lower_next": 119.82,
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": true,
+      "channel_lower_next": 68.12,
       "gap_to_fill": null,
       "triangle_top": null,
-      "theme": "Banks",
-      "theme_trend": "neutral",
+      "theme": null,
+      "theme_trend": null,
       "theme_leading": false,
-      "theme_rank": 86,
+      "theme_stage": null,
+      "theme_rank": null,
       "against_regime": false
     }
   ],
@@ -1346,14 +1105,20 @@
     ],
     "left_list": [
       "ACN",
+      "CRL",
       "CXW",
       "ELF",
       "GRAL",
+      "ILMN",
       "IT",
-      "SIG"
+      "JXN",
+      "NTRA",
+      "OSCR",
+      "SIG",
+      "WAT",
+      "WDAY"
     ],
     "joined_list": [
-      "HAE",
       "INSP",
       "MATX",
       "MPC",
@@ -1364,11 +1129,18 @@
     "why_left": {
       "PBF": "under 65m SMA30 (-0.4%)",
       "ACN": "SMA200 declining; extended; 1.7 ATR over 9 EMA",
+      "CRL": "theme SLIPPING: Genomics",
       "CXW": "under 65m SMA30 (-5.4%); under 9 EMA; loose VCP",
       "ELF": "extended; over 5% from SMA5; 1.9 ATR over 9 EMA; loose VCP",
       "GRAL": "extended; under 65m SMA30 (-2.4%); under 9 EMA",
+      "ILMN": "theme HOLDING: Biotechnology",
       "IT": "SMA200 declining; over 5% from SMA5; 1.6 ATR over 9 EMA; loose VCP",
-      "SIG": "extended; over 5% from SMA5; 2.4 ATR over 9 EMA; loose VCP"
+      "JXN": "theme WEAK: Banks",
+      "NTRA": "theme SLIPPING: Genomics",
+      "OSCR": "theme RECOVERY: Insurance",
+      "SIG": "extended; over 5% from SMA5; 2.4 ATR over 9 EMA; loose VCP",
+      "WAT": "theme RECOVERY: Water",
+      "WDAY": "theme FADING: Cloud"
     }
   },
   "stale_stalk": {},
@@ -3636,15 +3408,6 @@
   ],
   "triangles": [
     {
-      "ticker": "CRL",
-      "list": "Stalk",
-      "top": 310.53,
-      "support_next": 295.48,
-      "touches_top": 5,
-      "length": 36,
-      "rs": 98
-    },
-    {
       "ticker": "MATX",
       "list": "Stalk",
       "top": 240.87,
@@ -3655,208 +3418,663 @@
     }
   ],
   "regime": {
-    "bias": "SHORT",
-    "score": -2,
-    "score_bias": "SHORT",
+    "bias": "LONG",
+    "score": 0,
+    "score_bias": "MIXED",
     "why": [
-      "Market Monitor Defensive → DEFENSIVE; index score -2 (SHORT)",
+      "potential trend reversal: ±4% flow turned to buying on 2026-10-15 (day 1 of 2)",
+      "Market Monitor Expansion → LONG; index score +0 (MIXED)",
       "QQQ trend +0, below EMA50",
       "IWM trend -1",
       "IWM lagging QQQ (caution)",
-      "T2108 5d +6.8pp"
+      "T2108 5d +7.2pp",
+      "Market Monitor: buying vs selling 5d -1, 25%Q red, T2108 31% (+7 5d), 20% study 14 up / 48 down, T30A: T2108 < 20 10 sessions ago"
     ],
     "market_monitor": {
       "date": "2026-10-15",
-      "state": "Defensive",
-      "up4": 489.0,
-      "down4": 139.0,
+      "state": "Expansion",
+      "up4": 493.0,
+      "down4": 144.0,
       "ratio5": 0.52,
       "ratio10": 0.64,
-      "t2108": 30.32,
-      "t2108_d5": 6.77,
+      "t2108": 30.78,
+      "t2108_d5": 7.23,
       "up25q": 702.0,
       "down25q": 1485.0,
+      "read": "pradeep",
+      "label": "Breakouts work",
+      "mm_why": [
+        "buying vs selling 5d -1",
+        "25%Q red",
+        "T2108 31% (+7 5d)",
+        "20% study 14 up / 48 down",
+        "T30A: T2108 < 20 10 sessions ago"
+      ],
+      "flow5": -1,
+      "t30a": true,
+      "caution": false,
+      "up20w": 14.0,
+      "down20w": 48.0,
       "source": "Stockbee"
     },
-    "focus_held_by_regime": {}
+    "focus_held_by_regime": {},
+    "mm_hist": [
+      {
+        "date": "2026-09-18",
+        "up4": 253.0,
+        "down4": 235.0,
+        "t2108": 23.87,
+        "up20w": 39.0,
+        "down20w": 23.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-09-21",
+        "up4": 146.0,
+        "down4": 81.0,
+        "t2108": 23.18,
+        "up20w": 65.0,
+        "down20w": 23.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-09-22",
+        "up4": 328.0,
+        "down4": 179.0,
+        "t2108": 24.56,
+        "up20w": 108.0,
+        "down20w": 17.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-09-23",
+        "up4": 104.0,
+        "down4": 388.0,
+        "t2108": 20.51,
+        "up20w": 73.0,
+        "down20w": 23.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-09-24",
+        "up4": 153.0,
+        "down4": 236.0,
+        "t2108": 20.14,
+        "up20w": 46.0,
+        "down20w": 29.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-09-25",
+        "up4": 144.0,
+        "down4": 131.0,
+        "t2108": 20.26,
+        "up20w": 42.0,
+        "down20w": 26.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-09-28",
+        "up4": 135.0,
+        "down4": 308.0,
+        "t2108": 18.18,
+        "up20w": 25.0,
+        "down20w": 31.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-09-29",
+        "up4": 167.0,
+        "down4": 157.0,
+        "t2108": 18.04,
+        "up20w": 24.0,
+        "down20w": 41.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-09-30",
+        "up4": 153.0,
+        "down4": 187.0,
+        "t2108": 16.74,
+        "up20w": 28.0,
+        "down20w": 29.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-01",
+        "up4": 181.0,
+        "down4": 201.0,
+        "t2108": 18.99,
+        "up20w": 29.0,
+        "down20w": 26.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-02",
+        "up4": 221.0,
+        "down4": 132.0,
+        "t2108": 21.03,
+        "up20w": 25.0,
+        "down20w": 27.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-05",
+        "up4": 255.0,
+        "down4": 189.0,
+        "t2108": 22.39,
+        "up20w": 45.0,
+        "down20w": 20.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-06",
+        "up4": 177.0,
+        "down4": 211.0,
+        "t2108": 23.78,
+        "up20w": 39.0,
+        "down20w": 19.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-07",
+        "up4": 105.0,
+        "down4": 290.0,
+        "t2108": 21.1,
+        "up20w": 33.0,
+        "down20w": 27.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-08",
+        "up4": 179.0,
+        "down4": 291.0,
+        "t2108": 23.55,
+        "up20w": 27.0,
+        "down20w": 17.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-09",
+        "up4": 163.0,
+        "down4": 117.0,
+        "t2108": 25.29,
+        "up20w": 35.0,
+        "down20w": 22.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-12",
+        "up4": 92.0,
+        "down4": 364.0,
+        "t2108": 27.13,
+        "up20w": 14.0,
+        "down20w": 31.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-13",
+        "up4": 128.0,
+        "down4": 428.0,
+        "t2108": 29.4,
+        "up20w": 11.0,
+        "down20w": 47.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-14",
+        "up4": 77.0,
+        "down4": 784.0,
+        "t2108": 24.5,
+        "up20w": 10.0,
+        "down20w": 110.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-15",
+        "up4": 493.0,
+        "down4": 144.0,
+        "t2108": 30.78,
+        "up20w": 14.0,
+        "down20w": 48.0,
+        "source": "Stockbee"
+      }
+    ],
+    "reversal": {
+      "direction": "buying",
+      "date": "2026-10-15",
+      "day": 1,
+      "flow_before": -3,
+      "up4": 493.0,
+      "down4": 144.0
+    },
+    "up20_hi": 45.0,
+    "down20_hi": 110.0
   },
   "themes": {
     "leading": [
       {
-        "theme": "Healthcare providers",
-        "score": 89,
-        "n": 25,
-        "ret21": 4.3,
-        "rs21": 1.8
-      },
-      {
-        "theme": "Weight loss",
-        "score": 89,
-        "n": 7,
-        "ret21": 6.8,
-        "rs21": 4.2
-      },
-      {
-        "theme": "Gaming",
-        "score": 88,
-        "n": 5,
-        "ret21": 13.5,
-        "rs21": 11.0
-      },
-      {
-        "theme": "Medical devices",
-        "score": 88,
-        "n": 18,
-        "ret21": 3.8,
-        "rs21": 1.2
-      },
-      {
-        "theme": "Cloud",
-        "score": 87,
-        "n": 68,
-        "ret21": 3.9,
-        "rs21": 1.3
-      },
-      {
-        "theme": "Medical equipment",
-        "score": 86,
-        "n": 25,
-        "ret21": 3.7,
-        "rs21": 1.2
-      },
-      {
-        "theme": "Healthcare services",
-        "score": 85,
-        "n": 26,
-        "ret21": 3.2,
-        "rs21": 0.6
-      },
-      {
-        "theme": "Healthcare",
-        "score": 85,
-        "n": 21,
-        "ret21": 4.7,
-        "rs21": 2.1
-      },
-      {
-        "theme": "Software",
+        "theme": "Shipping",
         "score": 83,
-        "n": 78,
-        "ret21": 3.3,
-        "rs21": 0.8
-      },
-      {
-        "theme": "AI-resistant assets",
-        "score": 83,
-        "n": 5,
-        "ret21": 3.1,
-        "rs21": 0.6
-      },
-      {
-        "theme": "Crude oil",
-        "score": 80,
-        "n": 1,
-        "ret21": 0.7,
-        "rs21": -1.8
+        "stage": "LEADING",
+        "d5": 0.2,
+        "n": 3,
+        "ret21": -0.3,
+        "rs21": -2.7,
+        "etfs": [
+          "BOAT"
+        ],
+        "tickers": [
+          "FRO",
+          "DHT",
+          "STNG"
+        ]
       },
       {
         "theme": "Oil & gas",
-        "score": 80,
+        "score": 82,
+        "stage": "LEADING",
+        "d5": 8.9,
         "n": 28,
-        "ret21": 2.3,
-        "rs21": -0.3
+        "ret21": 3.7,
+        "rs21": 1.4,
+        "etfs": [
+          "IEO",
+          "XOP"
+        ],
+        "tickers": [
+          "MPC",
+          "PSX",
+          "VLO",
+          "PBF",
+          "APA"
+        ]
       },
       {
-        "theme": "Natural gas",
-        "score": 77,
-        "n": 19,
-        "ret21": 1.5,
-        "rs21": -1.0
+        "theme": "Volatility",
+        "score": 82,
+        "stage": "LEADING",
+        "d5": 0.8,
+        "n": 0,
+        "ret21": 6.9,
+        "rs21": 4.5,
+        "etfs": [
+          "SVIX"
+        ],
+        "tickers": []
+      },
+      {
+        "theme": "Mega-cap technology",
+        "score": 79,
+        "stage": "LEADING",
+        "d5": 6.4,
+        "n": 7,
+        "ret21": 4.6,
+        "rs21": 2.2,
+        "etfs": [
+          "MAGS"
+        ],
+        "tickers": [
+          "MSFT",
+          "AAPL",
+          "META",
+          "NVDA",
+          "TSLA"
+        ]
       },
       {
         "theme": "Cybersecurity",
+        "score": 77,
+        "stage": "LEADING",
+        "d5": 1.8,
+        "n": 24,
+        "ret21": 3.2,
+        "rs21": 0.9,
+        "etfs": [
+          "CIBR",
+          "BUG",
+          "HACK"
+        ],
+        "tickers": [
+          "DT",
+          "ZS",
+          "OKTA",
+          "NTSK",
+          "NTAP"
+        ]
+      },
+      {
+        "theme": "Metaverse",
         "score": 76,
-        "n": 30,
-        "ret21": 2.3,
-        "rs21": -0.2
+        "stage": "LEADING",
+        "d5": 1.7,
+        "n": 28,
+        "ret21": 7.0,
+        "rs21": 4.7,
+        "etfs": [
+          "METV"
+        ],
+        "tickers": [
+          "SNAP",
+          "MSFT",
+          "DIS",
+          "AMD",
+          "TSM"
+        ]
       },
       {
-        "theme": "Internet",
-        "score": 75,
-        "n": 58,
-        "ret21": 2.3,
-        "rs21": -0.2
+        "theme": "Software",
+        "score": 76,
+        "stage": "LEADING",
+        "d5": 2.2,
+        "n": 41,
+        "ret21": 3.8,
+        "rs21": 1.5,
+        "etfs": [
+          "IGV",
+          "XSW"
+        ],
+        "tickers": [
+          "RNG",
+          "TEAM",
+          "DT",
+          "DOCU",
+          "ZETA"
+        ]
       },
       {
-        "theme": "Water",
+        "theme": "Fintech",
         "score": 75,
-        "n": 20,
-        "ret21": 2.5,
-        "rs21": -0.0
+        "stage": "LEADING",
+        "d5": 4.6,
+        "n": 14,
+        "ret21": 7.4,
+        "rs21": 5.0,
+        "etfs": [
+          "ARKF"
+        ],
+        "tickers": [
+          "PLTR",
+          "SHOP",
+          "CRCL",
+          "COIN",
+          "ABNB"
+        ]
+      },
+      {
+        "theme": "Crude oil",
+        "score": 73,
+        "stage": "LEADING",
+        "d5": 9.0,
+        "n": 0,
+        "ret21": 0.7,
+        "rs21": -1.6,
+        "etfs": [
+          "USO"
+        ],
+        "tickers": []
+      },
+      {
+        "theme": "Brazil",
+        "score": 72,
+        "stage": "LEADING",
+        "d5": 1.2,
+        "n": 0,
+        "ret21": 10.9,
+        "rs21": 8.6,
+        "etfs": [
+          "EWZ"
+        ],
+        "tickers": []
+      },
+      {
+        "theme": "Gaming",
+        "score": 69,
+        "stage": "BUILDING",
+        "d5": 12.0,
+        "n": 5,
+        "ret21": 5.2,
+        "rs21": 2.8,
+        "etfs": [
+          "ESPO"
+        ],
+        "tickers": [
+          "GME",
+          "U",
+          "RBLX",
+          "NTES",
+          "TTWO"
+        ]
       },
       {
         "theme": "Values-based",
-        "score": 74,
+        "score": 69,
+        "stage": "BUILDING",
+        "d5": 2.2,
         "n": 199,
-        "ret21": 2.8,
-        "rs21": 0.3
+        "ret21": 3.3,
+        "rs21": 0.9,
+        "etfs": [
+          "HLAL"
+        ],
+        "tickers": [
+          "TEAM",
+          "PSX",
+          "DOCU",
+          "VLO",
+          "OKTA"
+        ]
       },
       {
-        "theme": "Ethereum",
-        "score": 67,
+        "theme": "Latin America",
+        "score": 65,
+        "stage": "BUILDING",
+        "d5": 5.0,
         "n": 1,
-        "ret21": 1.8,
-        "rs21": -0.8
+        "ret21": 6.4,
+        "rs21": 4.0,
+        "etfs": [
+          "ILF"
+        ],
+        "tickers": [
+          "SCCO"
+        ]
+      },
+      {
+        "theme": "Healthcare providers",
+        "score": 63,
+        "stage": "BUILDING",
+        "d5": 14.7,
+        "n": 21,
+        "ret21": 5.0,
+        "rs21": 2.7,
+        "etfs": [
+          "IHF"
+        ],
+        "tickers": [
+          "VEEV",
+          "DOCS",
+          "HTFL",
+          "HCA",
+          "UHS"
+        ]
+      },
+      {
+        "theme": "Natural gas",
+        "score": 63,
+        "stage": "BUILDING",
+        "d5": 4.0,
+        "n": 17,
+        "ret21": 2.8,
+        "rs21": 0.5,
+        "etfs": [
+          "FCG",
+          "UNG"
+        ],
+        "tickers": [
+          "APA",
+          "BTE",
+          "DVN",
+          "OVV",
+          "RRC"
+        ]
+      },
+      {
+        "theme": "Healthcare services",
+        "score": 63,
+        "stage": "BUILDING",
+        "d5": 11.4,
+        "n": 22,
+        "ret21": 1.7,
+        "rs21": -0.7,
+        "etfs": [
+          "XHS"
+        ],
+        "tickers": [
+          "HNGE",
+          "MCK",
+          "HCA",
+          "UHS",
+          "COR"
+        ]
+      },
+      {
+        "theme": "ESG",
+        "score": 61,
+        "stage": "BUILDING",
+        "d5": 9.0,
+        "n": 262,
+        "ret21": 2.6,
+        "rs21": 0.2,
+        "etfs": [
+          "ESGU"
+        ],
+        "tickers": [
+          "VEEV",
+          "PSX",
+          "VLO",
+          "OKTA",
+          "NOW"
+        ]
+      },
+      {
+        "theme": "Consumer staples",
+        "score": 60,
+        "stage": "BUILDING",
+        "d5": 5.2,
+        "n": 44,
+        "ret21": 4.1,
+        "rs21": 1.7,
+        "etfs": [
+          "IYK"
+        ],
+        "tickers": [
+          "MCK",
+          "COKE",
+          "PM",
+          "PG",
+          "COR"
+        ]
+      },
+      {
+        "theme": "Climate",
+        "score": 57,
+        "stage": "BUILDING",
+        "d5": 2.4,
+        "n": 368,
+        "ret21": 2.8,
+        "rs21": 0.5,
+        "etfs": [
+          "USCA"
+        ],
+        "tickers": [
+          "TEAM",
+          "VEEV",
+          "ZS",
+          "OKTA",
+          "NOW"
+        ]
       }
     ],
     "downtrend": [
-      "Innovation",
-      "China",
-      "Fintech",
-      "Metaverse",
-      "China internet",
-      "Robotaxis",
-      "Robotics",
-      "Treasury bonds",
-      "Infrastructure",
-      "Digital infrastructure",
-      "Social sentiment",
-      "Electrical grid",
-      "Electric vehicles",
-      "Housing",
-      "Homebuilding",
-      "Generative AI",
-      "Gold",
-      "Quantum computing",
-      "Blockchain",
-      "Space",
-      "Real estate",
-      "Data centers",
-      "Telecom",
-      "Airlines",
-      "Metals & mining",
-      "Defense technology",
-      "Growth stocks",
-      "Silver",
-      "Lithium",
-      "Hydrogen",
-      "Sustainable economy",
-      "Humanoid robotics",
-      "Defense",
-      "Bitcoin",
-      "Solar",
-      "Meme stocks",
-      "Clean energy",
-      "Nuclear",
-      "Uranium",
-      "Strategic metals"
+      "Cloud (FADING)",
+      "Internet (FADING)",
+      "Innovation (FADING)",
+      "AI (SLIPPING)",
+      "Ethereum (SLIPPING)",
+      "Cryptocurrency (SLIPPING)",
+      "Semiconductors (SLIPPING)",
+      "Generative AI (SLIPPING)",
+      "Meme stocks (SLIPPING)",
+      "Genomics (SLIPPING)",
+      "Bitcoin (SLIPPING)",
+      "Social sentiment (SLIPPING)",
+      "Steel (WEAK)",
+      "Gender diversity (WEAK)",
+      "Copper (WEAK)",
+      "Momentum (WEAK)",
+      "Data centers (WEAK)",
+      "Quantum computing (WEAK)",
+      "China healthcare (WEAK)",
+      "South Korea (WEAK)",
+      "Gold miners (WEAK)",
+      "Natural resources (WEAK)",
+      "Robotics (WEAK)",
+      "Financial services (WEAK)",
+      "Lithium (WEAK)",
+      "Platinum (WEAK)",
+      "Metals & mining (WEAK)",
+      "Agriculture (WEAK)",
+      "Space (WEAK)",
+      "Gold (WEAK)",
+      "Digital infrastructure (WEAK)",
+      "Healthcare (WEAK)",
+      "Memory (WEAK)",
+      "Silver miners (WEAK)",
+      "Private technology (WEAK)",
+      "Electrical grid (WEAK)",
+      "Banks (WEAK)",
+      "Housing (WEAK)",
+      "Telecom (WEAK)",
+      "Consumer discretionary (WEAK)",
+      "Homebuilding (WEAK)",
+      "Energy infrastructure (WEAK)",
+      "Leisure (BEARISH)",
+      "Cannabis (BEARISH)",
+      "Blockchain (BEARISH)",
+      "Weight loss (BEARISH)",
+      "Silver (BEARISH)",
+      "Oil services (BEARISH)",
+      "Defense technology (BEARISH)",
+      "Hydrogen (BEARISH)",
+      "Capital markets (BEARISH)",
+      "Growth stocks (BEARISH)",
+      "Clean energy (BEARISH)",
+      "Humanoid robotics (BEARISH)",
+      "Defense (BEARISH)",
+      "Transportation (BEARISH)",
+      "Wind energy (BEARISH)",
+      "Airlines (BEARISH)",
+      "Uranium (BEARISH)",
+      "Psychedelics (BEARISH)",
+      "Palladium (BEARISH)",
+      "Nuclear (BEARISH)",
+      "Strategic metals (BEARISH)"
     ],
     "excluded": {
-      "W": "Housing"
+      "CRL": "Genomics SLIPPING",
+      "HAE": "Medical equipment HOLDING",
+      "ILMN": "Biotechnology HOLDING",
+      "JXN": "Banks WEAK",
+      "NTRA": "Genomics SLIPPING",
+      "OSCR": "Insurance RECOVERY",
+      "W": "Online retail RECOVERY",
+      "WAT": "Water RECOVERY",
+      "WDAY": "Cloud FADING"
     },
-    "n_themes": 103,
-    "map_built": "2026-10-15T09:56:26.450988+00:00",
-    "line": "Healthcare providers (leading), Weight loss (leading), Payments (neutral) · rising: Medical devices, Gaming, Healthcare services"
+    "n_themes": 106,
+    "map_built": "2026-10-16T08:12:25.153345+00:00",
+    "line": "Shipping (leading), Cloud (fading), Oil & gas (leading) · rising: Healthcare providers, Gaming, Healthcare services"
   },
   "gap_to_fill": {}
 }
