@@ -1,0 +1,20 @@
+{
+  "emitted": {
+    "NYSE:CRL|30M PIVOT|1792166400|cross|1792168800": {
+      "bar_t": 1792168800,
+      "pivot_atr": 11.47658191627749,
+      "pivot_drop": 9.92999267578125,
+      "pivot_green_t": 1792166400,
+      "pivot_high": 302.0299987792969,
+      "pivot_kind": "cross",
+      "pivot_low": 299.135009765625,
+      "pivot_ref": 308.8299865722656,
+      "pivot_ref_kind": "session_high",
+      "price": 302.4150085449219,
+      "rs_rating": 98,
+      "symbol": "NYSE:CRL",
+      "trigger": "30M PIVOT",
+      "ts_emitted": 1792169163
+    }
+  }
+}
