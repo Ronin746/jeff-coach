@@ -35,7 +35,7 @@ def card_line(r: dict, lim: Optional[int] = None) -> str:
     s = (f"• **{r['ticker']}** — RS {_fmt(r.get('rs'), '{}')} · VCP {_fmt(r.get('vcp'), '{:.1f}')} · "
          f"SMA5 {_fmt(r.get('sma5'), '{:+.1f}%')} · Atr Ext {_fmt(r.get('atr_ext'), '{:.2f}×')}")
     if r.get("theme"):                    # tema [RONIN 13/10]: ★ = tema leading in uptrend
-        s += f"\n  {'★ ' if r.get('theme_leading') else ''}{r['theme']}" + (" (uptrend)" if r.get("theme_trend") == "up" and not r.get("theme_leading") else "")
+        s += f"\n  {'★ ' if r.get('theme_leading') else ''}{r['theme']}" + (f" ({r['theme_stage']})" if r.get("theme_stage") else "")
     if r.get("against_regime"):
         s += " · ⚠ against the regime"
     why = r.get("reason_en") or ""
@@ -75,32 +75,55 @@ def sector_line(name: str, st: Optional[dict]) -> str:
 
 
 def regime_line(reg: Optional[dict], themes_line: Optional[str] = None) -> str:
-    """Intestazione del regime in testa alla card, nello stesso formato di Martin-coach [RONIN 13/10, 15/10]:
-    regime con i motivi, numeri del Market Monitor, temi."""
+    """Parte del regime in testa alla card, come Martin-coach [RONIN 13/10, 15/10, 16/10]: regime con i motivi,
+    Market Monitor letto come Pradeep (±4%, 25% nel trimestre, T2108, studio 20%), tabella ±4% a 20 giorni,
+    avviso di potential trend reversal, temi. Il grafico studio 20% / T2108 è l'immagine dello stesso riquadro."""
     if not reg:
         return ""
     bias = {"SHORT": "DEFENSIVE"}.get(reg["bias"], reg["bias"])
     rule = {"MIXED": f"max {C.REGIME_MIXED_MAX_FOCUS} Focus",
-            "SHORT": f"Focus only with a leading theme (max {C.REGIME_DEFENSIVE_MAX_FOCUS})"}.get(reg["bias"])
+            "SHORT": f"Focus only with a LEADING/BUILDING theme (max {C.REGIME_DEFENSIVE_MAX_FOCUS})"}.get(reg["bias"])
+    rev = reg.get("reversal")
+    if rev and rev.get("direction") == "buying":
+        rule = "no Focus limit (potential trend reversal)"
     L = [f"Regime **{bias}**" + (f" · {rule}" if rule else "") + " — " + "; ".join(reg.get("why") or [])]
+    if rev:
+        L.append(f"⚠️ **POTENTIAL TREND REVERSAL** — ±4% flow turned to **{rev['direction']}** on {rev['date']} "
+                 f"(day {rev['day']} of {C.REVERSAL_DAYS})")
     mm = reg.get("market_monitor")
     if mm:
-        L.append(f"Market Monitor **{mm['state']}**" + (" (own calc)" if mm.get("source") == "own" else "")
-                 + f" · ±4% `{mm['up4']:.0f}` / `{mm['down4']:.0f}` · 5D `{mm['ratio5']:.2f}` · 10D `{mm['ratio10']:.2f}`"
-                 + (f" · T2108 `{mm['t2108']:.0f}%`" if mm.get("t2108") is not None else ""))
+        own = " (own calc)" if mm.get("source") == "own" else ""
+        if mm.get("read") == "pradeep":
+            L.append(f"Market Monitor **{mm['state']}**{own} · ±4% `{mm['up4']:.0f}` / `{mm['down4']:.0f}`"
+                     + (f" · 25%Q `{mm['up25q']:.0f}` / `{mm['down25q']:.0f}`" if mm.get("up25q") is not None and mm.get("down25q") is not None else "")
+                     + (f" · T2108 `{mm['t2108']:.0f}%`" if mm.get("t2108") is not None else "")
+                     + (f" · 20% study `{mm['up20w']:.0f}`" if mm.get("up20w") is not None else ""))
+        else:
+            L.append(f"Market Monitor **{mm['state']}**{own} · ±4% `{mm['up4']:.0f}` / `{mm['down4']:.0f}`"
+                     + (f" · 5D `{mm['ratio5']:.2f}` · 10D `{mm['ratio10']:.2f}`" if mm.get("ratio10") is not None else "")
+                     + (f" · T2108 `{mm['t2108']:.0f}%`" if mm.get("t2108") is not None else ""))
+    if reg.get("mm_hist"):
+        from .breadth_chart import table_20d
+        tb = table_20d(reg["mm_hist"])
+        if tb:
+            L.append("**±4% last 20 days** (▲ buying · ▼ selling)\n" + tb)
     if themes_line:
         L.append(f"Themes: {themes_line}")
-    return "\n".join(L) + "\n"
+    return "\n".join(L)
 
 
 def themes_section(th: Optional[dict]) -> Optional[str]:
     if not th or not th.get("n_themes"):
         return None
-    L = [f"**THEMES** — ★ leading in uptrend ({len(th['leading'])} of {th['n_themes']})"]
-    L += [f"★ {t['theme']} — score {t['score']} · 1M {t['ret21']:+.1f}% · vs S&P {t['rs21']:+.1f}%" for t in th["leading"][:10]]
+    L = [f"**THEMES** — LEADING / BUILDING ({len(th['leading'])} of {th['n_themes']}) · score on the theme ETFs (7 factors)"]
+    for t in th["leading"][:10]:
+        tk = f" ({', '.join(t['tickers'])})" if t.get("tickers") else (f" ({', '.join(t['etfs'][:3])})" if t.get("etfs") else "")
+        L.append(f"{'★' if t.get('stage') == 'LEADING' else '•'} {t['theme']} — score {t['score']} · {t.get('stage')}"
+                 + (f" · 1M {t['ret21']:+.1f}%" if t.get("ret21") is not None else "")
+                 + (f" · vs S&P {t['rs21']:+.1f}%" if t.get("rs21") is not None else "") + tk)
     if th.get("downtrend"):
         dt = th["downtrend"]
-        L.append(f"Downtrend, names excluded ({len(dt)}): " + ", ".join(dt[:25]) + (" …" if len(dt) > 25 else ""))
+        L.append(f"Not for longs ({len(dt)}): " + ", ".join(dt[:25]) + (" …" if len(dt) > 25 else ""))
     return "\n".join(L)[:3900]
 
 
@@ -123,7 +146,8 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
 
     def build(f_lim, s_lim) -> list[str]:
         head = f"**WATCHLIST — {title_date}**" + (f" (close {as_of})" if as_of else "")
-        parts = [f"{head}\n{regime_line(regime, (themes or {}).get('line'))}\n" + sect("FOCUS", focus, f_lim),
+        rl = regime_line(regime, (themes or {}).get("line"))
+        parts = ([f"{head}\n{rl}"] if rl else []) + [("" if rl else f"{head}\n\n") + sect("FOCUS", focus, f_lim),
                  sect(f"STALK — above 65m SMA30 ({len(up)})", up, s_lim),
                  sect(f"STALK — below 65m SMA30 ({len(down)})", down, s_lim)]
         if dtl_breaks:          # rotture della trendline discendente in chiusura con volume >= 1,5x [RONIN 09/10]

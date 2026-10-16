@@ -6,6 +6,9 @@ Per ogni titolo:
      tema principale = il gruppo con più ETF che tengono il titolo (a parità: in daily il tema con cui il titolo si
      muove di più, correlazione a 60 sedute con la mediana del tema; riserva il peso più alto), mai un gruppo
      generico (GENERIC_GROUPS: contano solo nella classifica);
+     appartenenza solo se l'ETF sovrappesa il titolo rispetto al mercato (config THEME_OVERWEIGHT_*) [RONIN 16/10]:
+     le partecipazioni complete mettono le mega cap in quasi tutti i temi (MSFT in Cybersecurity, NVDA in Bitcoin,
+     LLY in Genomics) con pesi pari o inferiori al loro peso di mercato; quelle non sono esposizione al tema;
   2. modifiche a mano di Andrea in data/themes/manuale.json ({"aggiungi": {"TICKER": "Tema"}, "togli": {"TICKER": "Tema"}});
   3. (in daily) correlazione: i titoli senza tema che si muovono con un tema diventano PROPOSTE, non entrano da soli.
 ETF senza azioni in portafoglio (oro, argento, bitcoin, petrolio, Treasury: GLD, IBIT, USO, TLT...): l'ETF stesso è
@@ -99,8 +102,40 @@ def fetch_etf_holdings() -> dict[str, list[dict]]:
 
 
 # ------------------------------------------------------------------ mappa
-def build_map(etf_groups: dict[str, str], holdings: dict[str, list[dict]], manual: Optional[dict] = None) -> dict:
-    """{ticker: {"primary": tema, "themes": [..], "source": etf|manuale}}, i temi con la fonte e gli ETF di ogni tema."""
+def overweight(hits: dict[str, dict[str, list[float]]], mcap: dict[str, float]) -> dict[str, dict[str, float]]:
+    """Sovrappeso di ogni titolo in ogni gruppo: peso massimo negli ETF del gruppo / peso di mercato del titolo.
+    Titoli senza capitalizzazione (sotto 1 mld, esteri): infinito, un ETF che li tiene li sovrappesa per forza."""
+    tot = sum(v for v in mcap.values() if v and v > 0)
+    out = {}
+    for t, by in hits.items():
+        mw = (mcap.get(t) or 0) / tot if tot else 0
+        out[t] = {g: (max(ws) / mw if mw > 0 else float("inf")) for g, ws in by.items()}
+    return out
+
+
+def keep_groups(ow: dict[str, float], by: Optional[dict[str, list[float]]] = None, vmin: float = None,
+                frac: float = None) -> set[str]:
+    """Temi specifici in cui il titolo resta: sovrappeso >= vmin e >= frac del suo sovrappeso massimo. Se nessuno
+    passa (mega cap, presenti ovunque ma sovrappesate da nessuno) resta il tema principale di prima: il gruppo con più
+    ETF che lo tengono, poi il peso più alto (`by` = pesi per gruppo). I gruppi generici (fattori, macro: Momentum,
+    Mega-cap technology...) non passano da qui: tengono tutti i titoli dei loro ETF e non sono mai il tema principale."""
+    vmin = C.THEME_OVERWEIGHT_MIN if vmin is None else vmin
+    frac = C.THEME_OVERWEIGHT_FRAC if frac is None else frac
+    spec = {g: v for g, v in ow.items() if g not in GENERIC_GROUPS}
+    if not spec:
+        return set()
+    mx = max(spec.values())
+    keep = {g for g, v in spec.items() if v >= vmin and v >= mx * frac}
+    if not keep:
+        by = by or {g: [v] for g, v in spec.items()}
+        keep = {min(spec, key=lambda g: (-len(by.get(g, [])), -max(by.get(g, [0])), g))}
+    return keep
+
+
+def build_map(etf_groups: dict[str, str], holdings: dict[str, list[dict]], manual: Optional[dict] = None,
+              mcap: Optional[dict[str, float]] = None) -> dict:
+    """{ticker: {"primary": tema, "themes": [..], "source": etf|manuale}}, i temi con la fonte e gli ETF di ogni tema.
+    Con `mcap` ({ticker: capitalizzazione}) un titolo resta solo nei temi che lo sovrappesano (keep_groups)."""
     themes: dict[str, set[str]] = {}
     source: dict[str, str] = {}
     prim: dict[str, tuple] = {}
@@ -118,6 +153,12 @@ def build_map(etf_groups: dict[str, str], holdings: dict[str, list[dict]], manua
             themes.setdefault(t, set()).add(group)
             source.setdefault(t, "etf")
             hits.setdefault(t, {}).setdefault(group, []).append(h.get("weight") or 0)
+    ows = overweight(hits, mcap) if mcap else {}
+    if mcap:
+        for t in list(hits):
+            kept = keep_groups(ows[t], hits[t]) | {g for g in hits[t] if g in GENERIC_GROUPS}
+            hits[t] = {g: w for g, w in hits[t].items() if g in kept}
+            themes[t] = set(hits[t])
     for t, by in hits.items():               # principale: il gruppo con più ETF che lo tengono, poi il peso più alto
         specific = [k for k in by if k not in GENERIC_GROUPS]          # mai un gruppo generico
         prim[t] = ((1, 0), min(specific, key=lambda k: (-len(by[k]), -max(by[k]), k)) if specific else None)
@@ -144,6 +185,9 @@ def build_map(etf_groups: dict[str, str], holdings: dict[str, list[dict]], manua
                 themes.pop(t)
     tickers = {t: {"primary": prim.get(t, (None, None))[1], "themes": sorted(themes[t]), "source": source.get(t, "?")}
                for t in themes}
+    for t, ow in ows.items():                # sovrappeso dei temi tenuti (si vede perché un titolo è in un tema)
+        if t in tickers:
+            tickers[t]["ow"] = {g: (round(v, 1) if v != float("inf") else None) for g, v in ow.items() if g in themes.get(t, ()) and g not in GENERIC_GROUPS}
     for t, tied in ties.items():
         if t in tickers and tickers[t]["source"] == "etf":
             tickers[t]["tied"] = tied
@@ -151,6 +195,16 @@ def build_map(etf_groups: dict[str, str], holdings: dict[str, list[dict]], manua
     for th in ((manual or {}).get("aggiungi") or {}).values():
         origin.setdefault(th, "manuale")
     return {"tickers": tickers, "themes": origin, "theme_etfs": theme_etfs}
+
+
+def market_caps() -> dict[str, float]:
+    """Capitalizzazioni dall'universo Yahoo (data.build_universe, rinnovato ogni settimana); {} se manca."""
+    try:
+        from . import data as D
+        return {k: v.get("mcap") or 0 for k, v in D.build_universe().items()}
+    except Exception as e:
+        log.warning("temi: capitalizzazioni non disponibili (%s): appartenenza senza filtro di sovrappeso", e)
+        return {}
 
 
 def load_manual() -> dict:
@@ -167,7 +221,8 @@ def refresh(force: bool = False) -> dict:
         old = json.loads(MAP_FILE.read_text(encoding="utf-8"))
         age = datetime.now(timezone.utc) - datetime.fromisoformat(old["built_utc"])
         monday = datetime.now(timezone.utc).weekday() == 0 and age > timedelta(hours=20)
-        if not force and age < timedelta(days=6) and not monday and old.get("holdings_source", {}).get("nport"):   # mappa vecchia (basket o solo top 10): si rifà
+        same_rule = old.get("membership") == C.THEME_MEMBERSHIP
+        if not force and age < timedelta(days=6) and not monday and old.get("holdings_source", {}).get("nport") and same_rule:   # mappa vecchia (basket o solo top 10): si rifà
             return old
     try:
         etf_groups = fetch_etf_groups()
@@ -189,10 +244,11 @@ def refresh(force: bool = False) -> dict:
             return old
         log.warning("temi: fonti non raggiungibili (%s) e nessuna mappa ETF salvata: nessun tema", e)
         return {"built_utc": None, "tickers": {}, "themes": {}, "theme_etfs": {}}
-    m = build_map(etf_groups, holdings, load_manual())
+    mc = market_caps()
+    m = build_map(etf_groups, holdings, load_manual(), mc)
     doc = {"built_utc": datetime.now(timezone.utc).isoformat(), "sources": {
         "etf_list": C.THEME_ETF_SHEET_CSV, "etf_holdings": "SEC N-PORT + OpenFIGI", "etf_holdings_fallback": C.THEME_ETF_HOLDINGS_URL},
-        "n_etf": len(etf_groups), "holdings_source": {k: len(v) for k, v in hstats.items()}, "holdings_fallback": hstats["fallback"], "holdings_none": hstats["none"], "proxy_etfs": {g: [e for e in es if e in hstats["none"]] for g, es in m["theme_etfs"].items() if any(e in hstats["none"] for e in es)}, **m}
+        "n_etf": len(etf_groups), "membership": C.THEME_MEMBERSHIP if mc else None, "holdings_source": {k: len(v) for k, v in hstats.items()}, "holdings_fallback": hstats["fallback"], "holdings_none": hstats["none"], "proxy_etfs": {g: [e for e in es if e in hstats["none"]] for g, es in m["theme_etfs"].items() if any(e in hstats["none"] for e in es)}, **m}
     if old:                                 # cosa è cambiato rispetto alla settimana prima (va nel riepilogo)
         o, n = set(old.get("tickers", {})), set(m["tickers"])
         doc["changes"] = {"added": sorted(n - o)[:200], "removed": sorted(o - n)[:200]}

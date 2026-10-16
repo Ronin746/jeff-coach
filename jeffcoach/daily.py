@@ -58,8 +58,9 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
     except Exception as e:
         log.warning("mappa temi: %s", e)
         tmap = {}
-    proxy = sorted({e for v in (tmap.get("proxy_etfs") or {}).values() for e in v})   # ETF senza azioni dei temi
-    idx_syms = [x for x in list(C.REGIME_INDICES) + proxy if x not in syms]    # QQQ/IWM per il regime, ETF dei temi
+    # ETF dei temi (classifica sui loro 7 fattori, come Martin 16/10) e SPY (riferimento di Ratatouille)
+    tetf = sorted({e for v in (tmap.get("theme_etfs") or {}).values() for e in v})
+    idx_syms = [x for x in dict.fromkeys(list(C.REGIME_INDICES) + [C.BASKET_BENCHMARK] + tetf) if x not in syms]
     daily = D.download_daily(list(syms) + ["^GSPC"] + idx_syms, start, as_of)
     spx = daily.get("^GSPC")
     if spx is None or spx.index[-1].date() != as_of:
@@ -143,18 +144,35 @@ def themes_and_regime(daily: dict, spx, metrics: dict, tmap: dict, as_of, stocks
         own = B.update(B.own_rows(stocks), B.nel_archive())
     except Exception as e:
         log.warning("Market Monitor nostro: %s", e)
-    mm = RG.market_monitor(mm_rows, as_of)
+    full_rows = B.full_backup()            # replica nostra: qui c'è lo studio 20% (Stockbee non lo pubblica)
+    up20 = {r["date"]: {"up20w": r.get("up20w"), "down20w": r.get("down20w")} for r in full_rows
+            if r.get("up20w") is not None}
+    mm = RG.market_monitor(mm_rows, as_of, up20)
     if mm:
         mm["source"] = "Stockbee"
     else:
-        for rows in (B.full_backup(), own):
-            mm = RG.market_monitor(rows, as_of)
+        for rows in (full_rows, own):
+            mm = RG.market_monitor(rows, as_of, up20)
             if mm:
                 mm["source"] = "own"
                 break
     reg = RG.regime({k: RG.index_state(daily.get(k)) for k in C.REGIME_INDICES}, mm)
     if mm and mm.get("source") == "own":
         reg["why"].insert(0, "Market Monitor: own calculation (Stockbee unavailable)")
+    from . import breadth_chart as BC
+    try:                                   # parte del regime della card: ±4% a 20 giorni, grafico 20% e T2108
+        reg["mm_hist"] = BC.mm_history(list(mm_rows) + B.nel_archive(), full_rows, as_of)
+    except Exception as e:
+        log.warning("storico Market Monitor per la card: %s", e)
+        reg["mm_hist"] = []
+    rev = RG.flow_reversal(reg["mm_hist"]) if reg["mm_hist"] else None      # potential trend reversal
+    reg["reversal"] = rev
+    if rev:
+        reg["why"].insert(0, f"potential trend reversal: ±4% flow turned to {rev['direction']} on {rev['date']} "
+                             f"(day {rev['day']} of {C.REVERSAL_DAYS})")
+    win = sorted(d for d in up20 if d <= as_of.isoformat())[-C.PB_UP20_WINDOW:]
+    reg["down20_hi"] = max([up20[d].get("down20w") or 0 for d in win] or [0])
+    reg["up20_hi"] = max([up20[d].get("up20w") or 0 for d in win] or [0])
     return themes, reg
 
 
@@ -445,29 +463,35 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
     chan = channel_watch(rows, s65)
     dtlw = dtl_watch(dtl_names, metrics, rows, earn_out, out_universe, grp)
 
-    # temi e regime [RONIN 13/10]: fuori chi ha il tema in downtrend; prima chi ha un tema leading in uptrend;
-    # regime come Martin-coach (MIXED: al massimo 3 Focus; DEFENSIVE: solo Focus con tema leading, al massimo 3,
-    # segnati "against the regime"); gli altri Focus restano in Stalk col motivo
+    # temi e regime [RONIN 13/10, 16/10 come Martin]: long solo con tema LEADING o BUILDING (FADING con -20% >= 200
+    # nelle ultime 10 sedute; senza tema in classifica nessun filtro); prima LEADING, poi BUILDING, poi RS.
+    # Regime: MIXED al massimo 3 Focus; DEFENSIVE solo Focus con tema LEADING/BUILDING, al massimo 3, segnati
+    # "against the regime"; potential trend reversal verso gli acquisti: nessun limite. Gli altri Focus restano Stalk.
     th = doc.get("themes") or {"rows": [], "ticker": {}}
     trow = {r["theme"]: r for r in th["rows"]}
     reg = doc.get("regime") or {"bias": "LONG", "why": ["regime non calcolato"], "score": None}
     theme_out = {}
+    ok_stage = set(C.STAGE_LONG) | ({"FADING"} if (reg.get("down20_hi") or 0) >= C.STAGE_FADING_LONG_DOWN20 else set())
     for s, r in rows.items():
         t = trow.get(th["ticker"].get(s))
         r.m["theme"] = t["theme"] if t else None
         r.m["theme_trend"] = t["trend"] if t else None
-        r.m["theme_leading"] = bool(t and t["leading"])
+        r.m["theme_stage"] = t.get("stage") if t else None
+        r.m["theme_leading"] = bool(t and t.get("stage") == "LEADING")
         r.m["theme_rank"] = t["rank"] if t else None
-        if C.THEME_EXCLUDE_DOWNTREND and t and t["trend"] == "down" and r.list != "Out":
-            theme_out[s] = t["theme"]
+        if t and t.get("stage") and t["stage"] not in ok_stage and r.list != "Out":
+            theme_out[s] = f"{t['theme']} {t['stage']}"
             r.list = "Out"
-            r.out_reason = f"theme in downtrend: {t['theme']}"
-    rank_key = lambda r: (not r.m.get("theme_leading"), -(r.m["rs"] or 0), r.ticker)
+            r.out_reason = f"theme {t['stage']}: {t['theme']}"
+    from .themes import STAGE_ORDER
+    rank_key = lambda r: (STAGE_ORDER.get(r.m.get("theme_stage"), 2), -(r.m["rs"] or 0), r.ticker)
     regime_held = {}
     cap = {"MIXED": C.REGIME_MIXED_MAX_FOCUS, "SHORT": C.REGIME_DEFENSIVE_MAX_FOCUS}.get(reg["bias"])
+    if (reg.get("reversal") or {}).get("direction") == "buying":
+        cap = None                         # potential trend reversal verso gli acquisti: Focus pieni [Martin 16/10]
     if cap is not None:
         fl = sorted([r for r in rows.values() if r.list == "Focus"], key=rank_key)
-        ok = fl if reg["bias"] == "MIXED" else [r for r in fl if r.m.get("theme_leading")]
+        ok = fl if reg["bias"] == "MIXED" else [r for r in fl if r.m.get("theme_stage") in C.STAGE_LONG]
         keep = {r.ticker for r in ok[:cap]}
         for r in fl:
             if r.ticker in keep:
@@ -475,7 +499,7 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
                 continue
             r.list = "Stalk"
             why = (f"regime {reg['bias']}: max {cap} Focus" if reg["bias"] == "MIXED"
-                   else f"regime DEFENSIVE: Focus only with a leading theme (max {cap})")
+                   else f"regime DEFENSIVE: Focus only with a LEADING/BUILDING theme (max {cap})")
             r.gates.append(E.Gate("regime", False, why))
             regime_held[r.ticker] = why
 
@@ -499,6 +523,7 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
             gap_to_fill=_r(m.get("gap_top")) if C.GAP_GATE_ON and m.get("gap_open") else None,
             triangle_top=_r(m.get("t_top")) if m.get("t_ok") else None,
             theme=m.get("theme"), theme_trend=m.get("theme_trend"), theme_leading=bool(m.get("theme_leading")),
+            theme_stage=m.get("theme_stage"),
             theme_rank=m.get("theme_rank"), against_regime=bool(m.get("against_regime")),
         )
 
@@ -550,10 +575,15 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
                    for t, r in sorted(rows.items()) if r.m.get("t_ok") and not r.out_reason
                    and (r.m.get("rs") or 0) >= C.RS_FOCUS_MIN],
         regime=dict(bias=reg["bias"], score=reg.get("score"), score_bias=reg.get("score_bias"), why=reg["why"],
-                    market_monitor=reg.get("market_monitor"), focus_held_by_regime=regime_held),
-        themes=dict(leading=[dict(theme=r["theme"], score=round(r["score"]), n=r["n"], ret21=_r(r["ret21"], 1),
-                                  rs21=_r(r["rs21"], 1)) for r in th["rows"] if r["leading"]],
-                    downtrend=[r["theme"] for r in th["rows"] if r["trend"] == "down"],
+                    market_monitor=reg.get("market_monitor"), focus_held_by_regime=regime_held,
+                    mm_hist=(reg.get("mm_hist") or [])[-20:], reversal=reg.get("reversal"),
+                    up20_hi=reg.get("up20_hi"), down20_hi=reg.get("down20_hi")),
+        themes=dict(leading=[dict(theme=r["theme"], score=round(r["score"]), stage=r.get("stage"), d5=r.get("d5"),
+                                  n=r["n"], ret21=_r(r["ret21"], 1), rs21=_r(r["rs21"], 1), etfs=r.get("etfs"),
+                                  tickers=r["members"][:5])
+                             for r in th["rows"] if r.get("stage") in C.STAGE_LONG],
+                    downtrend=[f"{r['theme']} ({r['stage']})" for r in th["rows"]
+                               if r.get("stage") in ("SLIPPING", "WEAK", "BEARISH", "FADING")],
                     excluded=theme_out, n_themes=len(th["rows"]), map_built=th.get("map_built"),
                     line=themes_line(th["rows"], as_of)),
         gap_to_fill={t: _r(r.m["gap_top"]) for t, r in rows.items()
@@ -583,28 +613,14 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
                          for sec, st in sector_etf_stats(doc).items()})
 
 
-def themes_line(rows: list[dict], as_of) -> str:
-    """Riga dei temi in testa alla card, come Martin-coach [RONIN 15/10]: i primi 3 della classifica con lo stato
-    (leading / uptrend / neutral / downtrend) e i temi in uptrend che risalgono di più rispetto a 5 sedute prima."""
+def themes_line(rows: list[dict], as_of=None) -> str:
+    """Riga dei temi in testa alla card, come Martin-coach [RONIN 15/10, 16/10]: i primi 3 della classifica con lo
+    stadio di Ratatouille, poi i temi BUILDING/RECOVERY che salgono di più (variazione del punteggio a 5 sedute)."""
     if not rows:
         return ""
-    tag = lambda r: "leading" if r["leading"] else {"up": "uptrend", "down": "downtrend"}.get(r["trend"], "neutral")
-    s = ", ".join(f"{r['theme']} ({tag(r)})" for r in rows[:3])
-    prev = {}
-    try:                                  # classifica di 5 sedute prima (la più vecchia disponibile se mancano)
-        for d in reversed(last_sessions(as_of, 6)[:-1]):
-            p = C.WATCHLISTS / f"focus_{d.isoformat()}.json"
-            if p.exists():
-                tt = json.loads(p.read_text(encoding="utf-8")).get("theme_table") or []
-                if tt:
-                    prev = {r["theme"]: r["rank"] for r in tt}
-                    break
-    except Exception as e:
-        log.warning("classifica temi precedente: %s", e)
-    n = len(rows)
-    rising = [r for r in rows[3:] if r["trend"] == "up" and r["theme"] in prev
-              and prev[r["theme"]] - r["rank"] >= max(3, n // 10)]
-    rising.sort(key=lambda r: r["rank"] - prev[r["theme"]])
+    s = ", ".join(f"{r['theme']} ({(r.get('stage') or 'n/a').lower()})" for r in rows[:3])
+    rising = sorted((r for r in rows[3:] if r.get("stage") in ("BUILDING", "RECOVERY") and (r.get("d5") or 0) > 0),
+                    key=lambda r: -(r.get("d5") or 0))
     if rising:
         s += " · rising: " + ", ".join(r["theme"] for r in rising[:3])
     return s
@@ -700,10 +716,13 @@ def summary_it(res: dict, doc: dict) -> str:
             L.append("Focus tenuti in Stalk dal regime: " + ", ".join(sorted(rg["focus_held_by_regime"])))
     tm = a.get("themes") or {}
     if tm.get("n_themes"):
-        L.append(f"Temi leading in uptrend ({len(tm['leading'])} su {tm['n_themes']}): " +
-                 (", ".join(t["theme"] for t in tm["leading"]) or "nessuno"))
+        L.append(f"Temi LEADING/BUILDING ({len(tm['leading'])} su {tm['n_themes']}): " +
+                 (", ".join(f"{t['theme']} ({t['stage']})" for t in tm["leading"]) or "nessuno"))
         if tm.get("excluded"):
-            L.append("Esclusi per tema in downtrend: " + "; ".join(f"{t} ({v})" for t, v in sorted(tm["excluded"].items())))
+            L.append("Esclusi per stadio del tema (long solo LEADING/BUILDING): " + "; ".join(f"{t} ({v})" for t, v in sorted(tm["excluded"].items())))
+        rv = (a.get("regime") or {}).get("reversal")
+        if rv:
+            L.append(f"Potential trend reversal: flusso ±4% girato verso {rv['direction']} il {rv['date']} (giorno {rv['day']} di {C.REVERSAL_DAYS})")
         lf = [r["ticker"] for r in res["fpub"] if r.get("theme_leading")]
         if lf:
             L.append("Focus con tema leading: " + ", ".join(lf))
@@ -783,6 +802,18 @@ def main(argv=None) -> int:
         ex = lambda rr: [(r["ticker"], exch_of(r["ticker"], doc)) for r in by_sector(rr)]
         txt += "," + short_tv_txt(ex(sh["focus"]), ex([r for r in sh["stalk"] if r["ticker"] in dn]),
                                   ex([r for r in sh["stalk"] if r["ticker"] not in dn]))
+    try:                                       # grafico studio 20% e T2108 nella parte del regime [Martin 16/10]
+        from . import breadth_chart as BC
+        png = BC.render((doc.get("regime") or {}).get("mm_hist") or [], C.PB_UP20_CAUTION, C.PB_DOWN20_CAUTION,
+                        (C.PB_T2108_EXTREME, C.PB_T2108_OVERSOLD, C.PB_T2108_EXTENDED))
+    except Exception as e:
+        log.warning("grafico breadth: %s", e)
+        png = None
+    if png:
+        (work / "breadth.png").write_bytes(png)
+        embeds[0]["image"] = {"url": "attachment://breadth.png"}
+    elif (work / "breadth.png").exists():
+        (work / "breadth.png").unlink()
     card = {"embeds": embeds, "allowed_mentions": {"parse": []}}
     summ = summary_it(res, doc)
     write_atomic(work / "card.json", card)

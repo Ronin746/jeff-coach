@@ -85,6 +85,14 @@ def own_rows(daily: dict[str, pd.DataFrame], sessions: int = 300, min_price: flo
     d_up = closes / closes.rolling(35, min_periods=32).min() - 1
     d_dn = closes / closes.rolling(35, min_periods=32).max() - 1
     r20 = closes / closes.shift(20) - 1
+    # Studio 20% di Pradeep Bonde (scan TC2000 "5 Day up 20%": c/c5>=1.2 and minv3.1>=100000 and c>=3, su tutte le
+    # azioni ordinarie USA) [RONIN 16/10, video TraderLion kCLiSsIZ7L4 89:30-92:00]; il calo speculare (c/c5<=0.8)
+    # per il riquadro rosso dello stesso grafico.
+    r5 = closes / closes.shift(5)
+    minv3_1 = vols.shift(1).rolling(3).min()
+    f20 = (minv3_1 >= MIN_VOL) & (closes >= 3)
+    up20w = ((r5 >= 1.2) & f20).sum(axis=1)
+    down20w = ((r5 <= 0.8) & f20).sum(axis=1)
     sma40 = closes.rolling(40).mean()
     valid = closes.notna() & sma40.notna()
     t2108 = (closes > sma40).where(valid).sum(axis=1) / valid.sum(axis=1).replace(0, np.nan) * 100
@@ -95,6 +103,7 @@ def own_rows(daily: dict[str, pd.DataFrame], sessions: int = 300, min_price: flo
                        "up25m": (r20 >= 0.25).sum(axis=1), "down25m": (r20 <= -0.25).sum(axis=1),
                        "up50m": (r20 >= 0.50).sum(axis=1), "down50m": (r20 <= -0.50).sum(axis=1),
                        "up13d34": (d_up >= 0.13).sum(axis=1), "down13d34": (d_dn <= -0.13).sum(axis=1),
+                       "up20w": up20w, "down20w": down20w,
                        "t2108": t2108, "universe": closes.notna().sum(axis=1)}).iloc[65:].tail(sessions)
     out = []
     for d, r in df.iloc[::-1].iterrows():
@@ -104,12 +113,15 @@ def own_rows(daily: dict[str, pd.DataFrame], sessions: int = 300, min_price: flo
                     "ratio5": round(float(r.ratio5), 2), "ratio10": round(float(r.ratio10), 2),
                     "up25q": float(r.up25q), "down25q": float(r.down25q), "up25m": float(r.up25m),
                     "down25m": float(r.down25m), "up50m": float(r.up50m), "down50m": float(r.down50m),
-                    "up13d34": float(r.up13d34), "down13d34": float(r.down13d34), "t2108": round(float(r.t2108), 2),
+                    "up13d34": float(r.up13d34), "down13d34": float(r.down13d34), "up20w": float(r.up20w),
+                    "down20w": float(r.down20w), "t2108": round(float(r.t2108), 2),
                     "universe": float(r.universe)})
     return out
 
 
 COUNTS = ("up4", "down4", "up25q", "down25q", "up25m", "down25m", "up50m", "down50m", "up13d34", "down13d34", "universe")
+# up20w / down20w (studio 20% di Pradeep) non si calibrano: Stockbee non li pubblica nel foglio, sono già sul suo
+# stesso universo (azioni ordinarie USA) e con i suoi stessi filtri.
 
 
 # Finestra della calibrazione: le ultime 120 sedute in comune con Stockbee. Provata a ritroso su 10 anni
@@ -186,7 +198,7 @@ def update(own: list[dict], nel: list[dict]) -> list[dict]:
 # NASDAQ, NYSE e AMEX dagli elenchi pubblici di Nasdaq Trader (niente ETF, warrant, unit, diritti, privilegiate):
 # ~5.700 titoli. Verificato sul foglio di Stockbee: up4/down4 quasi identici (77 contro 78, 784 contro 799 il 14/10);
 # su 10 anni stato uguale nell'83% delle sedute senza calibrazione, 90,6% con la calibrazione a 120 sedute (sopra).
-# Gira ogni notte alle 00:00 di Roma (workflow "Market Monitor nostro" (copiato da Martin-coach)) e scrive data/breadth/market_monitor_full.json.
+# Gira ogni notte alle 00:00 di Roma (workflow "Market Monitor nostro") e scrive data/breadth/market_monitor_full.json.
 FULL_FILE = DIR / "market_monitor_full.json"
 CAL_FULL_FILE = DIR / "calibrazione_completa.json"
 UNIVERSE_MM_FILE = DIR / "universo_mm.json"
@@ -299,6 +311,16 @@ if __name__ == "__main__":
         from .data import fetch_market_monitor
         fetch_market_monitor()                       # aggiorna l'archivio di Stockbee per la calibrazione
         print(json.dumps(run_full(), indent=1))
+    elif len(sys.argv) > 1 and sys.argv[1] == "storico":
+        # ricostruisce l'archivio dal 2015 (serve quando si aggiunge una colonna, es. lo studio 20% del 16/10)
+        from datetime import date as _date
+        from .calendar_us import prev_session, now_et
+        end = prev_session(now_et().date() + __import__("datetime").timedelta(days=1))
+        start = _date.fromisoformat(sys.argv[2] if len(sys.argv) > 2 else "2015-06-01")
+        rows = full_rows(end, days=(end - start).days)
+        allrows = merge(FULL_FILE, rows)
+        print(json.dumps({"rows": len(rows), "first": rows[-1]["date"] if rows else None,
+                          "last": rows[0]["date"] if rows else None, "archive": len(allrows)}))
     elif len(sys.argv) > 1 and sys.argv[1] == "verifica":
         print(json.dumps({"calibrazione ora": walk_forward(), "calibrazione vecchia di 60 sedute": walk_forward(gap=60)}))
     else:

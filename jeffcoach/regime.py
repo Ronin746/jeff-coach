@@ -16,6 +16,7 @@ import pandas as pd
 from . import config as C
 
 log = logging.getLogger("jeffcoach.regime")
+DISPLAY = {"SHORT": "DEFENSIVE"}
 MM_FILE = C.STATE / "market_monitor.json"
 
 
@@ -62,20 +63,87 @@ def mm_state(row: dict) -> Optional[str]:
     return "Mixed"
 
 
-def market_monitor(rows: list[dict], as_of) -> Optional[dict]:
+def mm_state_pradeep(rows: list[dict], i: int, up20: Optional[dict] = None) -> Optional[tuple[str, list[str], dict]]:
+    """Lettura del Market Monitor come la usa Pradeep Bonde [RONIN 16/10] (righe dalla più recente, `i` = seduta).
+    Quello che guarda lui: acquisti contro vendite (giorni a ±4%), l'indicatore primario (titoli +25% contro -25% nel
+    trimestre), il T2108 (sotto 20 rialzista, sotto 10 molto), lo studio 20% (titoli +20% in 5 sedute >= 200: storno
+    entro 5-10 sedute, ignorato uscendo da un ipervenduto; -20% >= 200: vendita estrema, niente "Breakouts fail") e
+    il "think 30 days ahead".
+    None se mancano le sedute necessarie."""
+    need = max(C.PB_T30A, C.PB_UP20_WINDOW, C.PB_FLOW_DAYS + 5) + 1
+    win = rows[i:i + need]
+    if len(win) < C.PB_FLOW_DAYS + 6 or any(r.get(k) is None for r in win[:C.PB_FLOW_DAYS + 6]
+                                            for k in ("up4", "down4", "t2108")):
+        return None
+    r = win[0]
+    def u20(x, key="up20w"):          # studio 20% dalla replica nostra (Stockbee non lo pubblica)
+        v = (up20 or {}).get(x["date"])
+        v = v.get(key) if isinstance(v, dict) else (v if key == "up20w" else None)
+        return v if v is not None else x.get(key)
+    t = r["t2108"]
+    t5 = win[5]["t2108"]
+    flow = sum((x["up4"] > x["down4"]) - (x["down4"] > x["up4"]) for x in win[:C.PB_FLOW_DAYS])
+    buying, selling = flow >= C.PB_FLOW_MIN, flow <= -C.PB_FLOW_MIN
+    oversold = t < C.PB_T2108_OVERSOLD
+    last_os = next((k for k, x in enumerate(win[:C.PB_T30A + 1]) if x.get("t2108") is not None
+                    and x["t2108"] < C.PB_T2108_OVERSOLD), None)
+    t30a = last_os is not None
+    hi = [u20(x) for x in win[:C.PB_UP20_WINDOW] if u20(x) is not None]
+    caution = bool(hi) and max(hi) >= C.PB_UP20_CAUTION and not t30a
+    lo = [u20(x, "down20w") for x in win[:C.PB_UP20_WINDOW] if u20(x, "down20w") is not None]
+    caution_dn = bool(lo) and max(lo) >= C.PB_DOWN20_CAUTION      # vendita estrema: niente "Breakouts fail"
+    extended = t > C.PB_T2108_EXTENDED
+    q_up, q_dn = r.get("up25q"), r.get("down25q")
+    primary = None if q_up is None or q_dn is None else q_up > q_dn
+    why = [f"buying vs selling 5d {flow:+d}", f"25%Q {'green' if primary else 'red'}" if primary is not None else "25%Q n/a",
+           f"T2108 {t:.0f}% ({t - t5:+.0f} 5d)"]
+    if u20(r) is not None:
+        why.append(f"20% study {u20(r):.0f} up / {u20(r, 'down20w') or 0:.0f} down")
+    if oversold:
+        st = "Expansion"
+        why.append("T2108 < 10: extremely bullish" if t < C.PB_T2108_EXTREME else "T2108 < 20: start getting bullish")
+    elif t30a and not selling:
+        st = "Expansion"
+        why.append(f"T30A: T2108 < 20 {last_os} sessions ago")
+    elif primary and not selling and not caution and not extended and (buying or t > t5):
+        st = "Expansion"
+    elif primary is False and selling and t < t5 and not caution_dn:
+        st = "Defensive"
+        why.append("down-surges dominate, T2108 falling")
+    else:
+        st = "Mixed"
+        if caution:
+            why.append(f"20% study up >= {C.PB_UP20_CAUTION} in {C.PB_UP20_WINDOW}d: dip likely")
+        if caution_dn:
+            why.append(f"20% study down >= {C.PB_DOWN20_CAUTION} in {C.PB_UP20_WINDOW}d: bounce likely")
+        if extended:
+            why.append("T2108 extended")
+    flags = dict(flow5=flow, primary=primary, oversold=oversold, t30a=t30a, caution=caution, caution_down=caution_dn,
+                 extended=extended, up20w=u20(r), down20w=u20(r, "down20w"))
+    return st, why, flags
+
+
+def market_monitor(rows: list[dict], as_of, up20: Optional[dict] = None) -> Optional[dict]:
+    """Riga del Market Monitor della seduta `as_of` (righe dalla più recente) + variazione T2108 a 5 sedute."""
     day = as_of.isoformat() if hasattr(as_of, "isoformat") else str(as_of)
     i = next((k for k, r in enumerate(rows or []) if r.get("date") == day), None)
     if i is None:
         return None
     r = rows[i]
-    st = mm_state(r)
+    why, flags = [], {}
+    pb = mm_state_pradeep(rows, i, up20) if C.MM_READ == "pradeep" else None
+    if pb:
+        st, why, flags = pb
+    else:
+        st = mm_state(r)
     if st is None:
         return None
     old = rows[i + 5] if i + 5 < len(rows) else None
     d5 = (r["t2108"] - old["t2108"]) if (old and r.get("t2108") is not None and old.get("t2108") is not None) else None
-    return dict(date=day, state=st, up4=r["up4"], down4=r["down4"], ratio5=r["ratio5"], ratio10=r["ratio10"],
+    return dict(date=day, state=st, up4=r["up4"], down4=r["down4"], ratio5=r.get("ratio5"), ratio10=r.get("ratio10"),
                 t2108=r.get("t2108"), t2108_d5=None if d5 is None else round(d5, 2), up25q=r.get("up25q"),
-                down25q=r.get("down25q"))
+                down25q=r.get("down25q"), read="pradeep" if pb else "nel", label=C.MM_LABEL.get(st, st),
+                mm_why=why, **{k: v for k, v in flags.items() if k in ("flow5", "up20w", "down20w", "t30a", "caution")})
 
 
 def index_state(df: Optional[pd.DataFrame]) -> dict:
@@ -105,11 +173,35 @@ def regime(indices: dict[str, dict], mm: Optional[dict]) -> dict:
         if mm.get("t2108_d5") is not None:
             score += 1 if mm["t2108_d5"] >= C.MM_T2108_DELTA else -1 if mm["t2108_d5"] <= -C.MM_T2108_DELTA else 0
             why.append(f"T2108 5d {mm['t2108_d5']:+.1f}pp")
+        if mm.get("mm_why"):
+            why.append("Market Monitor: " + ", ".join(mm["mm_why"]))   # lettura di Pradeep [RONIN 16/10]
     score_bias = "LONG" if score >= C.BIAS_LONG_MIN else ("SHORT" if score <= C.BIAS_SHORT_MAX else "MIXED")
     if mm is not None:
         bias = C.MM_BIAS[mm["state"]]
-        why.insert(0, f"Market Monitor {mm['state']} → {"DEFENSIVE" if bias == "SHORT" else bias}; index score {score:+d} ({score_bias})")
+        why.insert(0, f"Market Monitor {mm['state']} → {DISPLAY.get(bias, bias)}; index score {score:+d} ({score_bias})")
     else:
         bias = score_bias
         why.insert(0, f"Market Monitor unavailable: index score {score:+d} → {bias}")
     return {"bias": bias, "score": score, "score_bias": score_bias, "why": why, "market_monitor": mm, "indices": indices}
+
+
+def flow_reversal(hist: list[dict], days: int = None) -> Optional[dict]:
+    """Inversione del trend ±4% [RONIN 16/10, Andrea]: una seduta con +4% > -4% dopo una fase di vendite (flusso
+    delle PB_FLOW_DAYS sedute prima <= -PB_FLOW_MIN, flusso = giorni ▲ meno giorni ▼), o il contrario. Vale nelle
+    prime `days` sedute (REVERSAL_DAYS = 2: il giorno dell'inversione e il successivo); vince la più recente.
+    `hist`: righe con date, up4, down4, dalla più vecchia."""
+    days = days or C.REVERSAL_DAYS
+    h = [r for r in hist if r.get("up4") is not None and r.get("down4") is not None]
+    sign = [(r["up4"] > r["down4"]) - (r["down4"] > r["up4"]) for r in h]
+    n = C.PB_FLOW_DAYS
+    for k in range(len(h) - 1, max(n - 1, len(h) - 1 - days), -1):      # ultime `days` sedute, dalla più recente
+        before = sum(sign[k - n:k])
+        if sign[k] > 0 and before <= -C.PB_FLOW_MIN:
+            d = "buying"
+        elif sign[k] < 0 and before >= C.PB_FLOW_MIN:
+            d = "selling"
+        else:
+            continue
+        return dict(direction=d, date=h[k]["date"], day=len(h) - k, flow_before=before,
+                    up4=h[k]["up4"], down4=h[k]["down4"])
+    return None

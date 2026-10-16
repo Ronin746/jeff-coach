@@ -293,3 +293,30 @@ BIAS_LONG_MIN, BIAS_SHORT_MAX = 2, -2
 #                      in uptrend, e i loro alert portano la nota "against the regime".
 REGIME_MIXED_MAX_FOCUS = 3
 REGIME_DEFENSIVE_MAX_FOCUS = 3
+
+# ---------------------------------------------------------------- aggiornamento come Martin-coach [RONIN 16/10]
+# Market Monitor letto come Pradeep Bonde (Martin 2026-10-16b..h): "pradeep" o "nel" (regole NEL di prima).
+MM_READ = "pradeep"
+MM_LABEL = {"Expansion": "Breakouts work", "Mixed": "Be selective", "Defensive": "Breakouts fail"}
+PB_T2108_OVERSOLD = 20.0            # T2108 < 20: "start getting bullish"
+PB_T2108_EXTREME = 10.0             # < 10: "extremely bullish"
+PB_T30A = 30                        # 30 sedute dopo un T2108 < 20
+PB_UP20_CAUTION = 200               # studio 20%: +20% in 5 sedute >= 200 = storno probabile entro 5-10 sedute
+PB_DOWN20_CAUTION = 200             # -20% in 5 sedute >= 200 = vendita estrema, niente "Breakouts fail"
+PB_UP20_WINDOW = 10
+PB_FLOW_DAYS = 5                    # acquisti/vendite: saldo dei giorni ±4% nelle ultime 5 sedute
+PB_FLOW_MIN = 2
+PB_T2108_EXTENDED = 65.0
+REVERSAL_DAYS = 2                   # potential trend reversal: il giorno dell'inversione del flusso ±4% e il successivo;
+#                                     JeffCoach (solo long): con l'inversione verso gli acquisti il regime non limita i Focus
+# Temi come Martin (16/10): classifica sugli ETF del tema col punteggio a 7 fattori di Ratatouille, stadi di Ratatouille,
+# titolo in un tema solo se l'ETF lo sovrappesa rispetto al mercato.
+THEME_ETF_DV_MIN = 250e3
+BASKET_WEIGHTS = {"price_performance": 0.25, "bullish_candles": 0.15, "ma_alignment": 0.15, "trend_consistency": 0.15,
+                  "volatility": 0.10, "volume": 0.10, "relative_strength": 0.10}
+BASKET_BENCHMARK = "SPY"
+STAGE_LONG = ("LEADING", "BUILDING")      # long solo con tema LEADING o BUILDING (senza tema: nessun filtro)
+STAGE_FADING_LONG_DOWN20 = 200            # tema FADING aperto ai long con -20% >= 200 nelle ultime 10 sedute
+THEME_OVERWEIGHT_MIN = 5.0
+THEME_OVERWEIGHT_FRAC = 1 / 3
+THEME_MEMBERSHIP = "sovrappeso-5-1/3"     # se cambia, la mappa si ricostruisce

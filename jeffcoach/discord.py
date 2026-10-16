@@ -62,12 +62,16 @@ def _request(url: str, method: str, body: bytes, ctype: str) -> dict[str, Any]:
         return {"ok": False, "status": None, "error": type(e).__name__}
 
 
-def _multipart(payload: dict, filename: str, content: bytes) -> tuple[bytes, str]:
+def _multipart(payload: dict, filename: str, content: bytes, extra: Optional[list] = None) -> tuple[bytes, str]:
+    """payload_json + file principale (txt) + altri file [(nome, byte, content-type)] (grafico del regime, 16/10)."""
     b = uuid.uuid4().hex
+    files = [(filename, content, "text/plain")] + list(extra or [])
     body = (f"--{b}\r\nContent-Disposition: form-data; name=\"payload_json\"\r\nContent-Type: application/json\r\n\r\n".encode()
-            + json.dumps(payload).encode()
-            + f"\r\n--{b}\r\nContent-Disposition: form-data; name=\"files[0]\"; filename=\"{filename}\"\r\nContent-Type: text/plain\r\n\r\n".encode()
-            + content + f"\r\n--{b}--\r\n".encode())
+            + json.dumps(payload).encode())
+    for k, (fn, data, ct) in enumerate(files):
+        body += (f"\r\n--{b}\r\nContent-Disposition: form-data; name=\"files[{k}]\"; filename=\"{fn}\"\r\nContent-Type: {ct}\r\n\r\n".encode()
+                 + data)
+    body += f"\r\n--{b}--\r\n".encode()
     return body, f"multipart/form-data; boundary={b}"
 
 
@@ -107,10 +111,14 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     base, q = url.split("?")[0], ("&" if "?" in url else "?")
     extra = {k: v for k, v in card.items() if k != "embeds"}
 
-    # 1) primo messaggio: primi riquadri + file
+    # 1) primo messaggio: primi riquadri + file (+ grafico studio 20% / T2108 nella parte del regime, come Martin 16/10)
+    files = []
+    png = work / "breadth.png"
+    if png.exists() and "attachment://breadth.png" in json.dumps(parts[0] if parts else []):
+        files.append(("breadth.png", png.read_bytes(), "image/png"))
     payload = {"username": C.CARD_USERNAME, **extra, "embeds": parts[0] if parts else [], "components": [],
-               "attachments": [{"id": 0, "filename": fname}]}
-    body, ctype = _multipart(payload, fname, txt_path.read_bytes())
+               "attachments": [{"id": 0, "filename": fname}] + [{"id": k + 1, "filename": f[0]} for k, f in enumerate(files)]}
+    body, ctype = _multipart(payload, fname, txt_path.read_bytes(), files)
     if prev.get("message_id"):
         res = _request(f"{base}/messages/{prev['message_id']}?with_components=true", "PATCH", body, ctype)
         res["method"] = "PATCH"
@@ -118,7 +126,7 @@ def post_card(session: date, dry_run: bool = False) -> dict:
         if not res.get("ok") and res.get("status") in (401, 403, 404):
             # messaggio di un altro webhook (es. Dua prima del 14/10): non si può correggere, se ne pubblica uno nuovo
             prev = {k: v for k, v in prev.items() if k not in ("message_id", "more_message_ids")}
-            body, ctype = _multipart(payload, fname, txt_path.read_bytes())
+            body, ctype = _multipart(payload, fname, txt_path.read_bytes(), files)
             res = _request(url + q + "wait=true", "POST", body, ctype)
             res["method"] = "POST"
     else:
