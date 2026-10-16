@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-15",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-16 13:40 CEST",
+  "asof_rome": "2026-10-16 13:54 CEST",
   "focus": [
     "CLMT"
   ],
@@ -25,8 +25,13 @@
     "CDNA",
     "ANF",
     "ATRC",
+    "CRL",
+    "HAE",
+    "ILMN",
     "LFST",
     "MATX",
+    "NTRA",
+    "OSCR",
     "RVTY",
     "SN",
     "AVTR",
@@ -36,7 +41,10 @@
     "TEVA",
     "CNK",
     "PI",
+    "W",
+    "WAT",
     "GGB",
+    "WDAY",
     "INSP"
   ],
   "tickers": [
@@ -631,6 +639,108 @@
       "against_regime": false
     },
     {
+      "ticker": "CRL",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 2.85,
+      "sma5": 1.34,
+      "atr_ext": 1.67,
+      "reason_en": "1 tight day",
+      "pattern": "tight",
+      "pattern_shape": "ascending triangle",
+      "open_gates": [
+        "comp"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 309.48,
+      "trendline_next": 333.3,
+      "industry": "Diagnostics & Research",
+      "sector": "Healthcare",
+      "group_pctl": 93,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": true,
+      "channel_lower_next": 294.72,
+      "gap_to_fill": null,
+      "triangle_top": 310.53,
+      "theme": "Genomics",
+      "theme_trend": "down",
+      "theme_leading": false,
+      "theme_stage": "SLIPPING",
+      "theme_rank": 30,
+      "against_regime": false
+    },
+    {
+      "ticker": "HAE",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 12.76,
+      "sma5": 0.26,
+      "atr_ext": 5.19,
+      "reason_en": "extended",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ext",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 122.46,
+      "trendline_next": 123.77,
+      "industry": "Medical Devices",
+      "sector": "Healthcare",
+      "group_pctl": 73,
+      "leader": [],
+      "carry_days": 0,
+      "channel": null,
+      "channel_buy_zone": false,
+      "channel_lower_next": null,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Medical equipment",
+      "theme_trend": "neutral",
+      "theme_leading": false,
+      "theme_stage": "HOLDING",
+      "theme_rank": 34,
+      "against_regime": false
+    },
+    {
+      "ticker": "ILMN",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 12.39,
+      "sma5": -1.91,
+      "atr_ext": 3.01,
+      "reason_en": "under 65m SMA30 (-1.2%); under 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma65",
+        "ema9",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 275.49,
+      "trendline_next": 309.35,
+      "industry": "Diagnostics & Research",
+      "sector": "Healthcare",
+      "group_pctl": 93,
+      "leader": [],
+      "carry_days": 1,
+      "channel": "backtest of the broken line",
+      "channel_buy_zone": true,
+      "channel_lower_next": 226.11,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Biotechnology",
+      "theme_trend": "neutral",
+      "theme_leading": false,
+      "theme_stage": "HOLDING",
+      "theme_rank": 25,
+      "against_regime": false
+    },
+    {
       "ticker": "LFST",
       "list": "Stalk",
       "rs": 98,
@@ -695,6 +805,72 @@
       "theme_leading": false,
       "theme_stage": null,
       "theme_rank": null,
+      "against_regime": false
+    },
+    {
+      "ticker": "NTRA",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 4.7,
+      "sma5": 1.52,
+      "atr_ext": 3.44,
+      "reason_en": "pattern last bar 1.5× ADR, 2.0 ATR under the line",
+      "pattern": "forming",
+      "pattern_shape": "ascending base",
+      "open_gates": [
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 408.82,
+      "trendline_next": 437.41,
+      "industry": "Diagnostics & Research",
+      "sector": "Healthcare",
+      "group_pctl": 93,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "lower part of the channel",
+      "channel_buy_zone": true,
+      "channel_lower_next": 389.2,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Genomics",
+      "theme_trend": "down",
+      "theme_leading": false,
+      "theme_stage": "SLIPPING",
+      "theme_rank": 30,
+      "against_regime": false
+    },
+    {
+      "ticker": "OSCR",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp": 7.6,
+      "sma5": -0.95,
+      "atr_ext": 1.49,
+      "reason_en": "under 65m SMA30 (-0.6%)",
+      "pattern": "tight",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma65"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 33.9,
+      "trendline_next": 35.01,
+      "industry": "Healthcare Plans",
+      "sector": "Healthcare",
+      "group_pctl": 81,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "at the upper line",
+      "channel_buy_zone": false,
+      "channel_lower_next": 28.65,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Insurance",
+      "theme_trend": "neutral",
+      "theme_leading": false,
+      "theme_stage": "RECOVERY",
+      "theme_rank": 67,
       "against_regime": false
     },
     {
@@ -1009,6 +1185,75 @@
       "against_regime": false
     },
     {
+      "ticker": "W",
+      "list": "Stalk",
+      "rs": 89,
+      "vcp": 18.75,
+      "sma5": 4.3,
+      "atr_ext": 2.16,
+      "reason_en": "1 tight day",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 112.93,
+      "trendline_next": 112.93,
+      "industry": "Internet Retail",
+      "sector": "Consumer Cyclical",
+      "group_pctl": 34,
+      "leader": [],
+      "carry_days": 0,
+      "channel": "breakout",
+      "channel_buy_zone": false,
+      "channel_lower_next": 94.71,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Online retail",
+      "theme_trend": "neutral",
+      "theme_leading": false,
+      "theme_stage": "RECOVERY",
+      "theme_rank": 74,
+      "against_regime": false
+    },
+    {
+      "ticker": "WAT",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp": 46.41,
+      "sma5": 2.07,
+      "atr_ext": 2.05,
+      "reason_en": "loose VCP; 1 tight day",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcp",
+        "comp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 449.12,
+      "trendline_next": 454.54,
+      "industry": "Diagnostics & Research",
+      "sector": "Healthcare",
+      "group_pctl": 93,
+      "leader": [],
+      "carry_days": 1,
+      "channel": "middle of the channel",
+      "channel_buy_zone": false,
+      "channel_lower_next": 426.42,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Water",
+      "theme_trend": "neutral",
+      "theme_leading": false,
+      "theme_stage": "RECOVERY",
+      "theme_rank": 50,
+      "against_regime": false
+    },
+    {
       "ticker": "GGB",
       "list": "Stalk",
       "rs": 87,
@@ -1041,6 +1286,41 @@
       "theme_leading": false,
       "theme_stage": null,
       "theme_rank": null,
+      "against_regime": false
+    },
+    {
+      "ticker": "WDAY",
+      "list": "Stalk",
+      "rs": 87,
+      "vcp": 42.22,
+      "sma5": 3.9,
+      "atr_ext": 0.81,
+      "reason_en": "SMA200 declining; loose VCP",
+      "pattern": "forming",
+      "pattern_shape": "ascending triangle",
+      "open_gates": [
+        "sma200",
+        "vcp",
+        "pattern"
+      ],
+      "extreme_rvol_ok": false,
+      "prior_day_high": 200.23,
+      "trendline_next": 190.29,
+      "industry": "Software—Application",
+      "sector": "Technology",
+      "group_pctl": 81,
+      "leader": [],
+      "carry_days": 1,
+      "channel": "at the upper line",
+      "channel_buy_zone": false,
+      "channel_lower_next": 181.05,
+      "gap_to_fill": null,
+      "triangle_top": null,
+      "theme": "Cloud",
+      "theme_trend": "neutral",
+      "theme_leading": false,
+      "theme_stage": "FADING",
+      "theme_rank": 2,
       "against_regime": false
     },
     {
@@ -1105,42 +1385,32 @@
     ],
     "left_list": [
       "ACN",
-      "CRL",
       "CXW",
       "ELF",
       "GRAL",
-      "ILMN",
       "IT",
       "JXN",
-      "NTRA",
-      "OSCR",
-      "SIG",
-      "WAT",
-      "WDAY"
+      "SIG"
     ],
     "joined_list": [
+      "HAE",
       "INSP",
       "MATX",
       "MPC",
       "RXO",
       "SN",
-      "TEVA"
+      "TEVA",
+      "W"
     ],
     "why_left": {
       "PBF": "under 65m SMA30 (-0.4%)",
       "ACN": "SMA200 declining; extended; 1.7 ATR over 9 EMA",
-      "CRL": "theme SLIPPING: Genomics",
       "CXW": "under 65m SMA30 (-5.4%); under 9 EMA; loose VCP",
       "ELF": "extended; over 5% from SMA5; 1.9 ATR over 9 EMA; loose VCP",
       "GRAL": "extended; under 65m SMA30 (-2.4%); under 9 EMA",
-      "ILMN": "theme HOLDING: Biotechnology",
       "IT": "SMA200 declining; over 5% from SMA5; 1.6 ATR over 9 EMA; loose VCP",
       "JXN": "theme WEAK: Banks",
-      "NTRA": "theme SLIPPING: Genomics",
-      "OSCR": "theme RECOVERY: Insurance",
-      "SIG": "extended; over 5% from SMA5; 2.4 ATR over 9 EMA; loose VCP",
-      "WAT": "theme RECOVERY: Water",
-      "WDAY": "theme FADING: Cloud"
+      "SIG": "extended; over 5% from SMA5; 2.4 ATR over 9 EMA; loose VCP"
     }
   },
   "stale_stalk": {},
@@ -3408,6 +3678,15 @@
   ],
   "triangles": [
     {
+      "ticker": "CRL",
+      "list": "Stalk",
+      "top": 310.53,
+      "support_next": 295.48,
+      "touches_top": 5,
+      "length": 36,
+      "rs": 98
+    },
+    {
       "ticker": "MATX",
       "list": "Stalk",
       "top": 240.87,
@@ -3997,18 +4276,6 @@
       }
     ],
     "downtrend": [
-      "Cloud (FADING)",
-      "Internet (FADING)",
-      "Innovation (FADING)",
-      "AI (SLIPPING)",
-      "Ethereum (SLIPPING)",
-      "Cryptocurrency (SLIPPING)",
-      "Semiconductors (SLIPPING)",
-      "Generative AI (SLIPPING)",
-      "Meme stocks (SLIPPING)",
-      "Genomics (SLIPPING)",
-      "Bitcoin (SLIPPING)",
-      "Social sentiment (SLIPPING)",
       "Steel (WEAK)",
       "Gender diversity (WEAK)",
       "Copper (WEAK)",
@@ -4062,15 +4329,7 @@
       "Strategic metals (BEARISH)"
     ],
     "excluded": {
-      "CRL": "Genomics SLIPPING",
-      "HAE": "Medical equipment HOLDING",
-      "ILMN": "Biotechnology HOLDING",
-      "JXN": "Banks WEAK",
-      "NTRA": "Genomics SLIPPING",
-      "OSCR": "Insurance RECOVERY",
-      "W": "Online retail RECOVERY",
-      "WAT": "Water RECOVERY",
-      "WDAY": "Cloud FADING"
+      "JXN": "Banks WEAK"
     },
     "n_themes": 106,
     "map_built": "2026-10-16T08:12:25.153345+00:00",
@@ -6895,9 +7154,9 @@
     "candidates": 314,
     "out_universe": 9,
     "focus": 1,
-    "stalk": 29,
+    "stalk": 37,
     "out_earnings": 3,
-    "out_theme_downtrend": 9
+    "out_theme_downtrend": 1
   },
   "out_universe": {
     "GMAB": "single-name Biotechnology",
@@ -8586,8 +8845,8 @@
       "next_earnings": "2026-11-04"
     },
     "CRL": {
-      "list": "Out",
-      "out_reason": "theme SLIPPING: Genomics",
+      "list": "Stalk",
+      "out_reason": "",
       "gates": {
         "rs": {
           "ok": true,
@@ -9986,8 +10245,8 @@
       "next_earnings": null
     },
     "HAE": {
-      "list": "Out",
-      "out_reason": "theme HOLDING: Medical equipment",
+      "list": "Stalk",
+      "out_reason": "",
       "gates": {
         "rs": {
           "ok": true,
@@ -11029,8 +11288,8 @@
       "next_earnings": null
     },
     "ILMN": {
-      "list": "Out",
-      "out_reason": "theme HOLDING: Biotechnology",
+      "list": "Stalk",
+      "out_reason": "",
       "gates": {
         "rs": {
           "ok": true,
@@ -12757,8 +13016,8 @@
       "next_earnings": "2026-11-03"
     },
     "NTRA": {
-      "list": "Out",
-      "out_reason": "theme SLIPPING: Genomics",
+      "list": "Stalk",
+      "out_reason": "",
       "gates": {
         "rs": {
           "ok": true,
@@ -13171,8 +13430,8 @@
       "next_earnings": null
     },
     "OSCR": {
-      "list": "Out",
-      "out_reason": "theme RECOVERY: Insurance",
+      "list": "Stalk",
+      "out_reason": "",
       "gates": {
         "rs": {
           "ok": true,
@@ -15976,8 +16235,8 @@
       "next_earnings": null
     },
     "W": {
-      "list": "Out",
-      "out_reason": "theme RECOVERY: Online retail",
+      "list": "Stalk",
+      "out_reason": "",
       "gates": {
         "rs": {
           "ok": true,
@@ -16194,8 +16453,8 @@
       "next_earnings": "2026-11-04"
     },
     "WAT": {
-      "list": "Out",
-      "out_reason": "theme RECOVERY: Water",
+      "list": "Stalk",
+      "out_reason": "",
       "gates": {
         "rs": {
           "ok": true,
@@ -16391,8 +16650,8 @@
       "next_earnings": "2026-11-03"
     },
     "WDAY": {
-      "list": "Out",
-      "out_reason": "theme FADING: Cloud",
+      "list": "Stalk",
+      "out_reason": "",
       "gates": {
         "rs": {
           "ok": true,
