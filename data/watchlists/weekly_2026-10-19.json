@@ -1,0 +1,1411 @@
+{
+  "week_of": "2026-10-19",
+  "session_date": "2026-10-19",
+  "as_of_close": "2026-10-16",
+  "asof_rome": "2026-10-19 08:25 CEST",
+  "focus": [
+    "OSCR",
+    "PARR",
+    "CVE",
+    "ZIM",
+    "IQV",
+    "SAIC"
+  ],
+  "stalk": [
+    "DELL",
+    "MU",
+    "ATRC",
+    "AVTR",
+    "CHEF",
+    "CLMT",
+    "DK",
+    "FIVN",
+    "HTFL",
+    "LFST",
+    "MATX",
+    "MRVL",
+    "NSIT",
+    "PAYC",
+    "RBRK",
+    "RVTY",
+    "SN",
+    "ZETA",
+    "CNC",
+    "QLYS",
+    "SIMO",
+    "ESTC",
+    "HUM",
+    "PTEN",
+    "SNOW",
+    "VAC",
+    "CHRD",
+    "MGNI",
+    "ATI",
+    "DOCU",
+    "GKOS",
+    "NUE",
+    "VIST",
+    "YPF",
+    "CNK",
+    "DAVE",
+    "ELF",
+    "MANH",
+    "FFIV",
+    "FRSH",
+    "COKE",
+    "DAR",
+    "ERO",
+    "LTH",
+    "SWKS",
+    "VAL",
+    "DBX",
+    "AMG",
+    "FTI",
+    "LLY",
+    "VRNS",
+    "WAT",
+    "ADI",
+    "BBY",
+    "CSCO",
+    "FCX",
+    "MTCH",
+    "MUR",
+    "PLTR",
+    "TECK",
+    "GGB",
+    "MOG-A",
+    "NOW",
+    "PI",
+    "STNG",
+    "W",
+    "WCC",
+    "PWR",
+    "SWK",
+    "BIO",
+    "CVLT",
+    "JXN",
+    "M",
+    "FRPT",
+    "KSPI",
+    "WEX",
+    "IOT"
+  ],
+  "tickers": [
+    {
+      "ticker": "OSCR",
+      "list": "Focus",
+      "rs": 98,
+      "vcp_weekly": 11.15,
+      "sma25_dist": 0.11,
+      "atr_ext": 0.3,
+      "ema9w_dist_atr": 0.13,
+      "reason_en": "box 9d after +228%, line 35.01, volume drying up on the weekly, 3 tight weeks",
+      "pattern": "tight",
+      "pattern_shape": "box",
+      "open_gates": []
+    },
+    {
+      "ticker": "PARR",
+      "list": "Focus",
+      "rs": 98,
+      "vcp_weekly": 4.97,
+      "sma25_dist": 0.25,
+      "atr_ext": 0.58,
+      "ema9w_dist_atr": 0.3,
+      "reason_en": "flat base 8d after +252%, line 90.74 on the weekly, 2 tight weeks",
+      "pattern": "tight",
+      "pattern_shape": "flat base",
+      "open_gates": []
+    },
+    {
+      "ticker": "CVE",
+      "list": "Focus",
+      "rs": 97,
+      "vcp_weekly": 13.29,
+      "sma25_dist": 3.32,
+      "atr_ext": 1.15,
+      "ema9w_dist_atr": 0.56,
+      "reason_en": "flat base 5d after +146%, line 34.16, volume drying up on the weekly, 3 tight weeks",
+      "pattern": "tight",
+      "pattern_shape": "flat base",
+      "open_gates": []
+    },
+    {
+      "ticker": "ZIM",
+      "list": "Focus",
+      "rs": 94,
+      "vcp_weekly": 14.68,
+      "sma25_dist": -1.69,
+      "atr_ext": 0.58,
+      "ema9w_dist_atr": 0.15,
+      "reason_en": "flat base 8d after +151%, line 30.98, volume drying up on the weekly, 2 tight weeks",
+      "pattern": "tight",
+      "pattern_shape": "flat base",
+      "open_gates": []
+    },
+    {
+      "ticker": "IQV",
+      "list": "Focus",
+      "rs": 92,
+      "vcp_weekly": 2.34,
+      "sma25_dist": 0.39,
+      "atr_ext": 0.94,
+      "ema9w_dist_atr": 0.56,
+      "reason_en": "flat base 7d after +80%, line 277.40 on the weekly, 2 tight weeks",
+      "pattern": "tight",
+      "pattern_shape": "flat base",
+      "open_gates": []
+    },
+    {
+      "ticker": "SAIC",
+      "list": "Focus",
+      "rs": 90,
+      "vcp_weekly": 8.7,
+      "sma25_dist": 1.84,
+      "atr_ext": 1.08,
+      "ema9w_dist_atr": 0.44,
+      "reason_en": "flat base 6d after +76%, line 142.66 on the weekly, 2 tight weeks",
+      "pattern": "tight",
+      "pattern_shape": "flat base",
+      "open_gates": []
+    },
+    {
+      "ticker": "DELL",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp_weekly": 18.42,
+      "sma25_dist": -17.83,
+      "atr_ext": -1.7,
+      "ema9w_dist_atr": -0.98,
+      "reason_en": "over 5% from SMA25; under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "MU",
+      "list": "Stalk",
+      "rs": 99,
+      "vcp_weekly": 18.62,
+      "sma25_dist": -13.61,
+      "atr_ext": -1.9,
+      "ema9w_dist_atr": -0.86,
+      "reason_en": "over 5% from SMA25; under weekly 9 EMA",
+      "pattern": "none",
+      "pattern_shape": "descending triangle",
+      "open_gates": [
+        "sma25",
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "ATRC",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 8.5,
+      "sma25_dist": -1.38,
+      "atr_ext": 1.64,
+      "ema9w_dist_atr": 0.79,
+      "reason_en": "weekly pattern 5d range 2.5 ATR, volume not drying up",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "AVTR",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 12.26,
+      "sma25_dist": 6.38,
+      "atr_ext": 3.65,
+      "ema9w_dist_atr": 1.29,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "tight",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25"
+      ]
+    },
+    {
+      "ticker": "CHEF",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 5.93,
+      "sma25_dist": 2.12,
+      "atr_ext": 0.59,
+      "ema9w_dist_atr": 0.25,
+      "reason_en": "weekly pattern volume not drying up",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "CLMT",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 10.65,
+      "sma25_dist": 2.7,
+      "atr_ext": 2.47,
+      "ema9w_dist_atr": 0.93,
+      "reason_en": "weekly pattern volume not drying up",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "DK",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 17.56,
+      "sma25_dist": 2.37,
+      "atr_ext": 1.25,
+      "ema9w_dist_atr": 0.61,
+      "reason_en": "weekly pattern 5d range 2.3 ATR, volume not drying up",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "FIVN",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 13.67,
+      "sma25_dist": -7.26,
+      "atr_ext": -0.67,
+      "ema9w_dist_atr": -0.18,
+      "reason_en": "over 5% from SMA25; under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "HTFL",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": null,
+      "sma25_dist": -2.57,
+      "atr_ext": 0.54,
+      "ema9w_dist_atr": 0.3,
+      "reason_en": "weekly VCP n/a",
+      "pattern": "none",
+      "pattern_shape": null,
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "LFST",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 8.54,
+      "sma25_dist": -4.46,
+      "atr_ext": -1.35,
+      "ema9w_dist_atr": -0.26,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "MATX",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 1.69,
+      "sma25_dist": 2.35,
+      "atr_ext": 1.57,
+      "ema9w_dist_atr": 0.63,
+      "reason_en": "weekly pattern volume not drying up",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "MRVL",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 10.12,
+      "sma25_dist": -11.26,
+      "atr_ext": -0.79,
+      "ema9w_dist_atr": -0.49,
+      "reason_en": "over 5% from SMA25; under weekly 9 EMA",
+      "pattern": "none",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "NSIT",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 5.6,
+      "sma25_dist": 0.08,
+      "atr_ext": 0.59,
+      "ema9w_dist_atr": 0.39,
+      "reason_en": "weekly pattern 5d range 2.1 ATR, last bar 1.4× ADR",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "PAYC",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 20.18,
+      "sma25_dist": 10.41,
+      "atr_ext": 3.87,
+      "ema9w_dist_atr": 1.62,
+      "reason_en": "over 5% from SMA25; 1.6 wATR over weekly 9 EMA",
+      "pattern": "none",
+      "pattern_shape": "no base",
+      "open_gates": [
+        "sma25",
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "RBRK",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 26.18,
+      "sma25_dist": -1.91,
+      "atr_ext": 1.25,
+      "ema9w_dist_atr": 0.5,
+      "reason_en": "loose weekly VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "RVTY",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 58.11,
+      "sma25_dist": 2.21,
+      "atr_ext": 3.33,
+      "ema9w_dist_atr": 1.08,
+      "reason_en": "loose weekly VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "SN",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 35.91,
+      "sma25_dist": 4.23,
+      "atr_ext": 1.05,
+      "ema9w_dist_atr": 0.69,
+      "reason_en": "loose weekly VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "ZETA",
+      "list": "Stalk",
+      "rs": 98,
+      "vcp_weekly": 17.64,
+      "sma25_dist": 0.82,
+      "atr_ext": 0.76,
+      "ema9w_dist_atr": 0.46,
+      "reason_en": "1 tight weeks",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "compw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "CNC",
+      "list": "Stalk",
+      "rs": 97,
+      "vcp_weekly": 23.48,
+      "sma25_dist": 6.09,
+      "atr_ext": 1.85,
+      "ema9w_dist_atr": 0.77,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "QLYS",
+      "list": "Stalk",
+      "rs": 97,
+      "vcp_weekly": 16.85,
+      "sma25_dist": -3.01,
+      "atr_ext": -0.2,
+      "ema9w_dist_atr": 0.12,
+      "reason_en": "1 tight weeks",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "compw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "SIMO",
+      "list": "Stalk",
+      "rs": 97,
+      "vcp_weekly": 20.07,
+      "sma25_dist": -19.21,
+      "atr_ext": -2.33,
+      "ema9w_dist_atr": -1.18,
+      "reason_en": "over 5% from SMA25; under weekly 9 EMA",
+      "pattern": "none",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "ESTC",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp_weekly": 10.18,
+      "sma25_dist": 0.48,
+      "atr_ext": 0.77,
+      "ema9w_dist_atr": 0.34,
+      "reason_en": "weekly pattern 5d range 2.1 ATR, 1.8 ATR under the line",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "HUM",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp_weekly": 21.06,
+      "sma25_dist": 3.92,
+      "atr_ext": 1.1,
+      "ema9w_dist_atr": 0.38,
+      "reason_en": "1 tight weeks",
+      "pattern": "forming",
+      "pattern_shape": "ascending triangle",
+      "open_gates": [
+        "compw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "PTEN",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp_weekly": 17.91,
+      "sma25_dist": 0.63,
+      "atr_ext": -0.49,
+      "ema9w_dist_atr": 0.05,
+      "reason_en": "weekly pattern 5d range 2.3 ATR, 1.7 ATR under the line",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "SNOW",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp_weekly": 23.91,
+      "sma25_dist": -9.05,
+      "atr_ext": -1.41,
+      "ema9w_dist_atr": -0.64,
+      "reason_en": "over 5% from SMA25; under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "VAC",
+      "list": "Stalk",
+      "rs": 96,
+      "vcp_weekly": 15.29,
+      "sma25_dist": 6.63,
+      "atr_ext": 0.93,
+      "ema9w_dist_atr": 0.51,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "box",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "CHRD",
+      "list": "Stalk",
+      "rs": 95,
+      "vcp_weekly": 23.93,
+      "sma25_dist": 8.86,
+      "atr_ext": 2.8,
+      "ema9w_dist_atr": 1.03,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "MGNI",
+      "list": "Stalk",
+      "rs": 95,
+      "vcp_weekly": 11.08,
+      "sma25_dist": -5.28,
+      "atr_ext": -0.86,
+      "ema9w_dist_atr": -0.19,
+      "reason_en": "over 5% from SMA25; under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "ATI",
+      "list": "Stalk",
+      "rs": 94,
+      "vcp_weekly": 0.0,
+      "sma25_dist": -1.52,
+      "atr_ext": -1.95,
+      "ema9w_dist_atr": -0.49,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "DOCU",
+      "list": "Stalk",
+      "rs": 94,
+      "vcp_weekly": 15.55,
+      "sma25_dist": 6.45,
+      "atr_ext": 3.31,
+      "ema9w_dist_atr": 1.17,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "GKOS",
+      "list": "Stalk",
+      "rs": 94,
+      "vcp_weekly": 18.37,
+      "sma25_dist": 0.99,
+      "atr_ext": -1.0,
+      "ema9w_dist_atr": -0.02,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "NUE",
+      "list": "Stalk",
+      "rs": 94,
+      "vcp_weekly": 11.77,
+      "sma25_dist": 2.88,
+      "atr_ext": 0.33,
+      "ema9w_dist_atr": 0.32,
+      "reason_en": "weekly pattern 5d range 2.3 ATR",
+      "pattern": "forming",
+      "pattern_shape": "box",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "VIST",
+      "list": "Stalk",
+      "rs": 94,
+      "vcp_weekly": 34.96,
+      "sma25_dist": 3.98,
+      "atr_ext": 0.75,
+      "ema9w_dist_atr": 0.43,
+      "reason_en": "loose weekly VCP",
+      "pattern": "forming",
+      "pattern_shape": "ascending base",
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "YPF",
+      "list": "Stalk",
+      "rs": 94,
+      "vcp_weekly": 26.67,
+      "sma25_dist": -0.27,
+      "atr_ext": 0.13,
+      "ema9w_dist_atr": 0.15,
+      "reason_en": "loose weekly VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "CNK",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp_weekly": 18.1,
+      "sma25_dist": 5.49,
+      "atr_ext": 1.77,
+      "ema9w_dist_atr": 0.87,
+      "reason_en": "over 5% from SMA25; 1 tight weeks",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "compw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "DAVE",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp_weekly": 7.25,
+      "sma25_dist": 5.12,
+      "atr_ext": 0.94,
+      "ema9w_dist_atr": 0.26,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "none",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "ELF",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp_weekly": 20.38,
+      "sma25_dist": 10.36,
+      "atr_ext": 3.09,
+      "ema9w_dist_atr": 1.15,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "none",
+      "pattern_shape": "ascending base",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "MANH",
+      "list": "Stalk",
+      "rs": 93,
+      "vcp_weekly": 18.86,
+      "sma25_dist": 6.02,
+      "atr_ext": 1.92,
+      "ema9w_dist_atr": 0.98,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "box",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "FFIV",
+      "list": "Stalk",
+      "rs": 92,
+      "vcp_weekly": 21.86,
+      "sma25_dist": -1.69,
+      "atr_ext": 1.33,
+      "ema9w_dist_atr": 0.26,
+      "reason_en": "weekly pattern 5d range 2.6 ATR",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "FRSH",
+      "list": "Stalk",
+      "rs": 92,
+      "vcp_weekly": 12.76,
+      "sma25_dist": 4.87,
+      "atr_ext": 1.59,
+      "ema9w_dist_atr": 0.78,
+      "reason_en": "1 tight weeks",
+      "pattern": "forming",
+      "pattern_shape": "ascending base",
+      "open_gates": [
+        "compw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "COKE",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp_weekly": 21.83,
+      "sma25_dist": 8.16,
+      "atr_ext": 3.0,
+      "ema9w_dist_atr": 1.07,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "ascending triangle",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "DAR",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp_weekly": 7.27,
+      "sma25_dist": -1.64,
+      "atr_ext": -1.01,
+      "ema9w_dist_atr": -0.22,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "none",
+      "pattern_shape": "descending triangle",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "ERO",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp_weekly": 3.26,
+      "sma25_dist": -4.96,
+      "atr_ext": -0.99,
+      "ema9w_dist_atr": -0.3,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "LTH",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp_weekly": 15.05,
+      "sma25_dist": 0.59,
+      "atr_ext": -1.12,
+      "ema9w_dist_atr": -0.25,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "box",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "SWKS",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp_weekly": 19.48,
+      "sma25_dist": -5.38,
+      "atr_ext": 0.56,
+      "ema9w_dist_atr": 0.08,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "VAL",
+      "list": "Stalk",
+      "rs": 91,
+      "vcp_weekly": 7.61,
+      "sma25_dist": 3.37,
+      "atr_ext": 0.32,
+      "ema9w_dist_atr": 0.29,
+      "reason_en": "weekly pattern pullback too deep",
+      "pattern": "none",
+      "pattern_shape": "pennant",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "DBX",
+      "list": "Stalk",
+      "rs": 90,
+      "vcp_weekly": 39.26,
+      "sma25_dist": 2.19,
+      "atr_ext": 0.72,
+      "ema9w_dist_atr": 0.53,
+      "reason_en": "loose weekly VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "AMG",
+      "list": "Stalk",
+      "rs": 89,
+      "vcp_weekly": 38.46,
+      "sma25_dist": 3.79,
+      "atr_ext": 1.6,
+      "ema9w_dist_atr": 0.51,
+      "reason_en": "loose weekly VCP",
+      "pattern": "forming",
+      "pattern_shape": "box",
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "FTI",
+      "list": "Stalk",
+      "rs": 89,
+      "vcp_weekly": 8.44,
+      "sma25_dist": -1.11,
+      "atr_ext": -1.85,
+      "ema9w_dist_atr": -0.41,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "LLY",
+      "list": "Stalk",
+      "rs": 89,
+      "vcp_weekly": 23.4,
+      "sma25_dist": 7.28,
+      "atr_ext": 2.28,
+      "ema9w_dist_atr": 0.94,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "VRNS",
+      "list": "Stalk",
+      "rs": 89,
+      "vcp_weekly": 0.0,
+      "sma25_dist": 1.82,
+      "atr_ext": 1.62,
+      "ema9w_dist_atr": 0.48,
+      "reason_en": "weekly pattern volume not drying up",
+      "pattern": "forming",
+      "pattern_shape": "ascending base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "WAT",
+      "list": "Stalk",
+      "rs": 89,
+      "vcp_weekly": 19.05,
+      "sma25_dist": 1.5,
+      "atr_ext": 1.33,
+      "ema9w_dist_atr": 0.62,
+      "reason_en": "weekly pattern 5d range 2.0 ATR, volume not drying up",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "ADI",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp_weekly": 25.75,
+      "sma25_dist": 0.31,
+      "atr_ext": 1.04,
+      "ema9w_dist_atr": 0.14,
+      "reason_en": "loose weekly VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "BBY",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp_weekly": 8.02,
+      "sma25_dist": 2.74,
+      "atr_ext": 1.61,
+      "ema9w_dist_atr": 0.59,
+      "reason_en": "weekly pattern last bar 1.6× ADR",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "CSCO",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp_weekly": 21.95,
+      "sma25_dist": -3.1,
+      "atr_ext": -1.35,
+      "ema9w_dist_atr": -0.58,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "falling wedge",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "FCX",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp_weekly": 0.0,
+      "sma25_dist": -2.59,
+      "atr_ext": -0.9,
+      "ema9w_dist_atr": -0.24,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "MTCH",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp_weekly": 21.77,
+      "sma25_dist": 2.97,
+      "atr_ext": 1.72,
+      "ema9w_dist_atr": 0.68,
+      "reason_en": "weekly pattern 5d range 2.2 ATR",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "MUR",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp_weekly": 30.63,
+      "sma25_dist": 10.06,
+      "atr_ext": 3.77,
+      "ema9w_dist_atr": 1.04,
+      "reason_en": "over 5% from SMA25; loose weekly VCP",
+      "pattern": "tight",
+      "pattern_shape": "ascending base",
+      "open_gates": [
+        "sma25",
+        "vcpw"
+      ]
+    },
+    {
+      "ticker": "PLTR",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp_weekly": 24.88,
+      "sma25_dist": -1.99,
+      "atr_ext": 0.45,
+      "ema9w_dist_atr": 0.21,
+      "reason_en": "weekly pattern 5d range 2.5 ATR",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "TECK",
+      "list": "Stalk",
+      "rs": 88,
+      "vcp_weekly": 0.0,
+      "sma25_dist": -2.3,
+      "atr_ext": -0.98,
+      "ema9w_dist_atr": -0.29,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "tight",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w"
+      ]
+    },
+    {
+      "ticker": "GGB",
+      "list": "Stalk",
+      "rs": 87,
+      "vcp_weekly": 13.65,
+      "sma25_dist": 0.89,
+      "atr_ext": 0.99,
+      "ema9w_dist_atr": 0.25,
+      "reason_en": "1 tight weeks",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "compw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "MOG-A",
+      "list": "Stalk",
+      "rs": 87,
+      "vcp_weekly": 6.36,
+      "sma25_dist": -1.09,
+      "atr_ext": -1.03,
+      "ema9w_dist_atr": -0.32,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "none",
+      "pattern_shape": "descending triangle",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "NOW",
+      "list": "Stalk",
+      "rs": 87,
+      "vcp_weekly": 4.83,
+      "sma25_dist": 2.69,
+      "atr_ext": 1.14,
+      "ema9w_dist_atr": 0.54,
+      "reason_en": "SMA200 declining",
+      "pattern": "none",
+      "pattern_shape": "pennant",
+      "open_gates": [
+        "sma200",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "PI",
+      "list": "Stalk",
+      "rs": 87,
+      "vcp_weekly": 1.23,
+      "sma25_dist": -3.75,
+      "atr_ext": -0.13,
+      "ema9w_dist_atr": -0.06,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "none",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "STNG",
+      "list": "Stalk",
+      "rs": 87,
+      "vcp_weekly": 12.87,
+      "sma25_dist": -4.11,
+      "atr_ext": -0.18,
+      "ema9w_dist_atr": -0.19,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "W",
+      "list": "Stalk",
+      "rs": 87,
+      "vcp_weekly": 14.68,
+      "sma25_dist": 3.35,
+      "atr_ext": 0.98,
+      "ema9w_dist_atr": 0.53,
+      "reason_en": "weekly pattern pullback too deep, descending triangle",
+      "pattern": "none",
+      "pattern_shape": "descending triangle",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "WCC",
+      "list": "Stalk",
+      "rs": 87,
+      "vcp_weekly": 24.86,
+      "sma25_dist": -4.85,
+      "atr_ext": -0.97,
+      "ema9w_dist_atr": -0.49,
+      "reason_en": "under weekly 9 EMA; 1 tight weeks",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "compw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "PWR",
+      "list": "Stalk",
+      "rs": 86,
+      "vcp_weekly": 23.32,
+      "sma25_dist": -3.75,
+      "atr_ext": -0.69,
+      "ema9w_dist_atr": -0.45,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "SWK",
+      "list": "Stalk",
+      "rs": 86,
+      "vcp_weekly": 0.0,
+      "sma25_dist": 2.89,
+      "atr_ext": -0.57,
+      "ema9w_dist_atr": 0.07,
+      "reason_en": "1 tight weeks",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "compw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "BIO",
+      "list": "Stalk",
+      "rs": 85,
+      "vcp_weekly": 15.81,
+      "sma25_dist": -4.93,
+      "atr_ext": -1.48,
+      "ema9w_dist_atr": -0.39,
+      "reason_en": "under weekly 9 EMA; 1 tight weeks",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "compw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "CVLT",
+      "list": "Stalk",
+      "rs": 85,
+      "vcp_weekly": 16.31,
+      "sma25_dist": -0.47,
+      "atr_ext": 0.97,
+      "ema9w_dist_atr": 0.31,
+      "reason_en": "weekly pattern 5d range 2.2 ATR",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "JXN",
+      "list": "Stalk",
+      "rs": 85,
+      "vcp_weekly": 7.03,
+      "sma25_dist": -1.03,
+      "atr_ext": -0.62,
+      "ema9w_dist_atr": -0.05,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "M",
+      "list": "Stalk",
+      "rs": 85,
+      "vcp_weekly": 6.55,
+      "sma25_dist": 5.89,
+      "atr_ext": 1.43,
+      "ema9w_dist_atr": 0.51,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "FRPT",
+      "list": "Stalk",
+      "rs": 84,
+      "vcp_weekly": 22.35,
+      "sma25_dist": 7.56,
+      "atr_ext": 0.04,
+      "ema9w_dist_atr": 0.42,
+      "reason_en": "over 5% from SMA25",
+      "pattern": "forming",
+      "pattern_shape": "ascending triangle",
+      "open_gates": [
+        "sma25",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "KSPI",
+      "list": "Stalk",
+      "rs": 84,
+      "vcp_weekly": 8.23,
+      "sma25_dist": -2.12,
+      "atr_ext": -1.87,
+      "ema9w_dist_atr": -0.37,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "WEX",
+      "list": "Stalk",
+      "rs": 84,
+      "vcp_weekly": 53.19,
+      "sma25_dist": 1.02,
+      "atr_ext": -0.88,
+      "ema9w_dist_atr": 0.12,
+      "reason_en": "loose weekly VCP",
+      "pattern": "forming",
+      "pattern_shape": "flat base",
+      "open_gates": [
+        "vcpw",
+        "pattern"
+      ]
+    },
+    {
+      "ticker": "IOT",
+      "list": "Stalk",
+      "rs": 80,
+      "vcp_weekly": 7.61,
+      "sma25_dist": -1.65,
+      "atr_ext": -0.18,
+      "ema9w_dist_atr": -0.0,
+      "reason_en": "under weekly 9 EMA",
+      "pattern": "none",
+      "pattern_shape": "ascending base",
+      "open_gates": [
+        "ema9w",
+        "pattern"
+      ]
+    }
+  ],
+  "earnings_check": {
+    "window": "2026-10-19..2026-10-23",
+    "excluded": {
+      "AMC": "2026-10-20",
+      "BE": "2026-10-22",
+      "MEDP": "2026-10-21",
+      "MXL": "2026-10-22",
+      "NEM": "2026-10-22",
+      "RNG": "2026-10-22",
+      "SCCO": "2026-10-22",
+      "STLD": "2026-10-19",
+      "TXN": "2026-10-21"
+    }
+  },
+  "notes": "Weekly: no Discord, no alerts. Same engine as the daily; weekly bars W-FRI."
+}

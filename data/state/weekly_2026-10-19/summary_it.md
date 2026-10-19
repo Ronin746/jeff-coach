@@ -1,0 +1,5 @@
+**Weekly 2026-10-19** (close 16/10)
+Focus (6): OSCR, PARR, CVE, ZIM, IQV, SAIC
+Stalk (77): DELL, MU, ATRC, AVTR, CHEF, CLMT, DK, FIVN, HTFL, LFST, MATX, MRVL, NSIT, PAYC, RBRK, RVTY, SN, ZETA, CNC, QLYS, SIMO, ESTC, HUM, PTEN, SNOW, VAC, CHRD, MGNI, ATI, DOCU, GKOS, NUE, VIST, YPF, CNK, DAVE, ELF, MANH, FFIV, FRSH, COKE, DAR, ERO, LTH, SWKS, VAL, DBX, AMG, FTI, LLY, VRNS, WAT, ADI, BBY, CSCO, FCX, MTCH, MUR, PLTR, TECK, GGB, MOG-A, NOW, PI, STNG, W, WCC, PWR, SWK, BIO, CVLT, JXN, M, FRPT, KSPI, WEX, IOT
+Pattern settimanale in formazione (numeri ok, manca solo il pattern): ATRC (flat base); CHEF (flat base); CLMT (flat base); DK (flat base); MATX (flat base); NSIT (flat base); ESTC (flat base); PTEN (flat base); NUE (box); FFIV (flat base); VRNS (ascending base); WAT (flat base); BBY (flat base); MTCH (flat base); PLTR (flat base); CVLT (flat base)
+Utili 2026-10-19..2026-10-23: AMC 2026-10-20, BE 2026-10-22, MEDP 2026-10-21, MXL 2026-10-22, NEM 2026-10-22, RNG 2026-10-22, SCCO 2026-10-22, STLD 2026-10-19, TXN 2026-10-21
