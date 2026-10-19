@@ -1,0 +1,22 @@
+**Watchlist 2026-10-19** (close 16/10)
+Focus (0): nessuno
+Stalk (22): MPC, PBF, APA, DK, PARR, TEAM, FRSH, CNC, HUM, ANF, ATRC, AVTR, CLMT, HAE, ILMN, MATX, CVE, RXO, CNK, SAIC, WAT, W
+
+Entrano in Focus: nessuno · Escono: CLMT (pattern wide (3.6 ATR), volume not drying up)
+Stalk scaduti (troppe sedute senza stringere): BTE (5)
+Gruppi più forti: Oil & Gas Refining & Marketing (100: DK, MPC, PARR, PBF); Electronics & Computer Distribution (99); Oil & Gas Integrated (98: CVE); Marine Shipping (98: MATX); Health Information Services (97); REIT—Hotel & Motel (96)
+Canale rialzista, parte bassa (16):
+  sopra SMA30 65m ed EMA9: CLMT (bordo basso, linea bassa 56.2); DOCU (bordo basso, linea bassa 71.33); VRNS (bordo basso, linea bassa 46.74); WAT (bordo basso, linea bassa 427.62)
+  sotto la SMA30 65m (alert se la recupera): CDNA (bordo basso, linea bassa 64.84); CRL (bordo basso, linea bassa 296.13); ECO (bordo basso, linea bassa 86.15); FRO (bordo basso, linea bassa 52.66); GTLB (bordo basso, linea bassa 50.76); ILMN (backtest della linea rotta 266.49); NTRA (bordo basso, linea bassa 390.58); P (sulla EMA21, linea bassa 102.8); RVTY (bordo basso, linea bassa 155.35); TRMD (bordo basso, linea bassa 37.38); ZIM (bordo basso, linea bassa 27.94); CVLT (bordo basso, linea bassa 149.64)
+Trendline discendente (wedge pop) (46):
+  rotta in chiusura con volume: CDW (vol 1.47x, linea dal picco 09-03 a 158.05)
+  rotta da poco, si segue il pullback (alert sul crossback: tocco di EMA9/21 e recupero della SMA30 65m sopra la EMA9): AMLX (rotta il 10-15, vol 0.37x); PENG (rotta il 10-02, vol 2.07x); VAC (rotta il 10-08, vol 0.65x); TENB (rotta il 10-05, vol 0.82x); COKE (rotta il 10-14, vol 0.79x); VAL (rotta il 10-05, vol 1.0x); ABNB (rotta il 10-08, vol 0.68x); CRM (rotta il 10-12, vol 0.68x); EAT (rotta il 10-12, vol 0.94x); MUR (rotta il 10-02, vol 0.67x); BAX (rotta il 10-05, vol 1.48x); CROX (rotta il 10-15, vol 1.44x); FCEL (rotta il 10-02, vol 1.04x); HRB (rotta il 10-05, vol 0.98x); IT (rotta il 10-15, vol 1.04x); ASAN (rotta il 10-15, vol 1.01x); BH (rotta il 10-15, vol 0.56x); CART (rotta il 10-08, vol 0.64x); CF (rotta il 10-15, vol 1.21x); SWK (rotta il 10-13, vol 0.64x); WDAY (rotta il 10-15, vol 0.94x); CTSH (rotta il 10-15, vol 1.14x); M (rotta il 10-15, vol 1.54x); WK (rotta il 10-02, vol 3.65x); KSPI (rotta il 10-12, vol 0.9x); WEX (rotta il 10-13, vol 1.05x)
+  sotto la linea e vicina, entro 1 ATR (alert se la rompe con RVOL >= 1,5): AUGO (linea 89.85, 0.58 ATR); ATI (linea 187.07, 0.36 ATR); GKOS (linea 168.61, 0.6 ATR); NUE (linea 259.26, 0.47 ATR); YPF (linea 52.33, 0.27 ATR); DAVE (linea 364.05, 0.09 ATR); CHYM (linea 30.24, 0.61 ATR); SEZL (linea 128.67, 0.29 ATR); DAR (linea 63.25, 0.9 ATR); HPQ (linea 30.37, 0.45 ATR); RIG (linea 5.77, 0.79 ATR); MOG-A (linea 370.95, 0.32 ATR); NE (linea 44.87, 0.59 ATR); GRMN (linea 288.87, 0.57 ATR); MT (linea 63.76, 0.64 ATR); MTDR (linea 58.06, 0.32 ATR); EGO (linea 36.65, 0.46 ATR); FRPT (linea 68.12, 0.66 ATR); HCC (linea 91.9, 0.7 ATR)
+Reazione ritardata agli utili (6): ACN (utili 10-01 +18%, pivot 231.36, minimo crescente); IOT (utili 09-04 +16%, pivot 44.21); SAIC (utili 08-31 +12%, pivot 136.4, minimo crescente); CRM (utili 08-27 +12%, pivot 251.94, minimo crescente); ANF (utili 08-26 +21%, pivot 156.72, minimo crescente); DE (utili 08-20 +5%, pivot 692.83, minimo crescente)
+Triangoli ascendenti (3): CRL (tetto 310.53, 6 tocchi, Out); MATX (tetto 240.87, 5 tocchi, Stalk); MEDP (tetto 642.65, 5 tocchi, Out)
+Numeri ok ma senza pattern di continuation (fuori lista): ABNB, BFH, CACI, DBX, FNV, LTH, NAVN, NE, YPF
+Regime: MIXED — potential trend reversal: ±4% flow turned to buying on 2026-10-15 (day 2 of 2); Market Monitor Mixed → MIXED; index score -3 (SHORT); QQQ trend -1, below EMA50; IWM trend -1; IWM lagging QQQ (caution); T2108 5d +4.5pp; Market Monitor: buying vs selling 5d -3, 25%Q red, T2108 30% (+5 5d)
+Temi LEADING/BUILDING (16 su 106): Oil & gas (LEADING), Mega-cap technology (LEADING), Cybersecurity (LEADING), Crude oil (LEADING), Software (LEADING), Metaverse (LEADING), Brazil (LEADING), Fintech (LEADING), Gaming (BUILDING), Healthcare services (BUILDING), Natural gas (BUILDING), Consumer staples (BUILDING), Steel (BUILDING), Healthcare providers (BUILDING), ESG (BUILDING), Payments (BUILDING)
+Potential trend reversal: flusso ±4% girato verso buying il 2026-10-15 (giorno 2 di 2)
+Utili 2026-10-19..2026-10-23: NEM 2026-10-22, NOK 2026-10-22, SLB 2026-10-23
+Remy: 22 nomi
