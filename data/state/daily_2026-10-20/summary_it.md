@@ -18,4 +18,3 @@ Temi LEADING/BUILDING (20 su 106): Oil & gas (LEADING), Mega-cap technology (LEA
 Esclusi per stadio del tema (WEAK/BEARISH): AMG (Capital markets BEARISH); HAE (Medical equipment WEAK)
 Utili 2026-10-20..2026-10-26: AMC 2026-10-20, GGB 2026-10-26, MEDP 2026-10-21, NE 2026-10-26, NEM 2026-10-22, NUE 2026-10-26, SCCO 2026-10-22, SLB 2026-10-23
 Remy: 20 nomi
-Settore/market cap non verificati (Yahoo non ha risposto): ACN, AI, ALKS, AMC, AMG, AMLX, APA, AR, ASAN, ATI, ATRC, AUGO, AVTR, BAX, BFH, CACI, CAI, CART, CCC, CDNA

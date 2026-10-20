@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-19",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-20 15:28 CEST",
+  "asof_rome": "2026-10-20 15:31 CEST",
   "focus": [],
   "stalk": [
     "TEAM",
@@ -747,28 +747,7 @@
       "STLD"
     ]
   },
-  "info_not_verified": [
-    "ACN",
-    "AI",
-    "ALKS",
-    "AMC",
-    "AMG",
-    "AMLX",
-    "APA",
-    "AR",
-    "ASAN",
-    "ATI",
-    "ATRC",
-    "AUGO",
-    "AVTR",
-    "BAX",
-    "BFH",
-    "CACI",
-    "CAI",
-    "CART",
-    "CCC",
-    "CDNA"
-  ],
+  "info_not_verified": [],
   "changes_vs_previous": {
     "focus_before": [],
     "focus_after": [],
@@ -12906,6 +12885,7 @@
         "peg_pivot": 136.4,
         "peg_ok": true,
         "peg_why": [],
+        "peg_earnings": true,
         "industry": "Information Technology Services",
         "sector": "Technology",
         "group_pctl": 41,
