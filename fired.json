@@ -1,0 +1,127 @@
+{
+  "2026-10-15": {
+    "GTLB|Channel|sma30-65m": {
+      "ts": "2026-10-15T18:54:55.154870+02:00",
+      "price": 54.900001525878906,
+      "sma30_65m": 54.73533325195312
+    },
+    "RVTY|Channel|sma30-65m": {
+      "ts": "2026-10-15T18:54:55.747498+02:00",
+      "price": 155.60000610351562,
+      "sma30_65m": 154.32950032552083
+    },
+    "TEVA|Channel|sma30-65m": {
+      "ts": "2026-10-15T18:54:56.363725+02:00",
+      "price": 41.25,
+      "sma30_65m": 41.15361340840658
+    },
+    "FRSH|Channel|sma30-65m": {
+      "ts": "2026-10-15T18:54:56.926996+02:00",
+      "price": 14.390000343322754,
+      "sma30_65m": 13.908816719055176
+    },
+    "IOT|Channel|sma30-65m": {
+      "ts": "2026-10-15T18:54:57.487931+02:00",
+      "price": 42.380001068115234,
+      "sma30_65m": 41.6561705271403
+    },
+    "CVLT|Channel|sma30-65m": {
+      "ts": "2026-10-15T18:54:58.050544+02:00",
+      "price": 157.02000427246094,
+      "sma30_65m": 155.236496480306
+    },
+    "LIFE|DTL|below65": true,
+    "PENG|DTL|below65": true,
+    "FROG|DTL|below65": true,
+    "MRVL|DTL|below65": true,
+    "SNOW|DTL|below65": true,
+    "TSEM|DTL|below65": true,
+    "TENB|DTL|below65": true,
+    "FCEL|DTL|below65": true,
+    "CHYM|DTL|below65": true,
+    "VAL|DTL|below65": true,
+    "CIEN|DTL|below65": true,
+    "NOK|DTL|below65": true,
+    "SEI|DTL|below65": true,
+    "KSPI|DTL|below65": true,
+    "GEV|DTL|below65": true,
+    "ETSY|DTL|alert": {
+      "ts": "2026-10-15T18:55:02.903614+02:00",
+      "price": 89.33000183105469,
+      "kind": "near"
+    },
+    "WDAY|DTL|alert": {
+      "ts": "2026-10-15T18:55:03.941455+02:00",
+      "price": 196.61000061035156,
+      "kind": "near"
+    },
+    "ASAN|DTL|alert": {
+      "ts": "2026-10-15T18:55:04.557428+02:00",
+      "price": 10.260000228881836,
+      "kind": "near"
+    }
+  },
+  "2026-10-16": {
+    "VRNS|Channel|sma30-65m": {
+      "ts": "2026-10-16T18:34:38.362683+02:00",
+      "price": 48.70000076293945,
+      "sma30_65m": 47.77546005249023
+    },
+    "MRVL|DTL|below65": true,
+    "PENG|DTL|below65": true,
+    "SNOW|DTL|below65": true,
+    "TSEM|DTL|below65": true,
+    "TENB|DTL|below65": true,
+    "FCEL|DTL|below65": true,
+    "CIEN|DTL|below65": true,
+    "KSPI|DTL|below65": true,
+    "WIX|DTL|below65": true,
+    "SEI|DTL|below65": true
+  },
+  "2026-10-20": {
+    "GTLB|Channel|sma30-65m": {
+      "ts": "2026-10-20T18:57:22.578662+02:00",
+      "price": 55.41999816894531,
+      "ma65": 53.60195575362801
+    },
+    "CRL|Channel|sma30-65m": {
+      "ts": "2026-10-20T18:57:23.034673+02:00",
+      "price": 314.2699890136719,
+      "ma65": 302.61785984765237
+    },
+    "RVTY|Channel|sma30-65m": {
+      "ts": "2026-10-20T18:57:23.543902+02:00",
+      "price": 155.25,
+      "ma65": 153.69110867100994
+    },
+    "RGEN|Channel|sma30-65m": {
+      "ts": "2026-10-20T18:57:24.058679+02:00",
+      "price": 178.06500244140625,
+      "ma65": 177.1242200476259
+    },
+    "WAT|Channel|sma30-65m": {
+      "ts": "2026-10-20T18:57:24.509455+02:00",
+      "price": 444.6700134277344,
+      "ma65": 436.5253239869326
+    },
+    "CVLT|Channel|sma30-65m": {
+      "ts": "2026-10-20T18:57:25.098933+02:00",
+      "price": 153.38999938964844,
+      "ma65": 153.1426300992454
+    },
+    "IOT|Channel|sma30-65m": {
+      "ts": "2026-10-20T18:57:25.581268+02:00",
+      "price": 42.154998779296875,
+      "ma65": 41.02045781865191
+    },
+    "EAT|DTL|below65": true,
+    "BAX|DTL|below65": true,
+    "M|DTL|below65": true,
+    "LIFE|DTL|alert": {
+      "ts": "2026-10-20T18:57:30.011176+02:00",
+      "price": 41.05500030517578,
+      "kind": "near"
+    },
+    "CF|DTL|below65": true
+  }
+}
