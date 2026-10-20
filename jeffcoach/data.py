@@ -201,6 +201,21 @@ def buckets_65m(sub: pd.DataFrame, days: Optional[set] = None) -> list[tuple]:
     return [(d, b, float(g.Close.iloc[-1]), len(g)) for (d, b), g in sub.groupby(["d", "b"], sort=True)]
 
 
+def hourly(symbol: str, period: str = "6mo") -> Optional[pd.DataFrame]:
+    """Barre da 60 minuti in ora di New York (solo ore regolari), per il trend dell'indice [ANDREA 20/10]."""
+    yf = _yf()
+    try:
+        df = yf.download(symbol, period=period, interval="60m", auto_adjust=False, progress=False, threads=False)
+        if isinstance(df.columns, pd.MultiIndex):
+            df = df[symbol]
+        df = df.dropna(subset=["Close"]).copy()
+        df.index = df.index.tz_convert(ET)
+        return df if len(df) else None
+    except Exception as e:
+        log.warning("barre orarie di %s non disponibili: %s", symbol, e)
+        return None
+
+
 def sma30_65m(symbols: Iterable[str], sessions: list[date], chunk: int = 60) -> dict[str, dict]:
     """SMA30 su barre a 65 minuti RTH costruite dai 5 minuti (prepost=False).
     6 bucket al giorno dalle 09:30 ET (09:30, 10:35, 11:40, 12:45, 13:50, 14:55); close del bucket =

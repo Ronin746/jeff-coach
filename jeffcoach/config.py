@@ -286,6 +286,9 @@ MM_T2108_DELTA = 5.0
 MM_BIAS = {"Expansion": "LONG", "Defensive": "SHORT", "Mixed": "MIXED"}
 REGIME_INDICES = ("QQQ", "IWM")
 BIAS_LONG_MIN, BIAS_SHORT_MAX = 2, -2
+BIAS_SOURCE = "pool"            # [ANDREA 20/10] "pool" = liste del pool monitorato (regime.regime_pool, come il bot
+#                                 di Martin dal 17/10); "mm" = Market Monitor di Stockbee come prima. Senza il pool
+#                                 si torna da sé al Market Monitor.
 # Gestione (JeffCoach è solo long, lo short è sospeso):
 #   LONG  (Expansion): tutti i Focus;
 #   MIXED (Mixed): al massimo 3 Focus, i migliori (tema leading prima, poi forza del tema, poi RS); gli altri in Stalk;
@@ -320,3 +323,36 @@ STAGE_LONG_EXCLUDE = ("WEAK", "BEARISH")  # [RONIN 16/10] fuori dalla lista long
 THEME_OVERWEIGHT_MIN = 5.0
 THEME_OVERWEIGHT_FRAC = 1 / 3
 THEME_MEMBERSHIP = "sovrappeso-5-1/3"     # se cambia, la mappa si ricostruisce
+
+# ---------------------------------------------------------------- pool monitorato e sue liste [ANDREA 20/10]
+# Portato dal bot di Martin (pool.py + regime.pool_state). Soglie tarate là sulle 99 live di Martin: qui l'universo è
+# un altro, i valori sono il punto di partenza e si ritarano col replay.
+POOL_DV_RANK = 0.70                 # dollar volume a 20 sedute nel 30% più alto dell'universo
+POOL_RS_MIN = 0.80                  # forza relativa a 3 o 6 mesi almeno all'80° percentile negli ultimi 6 mesi
+POOL_LIQ_RS = 50e6                  # la forza relativa si misura tra i titoli con almeno 50M$/giorno
+POOL_ADR_MIN = 3.5                  # ADR a 20 sedute almeno 3,5%
+POOL_N = None                       # nessun tetto al numero di titoli del pool
+POOL_MIN_UP_LOW = None              # (spento) minimo di salita dal minimo a 52 settimane
+POOL_ADR_RANK = None                # (spento) ADR in percentile al posto della soglia fissa
+POOL_BIG_RANK = None                # (spento) percentile delle sedute da +4% in 60 giorni
+POOL_SHARE_GOOD = 70.0              # Leading / (Leading+Lagging) del pool: >= 70% = +1 ...
+POOL_SHARE_BAD = 50.0               # ... <= 50% = -1
+POOL_FLOW_MIN = 10.0                # flusso a 5 sedute in % del pool: ±10% = ±1 ...
+POOL_FLOW_STRONG = 20.0             # ... ±20% = ±2
+POOL_FLOW_DAY_MIN = 1.0             # tendenza: 3 flussi giornalieri su 4 oltre ±1% nello stesso verso = ±1
+POOL_TREND_DAYS = 4                 # quante sedute guarda la tendenza dei flussi
+POOL_TREND_MIN = 3                  # quante di quelle devono andare nello stesso verso
+POOL_SCORE_GOOD = 2                 # punteggio del pool: >= +2 mercato in espansione ...
+POOL_SCORE_BAD = -2                 # ... <= -2 mercato difensivo
+# studio 20% di Pradeep come filtro degli ingressi [ANDREA 20/10, dal bot di Martin]
+U20_FILTER = True
+U20_LONG_MAX = 150                  # oltre 150 titoli +20% in 5 giorni: niente nuovi long (mercato surriscaldato)
+D20_SHORT_MAX = 100                 # oltre 100 titoli -20% in 5 giorni: niente nuovi short
+# conferma del trend del QQQ all'ingresso [ANDREA 20/10, dal bot di Martin]
+QQQ_GATE = True                     # l'ingresso aspetta che il QQQ sia nel verso del trade (non lo scarta)
+QQQ_TREND_SYMBOL = "QQQ"
+QQQ_TREND_MA = ("ema", 50)          # media oraria che definisce il trend del QQQ
+QQQ_TREND_SWINGS = False            # [20/10g di Martin] massimi e minimi di swing orari: chiedevano un indice già
+#                                     esteso e scartavano i pullback buoni, quindi restano spenti
+H60_SLOPE_BARS = 5                  # barre orarie per la pendenza della media
+SWING_60M_K = 3                     # barre a destra e sinistra per un massimo/minimo di swing (solo con QQQ_TREND_SWINGS)

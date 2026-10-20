@@ -185,6 +185,42 @@ def regime(indices: dict[str, dict], mm: Optional[dict]) -> dict:
     return {"bias": bias, "score": score, "score_bias": score_bias, "why": why, "market_monitor": mm, "indices": indices}
 
 
+def regime_pool(pb: Optional[dict], indices: dict[str, dict], mm: Optional[dict]) -> dict:
+    """Bias dalle liste del pool monitorato [ANDREA 20/10, dal bot di Martin (martincoach/engine.regime_pool)].
+
+    Punteggio: livello (quota Leading su Leading+Lagging del pool), flusso a 5 sedute (chi scende di una lista vale -1,
+    di due -2, chi sale +) e tendenza dei flussi giornalieri. >= BIAS_LONG_MIN LONG, <= BIAS_SHORT_MAX SHORT
+    (DEFENSIVE), in mezzo MIXED. Gli indici e il Market Monitor restano come contesto nella card."""
+    pb = pb or {}
+    if not pb.get("lists"):
+        return regime(indices, mm)                 # senza il pool si torna al Market Monitor
+    score, why = 0, []
+    sh = pb["share"]
+    score += 1 if sh >= C.POOL_SHARE_GOOD else (-1 if sh <= C.POOL_SHARE_BAD else 0)
+    why.append(f"pool ({pb['n']}): Leading {sh:.0f}% of Leading+Lagging · Leading {pb['lists']['Leading']} / "
+               f"Mediocre {pb['lists']['Mediocre']} / Lagging {pb['lists']['Lagging']}")
+    f5 = pb.get("flow5")
+    if f5 is not None:
+        score += (2 if f5 >= C.POOL_FLOW_STRONG else 1 if f5 >= C.POOL_FLOW_MIN else
+                  -2 if f5 <= -C.POOL_FLOW_STRONG else -1 if f5 <= -C.POOL_FLOW_MIN else 0)
+        why.append(f"pool flow 5d {f5:+.1f}% ({pb.get('up_5d', 0)} up, {pb.get('down_5d', 0)} down)")
+    fd = pb.get("flow_daily") or []
+    if len(fd) >= C.POOL_TREND_DAYS:
+        ch = fd[-C.POOL_TREND_DAYS:]
+        up = sum(x >= C.POOL_FLOW_DAY_MIN for x in ch)
+        dn = sum(x <= -C.POOL_FLOW_DAY_MIN for x in ch)
+        tr = 1 if up >= C.POOL_TREND_MIN else (-1 if dn >= C.POOL_TREND_MIN else 0)
+        score += tr
+        why.append(f"pool flow trend {'up' if tr > 0 else 'down' if tr < 0 else 'mixed'} ("
+                   + " ".join(f"{x:+.1f}%" for x in ch) + ")")
+    bias = "LONG" if score >= C.BIAS_LONG_MIN else ("SHORT" if score <= C.BIAS_SHORT_MAX else "MIXED")
+    why.insert(0, f"pool lists: score {score:+d} → {DISPLAY.get(bias, bias)}")
+    if mm is not None:
+        why.append(f"Market Monitor {mm['state']} (context)")
+    return {"bias": bias, "score": score, "score_bias": bias, "why": why, "market_monitor": mm,
+            "indices": indices, "pool": {k: pb.get(k) for k in ("n", "lists", "share", "flow5", "flow_daily")}}
+
+
 def flow_reversal(hist: list[dict], days: int = None) -> Optional[dict]:
     """Inversione del trend ±4% [RONIN 16/10, Andrea]: una seduta con +4% > -4% dopo una fase di vendite (flusso
     delle PB_FLOW_DAYS sedute prima <= -PB_FLOW_MIN, flusso = giorni ▲ meno giorni ▼), o il contrario. Vale nelle

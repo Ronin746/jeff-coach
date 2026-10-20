@@ -156,7 +156,24 @@ def themes_and_regime(daily: dict, spx, metrics: dict, tmap: dict, as_of, stocks
             if mm:
                 mm["source"] = "own"
                 break
-    reg = RG.regime({k: RG.index_state(daily.get(k)) for k in C.REGIME_INDICES}, mm)
+    pool = None
+    try:                                   # pool monitorato e sue liste [ANDREA 20/10, come il bot di Martin]
+        from . import pool as PL
+        ix = daily.get(C.REGIME_INDICES[0])
+        pool = PL.pool_breadth(daily, list(stocks), ix.index) if ix is not None else None
+    except Exception as e:
+        log.warning("pool monitorato: %s", e)
+    idxs = {k: RG.index_state(daily.get(k)) for k in C.REGIME_INDICES}
+    reg = RG.regime_pool(pool, idxs, mm) if C.BIAS_SOURCE == "pool" else RG.regime(idxs, mm)
+    # studio 20% di Pradeep [ANDREA 20/10, dal bot di Martin]: oltre U20_LONG_MAX titoli +20% in 5 giorni il mercato è
+    # surriscaldato e i breakout non tengono, quindi oggi niente nuovi long (la lista resta pubblicata, senza Focus)
+    s20 = up20.get(as_of.isoformat() if hasattr(as_of, "isoformat") else str(as_of)) or {}
+    if C.U20_FILTER and (s20.get("up20w") or 0) > C.U20_LONG_MAX:
+        reg["u20_block"] = True
+        reg["why"].insert(1, f"20% study: {s20['up20w']:.0f} stocks up 20% in 5 days (max {C.U20_LONG_MAX}): no new longs")
+    if C.U20_FILTER and (s20.get("down20w") or 0) > C.D20_SHORT_MAX:     # lato short: vendita già esaurita
+        reg["d20_block"] = True
+        reg["why"].insert(1, f"20% study: {s20['down20w']:.0f} stocks down 20% in 5 days (max {C.D20_SHORT_MAX}): no new shorts")
     if mm and mm.get("source") == "own":
         reg["why"].insert(0, "Market Monitor: own calculation (Stockbee unavailable)")
     from . import breadth_chart as BC
@@ -488,22 +505,27 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
     cap = {"MIXED": C.REGIME_MIXED_MAX_FOCUS, "SHORT": C.REGIME_DEFENSIVE_MAX_FOCUS}.get(reg["bias"])
     if (reg.get("reversal") or {}).get("direction") == "buying":
         cap = None                         # potential trend reversal verso gli acquisti: Focus pieni [Martin 16/10]
+    if reg.get("u20_block"):               # studio 20%: mercato surriscaldato, niente Focus oggi [ANDREA 20/10]
+        cap = 0
     if cap is not None:
         fl = sorted([r for r in rows.values() if r.list == "Focus"], key=rank_key)
-        ok = fl if reg["bias"] == "MIXED" else [r for r in fl if r.m.get("theme_stage") in C.STAGE_LONG]
+        ok = [] if cap == 0 else (fl if reg["bias"] == "MIXED" else [r for r in fl if r.m.get("theme_stage") in C.STAGE_LONG])
         keep = {r.ticker for r in ok[:cap]}
         for r in fl:
             if r.ticker in keep:
                 r.m["against_regime"] = reg["bias"] == "SHORT"
                 continue
             r.list = "Stalk"
-            why = (f"regime {reg['bias']}: max {cap} Focus" if reg["bias"] == "MIXED"
+            why = (f"20% study: market overheated, no new longs today" if cap == 0 else
+                   f"regime {reg['bias']}: max {cap} Focus" if reg["bias"] == "MIXED"
                    else f"regime DEFENSIVE: Focus only with a LEADING/BUILDING theme (max {cap})")
             r.gates.append(E.Gate("regime", False, why))
             regime_held[r.ticker] = why
 
     short = None
-    if C.SHORT["enabled"] and doc.get("short_metrics") is not None:
+    if reg.get("d20_block"):               # studio 20%: troppi titoli già -20%, niente nuovi short [ANDREA 20/10]
+        pass
+    elif C.SHORT["enabled"] and doc.get("short_metrics") is not None:
         from . import short as SH
         short = SH.build_short(doc, prev, info, earn, (lo, hi), D.fetch_info, D.fetch_earnings)
 

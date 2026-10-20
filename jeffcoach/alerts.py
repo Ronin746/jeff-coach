@@ -269,6 +269,53 @@ def rvol_needed(ref: dict) -> Optional[float]:
     return C.ENTRY_RVOL_MIN + f * (C.ENTRY_RVOL_MAX - C.ENTRY_RVOL_MIN)
 
 
+_QH: dict = {}
+
+
+def _qqq_hourly(day):
+    """Barre orarie dell'indice, scaricate una volta per giro (cache per seduta)."""
+    if day not in _QH:
+        from . import data as D
+        _QH.clear()
+        _QH[day] = D.hourly(C.QQQ_TREND_SYMBOL)
+    return _QH[day]
+
+
+def trend_60m(qh, price: float, side: str) -> "Optional[bool]":
+    """Trend a 60 minuti dell'indice [ANDREA 20/10, dal bot di Martin (martincoach/alerts.trend_60m)]: prezzo dalla parte
+    giusta della media oraria (QQQ_TREND_MA) e media inclinata nel verso del trade su H60_SLOPE_BARS barre. Con
+    QQQ_TREND_SWINGS anche gli ultimi due massimi e minimi di swing nel verso del trade (spenti: chiedevano un indice
+    già esteso). None se mancano le barre."""
+    if qh is None or len(qh) < 60:
+        return None
+    ch = qh.Close.astype(float).copy()
+    ch.iloc[-1] = price                      # l'ultima barra oraria è in corso: conta il prezzo di adesso
+    kind, n = C.QQQ_TREND_MA
+    ma = I.ema(ch, n) if kind == "ema" else ch.rolling(n).mean()
+    slope = float(ma.iloc[-1] - ma.iloc[-1 - C.H60_SLOPE_BARS])
+    k = 1 if side == "long" else -1
+    ok = k * (price - float(ma.iloc[-1])) > 0 and k * slope > 0
+    if not C.QQQ_TREND_SWINGS:
+        return bool(ok)
+    h, l, w = qh.High.astype(float).values, qh.Low.astype(float).values, C.SWING_60M_K
+    sh = [h[i] for i in range(w, len(h) - w) if h[i] == max(h[i - w:i + w + 1])]
+    sl = [l[i] for i in range(w, len(l) - w) if l[i] == min(l[i - w:i + w + 1])]
+    if len(sh) < 2 or len(sl) < 2:
+        return False
+    return bool(ok and k * (sh[-1] - sh[-2]) > 0 and k * (sl[-1] - sl[-2]) > 0)
+
+
+def index_trend(day, price_now: "Optional[float]", side: str = "long") -> "Optional[bool]":
+    """Conferma dell'indice per gli ingressi: True in trend, False contro, None se non si può dire [ANDREA 20/10]."""
+    if not C.QQQ_GATE:
+        return None
+    qh = _qqq_hourly(day)
+    if qh is None:
+        return None
+    px = price_now if price_now is not None else float(qh.Close.iloc[-1])
+    return trend_60m(qh, px, side)
+
+
 def entry_checks(price: float, lod: float, rvol: float, mins: float, ref: dict) -> tuple[bool, str, Optional[float]]:
     """Ritorna (ok, motivo se no, RVOL richiesto). Ritmo: la soglia vale a 30 minuti, poi cresce col tempo."""
     need = rvol_needed(ref)
@@ -341,7 +388,10 @@ def run_once(dry_run: bool = False) -> dict:
         return {"scanned": 0, "minutes": mins}
     tickers = sorted({r["ticker"] for r in rows} | {r["ticker"] for r in srows})
     refs = daily_refs(tickers, today) if tickers else {}
-    bars = intraday(tickers, today) if tickers else {}
+    bars = intraday(sorted(set(tickers) | ({C.QQQ_TREND_SYMBOL} if C.QQQ_GATE else set())), today) if tickers else {}
+    qb = bars.get(C.QQQ_TREND_SYMBOL)       # conferma dell'indice all'ingresso [ANDREA 20/10]
+    qpx = float(qb.Close.iloc[-1]) if qb is not None and len(qb) else None
+    qqq_up, qqq_dn = index_trend(today, qpx, "long"), index_trend(today, qpx, "short")
     state = json.loads(FIRED.read_text(encoding="utf-8")) if FIRED.exists() else {}
     day = state.setdefault(today.isoformat(), {})
     fired, scan = [], []
@@ -380,6 +430,9 @@ def run_once(dry_run: bool = False) -> dict:
             continue
         if C.CHASE_MAX_ATR_ABOVE_ORH is not None and ref.get("atr") and (price - orh) / ref["atr"] > C.CHASE_MAX_ATR_ABOVE_ORH:
             rec["skipped"] = "chase"
+            continue
+        if C.QQQ_GATE and qqq_up is False:
+            rec["skipped"] = "qqq not trending up"      # si aspetta la conferma dell'indice [ANDREA 20/10]
             continue
         ok, why, need = entry_checks(price, float(b.Low.min()), rvol, mins, ref)
         rec["rvol_needed"] = need
@@ -428,6 +481,9 @@ def run_once(dry_run: bool = False) -> dict:
             continue
         if C.ENTRY_LOD_BLOCKS and hod_atr is not None and hod_atr > C.LOD_ATR_RONIN:
             rec["skipped"] = f"HoD {hod_atr:.0%} ATR > 70%"
+            continue
+        if C.QQQ_GATE and qqq_dn is False:
+            rec["skipped"] = "qqq not trending down"    # short: l'indice deve essere nel verso del trade [ANDREA 20/10]
             continue
         if recent_alert(day, t):
             rec["skipped"] = "cooldown"
