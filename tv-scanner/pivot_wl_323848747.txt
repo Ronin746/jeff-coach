@@ -1,12 +1,11 @@
 # TradingView watchlist 323848747 "Main" (read-only shared; NEVER modify on TV)
-# Synced: 2026-10-16 18:34 Rome via sync_pivot_wl.py (43 symbols, 0 ETF excluded)
+# Synced: 2026-10-20 18:57 Rome via sync_pivot_wl.py (40 symbols, 0 ETF excluded)
 # Re-sync: .venv/bin/python sync_pivot_wl.py --from-file <dump>
 NASDAQ:RKLB
 NYSE:COHR
 NASDAQ:FORM
 NASDAQ:COHU
 NYSE:DOCN
-NASDAQ:HUT
 NASDAQ:APLD
 NYSE:NVT
 NASDAQ:LSCC
@@ -35,12 +34,10 @@ NYSE:CVI
 NYSE:BETA
 NASDAQ:SYNA
 NYSE:CACI
-NASDAQ:GH
 NASDAQ:TEAM
 NASDAQ:FTRE
 NASDAQ:FIVN
 NYSE:BAX
-NYSE:TOST
 NASDAQ:MMED
 NASDAQ:CBRS
 NASDAQ:NVAX

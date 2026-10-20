@@ -1,9 +1,8 @@
 # TradingView watchlist 323848747 "Main" (read-only shared; NEVER modify on TV)
-# Synced: 2026-10-16 18:34 Rome via sync_pivot_wl.py (71 symbols, 0 ETF excluded)
+# Synced: 2026-10-20 18:57 Rome via sync_pivot_wl.py (69 symbols, 0 ETF excluded)
 # Re-sync: .venv/bin/python sync_pivot_wl.py --from-file <dump>
 NYSE:BTE
 NYSE:PARR
-NYSE:NOW
 NYSE:PBF
 NASDAQ:BSP
 NYSE:MATX
@@ -18,11 +17,8 @@ NYSE:ESTC
 NYSE:ANF
 NYSE:HNGE
 NASDAQ:GO
-NASDAQ:SWKS
-NYSE:SNOW
 NASDAQ:CLMT
 NASDAQ:CAKE
-NYSE:CRM
 NASDAQ:WDAY
 NYSE:ELF
 NASDAQ:CVLT
@@ -39,7 +35,6 @@ NYSE:RVTY
 NASDAQ:FROG
 NASDAQ:LITE
 NASDAQ:PI
-NASDAQ:ADI
 NYSE:ANET
 NYSE:P
 NASDAQ:IOVA
@@ -72,3 +67,6 @@ NASDAQ:NBIS
 NASDAQ:MXL
 NASDAQ:SLS
 NASDAQ:KLAC
+NASDAQ:APPF
+NYSE:ETSY
+NASDAQ:HUT
