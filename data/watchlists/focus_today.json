@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-19",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-20 08:03 CEST",
+  "asof_rome": "2026-10-20 10:45 CEST",
   "focus": [],
   "stalk": [
     "TEAM",
@@ -12901,6 +12901,7 @@
         "peg_pivot": 136.4,
         "peg_ok": true,
         "peg_why": [],
+        "peg_earnings": true,
         "industry": "Information Technology Services",
         "sector": "Technology",
         "group_pctl": 40,
