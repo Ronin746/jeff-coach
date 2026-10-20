@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-19",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-20 10:45 CEST",
+  "asof_rome": "2026-10-20 15:28 CEST",
   "focus": [],
   "stalk": [
     "TEAM",
@@ -48,7 +48,7 @@
       "trendline_next": 223.7,
       "industry": "Software—Application",
       "sector": "Technology",
-      "group_pctl": 77,
+      "group_pctl": 76,
       "leader": [
         "3m",
         "6m"
@@ -86,7 +86,7 @@
       "trendline_next": 49.85,
       "industry": "Oil & Gas E&P",
       "sector": "Energy",
-      "group_pctl": 94,
+      "group_pctl": 93,
       "leader": [],
       "carry_days": 2,
       "channel": null,
@@ -156,7 +156,7 @@
       "trendline_next": 14.58,
       "industry": "Software—Application",
       "sector": "Technology",
-      "group_pctl": 77,
+      "group_pctl": 76,
       "leader": [],
       "carry_days": 0,
       "channel": "middle of the channel",
@@ -403,7 +403,7 @@
       "trendline_next": 93.42,
       "industry": "Gold",
       "sector": "Basic Materials",
-      "group_pctl": 69,
+      "group_pctl": 68,
       "leader": [
         "3m"
       ],
@@ -576,7 +576,7 @@
       "trendline_next": 29.37,
       "industry": "Trucking",
       "sector": "Industrials",
-      "group_pctl": 48,
+      "group_pctl": 49,
       "leader": [
         "1m"
       ],
@@ -611,7 +611,7 @@
       "trendline_next": 134.83,
       "industry": "Information Technology Services",
       "sector": "Technology",
-      "group_pctl": 40,
+      "group_pctl": 41,
       "leader": [],
       "carry_days": 1,
       "channel": "middle of the channel",
@@ -680,7 +680,7 @@
       "trendline_next": 113.1,
       "industry": "Internet Retail",
       "sector": "Consumer Cyclical",
-      "group_pctl": 35,
+      "group_pctl": 36,
       "leader": [],
       "carry_days": 2,
       "channel": "breakout",
@@ -742,14 +742,33 @@
       "SCCO": "2026-10-22",
       "SLB": "2026-10-23"
     },
-    "missing_dates": [
-      "STLD"
-    ],
+    "missing_dates": [],
     "reported_on_reference_day": [
       "STLD"
     ]
   },
-  "info_not_verified": [],
+  "info_not_verified": [
+    "ACN",
+    "AI",
+    "ALKS",
+    "AMC",
+    "AMG",
+    "AMLX",
+    "APA",
+    "AR",
+    "ASAN",
+    "ATI",
+    "ATRC",
+    "AUGO",
+    "AVTR",
+    "BAX",
+    "BFH",
+    "CACI",
+    "CAI",
+    "CART",
+    "CCC",
+    "CDNA"
+  ],
   "changes_vs_previous": {
     "focus_before": [],
     "focus_after": [],
@@ -853,14 +872,12 @@
       "in_list": []
     },
     {
-      "industry": "Oil & Gas E&P",
+      "industry": "REIT—Hotel & Motel",
       "pctl": 94,
       "median_rs": 90,
-      "n": 30,
-      "strong": 15,
-      "in_list": [
-        "APA"
-      ]
+      "n": 6,
+      "strong": 3,
+      "in_list": []
     }
   ],
   "channel_watch": [
@@ -1366,7 +1383,7 @@
       "under_ema9": true,
       "atr": 6.24,
       "industry": "Software—Application",
-      "group_pctl": 77,
+      "group_pctl": 76,
       "lines": {
         "start": "2026-08-26",
         "end": "2026-10-19",
@@ -1437,7 +1454,7 @@
       "higher_low": true,
       "range5_atr": 1.7,
       "industry": "Information Technology Services",
-      "group_pctl": 40,
+      "group_pctl": 41,
       "text": "PEG 2026-08-31 +11% (3.8x vol), back in the PEG range 125.96-142.66, pivot 136.40"
     },
     {
@@ -1454,7 +1471,7 @@
       "higher_low": true,
       "range5_atr": 2.1,
       "industry": "Software—Application",
-      "group_pctl": 77,
+      "group_pctl": 76,
       "text": "PEG 2026-08-28 +24% (4.9x vol), back in the PEG range 83.74-108.00, pivot 101.39"
     },
     {
@@ -1488,7 +1505,7 @@
       "higher_low": true,
       "range5_atr": 2.1,
       "industry": "Software—Application",
-      "group_pctl": 77,
+      "group_pctl": 76,
       "text": "PEG 2026-08-27 +12% (3.9x vol), back in the PEG range 205.62-254.48, pivot 251.94"
     },
     {
@@ -2906,57 +2923,43 @@
     }
   ],
   "regime": {
-    "bias": "LONG",
-    "score": -2,
+    "bias": "SHORT",
+    "score": -3,
     "score_bias": "SHORT",
     "why": [
-      "potential trend reversal: ±4% flow turned to buying on 2026-10-15 (day 2 of 2)",
-      "Market Monitor: own calculation (Stockbee unavailable)",
-      "Market Monitor Expansion → LONG; index score -2 (SHORT)",
-      "QQQ trend -1, below EMA50",
-      "IWM trend -1",
-      "IWM lagging QQQ (caution)",
-      "T2108 5d +4.3pp",
-      "Market Monitor: buying vs selling 5d -1, 25%Q red, T2108 32% (+4 5d), 20% study 3 up / 24 down, T30A: T2108 < 20 12 sessions ago"
+      "pool lists: score -3 → DEFENSIVE",
+      "pool (166): Leading 47% of Leading+Lagging · Leading 42 / Mediocre 75 / Lagging 48",
+      "pool flow 5d -22.9% (8 up, 43 down)",
+      "pool flow trend mixed (-13.5% +1.9% -11.2% -0.6%)",
+      "Market Monitor Mixed (context)"
     ],
     "market_monitor": {
       "date": "2026-10-19",
-      "state": "Expansion",
-      "up4": 117,
-      "down4": 73,
-      "ratio5": 0.65,
-      "ratio10": 0.66,
-      "t2108": 32.06,
-      "t2108_d5": 4.27,
-      "up25q": 687,
-      "down25q": 1657,
+      "state": "Mixed",
+      "up4": 167.0,
+      "down4": 175.0,
+      "ratio5": 0.48,
+      "ratio10": 0.51,
+      "t2108": 29.46,
+      "t2108_d5": 2.33,
+      "up25q": 644.0,
+      "down25q": 1573.0,
       "read": "pradeep",
-      "label": "Breakouts work",
+      "label": "Be selective",
       "mm_why": [
-        "buying vs selling 5d -1",
+        "buying vs selling 5d -3",
         "25%Q red",
-        "T2108 32% (+4 5d)",
-        "20% study 3 up / 24 down",
-        "T30A: T2108 < 20 12 sessions ago"
+        "T2108 29% (+2 5d)"
       ],
-      "flow5": -1,
+      "flow5": -3,
       "t30a": true,
       "caution": false,
-      "up20w": 3.0,
-      "down20w": 24.0,
-      "source": "own"
+      "up20w": null,
+      "down20w": null,
+      "source": "Stockbee"
     },
     "focus_held_by_regime": {},
     "mm_hist": [
-      {
-        "date": "2026-09-21",
-        "up4": 146.0,
-        "down4": 81.0,
-        "t2108": 23.18,
-        "up20w": 65.0,
-        "down20w": 23.0,
-        "source": "Stockbee"
-      },
       {
         "date": "2026-09-22",
         "up4": 328.0,
@@ -3127,16 +3130,18 @@
         "down4": 405.0,
         "t2108": 29.81,
         "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-19",
+        "up20w": null,
+        "down20w": null,
+        "up4": 167.0,
+        "down4": 175.0,
+        "t2108": 29.46,
+        "source": "Stockbee"
       }
     ],
-    "reversal": {
-      "direction": "buying",
-      "date": "2026-10-15",
-      "day": 2,
-      "flow_before": -3,
-      "up4": 493.0,
-      "down4": 144.0
-    },
+    "reversal": null,
     "up20_hi": 45.0,
     "down20_hi": 110.0
   },

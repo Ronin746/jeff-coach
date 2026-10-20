@@ -13,9 +13,9 @@ Trendline discendente (wedge pop) (39):
 Reazione ritardata agli utili (6): IOT (utili 09-04 +16%, pivot 43.78, minimo crescente); SAIC (utili 08-31 +12%, pivot 136.4, minimo crescente); ESTC (utili 08-28 +24%, pivot 101.39, minimo crescente); GAP (utili 08-28 +19%, pivot 24.21, minimo crescente); CRM (utili 08-27 +12%, pivot 251.94, minimo crescente); DE (utili 08-20 +5%, pivot 692.83, minimo crescente)
 Triangoli ascendenti (3): CRL (tetto 310.53, 6 tocchi, Out); ILMN (tetto 280.17, 4 tocchi, Stalk); VRNS (tetto 49.67, 7 tocchi, Stalk)
 Numeri ok ma senza pattern di continuation (fuori lista): BFH, CACI, CDW, GKOS, IMAX, LTH, NAVN, SWKS, VIST
-Regime: LONG — potential trend reversal: ±4% flow turned to buying on 2026-10-15 (day 2 of 2); Market Monitor: own calculation (Stockbee unavailable); Market Monitor Expansion → LONG; index score -2 (SHORT); QQQ trend -1, below EMA50; IWM trend -1; IWM lagging QQQ (caution); T2108 5d +4.3pp; Market Monitor: buying vs selling 5d -1, 25%Q red, T2108 32% (+4 5d), 20% study 3 up / 24 down, T30A: T2108 < 20 12 sessions ago
+Regime: SHORT — pool lists: score -3 → DEFENSIVE; pool (166): Leading 47% of Leading+Lagging · Leading 42 / Mediocre 75 / Lagging 48; pool flow 5d -22.9% (8 up, 43 down); pool flow trend mixed (-13.5% +1.9% -11.2% -0.6%); Market Monitor Mixed (context)
 Temi LEADING/BUILDING (20 su 106): Oil & gas (LEADING), Mega-cap technology (LEADING), Crude oil (LEADING), Metaverse (LEADING), Software (LEADING), Brazil (LEADING), Fintech (LEADING), Gaming (BUILDING), Latin America (BUILDING), Natural gas (BUILDING), Healthcare services (BUILDING), Biotechnology (BUILDING), ESG (BUILDING), Payments (BUILDING), Consumer staples (BUILDING), Healthcare providers (BUILDING), Medical devices (BUILDING), Steel (BUILDING), Financial services (BUILDING), Retail (BUILDING)
 Esclusi per stadio del tema (WEAK/BEARISH): AMG (Capital markets BEARISH); HAE (Medical equipment WEAK)
-Potential trend reversal: flusso ±4% girato verso buying il 2026-10-15 (giorno 2 di 2)
-Utili 2026-10-20..2026-10-26: AMC 2026-10-20, GGB 2026-10-26, MEDP 2026-10-21, NE 2026-10-26, NEM 2026-10-22, NUE 2026-10-26, SCCO 2026-10-22, SLB 2026-10-23 · senza data: STLD
+Utili 2026-10-20..2026-10-26: AMC 2026-10-20, GGB 2026-10-26, MEDP 2026-10-21, NE 2026-10-26, NEM 2026-10-22, NUE 2026-10-26, SCCO 2026-10-22, SLB 2026-10-23
 Remy: 20 nomi
+Settore/market cap non verificati (Yahoo non ha risposto): ACN, AI, ALKS, AMC, AMG, AMLX, APA, AR, ASAN, ATI, ATRC, AUGO, AVTR, BAX, BFH, CACI, CAI, CART, CCC, CDNA
