@@ -9,7 +9,7 @@ Regole [RONIN 30/09, 04/10, 05/10]:
     medio: 18-40% entro 30 minuti secondo il volume di ieri, poi a ritmo) e con prezzo - minimo del giorno <= 0,70 ATR;
     niente PDH nei messaggi;
   - canale [RONIN 08/10]: i nomi nella parte bassa di un canale rialzista (lettura D, "channel_watch" in today.json)
-    che hanno chiuso SOTTO la SMA30 65m: un alert, una volta per nome, quando il prezzo la recupera, anche se
+    che hanno chiuso SOTTO la media 65m (EMA50 dal 20/10): un alert, una volta per nome, quando il prezzo la recupera, anche se
     è ancora sotto la EMA9 giornaliera. Non è un ingresso Focus: è un "guardalo".
 
 Correzioni rispetto al loop precedente:
@@ -119,7 +119,7 @@ def load_channel(today: date) -> list[dict]:
     d = json.loads(p.read_text(encoding="utf-8"))
     if d.get("session_date") != today.isoformat():
         return []
-    return [c for c in d.get("channel_watch") or [] if c.get("above_sma30_65m") is False and c.get("ticker")]
+    return [c for c in d.get("channel_watch") or [] if c.get("above_ma65", c.get("above_sma30_65m")) is False and c.get("ticker")]
 
 
 _chan_cache: dict = {"ts": 0.0, "bars": {}}
@@ -182,18 +182,18 @@ def fmt_dtl_break(x, price, line, rvol):
 
 def fmt_dtl_pullback(x, price, sma, rvol):
     return f"{x['ticker']} · Wedge pop", "\n".join([
-        f"65m SMA30 reclaimed `{sma:.2f}` above the daily EMA9 `{x['ema9']}`", f"Price: `{price:.2f}`",
+        f"65m {C.MA65_KIND.upper()}{C.MA65_LEN} reclaimed `{sma:.2f}` above the daily EMA9 `{x['ema9']}`", f"Price: `{price:.2f}`",
         f"Downtrend line broken {x['break_date'][5:]} (vol {x['break_vol']}×) · line now `{x['line_next']}`",
         f"Daily EMA21 `{x['ema21']}`" + (f" · RVOL `{rvol:.2f}`" if rvol is not None else "")])
 
 
-def live_sma30_65m(tickers: list[str], today: date) -> dict[str, dict]:
-    """SMA30 65m con il bucket in corso (come TradingView): ultimi 30 close di bucket, l'ultimo = prezzo attuale.
-    Un download 5m di 7 giorni per i soli nomi del canale, al massimo ogni CHANNEL_POLL_SEC."""
+def live_ma65(tickers: list[str], today: date) -> dict[str, dict]:
+    """Media 65m col bucket in corso (come TradingView): EMA50 dal 20/10 [ANDREA], prima SMA30. L'ultimo close di
+    bucket è il prezzo attuale. Un download 5m per i soli nomi del canale, al massimo ogni CHANNEL_POLL_SEC."""
     import yfinance as yf
     from .data import buckets_65m
     if time.time() - _chan_cache["ts"] >= C.CHANNEL_POLL_SEC or set(tickers) - set(_chan_cache["bars"]):
-        df = yf.download(tickers, period="7d", interval="5m", prepost=False, auto_adjust=False,
+        df = yf.download(tickers, period=C.MA65_LIVE_PERIOD, interval="5m", prepost=False, auto_adjust=False,
                          group_by="ticker", progress=False, threads=True)
         bars = {}
         for t in tickers:
@@ -205,10 +205,12 @@ def live_sma30_65m(tickers: list[str], today: date) -> dict[str, dict]:
         _chan_cache.update(ts=time.time(), bars=bars)
     out = {}
     for t, b in _chan_cache["bars"].items():
-        if len(b) < C.SMA65_LEN or b[-1][0] != today.isoformat():
+        if len(b) < C.MA65_LEN or b[-1][0] != today.isoformat():
             continue
-        last = b[-C.SMA65_LEN:]
-        out[t] = dict(sma=sum(x[2] for x in last) / C.SMA65_LEN, price=b[-1][2], bucket=f"{b[-1][0]}#{b[-1][1]}")
+        ma = I.ma65([x[2] for x in b])
+        if ma is None:
+            continue
+        out[t] = dict(sma=ma, price=b[-1][2], bucket=f"{b[-1][0]}#{b[-1][1]}")
     return out
 
 
@@ -339,7 +341,7 @@ def fmt_entry(t, orh, price, rvol, rvol30, need=None, lod_atr=None, against=Fals
 def fmt_channel(c, price, sma):
     under = price <= (c.get("ema9") or 0)
     return f"{c['ticker']} · Channel", "\n".join([
-        f"65m SMA30 reclaimed `{sma:.2f}`", f"Price: `{price:.2f}`",
+        f"65m {C.MA65_KIND.upper()}{C.MA65_LEN} reclaimed `{sma:.2f}`", f"Price: `{price:.2f}`",
         f"Daily EMA9: `{c['ema9']:.2f}`" + (" (still under)" if under else ""),
         (f"Broken line (backtest): `{c['upper_line_next']:.2f}`" if c["state"] == "backtest of the broken line"
          else f"Channel lower line: `{c['lower_line_next']:.2f}`"), f"Position: {c['state']}"])
@@ -493,11 +495,11 @@ def run_once(dry_run: bool = False) -> dict:
         if res.get("sent"):
             day[k] = {"ts": datetime.now(ROME).isoformat(), "price": price, "orl": orl, "rvol": rvol, "hod_atr": hod_atr}
             fired.append(k)
-    # canale: recupero della SMA30 65m (una volta per nome)
+    # canale: recupero della media 65m (una volta per nome)
     chan = [c for c in load_channel(today) if f"{c['ticker']}|Channel|sma30-65m" not in day]
     if chan and mins >= 0:
         try:
-            live = live_sma30_65m([c["ticker"] for c in chan], today)
+            live = live_ma65([c["ticker"] for c in chan], today)
         except Exception as e:
             log.warning("canale 65m: %s", e)
             live = {}
@@ -505,7 +507,7 @@ def run_once(dry_run: bool = False) -> dict:
             t, lv = c["ticker"], live.get(c["ticker"])
             if not lv:
                 continue
-            scan.append(dict(ticker=t, list="Channel", price=lv["price"], sma30_65m=round(lv["sma"], 2)))
+            scan.append(dict(ticker=t, list="Channel", price=lv["price"], ma65=round(lv["sma"], 2)))
             if lv["price"] <= lv["sma"]:
                 continue
             k = f"{t}|Channel|sma30-65m"
@@ -518,7 +520,7 @@ def run_once(dry_run: bool = False) -> dict:
             res = ({"sent": True, "dry_run": True} if dry_run
                    else send_alert(*fmt_channel(c, lv["price"], lv["sma"]), image=img))
             if res.get("sent"):
-                day[k] = {"ts": datetime.now(ROME).isoformat(), "price": lv["price"], "sma30_65m": lv["sma"]}
+                day[k] = {"ts": datetime.now(ROME).isoformat(), "price": lv["price"], "ma65": lv["sma"]}
                 fired.append(k)
     # trendline discendente: rottura in seduta con RVOL alto (near) e crossback dopo la rottura (pullback)
     dl = [x for x in load_dtl(today) if f"{x['ticker']}|DTL|alert" not in day]
@@ -544,13 +546,15 @@ def run_once(dry_run: bool = False) -> dict:
                     msg, title = fmt_dtl_break(x, price, line, rv), "downtrend line break"
             else:
                 b = buckets_65m(sub)
-                if len(b) < C.SMA65_LEN or b[-1][0] != today.isoformat():
+                if len(b) < C.MA65_LEN or b[-1][0] != today.isoformat():
                     continue
-                sma = sum(q[2] for q in b[-C.SMA65_LEN:]) / C.SMA65_LEN
+                sma = I.ma65([q[2] for q in b])
+                if sma is None:
+                    continue
                 kb = f"{t}|DTL|below65"
-                scan.append(dict(ticker=t, list="DTL pullback", price=price, sma30_65m=round(sma, 2)))
+                scan.append(dict(ticker=t, list="DTL pullback", price=price, ma65=round(sma, 2)))
                 if price <= sma:
-                    day[kb] = True                  # sotto la SMA30 65m: si aspetta il recupero
+                    day[kb] = True                  # sotto la media 65m: si aspetta il recupero
                 else:
                     low = float(sub[sub.index.date == today].Low.min())
                     # crossback: ieri o oggi il minimo è tornato sulle medie (EMA9 o EMA21)

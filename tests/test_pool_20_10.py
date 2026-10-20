@@ -53,3 +53,16 @@ def test_conferma_indice():
     qd = pd.DataFrame({"Open": dn, "High": dn + 0.5, "Low": dn - 0.5, "Close": dn, "Volume": 1e6}, index=hi)
     assert A.trend_60m(qd, float(dn[-1]) - 1, "short") is True
     assert A.trend_60m(None, 100.0, "long") is None
+
+
+def test_media_65m_e_ema50():
+    """La media sulle barre 65m è la EMA50, non più la SMA30 [ANDREA 20/10]."""
+    import pandas as pd
+    from jeffcoach import indicators as I
+    assert C.MA65_KIND == "ema" and C.MA65_LEN == 50
+    closes = list(range(1, 121))                       # serie in salita: la EMA sta sopra la SMA
+    v = I.ma65(closes)
+    sma = sum(closes[-C.MA65_LEN:]) / C.MA65_LEN
+    assert v is not None and v > sma
+    assert abs(v - float(pd.Series([float(x) for x in closes]).ewm(span=50, adjust=False).mean().iloc[-1])) < 1e-9
+    assert I.ma65(closes[:C.MA65_LEN - 1]) is None      # storico troppo corto: niente media

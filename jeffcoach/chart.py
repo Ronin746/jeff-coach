@@ -1,7 +1,7 @@
 """Grafico per gli alert di Sydney "· Channel" [RONIN 09/10].
 
 Sopra: daily degli ultimi ~6 mesi (candele), EMA9, EMA21, SMA50 e le due linee del canale rialzista (lettura D),
-prolungate fino a oggi. Sotto: close delle barre a 65 minuti degli ultimi giorni con la SMA30 65m.
+prolungate fino a oggi. Sotto: close delle barre a 65 minuti degli ultimi giorni con la media 65m (EMA50 dal 20/10).
 Ritorna i byte di un PNG, oppure None se manca matplotlib o i dati: l'alert parte comunque, senza immagine.
 """
 from __future__ import annotations
@@ -72,7 +72,7 @@ def channel_chart(c: dict, buckets: Optional[list] = None, price: Optional[float
         x = range(len(d))
         pos = {ts.date().isoformat(): i for i, ts in enumerate(d.index)}
 
-        if not buckets or len(buckets) < 60:      # per vedere la SMA30 65m su tutto il riquadro servono ~15 giorni
+        if not buckets or len(buckets) < 60:      # per vedere la media 65m su tutto il riquadro servono ~15 giorni
             try:
                 import yfinance as yf
                 from .data import buckets_65m
@@ -120,9 +120,11 @@ def channel_chart(c: dict, buckets: Optional[list] = None, price: Optional[float
             bx.set_facecolor(BG)
             b = buckets[-60:]
             closes = [q[2] for q in buckets]
-            sma = pd.Series(closes).rolling(C.SMA65_LEN).mean().iloc[-len(b):].values
+            cs = pd.Series(closes)
+            sma = (cs.ewm(span=C.MA65_LEN, adjust=False).mean() if C.MA65_KIND == "ema"
+                   else cs.rolling(C.MA65_LEN).mean()).iloc[-len(b):].values
             bx.plot(range(len(b)), [q[2] for q in b], color=FG, lw=1, label="65m close")
-            bx.plot(range(len(b)), sma, color="#f39c12", lw=1.2, label="SMA30 65m")
+            bx.plot(range(len(b)), sma, color="#f39c12", lw=1.2, label=f"{C.MA65_KIND.upper()}{C.MA65_LEN} 65m")
             day_starts = [i for i in range(len(b)) if i == 0 or b[i][0] != b[i - 1][0]]
             bx.set_xticks(day_starts, [b[i][0][8:10] + "/" + b[i][0][5:7] for i in day_starts])
             bx.legend(loc="upper left", fontsize=7, facecolor=BG, labelcolor=FG, framealpha=0.6)

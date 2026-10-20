@@ -163,3 +163,13 @@ def rs_rating(raw: Optional[float], th: Sequence[float] = C.RS_PINE_REPLAY) -> O
     else:
         r = _attr(raw, f6, f7, 9, 2, 0)
     return int(round(r))
+
+
+def ma65(closes) -> Optional[float]:
+    """Ultimo valore della media sui close dei bucket da 65 minuti: EMA o SMA secondo MA65_KIND [ANDREA 20/10]."""
+    s = pd.Series([float(x) for x in closes])
+    if len(s) < C.MA65_LEN:
+        return None
+    m = ema(s, C.MA65_LEN) if C.MA65_KIND == "ema" else s.rolling(C.MA65_LEN).mean()
+    v = float(m.iloc[-1])
+    return v if v == v else None

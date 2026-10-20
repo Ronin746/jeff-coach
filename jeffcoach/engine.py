@@ -159,12 +159,12 @@ def focus_gates(m: dict, sma65: Optional[dict]) -> list[Gate]:
                   f"Atr Ext {ext:.2f}× over 4×" if ext is not None else "ext n/a", "extended"))
     d5 = m["sma5_dist_pct"]
     g.append(Gate("sma5", abs(d5) <= C.SMA5_MAX_DIST_PCT, f"{d5:+.1f}% from the 5-day SMA", "over 5% from SMA5"))
-    s30 = (sma65 or {}).get("sma30_65m")
+    s30 = (sma65 or {}).get("ma65", (sma65 or {}).get("sma30_65m"))
     if s30 is None:
-        g.append(Gate("sma65", False, "65m SMA30 n/a"))
+        g.append(Gate("sma65", False, f"65m {C.MA65_KIND.upper()}{C.MA65_LEN} n/a"))
     else:
-        g.append(Gate("sma65", m["close"] > s30, f"closed under the 65m SMA30 ({m['close']:.2f} vs {s30:.2f})",
-                      f"under 65m SMA30 ({(m['close'] / s30 - 1) * 100:+.1f}%)"))
+        g.append(Gate("sma65", m["close"] > s30, f"closed under the 65m {C.MA65_KIND.upper()}{C.MA65_LEN} ({m['close']:.2f} vs {s30:.2f})",
+                      f"under 65m {C.MA65_KIND.upper()}{C.MA65_LEN} ({(m['close'] / s30 - 1) * 100:+.1f}%)"))
     e = m["ema9_dist_atr"]
     g.append(Gate("ema9", 0 < e <= C.EMA9_MAX_ATR,
                   "under the 9 EMA" if e <= 0 else f"{e:.1f} ATR above the 9 EMA",

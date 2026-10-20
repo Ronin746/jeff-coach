@@ -1,4 +1,4 @@
-"""Lettura D (canale rialzista, acquisto nella parte bassa) e lista "canale" con la SMA30 65m (dati sintetici)."""
+"""Lettura D (canale rialzista, acquisto nella parte bassa) e lista "canale" con la media 65m (dati sintetici)."""
 import numpy as np
 import pandas as pd
 
@@ -28,11 +28,11 @@ def test_canale_bordo_basso_e_alto():
     assert not ok and m["d_state"] == "at the upper line", (m.get("d_state"), why)
 
 
-def test_lista_canale_recupero_sma30_sotto_ema9():
+def test_lista_canale_recupero_media65_sotto_ema9():
     m = dict(pattern_d_ok=True, rs=95, d_state="lower part of the channel", close=100.0, d_lower_next=97.0,
              d_upper_next=110.0, d_pos=0.2, d_width_atr=4.0, ema9=101.0, atr=2.0)
     rows = {"XYZ": E.Row("XYZ", "Out", m, [])}
-    w = channel_watch(rows, {"XYZ": {"sma30_65m": 99.0}})
-    assert w[0]["above_sma30_65m"] is True and w[0]["under_ema9"] is True     # si segnala anche sotto la EMA9
-    w = channel_watch(rows, {"XYZ": {"sma30_65m": 101.5}})
-    assert w[0]["above_sma30_65m"] is False                                    # in osservazione per l'alert
+    w = channel_watch(rows, {"XYZ": {"ma65": 99.0}})
+    assert w[0]["above_ma65"] is True and w[0]["under_ema9"] is True     # si segnala anche sotto la EMA9
+    w = channel_watch(rows, {"XYZ": {"ma65": 101.5}})
+    assert w[0]["above_ma65"] is False                                    # in osservazione per l'alert

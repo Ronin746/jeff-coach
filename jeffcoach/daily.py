@@ -96,7 +96,7 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
             except Exception as e:
                 log.warning("PEG %s: %s", s, e)
     info: dict = {}          # mcap/settore freschi: si scaricano in build() solo per i nomi che entrano in lista
-    s65 = D.sma30_65m(cand, last_sessions(as_of, 6))
+    s65 = D.ma_65m(cand, last_sessions(as_of, C.MA65_SESSIONS))
     # SHORT [RONIN 12/10]: stesse metriche sul grafico capovolto, per i titoli sotto la SMA200
     short_m, s65s = {}, {}
     if C.SHORT["enabled"]:
@@ -112,7 +112,7 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
         pre_s = [s for s, m in short_m.items()
                  if len([g for g in SH.numeric_open(m, None) if g != "sma65"]) <= C.SHORT["pre_max_numeric_open"]]
         if pre_s:
-            s65s = D.sma30_65m(pre_s, last_sessions(as_of, 6))
+            s65s = D.ma_65m(pre_s, last_sessions(as_of, C.MA65_SESSIONS))
     themes, reg = themes_and_regime(daily, spx, metrics, tmap, as_of,
                                     {s: daily[s] for s in syms if s in daily})
     doc = dict(session=session, as_of=as_of, meta=meta, metrics=metrics, info=info, sma65=s65, industry=industry,
@@ -222,12 +222,12 @@ def channel_watch(rows: dict, s65: dict) -> list[dict]:
         hard_out = r.out_reason and not r.out_reason.startswith("stale")     # utili / universo: fuori anche qui
         if not m.get("pattern_d_ok") or hard_out or (m.get("rs") or 0) < C.CHANNEL_RS_MIN:
             continue
-        s30 = (s65.get(t) or {}).get("sma30_65m")
+        s30 = (s65.get(t) or {}).get("ma65")
         above = None if s30 is None else m["close"] > s30
         out.append(dict(ticker=t, list=r.list, state=m["d_state"], rs=m["rs"], close=_r(m["close"]),
                         lower_line_next=_r(m["d_lower_next"]), upper_line_next=_r(m["d_upper_next"]),
-                        pos=_r(m["d_pos"]), width_atr=_r(m["d_width_atr"], 1), sma30_65m=_r(s30),
-                        above_sma30_65m=above, ema9=_r(m["ema9"]), under_ema9=m["close"] <= m["ema9"],
+                        pos=_r(m["d_pos"]), width_atr=_r(m["d_width_atr"], 1), ma65=_r(s30), sma30_65m=_r(s30),       # ma65: EMA50 dal 20/10 (sma30_65m resta come alias)
+                        above_ma65=above, above_sma30_65m=above, ema9=_r(m["ema9"]), under_ema9=m["close"] <= m["ema9"],
                         atr=_r(m["atr"]), industry=m.get("industry"), group_pctl=m.get("group_pctl"),
                         lines=m.get("d_line_pts")))
     return sorted(out, key=lambda x: (-(x["rs"] or 0), x["ticker"]))

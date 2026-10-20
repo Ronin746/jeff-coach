@@ -57,6 +57,11 @@ def by_sector(rows: list[dict]) -> list[dict]:
     return [r for _, rr in sector_groups(rows) for r in rr]
 
 
+def _ma65() -> str:
+    """Etichetta della media sulle barre 65m: EMA50 dal 20/10 [ANDREA], prima SMA30."""
+    return f"{C.MA65_KIND.upper()}{C.MA65_LEN}"
+
+
 def above_sma65(r: dict) -> bool:
     return "sma65" not in (r.get("open_gates") or [])
 
@@ -130,7 +135,7 @@ def themes_section(th: Optional[dict]) -> Optional[str]:
 def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
                       sectors: Optional[dict] = None, dtl_breaks: Optional[list[dict]] = None,
                       regime: Optional[dict] = None, themes: Optional[dict] = None, as_of: Optional[str] = None) -> list[str]:
-    """Card: FOCUS, STALK sopra la SMA30 65m, STALK sotto [RONIN 04/10, 09/10]. Niente tabelle: una voce per nome
+    """Card: FOCUS, STALK sopra la media 65m, STALK sotto [RONIN 04/10, 09/10]. Niente tabelle: una voce per nome
     con statistiche e descrizione. Ogni sezione è un embed a sé dello stesso messaggio (Discord: 4096 caratteri per
     embed, 6000 in tutto); oltre si accorciano le frasi, prima degli Stalk.
     I nomi non si tolgono mai."""
@@ -148,8 +153,8 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
         head = f"**WATCHLIST — {title_date}**" + (f" (close {as_of})" if as_of else "")
         rl = regime_line(regime, (themes or {}).get("line"))
         parts = ([f"{head}\n{rl}"] if rl else []) + [("" if rl else f"{head}\n\n") + sect("FOCUS", focus, f_lim),
-                 sect(f"STALK — above 65m SMA30 ({len(up)})", up, s_lim),
-                 sect(f"STALK — below 65m SMA30 ({len(down)})", down, s_lim)]
+                 sect(f"STALK — above 65m {_ma65()} ({len(up)})", up, s_lim),
+                 sect(f"STALK — below 65m {_ma65()} ({len(down)})", down, s_lim)]
         if dtl_breaks:          # rotture della trendline discendente in chiusura con volume >= 1,5x [RONIN 09/10]
             rows = [dict(d, reason_en=(f"downtrend line break, vol {d['break_vol']}× avg" if d.get("break_ago") == 0 else
                                        f"downtrend line broken {d['break_date'][5:]}, confirmed today with vol {d['confirm_vol']}× avg")
@@ -172,9 +177,9 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
 
 
 def short_card_descriptions(title_date: str, focus: list[dict], stalk: list[dict]) -> list[str]:
-    """Card SHORT [RONIN 12/10]: stesse voci del long, riquadri rossi. Per lo short il lato giusto è SOTTO la SMA30 65m,
+    """Card SHORT [RONIN 12/10]: stesse voci del long, riquadri rossi. Per lo short il lato giusto è SOTTO la media 65m,
     quindi quegli Stalk vengono per primi. Niente statistiche degli ETF di settore (sono pensate per il long)."""
-    # nello short il gate "sma65" aperto vuol dire prezzo SOPRA la SMA30 65m (lato sbagliato)
+    # nello short il gate "sma65" aperto vuol dire prezzo SOPRA la media 65m (lato sbagliato)
     dn = [r for r in stalk if above_sma65(r)]
     up = [r for r in stalk if not above_sma65(r)]
 
@@ -186,8 +191,8 @@ def short_card_descriptions(title_date: str, focus: list[dict], stalk: list[dict
 
     for f_lim, s_lim in ((None, None), (None, 70), (None, 45), (80, 30), (60, 0), (0, 0)):
         d = [f"**SHORT WATCHLIST — {title_date}**\n\n" + sect("SHORT FOCUS", focus, f_lim),
-             sect(f"SHORT STALK — below 65m SMA30 ({len(dn)})", dn, s_lim),
-             sect(f"SHORT STALK — above 65m SMA30 ({len(up)})", up, s_lim)]
+             sect(f"SHORT STALK — below 65m {_ma65()} ({len(dn)})", dn, s_lim),
+             sect(f"SHORT STALK — above 65m {_ma65()} ({len(up)})", up, s_lim)]
         if all(len(x) <= CARD_LIMIT for x in d):
             return d
     return [x[:CARD_LIMIT] for x in d]
@@ -196,8 +201,8 @@ def short_card_descriptions(title_date: str, focus: list[dict], stalk: list[dict
 def short_tv_txt(focus, stalk_below, stalk_above) -> str:
     """Sezioni short del txt TradingView, dopo quelle long nella stessa riga [RONIN 12/10]."""
     out = ["###SHORT FOCUS", *[tv_symbol(t, e) for t, e in focus],
-           "###SHORT STALK BELOW 65m SMA30", *[tv_symbol(t, e) for t, e in stalk_below],
-           "###SHORT STALK ABOVE 65m SMA30", *[tv_symbol(t, e) for t, e in stalk_above]]
+           f"###SHORT STALK BELOW 65m {_ma65()}", *[tv_symbol(t, e) for t, e in stalk_below],
+           f"###SHORT STALK ABOVE 65m {_ma65()}", *[tv_symbol(t, e) for t, e in stalk_above]]
     return ",".join(out)
 
 
@@ -218,6 +223,6 @@ def tv_txt(focus: Iterable[tuple[str, str]], stalk: Iterable[tuple[str, str]],
     if stalk_below is None:
         out += ["###STALK", *[tv_symbol(t, e) for t, e in stalk]]
     else:
-        out += ["###STALK ABOVE 65m SMA30", *[tv_symbol(t, e) for t, e in stalk],
-                "###STALK BELOW 65m SMA30", *[tv_symbol(t, e) for t, e in stalk_below]]
+        out += [f"###STALK ABOVE 65m {_ma65()}", *[tv_symbol(t, e) for t, e in stalk],
+                f"###STALK BELOW 65m {_ma65()}", *[tv_symbol(t, e) for t, e in stalk_below]]
     return ",".join(out)

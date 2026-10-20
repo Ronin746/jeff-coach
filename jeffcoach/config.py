@@ -57,7 +57,12 @@ VCP_LEN, VCP_ADR_LEN, VCP_BASELINE = 5, 20, 50
 # almeno 2 delle ultime 3 barre con range% < ADR20% (un solo giorno largo non azzera i precedenti, caso PLTR)
 COMPRESSION_DAYS_MIN = 2
 COMPRESSION_WINDOW = 3
-SMA65_LEN = 30                 # SMA30 su barre 65m RTH, close daily SOPRA [RONIN 06/10]
+MA65_KIND = "ema"              # [ANDREA 20/10] media sulle barre 65m RTH: EMA50 al posto della SMA30
+MA65_LEN = 50                  # (prima: SMA 30 [RONIN 06/10]). Il close daily deve stare SOPRA
+MA65_SESSIONS = 25             # sedute di barre a 5 minuti da scaricare: la EMA50 su bucket da 65m vuole piu'
+#                                storico della SMA30 (50 bucket = ~8 sedute, con 25 la media e' ben avviata)
+MA65_LIVE_PERIOD = "30d"       # 5m scaricati negli alert per la media 65m (con la SMA30 bastavano 7 giorni)
+SMA65_LEN = MA65_LEN           # vecchio nome, tenuto per compatibilita'
 BUCKET_MIN = 65
 
 # ---------------------------------------------------------------- Stalk

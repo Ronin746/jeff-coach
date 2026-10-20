@@ -15,6 +15,7 @@ from typing import Iterable, Optional
 import pandas as pd
 
 from . import config as C
+from . import indicators as I
 from .calendar_us import ET
 
 log = logging.getLogger("jeffcoach.data")
@@ -216,8 +217,8 @@ def hourly(symbol: str, period: str = "6mo") -> Optional[pd.DataFrame]:
         return None
 
 
-def sma30_65m(symbols: Iterable[str], sessions: list[date], chunk: int = 60) -> dict[str, dict]:
-    """SMA30 su barre a 65 minuti RTH costruite dai 5 minuti (prepost=False).
+def ma_65m(symbols: Iterable[str], sessions: list[date], chunk: int = 60) -> dict[str, dict]:
+    """Media (EMA50 dal 20/10, prima SMA30) su barre a 65 minuti RTH costruite dai 5 minuti (prepost=False).
     6 bucket al giorno dalle 09:30 ET (09:30, 10:35, 11:40, 12:45, 13:50, 14:55); close del bucket =
     close dell'ultima 5m disponibile nel bucket (come TradingView). SMA = media degli ultimi 30 close."""
     yf = _yf()
@@ -247,11 +248,11 @@ def sma30_65m(symbols: Iterable[str], sessions: list[date], chunk: int = 60) -> 
                 continue
             buckets = buckets_65m(sub, want)
             missing_days = sorted(want - {d for d, *_ in buckets})
-            if len(buckets) < C.SMA65_LEN:
+            if len(buckets) < C.MA65_LEN:
                 out[s] = {"err": f"solo {len(buckets)} bucket 65m", "missing_days": missing_days}
                 continue
-            last = buckets[-C.SMA65_LEN:]
-            out[s] = {"sma30_65m": sum(x[2] for x in last) / C.SMA65_LEN, "n_buckets": len(buckets),
+            last = buckets[-C.MA65_LEN:]
+            out[s] = {"ma65": I.ma65([x[2] for x in buckets]), "n_buckets": len(buckets),
                       "last_bucket": f"{last[-1][0]}#{last[-1][1]}", "incomplete": sum(1 for x in last if x[3] < 13),
                       "missing_days": missing_days}
         log.info("65m %d/%d", min(i + chunk, len(syms)), len(syms))
@@ -301,3 +302,6 @@ def fetch_earnings(symbols: Iterable[str], since: date, workers: int = 8) -> dic
         return t, res
     with ThreadPoolExecutor(workers) as ex:
         return dict(ex.map(one, sorted(set(symbols))))
+
+
+sma30_65m = ma_65m          # vecchio nome [20/10]
