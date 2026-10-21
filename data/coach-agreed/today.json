@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-20",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-21 11:07 CEST",
+  "asof_rome": "2026-10-21 11:11 CEST",
   "focus": [
     "ATRC",
     "NTRA"
@@ -3682,7 +3682,88 @@
       "down4": 108.0
     },
     "up20_hi": 45.0,
-    "down20_hi": 110.0
+    "down20_hi": 110.0,
+    "martin_breadth": {
+      "lists": {
+        "Leading": 557,
+        "Mediocre": 614,
+        "Lagging": 583
+      },
+      "lists_1d": {
+        "Leading": 492,
+        "Mediocre": 621,
+        "Lagging": 641
+      },
+      "lists_5d": {
+        "Leading": 515,
+        "Mediocre": 569,
+        "Lagging": 669
+      },
+      "above21_pct": 56,
+      "iwm_vs_qqq_21d": -0.2,
+      "iwm_above9": true,
+      "iwm_above21": false,
+      "mega_above9": 2,
+      "mega_n": 10,
+      "leaders_below9": 2,
+      "leaders_below21": 2,
+      "leaders_n": 20,
+      "scan_n": 89,
+      "scan_themes": [
+        [
+          "Biotechnology",
+          15
+        ],
+        [
+          "Software",
+          13
+        ],
+        [
+          "Cloud",
+          9
+        ],
+        [
+          "Healthcare services",
+          5
+        ]
+      ]
+    },
+    "pool_card": {
+      "n": 167,
+      "lists": {
+        "Leading": 45,
+        "Mediocre": 71,
+        "Lagging": 50
+      },
+      "lists_1d": {
+        "Leading": 42,
+        "Mediocre": 75,
+        "Lagging": 48
+      },
+      "lists_5d": {
+        "Leading": 62,
+        "Mediocre": 55,
+        "Lagging": 39
+      },
+      "share": 47.368421052631575,
+      "flow5": -19.9,
+      "flow_daily": [
+        2.5,
+        2.6,
+        -4.0,
+        -8.1,
+        3.3,
+        -9.6,
+        -2.0,
+        -14.1,
+        1.9,
+        -11.1,
+        -0.6,
+        2.4
+      ],
+      "up_5d": 8,
+      "down_5d": 38
+    }
   },
   "themes": {
     "leading": [

@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-20",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-21 11:07 CEST",
+  "asof_rome": "2026-10-21 11:11 CEST",
   "focus": [
     "ATRC",
     "NTRA"
@@ -3682,7 +3682,88 @@
       "down4": 108.0
     },
     "up20_hi": 45.0,
-    "down20_hi": 110.0
+    "down20_hi": 110.0,
+    "martin_breadth": {
+      "lists": {
+        "Leading": 557,
+        "Mediocre": 614,
+        "Lagging": 583
+      },
+      "lists_1d": {
+        "Leading": 492,
+        "Mediocre": 621,
+        "Lagging": 641
+      },
+      "lists_5d": {
+        "Leading": 515,
+        "Mediocre": 569,
+        "Lagging": 669
+      },
+      "above21_pct": 56,
+      "iwm_vs_qqq_21d": -0.2,
+      "iwm_above9": true,
+      "iwm_above21": false,
+      "mega_above9": 2,
+      "mega_n": 10,
+      "leaders_below9": 2,
+      "leaders_below21": 2,
+      "leaders_n": 20,
+      "scan_n": 89,
+      "scan_themes": [
+        [
+          "Biotechnology",
+          15
+        ],
+        [
+          "Software",
+          13
+        ],
+        [
+          "Cloud",
+          9
+        ],
+        [
+          "Healthcare services",
+          5
+        ]
+      ]
+    },
+    "pool_card": {
+      "n": 167,
+      "lists": {
+        "Leading": 45,
+        "Mediocre": 71,
+        "Lagging": 50
+      },
+      "lists_1d": {
+        "Leading": 42,
+        "Mediocre": 75,
+        "Lagging": 48
+      },
+      "lists_5d": {
+        "Leading": 62,
+        "Mediocre": 55,
+        "Lagging": 39
+      },
+      "share": 47.368421052631575,
+      "flow5": -19.9,
+      "flow_daily": [
+        2.5,
+        2.6,
+        -4.0,
+        -8.1,
+        3.3,
+        -9.6,
+        -2.0,
+        -14.1,
+        1.9,
+        -11.1,
+        -0.6,
+        2.4
+      ],
+      "up_5d": 8,
+      "down_5d": 38
+    }
   },
   "themes": {
     "leading": [
@@ -7153,7 +7234,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 2.98391168125744,
+        "ma65": 2.983909460401974,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -8134,7 +8215,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 102.07458346249054,
+        "ma65": 102.07362342788659,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -8346,7 +8427,7 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 30.49051989082711,
+        "ma65": 30.49052036356632,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -8698,7 +8779,7 @@
         "theme_rank": 9
       },
       "sma30_65m": {
-        "ma65": 7.5040831936676335,
+        "ma65": 7.50406341753294,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -9094,7 +9175,7 @@
         "theme_rank": 16
       },
       "sma30_65m": {
-        "ma65": 68.73444144505609,
+        "ma65": 68.73421747639682,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -9255,7 +9336,7 @@
         "theme_rank": 49
       },
       "sma30_65m": {
-        "ma65": 38.58442183445761,
+        "ma65": 38.58441820912031,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -9437,7 +9518,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 58.87274991111693,
+        "ma65": 58.872744891661625,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -9849,7 +9930,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 32.577476298062166,
+        "ma65": 32.57747756635874,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -10043,7 +10124,7 @@
         "theme_rank": 7
       },
       "sma30_65m": {
-        "ma65": 153.6930140937666,
+        "ma65": 153.69297883124946,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -10471,7 +10552,7 @@
         "theme_rank": 1
       },
       "sma30_65m": {
-        "ma65": 124.1514607248537,
+        "ma65": 124.15175716287963,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -10872,7 +10953,6 @@
         "peg_pivot": 101.39,
         "peg_ok": true,
         "peg_why": [],
-        "peg_earnings": true,
         "industry": "Software—Application",
         "sector": "Technology",
         "group_pctl": 87,
@@ -10895,7 +10975,7 @@
         "theme_rank": 73
       },
       "sma30_65m": {
-        "ma65": 94.43830954653035,
+        "ma65": 94.4383146727566,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -11094,7 +11174,7 @@
         "theme_rank": 48
       },
       "sma30_65m": {
-        "ma65": 83.66814277214337,
+        "ma65": 83.66813499372735,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -11331,7 +11411,7 @@
         "theme_rank": 66
       },
       "sma30_65m": {
-        "ma65": 70.1725438333737,
+        "ma65": 70.1725571582947,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -11508,7 +11588,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 5.131891770295578,
+        "ma65": 5.1318919716929585,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -11705,7 +11785,7 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 37.8676792572653,
+        "ma65": 37.8673474892949,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -11881,7 +11961,7 @@
         "theme_rank": 29
       },
       "sma30_65m": {
-        "ma65": 118.14650511383995,
+        "ma65": 118.14640712792433,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -12295,7 +12375,7 @@
         "theme_rank": 25
       },
       "sma30_65m": {
-        "ma65": 420.3556292526525,
+        "ma65": 420.35730997651046,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -12472,7 +12552,7 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 267.5324765215507,
+        "ma65": 267.5327566572473,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -13037,7 +13117,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 9.622605281743514,
+        "ma65": 9.622674258258357,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -13615,7 +13695,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 233.90957054470712,
+        "ma65": 233.9095862645877,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -13840,7 +13920,7 @@
         "theme_rank": 31
       },
       "sma30_65m": {
-        "ma65": 620.4296213635228,
+        "ma65": 620.437915882911,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -14000,7 +14080,7 @@
         "theme_rank": 1
       },
       "sma30_65m": {
-        "ma65": 469.38469921381454,
+        "ma65": 469.3844153457055,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -14213,7 +14293,7 @@
         "theme_rank": 51
       },
       "sma30_65m": {
-        "ma65": 116.60946707781079,
+        "ma65": 116.6098097189534,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -14435,7 +14515,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 163.77688015817114,
+        "ma65": 163.7768763226198,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -14627,7 +14707,7 @@
         "theme_rank": 31
       },
       "sma30_65m": {
-        "ma65": 400.7923485755875,
+        "ma65": 400.79232843482237,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -15028,7 +15108,7 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 76.97763108549006,
+        "ma65": 76.97754025677887,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -15249,7 +15329,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 84.82461022744924,
+        "ma65": 84.82460835101249,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -15660,7 +15740,7 @@
         "theme_rank": 1
       },
       "sma30_65m": {
-        "ma65": 288.1784763123333,
+        "ma65": 288.1777990505671,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -16088,7 +16168,7 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 177.39823930779386,
+        "ma65": 177.39823637522943,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -16301,7 +16381,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 17.52055385964818,
+        "ma65": 17.52063764778199,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -16498,7 +16578,7 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 34.496954479131965,
+        "ma65": 34.49708291286045,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -16713,7 +16793,7 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 189.60573898474937,
+        "ma65": 189.60582126694547,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -16907,7 +16987,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 154.1246155500369,
+        "ma65": 154.1245209273339,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -17104,7 +17184,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 28.448836503859717,
+        "ma65": 28.449228594900234,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -17341,7 +17421,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 6.359942037688389,
+        "ma65": 6.359953039480351,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -17785,7 +17865,7 @@
         "theme_rank": 4
       },
       "sma30_65m": {
-        "ma65": 171.8132572536703,
+        "ma65": 171.81309832612024,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -18192,7 +18272,7 @@
         "theme_rank": 9
       },
       "sma30_65m": {
-        "ma65": 210.31407841433517,
+        "ma65": 210.31408871442437,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -18643,7 +18723,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 23.250200926180316,
+        "ma65": 23.250329727450698,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -19039,7 +19119,7 @@
         "theme_rank": 31
       },
       "sma30_65m": {
-        "ma65": 146.67720756695277,
+        "ma65": 146.67726531279556,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
@@ -19254,7 +19334,7 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 85.72767685072833,
+        "ma65": 85.72750868175375,
         "n_buckets": 175,
         "last_bucket": "2026-10-20#6",
         "incomplete": 50,
