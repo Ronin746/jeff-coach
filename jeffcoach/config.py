@@ -149,7 +149,7 @@ CHANNEL = dict(
     lost_lower_atr=0.5,
 )
 CHANNEL_RS_MIN = 80              # lista "canale": solo RS >= 80 [RONIN 08/10]
-CHANNEL_ALERT = True             # Sydney: alert quando un nome del canale recupera la SMA30 65m in seduta
+CHANNEL_ALERT = False            # Sydney: alert "· Channel" spenti [RONIN 21/10]; gli altri alert restano
 # Trendline discendente e sua rottura ("wedge pop", Kell) [RONIN 09/10] — vedi dtl.py
 DTL = dict(
     lookback=200,            # i massimi si cercano nelle ultime 200 sedute
