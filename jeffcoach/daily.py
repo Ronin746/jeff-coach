@@ -607,7 +607,8 @@ def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
         regime=dict(bias=reg["bias"], score=reg.get("score"), score_bias=reg.get("score_bias"), why=reg["why"],
                     market_monitor=reg.get("market_monitor"), focus_held_by_regime=regime_held,
                     mm_hist=(reg.get("mm_hist") or [])[-20:], reversal=reg.get("reversal"),
-                    up20_hi=reg.get("up20_hi"), down20_hi=reg.get("down20_hi")),
+                    up20_hi=reg.get("up20_hi"), down20_hi=reg.get("down20_hi"),
+                    martin_breadth=reg.get("martin_breadth"), pool_card=reg.get("pool_card")),   # card come Martin [ANDREA 21/10]
         themes=dict(leading=[dict(theme=r["theme"], score=round(r["score"]), stage=r.get("stage"), d5=r.get("d5"),
                                   n=r["n"], ret21=_r(r["ret21"], 1), rs21=_r(r["rs21"], 1), etfs=r.get("etfs"),
                                   tickers=r["members"][:5])
