@@ -116,9 +116,8 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     png = work / "breadth.png"
     if png.exists() and "attachment://breadth.png" in json.dumps(parts[0] if parts else []):
         files.append(("breadth.png", png.read_bytes(), "image/png"))
-    rs_png = work / "themes_rs.png"                 # grafico RS dei basket in testa ai temi [RONIN 21/10]
-    if rs_png.exists() and "attachment://themes_rs.png" in json.dumps(parts[0] if parts else []):
-        files.append(("themes_rs.png", rs_png.read_bytes(), "image/png"))
+    rs_pngs = [work / fn for fn in ("themes_rs.png", "themes_rs_3m.png") if (work / fn).exists()]   # mappa dei temi [21/10]
+    files += [(p.name, p.read_bytes(), "image/png") for p in rs_pngs if f"attachment://{p.name}" in json.dumps(parts[0] if parts else [])]
     payload = {"username": C.CARD_USERNAME, **extra, "embeds": parts[0] if parts else [], "components": [],
                "attachments": [{"id": 0, "filename": fname}] + [{"id": k + 1, "filename": f[0]} for k, f in enumerate(files)]}
     body, ctype = _multipart(payload, fname, txt_path.read_bytes(), files)
@@ -144,10 +143,11 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     more = []
     for i, emb in enumerate(parts[1:]):
         pl, pct = json.dumps({"username": C.CARD_USERNAME, **extra, "embeds": emb}).encode(), "application/json"
-        if rs_png.exists() and "attachment://themes_rs.png" in json.dumps(emb):     # grafico RS nella continuazione
+        here = [p for p in rs_pngs if f"attachment://{p.name}" in json.dumps(emb)]   # grafici RS nella continuazione
+        if here:
             pl, pct = _multipart({"username": C.CARD_USERNAME, **extra, "embeds": emb,
-                                  "attachments": [{"id": 0, "filename": "themes_rs.png"}]},
-                                 "themes_rs.png", rs_png.read_bytes())
+                                  "attachments": [{"id": k, "filename": p.name} for k, p in enumerate(here)]},
+                                 here[0].name, here[0].read_bytes(), [(p.name, p.read_bytes(), "image/png") for p in here[1:]])
         if i < len(old_more):
             r = _request(f"{base}/messages/{old_more[i]}", "PATCH", pl, pct)
             r.setdefault("message_id", old_more[i])

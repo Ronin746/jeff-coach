@@ -110,8 +110,15 @@ def themes_head(th: Optional[dict]) -> Optional[str]:
     (allegato themes_rs.png, aggiunto in daily) va in questo riquadro."""
     if not th or not th.get("ranking"):
         return None
-    return (f"**THEMES — Lone Stock Trader baskets**" + (f" (as of {th['baskets_fetched']})" if th.get("baskets_fetched") else "")
-            + "\nWeek RS (x) vs Month RS (y): percentile of each basket's equal-weight return among all baskets")
+    return (f"**THEMES**" + (f" · groups as of {th['baskets_fetched']}" if th.get("baskets_fetched") else "")
+            + "\nWeek RS (x) vs Month RS (y) · percentile among all groups")
+
+
+def themes_head_3m(th: Optional[dict]) -> Optional[str]:
+    """Seconda immagine della mappa dei temi: RS mese / trimestre (allegato themes_rs_3m.png) [RONIN 21/10]."""
+    if not th or not th.get("ranking"):
+        return None
+    return "Month RS (x) vs Quarter RS (y) · percentile among all groups"
 
 
 def themes_ranking(th: Optional[dict], k: int = 5) -> Optional[str]:
@@ -123,9 +130,10 @@ def themes_ranking(th: Optional[dict], k: int = 5) -> Optional[str]:
     def ln(x):
         d5 = f" ({x['d5']:+.0f} 5d)" if x.get("d5") is not None else ""
         tk = f" ({', '.join(x['tickers'][:k])})" if x.get("tickers") and k else ""
-        return (f"`{x['rank']:>2}` **{x['theme']}** — 7F `{x['score']}`{d5} · W `{x['rs_w']:.0f}` M `{x['rs_m']:.0f}` "
+        q = f" Q `{x['rs_q']:.0f}`" if x.get("rs_q") is not None else ""
+        return (f"`{x['rank']:>2}` **{x['theme']}** — 7F `{x['score']}`{d5} · W `{x['rs_w']:.0f}` M `{x['rs_m']:.0f}`{q} "
                 f"{x['quadrant']} · 1W {pct(x.get('ret1w'))} 1M {pct(x.get('ret1m'))}{tk}")
-    L = [f"**Overall ranking — 7-factor, equal-weight of members ({th.get('ranked_n', 0)} baskets)**"]
+    L = [f"**Overall ranking — 7-factor, equal-weight of members ({th.get('ranked_n', 0)} groups)**"]
     L += [ln(x) for x in th["ranking"]]
     if th.get("bottom"):
         L += ["", "**Weakest**"] + [ln(x) for x in th["bottom"]]
@@ -135,7 +143,7 @@ def themes_ranking(th: Optional[dict], k: int = 5) -> Optional[str]:
 def themes_section(th: Optional[dict]) -> Optional[str]:
     if not th or not th.get("n_themes"):
         return None
-    basis = "7 factors, equal-weight of the basket names" if th.get("ranking") else "score on the theme ETFs (7 factors)"
+    basis = "7 factors, equal-weight of the group names" if th.get("ranking") else "score on the theme ETFs (7 factors)"
     L = [f"**THEMES** — LEADING / BUILDING ({len(th['leading'])} of {th['n_themes']}) · {basis}"]
     for t in th["leading"][:10]:
         tk = f" ({', '.join(t['tickers'])})" if t.get("tickers") else (f" ({', '.join(t['etfs'][:3])})" if t.get("etfs") else "")
@@ -179,7 +187,7 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
                                       + ("" if d.get("above_sma200") else " · under SMA200"))
                     for d in dtl_breaks]
             parts.append(sect(f"DOWNTREND LINE BREAK — vol ≥1.5× ({len(rows)})", rows, s_lim))
-        for ts in (themes_head(themes), themes_ranking(themes), themes_section(themes)):
+        for ts in (themes_head(themes), themes_head_3m(themes), themes_ranking(themes), themes_section(themes)):
             if ts:
                 parts.append(ts)
         return parts                                # una sezione per embed, sempre [RONIN 09/10]

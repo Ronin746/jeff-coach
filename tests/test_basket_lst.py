@@ -32,7 +32,8 @@ def test_basket_lst_classifica_e_card():
     assert rk["ranked_n"] == 3 and all(0 < x["rs_w"] <= 100 for x in rk["ranking"])
     themes = dict(leading=[], downtrend=[], n_themes=len(th["rows"]), line="", **rk)
     d = card_descriptions("2026-10-21", [], [], themes=themes, as_of="2026-10-20")
-    assert any(x.startswith("**THEMES — Lone Stock Trader baskets** (as of 2026-10-20)") for x in d)
+    assert any(x.startswith("**THEMES** · groups as of 2026-10-20") for x in d)
+    assert any(x.startswith("Month RS (x) vs Quarter RS (y)") for x in d) and not any("Lone Stock" in x for x in d)
     assert any("Overall ranking" in x and "**UP**" in x for x in d)
-    png = RC.render(rk["points"])
-    assert png[:4] == b"\x89PNG"
+    pngs = RC.render_all(rk["points"])
+    assert set(pngs) == {"themes_rs.png", "themes_rs_3m.png"}

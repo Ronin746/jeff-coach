@@ -650,11 +650,11 @@ def lst_ranking(th: dict) -> dict:
     """Classifica complessiva e punti del grafico RS dei basket Lone Stock Trader [RONIN 21/10]; {} con la vecchia mappa."""
     if th.get("membership") != "lst":
         return {}
-    rk = [dict(theme=r["theme"], rank=r["rank"], score=round(r["score"]), d5=r.get("d5"), rs_w=r["rs_w"], rs_m=r["rs_m"],
+    rk = [dict(theme=r["theme"], rank=r["rank"], score=round(r["score"]), d5=r.get("d5"), rs_w=r["rs_w"], rs_m=r["rs_m"], rs_q=r.get("rs_q"),
                quadrant=r["quadrant"], ret1w=_r(r.get("ret1w"), 1), ret1m=_r(r.get("ret1m"), 1), n=r.get("n"),
                tickers=r["members"][:5]) for r in th["rows"] if r.get("rs_w") is not None]
     return dict(ranking=rk[:C.THEME_RANK_ROWS], bottom=rk[-5:] if len(rk) > C.THEME_RANK_ROWS + 5 else [], ranked_n=len(rk),
-                points=[{k: x[k] for k in ("theme", "rs_w", "rs_m", "score")} for x in rk],
+                points=[{k: x.get(k) for k in ("theme", "rs_w", "rs_m", "rs_q", "score")} for x in rk],
                 baskets_fetched=th.get("baskets_fetched"))
 
 
@@ -860,19 +860,20 @@ def main(argv=None) -> int:
     elif (work / "breadth.png").exists():
         (work / "breadth.png").unlink()
     tma = res["agreed"].get("themes") or {}
-    rpng = None
-    if tma.get("points"):                      # grafico RS settimana / mese dei basket in testa ai temi [RONIN 21/10]
+    pngs = {}
+    if tma.get("points"):                      # mappa dei temi: RS settimana/mese e mese/trimestre [RONIN 21/10]
         try:
             from . import rs_chart as RC
-            rpng = RC.render(tma["points"], subtitle=f"{session} · close {res['agreed']['as_of_close']} · {len(tma['points'])} Lone Stock Trader baskets")
+            pngs = RC.render_all(tma["points"], subtitle=f"{session} · close {res['agreed']['as_of_close']} · {len(tma['points'])} groups")
         except Exception as e:
-            log.warning("grafico RS dei basket: %s", e)
-    head = next((e for e in embeds if e["description"].startswith("**THEMES — ")), None)
-    if rpng and head is not None:
-        (work / "themes_rs.png").write_bytes(rpng)
-        head["image"] = {"url": "attachment://themes_rs.png"}
-    elif (work / "themes_rs.png").exists():
-        (work / "themes_rs.png").unlink()
+            log.warning("grafici RS dei temi: %s", e)
+    for fn, prefix in (("themes_rs.png", "**THEMES**"), ("themes_rs_3m.png", "Month RS (x) vs Quarter RS (y)")):
+        emb = next((e for e in embeds if e["description"].startswith(prefix)), None)
+        if fn in pngs and emb is not None:
+            (work / fn).write_bytes(pngs[fn])
+            emb["image"] = {"url": f"attachment://{fn}"}
+        elif (work / fn).exists():
+            (work / fn).unlink()
     card = {"embeds": embeds, "allowed_mentions": {"parse": []}}
     summ = summary_it(res, doc)
     write_atomic(work / "card.json", card)

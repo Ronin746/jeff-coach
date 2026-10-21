@@ -22,8 +22,9 @@ def quadrant(rs_w: float, rs_m: float) -> str:
     return "Improving" if rs_w >= 50 else "Weak"
 
 
-def add_rs(rows: list[dict], key_w: str = "ret1w", key_m: str = "ret1m") -> list[dict]:
-    """RS settimanale e mensile: rendimento equal-weight del basket a 5 e 21 sedute in percentile 0-100 tra i basket."""
+def add_rs(rows: list[dict], key_w: str = "ret1w", key_m: str = "ret1m", key_q: str = "ret3m") -> list[dict]:
+    """RS settimanale, mensile e trimestrale: rendimento equal-weight del basket a 5, 21 e 63 sedute in percentile
+    0-100 tra i basket [RONIN 21/10: grafico settimana/mese e mese/trimestre]."""
     ok = [r for r in rows if r.get(key_w) is not None and r.get(key_m) is not None]
     n = len(ok)
     if not n:
@@ -42,15 +43,34 @@ def add_rs(rows: list[dict], key_w: str = "ret1w", key_m: str = "ret1m") -> list
             i = j + 1
         return out
     w, m = pct([r[key_w] for r in ok]), pct([r[key_m] for r in ok])
-    for r, a, b in zip(ok, w, m):
+    q = pct([r.get(key_q) if r.get(key_q) is not None else float("-inf") for r in ok])
+    for r, a, b, c in zip(ok, w, m, q):
         r["rs_w"], r["rs_m"] = round(a, 1), round(b, 1)
+        r["rs_q"] = round(c, 1) if r.get(key_q) is not None else None
         r["quadrant"] = quadrant(r["rs_w"], r["rs_m"])
     return rows
 
 
-def render(points: list[dict], title: str = "Baskets — Week RS vs Month RS", subtitle: str = "") -> Optional[bytes]:
-    """points: [{theme, rs_w, rs_m, score?}] -> PNG (None se matplotlib manca o non ci sono punti)."""
-    pts = [p for p in points if p.get("rs_w") is not None and p.get("rs_m") is not None]
+CHARTS = {   # nome file: (asse X, asse Y, titolo, etichetta X, etichetta Y) [RONIN 21/10, Andrea: due immagini]
+    "themes_rs.png": ("rs_w", "rs_m", "Themes — Week RS vs Month RS", "Week RS", "Month RS"),
+    "themes_rs_3m.png": ("rs_m", "rs_q", "Themes — Month RS vs Quarter RS", "Month RS", "Quarter RS (3 months)"),
+}
+
+
+def render_all(points: list[dict], subtitle: str = "") -> dict[str, bytes]:
+    """Le due immagini della mappa dei temi: {nome file: PNG}."""
+    out = {}
+    for fn, (xk, yk, title, xl, yl) in CHARTS.items():
+        png = render(points, title, subtitle, xk, yk, xl, yl)
+        if png:
+            out[fn] = png
+    return out
+
+
+def render(points: list[dict], title: str = "Themes — Week RS vs Month RS", subtitle: str = "",
+           xk: str = "rs_w", yk: str = "rs_m", xl: str = "Week RS", yl: str = "Month RS") -> Optional[bytes]:
+    """points: [{theme, rs_w, rs_m, rs_q?, score?}] -> PNG (None se matplotlib manca o non ci sono punti)."""
+    pts = [dict(p, rs_w=p.get(xk), rs_m=p.get(yk)) for p in points if p.get(xk) is not None and p.get(yk) is not None]
     if not pts:
         return None
     try:
@@ -90,8 +110,8 @@ def render(points: list[dict], title: str = "Baskets — Week RS vs Month RS", s
     ax.tick_params(colors=FG, labelsize=10)
     for sp in ax.spines.values():
         sp.set_color(GRID)
-    ax.set_xlabel("Week RS (percentile among baskets)", color=FG, fontsize=11)
-    ax.set_ylabel("Month RS (percentile among baskets)", color=FG, fontsize=11)
+    ax.set_xlabel(f"{xl} (percentile among groups)", color=FG, fontsize=11)
+    ax.set_ylabel(f"{yl} (percentile among groups)", color=FG, fontsize=11)
     ax.set_title(title + (f"\n{subtitle}" if subtitle else ""), color=FG, fontsize=15, loc="left", pad=12)
     fig.tight_layout()
     buf = io.BytesIO()
