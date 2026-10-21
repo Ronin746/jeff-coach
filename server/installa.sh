@@ -56,7 +56,7 @@ for f in server/systemd/*; do
 done
 sudo systemctl daemon-reload
 sudo systemctl enable --now jeffcoach-alert.service
-sudo systemctl enable --now jeffcoach-aggiorna.timer
+sudo systemctl enable --now jeffcoach-aggiorna.timer jeffcoach-basket.timer
 if [ "$MEM_MB" -ge 2500 ]; then
   sudo systemctl enable --now jeffcoach-lista.timer jeffcoach-card.timer jeffcoach-settimana.timer
 else

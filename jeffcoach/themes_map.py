@@ -214,8 +214,101 @@ def load_manual() -> dict:
         return {}
 
 
+# ------------------------------------------------------------------ basket di Lone Stock Trader [RONIN 21/10]
+def build_lst_map(baskets: dict[str, list[str]], manual: Optional[dict] = None) -> dict:
+    """Mappa dai basket di Lone Stock Trader [RONIN 21/10, Andrea: "per tutti i gruppi prendili da questo sito"].
+    Ogni basket è un tema col suo nome del sito; un titolo sta in tutti i basket che lo contengono (ETF compresi:
+    COPX, XHB, IGV... sono membri come gli altri). Tema principale = il basket più piccolo che lo contiene (il più
+    specifico); a pari dimensione decide in daily l'andamento (correlazione con la mediana del basket).
+    Le modifiche a mano di data/themes/manuale.json valgono come prima."""
+    themes: dict[str, set[str]] = {}
+    for b, mem in baskets.items():
+        for t in mem:
+            themes.setdefault(yahoo(t), set()).add(b)
+    size = {b: len(set(v)) for b, v in baskets.items()}
+    prim: dict[str, Optional[str]] = {}
+    ties: dict[str, list[str]] = {}
+    source = {t: "lst" for t in themes}
+    for t, bs in themes.items():
+        small = min(size[b] for b in bs)
+        tied = sorted(b for b in bs if size[b] == small)
+        prim[t] = tied[0]
+        if len(tied) > 1:
+            ties[t] = tied
+    for t, th in ((manual or {}).get("aggiungi") or {}).items():
+        t = yahoo(t)
+        themes.setdefault(t, set()).add(th)
+        prim[t], source[t] = th, "manuale"
+        ties.pop(t, None)
+    for t, th in ((manual or {}).get("togli") or {}).items():
+        t = yahoo(t)
+        if t in themes:
+            themes[t].discard(th)
+            if prim.get(t) == th:
+                rest = sorted(themes[t], key=lambda b: (size.get(b, 999), b))
+                prim[t] = rest[0] if rest else None
+            if not themes[t]:
+                themes.pop(t)
+    tickers = {t: {"primary": prim.get(t), "themes": sorted(th), "source": source.get(t, "lst")} for t, th in themes.items()}
+    for t, tied in ties.items():
+        if t in tickers and tickers[t]["source"] == "lst":
+            tickers[t]["tied"] = tied
+    members = {b: [yahoo(t) for t in v] for b, v in baskets.items()}
+    for t, th in ((manual or {}).get("aggiungi") or {}).items():
+        members.setdefault(th, [])
+        if yahoo(t) not in members[th]:
+            members[th].append(yahoo(t))
+    for t, th in ((manual or {}).get("togli") or {}).items():
+        if th in members and yahoo(t) in members[th]:
+            members[th].remove(yahoo(t))
+    origin = {b: "lst" for b in baskets}
+    for th in ((manual or {}).get("aggiungi") or {}).values():
+        origin.setdefault(th, "manuale")
+    return {"tickers": tickers, "themes": origin, "theme_etfs": {}, "baskets": members}
+
+
+def refresh_lst() -> dict:
+    """Mappa dai basket LST salvati nel repo (data/themes/lst_baskets.json, aggiornati il lunedì alle 01:00 da
+    lst_baskets.py sul server). Si ricostruisce quando cambia il file dei basket o il file manuale."""
+    from . import lst_baskets as LB
+    src = LB.load()
+    old = None
+    if MAP_FILE.exists():
+        try:
+            old = json.loads(MAP_FILE.read_text(encoding="utf-8"))
+        except ValueError:
+            old = None
+    if not src or not src.get("baskets"):
+        if old and old.get("membership") == "lst":
+            log.warning("temi: file dei basket LST mancante, tengo la mappa del %s", (old.get("built_utc") or "")[:10])
+            return old
+        raise RuntimeError("nessun file dei basket LST (data/themes/lst_baskets.json)")
+    manual = load_manual()
+    mh = json.dumps(manual, sort_keys=True)
+    if old and old.get("membership") == "lst" and old.get("baskets_fetched_utc") == src["fetched_utc"] \
+            and old.get("manual_hash") == mh:
+        return old
+    m = build_lst_map(src["baskets"], manual)
+    doc = {"built_utc": datetime.now(timezone.utc).isoformat(), "membership": "lst", "manual_hash": mh,
+           "sources": {"baskets": src.get("source")}, "baskets_fetched_utc": src["fetched_utc"],
+           "basket_changes": src.get("changes"), **m}
+    if old:
+        o, n = set(old.get("tickers", {})), set(m["tickers"])
+        doc["changes"] = {"added": sorted(n - o)[:200], "removed": sorted(o - n)[:200]}
+    DIR.mkdir(parents=True, exist_ok=True)
+    tmp = MAP_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(doc, indent=1, ensure_ascii=False), encoding="utf-8")
+    tmp.replace(MAP_FILE)
+    if not MANUAL_FILE.exists():
+        MANUAL_FILE.write_text(json.dumps({"aggiungi": {}, "togli": {}}, indent=1), encoding="utf-8")
+    log.info("temi: %d titoli in %d basket LST (basket del %s)", len(m["tickers"]), len(m["themes"]), src["fetched_utc"][:10])
+    return doc
+
+
 def refresh(force: bool = False) -> dict:
     """Mappa aggiornata: si riscaricano le fonti il lunedì o se la mappa ha più di 6 giorni; altrimenti quella salvata."""
+    if getattr(C, "THEME_SOURCE", "etf") == "lst":
+        return refresh_lst()
     old = None
     if MAP_FILE.exists():
         old = json.loads(MAP_FILE.read_text(encoding="utf-8"))

@@ -65,7 +65,7 @@ def _request(url: str, method: str, body: bytes, ctype: str) -> dict[str, Any]:
 def _multipart(payload: dict, filename: str, content: bytes, extra: Optional[list] = None) -> tuple[bytes, str]:
     """payload_json + file principale (txt) + altri file [(nome, byte, content-type)] (grafico del regime, 16/10)."""
     b = uuid.uuid4().hex
-    files = [(filename, content, "text/plain")] + list(extra or [])
+    files = [(filename, content, "image/png" if filename.endswith(".png") else "text/plain")] + list(extra or [])
     body = (f"--{b}\r\nContent-Disposition: form-data; name=\"payload_json\"\r\nContent-Type: application/json\r\n\r\n".encode()
             + json.dumps(payload).encode())
     for k, (fn, data, ct) in enumerate(files):
@@ -116,6 +116,9 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     png = work / "breadth.png"
     if png.exists() and "attachment://breadth.png" in json.dumps(parts[0] if parts else []):
         files.append(("breadth.png", png.read_bytes(), "image/png"))
+    rs_png = work / "themes_rs.png"                 # grafico RS dei basket in testa ai temi [RONIN 21/10]
+    if rs_png.exists() and "attachment://themes_rs.png" in json.dumps(parts[0] if parts else []):
+        files.append(("themes_rs.png", rs_png.read_bytes(), "image/png"))
     payload = {"username": C.CARD_USERNAME, **extra, "embeds": parts[0] if parts else [], "components": [],
                "attachments": [{"id": 0, "filename": fname}] + [{"id": k + 1, "filename": f[0]} for k, f in enumerate(files)]}
     body, ctype = _multipart(payload, fname, txt_path.read_bytes(), files)
@@ -140,12 +143,16 @@ def post_card(session: date, dry_run: bool = False) -> dict:
     old_more = list(prev.get("more_message_ids") or [])
     more = []
     for i, emb in enumerate(parts[1:]):
-        pl = json.dumps({"username": C.CARD_USERNAME, **extra, "embeds": emb}).encode()
+        pl, pct = json.dumps({"username": C.CARD_USERNAME, **extra, "embeds": emb}).encode(), "application/json"
+        if rs_png.exists() and "attachment://themes_rs.png" in json.dumps(emb):     # grafico RS nella continuazione
+            pl, pct = _multipart({"username": C.CARD_USERNAME, **extra, "embeds": emb,
+                                  "attachments": [{"id": 0, "filename": "themes_rs.png"}]},
+                                 "themes_rs.png", rs_png.read_bytes())
         if i < len(old_more):
-            r = _request(f"{base}/messages/{old_more[i]}", "PATCH", pl, "application/json")
+            r = _request(f"{base}/messages/{old_more[i]}", "PATCH", pl, pct)
             r.setdefault("message_id", old_more[i])
         else:
-            r = _request(url + q + "wait=true", "POST", pl, "application/json")
+            r = _request(url + q + "wait=true", "POST", pl, pct)
         if r.get("ok"):
             more.append(r["message_id"])
     for mid in old_more[len(parts) - 1:]:

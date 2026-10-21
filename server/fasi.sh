@@ -64,6 +64,11 @@ case "${1:-}" in
     "$PY" -m jeffcoach.weekly --skip-if-done
     pubblica "Settimana"
     ;;
+  basket)      # basket di Lone Stock Trader per i temi [RONIN 21/10]: la copia comune ~/.lst che il bot di Martin
+    #              legge alle 01:00; se manca o è vecchia si legge il sito con la sessione comune (o LST_TOKEN_0/1 in .env)
+    allinea
+    if "$PY" -m jeffcoach.lst_baskets; then pubblica "Basket LST"; else echo "basket LST non aggiornati: tengo quelli di prima"; exit 1; fi
+    ;;
   *)
-    echo "uso: fasi.sh aggiorna|lista|card|settimana"; exit 2 ;;
+    echo "uso: fasi.sh aggiorna|lista|card|settimana|basket"; exit 2 ;;
 esac

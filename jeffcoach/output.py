@@ -105,10 +105,38 @@ def regime_line(reg: Optional[dict], themes_line: Optional[str] = None) -> str:
     return "\n".join(L)
 
 
+def themes_head(th: Optional[dict]) -> Optional[str]:
+    """Apertura della sezione temi con i basket di Lone Stock Trader [RONIN 21/10]: il grafico RS settimana / mese
+    (allegato themes_rs.png, aggiunto in daily) va in questo riquadro."""
+    if not th or not th.get("ranking"):
+        return None
+    return (f"**THEMES — Lone Stock Trader baskets**" + (f" (as of {th['baskets_fetched']})" if th.get("baskets_fetched") else "")
+            + "\nWeek RS (x) vs Month RS (y): percentile of each basket's equal-weight return among all baskets")
+
+
+def themes_ranking(th: Optional[dict], k: int = 5) -> Optional[str]:
+    """Classifica complessiva dei basket sul 7-factor (media equal-weight dei titoli del basket) [RONIN 21/10]."""
+    if not th or not th.get("ranking"):
+        return None
+    pct = lambda v: "n/a" if v is None else f"{v:+.1f}%"
+
+    def ln(x):
+        d5 = f" ({x['d5']:+.0f} 5d)" if x.get("d5") is not None else ""
+        tk = f" ({', '.join(x['tickers'][:k])})" if x.get("tickers") and k else ""
+        return (f"`{x['rank']:>2}` **{x['theme']}** — 7F `{x['score']}`{d5} · W `{x['rs_w']:.0f}` M `{x['rs_m']:.0f}` "
+                f"{x['quadrant']} · 1W {pct(x.get('ret1w'))} 1M {pct(x.get('ret1m'))}{tk}")
+    L = [f"**Overall ranking — 7-factor, equal-weight of members ({th.get('ranked_n', 0)} baskets)**"]
+    L += [ln(x) for x in th["ranking"]]
+    if th.get("bottom"):
+        L += ["", "**Weakest**"] + [ln(x) for x in th["bottom"]]
+    return "\n".join(L)[:3900]
+
+
 def themes_section(th: Optional[dict]) -> Optional[str]:
     if not th or not th.get("n_themes"):
         return None
-    L = [f"**THEMES** — LEADING / BUILDING ({len(th['leading'])} of {th['n_themes']}) · score on the theme ETFs (7 factors)"]
+    basis = "7 factors, equal-weight of the basket names" if th.get("ranking") else "score on the theme ETFs (7 factors)"
+    L = [f"**THEMES** — LEADING / BUILDING ({len(th['leading'])} of {th['n_themes']}) · {basis}"]
     for t in th["leading"][:10]:
         tk = f" ({', '.join(t['tickers'])})" if t.get("tickers") else (f" ({', '.join(t['etfs'][:3])})" if t.get("etfs") else "")
         L.append(f"{'★' if t.get('stage') == 'LEADING' else '•'} {t['theme']} — score {t['score']} · {t.get('stage')}"
@@ -151,9 +179,9 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
                                       + ("" if d.get("above_sma200") else " · under SMA200"))
                     for d in dtl_breaks]
             parts.append(sect(f"DOWNTREND LINE BREAK — vol ≥1.5× ({len(rows)})", rows, s_lim))
-        ts = themes_section(themes)
-        if ts:
-            parts.append(ts)
+        for ts in (themes_head(themes), themes_ranking(themes), themes_section(themes)):
+            if ts:
+                parts.append(ts)
         return parts                                # una sezione per embed, sempre [RONIN 09/10]
     # oltre i 6000 caratteri a messaggio la card continua in un secondo messaggio (discord.post_card): le frasi
     # si accorciano solo se una singola sezione supera i 4096 caratteri di un riquadro

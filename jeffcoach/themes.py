@@ -74,9 +74,76 @@ def _ret(df: pd.DataFrame, n: int = 21) -> Optional[float]:
     return float((c.iloc[-1] / c.iloc[-1 - n] - 1) * 100) if len(c) > n else None
 
 
+def build_lst(daily: dict[str, pd.DataFrame], universe: set[str], metrics: dict[str, dict], tmap: dict) -> dict:
+    """Temi = basket di Lone Stock Trader [RONIN 21/10, Andrea, come Martin]: punteggio del basket = media equal-weight
+    del Final_Score a 7 fattori di TUTTI i suoi titoli (percentili su tutti i titoli dei basket, nessun filtro di
+    liquidità), d5 sui punteggi di 5 sedute fa, stadio come prima; RS settimanale e mensile = rendimento equal-weight
+    a 5 e 21 sedute in percentile tra i basket (grafico in testa alla sezione temi della card)."""
+    from . import rs_chart as RC
+    bench = daily.get(C.BASKET_BENCHMARK)
+    if bench is None:
+        raise RuntimeError(f"manca {C.BASKET_BENCHMARK}")
+    last = bench.index[-1]
+    baskets = {b: [t for t in dict.fromkeys(v) if t in daily and daily[t].index[-1] == last] for b, v in tmap["baskets"].items()}
+    allm = sorted({t for v in baskets.values() for t in v})
+    sc = BS.universe_scores(daily, allm, bench)
+    cut = {t: daily[t].iloc[:-5] for t in allm + [C.BASKET_BENCHMARK] if t in daily}
+    sc_prev = BS.universe_scores(cut, allm, cut.get(C.BASKET_BENCHMARK))
+    if sc is None or not len(sc):
+        raise RuntimeError("nessun titolo dei basket con dati sufficienti")
+    fs = sc["Final_Score"].to_dict()
+    spy21 = _ret(bench)
+    rows = []
+    for b, mem in baskets.items():
+        st = BS.basket_stats(mem, sc)
+        if st is None or st["n_scored"] < C.LST_MIN_SCORED:
+            continue
+        pv = BS.basket_stats(mem, sc_prev) if sc_prev is not None and len(sc_prev) else None
+        d5 = round(st["score"] - pv["score"], 1) if pv else 0.0
+        mem_s = sorted(mem, key=lambda x: (x not in fs, -fs.get(x, 0)))
+        rows.append(dict(theme=b, etfs=None, n=st["n_scored"], members=mem_s, score=st["score"], ret21=st["ret1m"],
+                         rs21=(st["ret1m"] - spy21) if spy21 is not None else None, ret1w=st["ret1w"], ret1m=st["ret1m"],
+                         ret3m=st["ret3m"], d5=d5, stage=stage(st["score"], d5), source="lst"))
+    rows.sort(key=lambda r: -r["score"])
+    RC.add_rs(rows)
+    for k, r in enumerate(rows, 1):
+        r["rank"] = k
+        r["leading"] = r["stage"] == "LEADING"
+        r["trend"] = {"LEADING": "up", "BUILDING": "up", "SLIPPING": "down", "WEAK": "down", "BEARISH": "down"}.get(r["stage"], "neutral")
+    ranked = {r["theme"] for r in rows}
+    liquid = {s for s in universe if (metrics.get(s) or {}).get("adv") and metrics[s]["adv"] >= C.THEME_DV_MIN}
+    tick: dict[str, str] = {}
+    for r in rows:                         # il basket col punteggio più alto che contiene il titolo...
+        for t in r["members"]:
+            if t in liquid:
+                tick.setdefault(t, r["theme"])
+    tinfo = tmap.get("tickers") or {}
+    for s, info in tinfo.items():          # ...poi il principale della mappa (basket più piccolo) se è in classifica
+        if s in liquid and info.get("primary") in ranked:
+            tick[s] = info["primary"]
+    try:
+        ties = {s: [th for th in info["tied"] if th in ranked] for s, info in tinfo.items() if s in liquid and info.get("tied")}
+        ties = {s: v for s, v in ties.items() if len(v) > 1}
+        groups = {r["theme"]: r["members"] for r in rows}
+        cols = sorted(({s for s in ties} | {x for v in groups.values() for x in v}) & set(daily))
+        closes = pd.DataFrame({s: daily[s].Close for s in cols}).iloc[-62:]
+        tick.update(break_ties(closes, groups, ties, min_members=C.THEME_MIN_MEMBERS))
+    except Exception as e:
+        log.warning("pari merito temi: %s", e)
+    for r in rows:
+        r["members"] = r["members"][:10]
+        for k, v in list(r.items()):
+            if isinstance(v, (np.floating,)):
+                r[k] = float(v)
+    return {"rows": rows, "ticker": tick, "map_built": tmap.get("built_utc"), "membership": "lst",
+            "baskets_fetched": (tmap.get("baskets_fetched_utc") or "")[:10]}
+
+
 def build(daily: dict[str, pd.DataFrame], spx: pd.Series, universe: set[str], metrics: dict[str, dict], tmap: dict) -> dict:
     """Ritorna {"rows": [...], "ticker": {titolo: tema}, "map_built"}. Righe in ordine di punteggio."""
     from . import themes_map as TM
+    if C.THEME_SOURCE == "lst" and tmap.get("baskets"):
+        return build_lst(daily, universe, metrics, tmap)
     bench = daily.get(C.BASKET_BENCHMARK)
     theme_etfs = tmap.get("theme_etfs") or {}
     all_etfs = sorted({e for v in theme_etfs.values() for e in v})

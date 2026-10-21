@@ -1,0 +1,9 @@
+[Unit]
+Description=Jeff Coach - orario: lunedi 01:10 (basket Lone Stock Trader)
+
+[Timer]
+OnCalendar=Mon 01:10 Europe/Rome
+Persistent=true
+
+[Install]
+WantedBy=timers.target

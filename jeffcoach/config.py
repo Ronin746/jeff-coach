@@ -270,6 +270,12 @@ ALERT_COOLDOWN_MIN = 60
 # Andrea con le partecipazioni dal repo di NEL, modifiche a mano (state/themes/manuale.json); industria Yahoo come riserva.
 THEME_ETF_SHEET_CSV = "https://docs.google.com/spreadsheets/d/1OSC1ovj4y5I-Yb_xBsMNvexgAOSUbLJRzbQU9W9uCNM/export?format=csv&gid=305077282"
 THEME_ETF_HOLDINGS_URL = "https://raw.githubusercontent.com/i-manage-risk/NEL/main/data/etf_holdings_cache.json"
+# [RONIN 21/10, Andrea, come Martin] temi = basket di Lone Stock Trader (data/themes/lst_baskets.json, aggiornati il
+# lunedì alle 01:00 dal server); punteggio del basket = media equal-weight del 7-factor di tutti i suoi titoli; grafico
+# RS settimana / mese dei basket in testa alla sezione temi della card.
+THEME_SOURCE = "lst"
+LST_MIN_SCORED = 3               # un basket entra in classifica con almeno 3 titoli con storia sufficiente
+THEME_RANK_ROWS = 15             # basket nella classifica complessiva della card
 THEME_DV_MIN = 75e6              # un titolo conta in un tema con controvalore medio >= 75M$ (come Martin)
 THEME_MIN_MEMBERS = 3            # un tema entra in classifica con almeno 3 titoli liquidi
 # Trend del tema: indice a pesi uguali dei suoi titoli (mediana delle variazioni giornaliere).
