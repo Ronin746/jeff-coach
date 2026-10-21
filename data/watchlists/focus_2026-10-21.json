@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-20",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-21 10:45 CEST",
+  "asof_rome": "2026-10-21 11:06 CEST",
   "focus": [
     "ATRC",
     "NTRA"
@@ -61,7 +61,7 @@
       "trendline_next": 57.57,
       "industry": "Medical Instruments & Supplies",
       "sector": "Healthcare",
-      "group_pctl": 73,
+      "group_pctl": 72,
       "leader": [
         "3m",
         "6m"
@@ -130,7 +130,7 @@
       "trendline_next": null,
       "industry": "Oil & Gas E&P",
       "sector": "Energy",
-      "group_pctl": 94,
+      "group_pctl": 95,
       "leader": [],
       "carry_days": 3,
       "channel": null,
@@ -442,7 +442,7 @@
       "trendline_next": 223.7,
       "industry": "Software—Application",
       "sector": "Technology",
-      "group_pctl": 85,
+      "group_pctl": 87,
       "leader": [
         "3m",
         "6m"
@@ -480,7 +480,7 @@
       "trendline_next": 16.83,
       "industry": "Medical Instruments & Supplies",
       "sector": "Healthcare",
-      "group_pctl": 73,
+      "group_pctl": 72,
       "leader": [],
       "carry_days": 3,
       "channel": "at the upper line",
@@ -825,7 +825,7 @@
       "trendline_next": 29.37,
       "industry": "Trucking",
       "sector": "Industrials",
-      "group_pctl": 51,
+      "group_pctl": 54,
       "leader": [
         "1m"
       ],
@@ -861,7 +861,7 @@
       "trendline_next": 215.99,
       "industry": "Beverages—Non-Alcoholic",
       "sector": "Consumer Defensive",
-      "group_pctl": 83,
+      "group_pctl": 84,
       "leader": [],
       "carry_days": 0,
       "channel": "breakout",
@@ -894,7 +894,7 @@
       "trendline_next": 180.06,
       "industry": "Software—Application",
       "sector": "Technology",
-      "group_pctl": 85,
+      "group_pctl": 87,
       "leader": [
         "1m"
       ],
@@ -931,7 +931,7 @@
       "trendline_next": 115.27,
       "industry": "Internet Retail",
       "sector": "Consumer Cyclical",
-      "group_pctl": 41,
+      "group_pctl": 40,
       "leader": [],
       "carry_days": 3,
       "channel": "extended above",
@@ -1035,7 +1035,7 @@
       "trendline_next": 90.32,
       "industry": "Internet Retail",
       "sector": "Consumer Cyclical",
-      "group_pctl": 41,
+      "group_pctl": 40,
       "leader": [],
       "carry_days": 0,
       "channel": "extended above",
@@ -1069,7 +1069,7 @@
       "trendline_next": 10.13,
       "industry": "Banks—Regional",
       "sector": "Financial Services",
-      "group_pctl": 55,
+      "group_pctl": 53,
       "leader": [],
       "carry_days": 0,
       "channel": "extended above",
@@ -1137,7 +1137,7 @@
       "trendline_next": 7.91,
       "industry": "Software—Application",
       "sector": "Technology",
-      "group_pctl": 85,
+      "group_pctl": 87,
       "leader": [],
       "carry_days": 0,
       "channel": null,
@@ -1383,15 +1383,17 @@
       ]
     },
     {
-      "industry": "Oil & Gas Drilling",
+      "industry": "Oil & Gas E&P",
       "pctl": 95,
       "median_rs": 89,
-      "n": 5,
-      "strong": 2,
-      "in_list": []
+      "n": 30,
+      "strong": 12,
+      "in_list": [
+        "APA"
+      ]
     },
     {
-      "industry": "Steel",
+      "industry": "Oil & Gas Drilling",
       "pctl": 94,
       "median_rs": 88,
       "n": 6,
@@ -1410,8 +1412,8 @@
       "upper_line_next": 77.0,
       "pos": 0.35,
       "width_atr": 2.8,
-      "ma65": 66.1,
-      "sma30_65m": 66.1,
+      "ma65": 66.34,
+      "sma30_65m": 66.34,
       "above_ma65": true,
       "above_sma30_65m": true,
       "ema9": 65.83,
@@ -1468,8 +1470,8 @@
       "upper_line_next": 356.97,
       "pos": 0.31,
       "width_atr": 4.9,
-      "ma65": 303.65,
-      "sma30_65m": 303.65,
+      "ma65": 304.2,
+      "sma30_65m": 304.2,
       "above_ma65": true,
       "above_sma30_65m": true,
       "ema9": 303.52,
@@ -1497,15 +1499,15 @@
       "upper_line_next": 63.95,
       "pos": 0.99,
       "width_atr": 3.6,
-      "ma65": 62.27,
-      "sma30_65m": 62.27,
+      "ma65": 62.38,
+      "sma30_65m": 62.38,
       "above_ma65": true,
       "above_sma30_65m": true,
       "ema9": 62.42,
       "under_ema9": false,
       "atr": 2.08,
       "industry": "Software—Application",
-      "group_pctl": 85,
+      "group_pctl": 87,
       "lines": {
         "start": "2026-06-16",
         "end": "2026-10-20",
@@ -1526,8 +1528,8 @@
       "upper_line_next": 458.12,
       "pos": 0.2,
       "width_atr": 3.8,
-      "ma65": 400.63,
-      "sma30_65m": 400.63,
+      "ma65": 400.79,
+      "sma30_65m": 400.79,
       "above_ma65": true,
       "above_sma30_65m": true,
       "ema9": 400.09,
@@ -1555,8 +1557,8 @@
       "upper_line_next": 94.46,
       "pos": 0.35,
       "width_atr": 3.6,
-      "ma65": 84.39,
-      "sma30_65m": 84.39,
+      "ma65": 84.47,
+      "sma30_65m": 84.47,
       "above_ma65": false,
       "above_sma30_65m": false,
       "ema9": 84.39,
@@ -1584,8 +1586,8 @@
       "upper_line_next": 231.44,
       "pos": 0.22,
       "width_atr": 5.1,
-      "ma65": 190.0,
-      "sma30_65m": 190.0,
+      "ma65": 189.84,
+      "sma30_65m": 189.84,
       "above_ma65": true,
       "above_sma30_65m": true,
       "ema9": 190.78,
@@ -1613,8 +1615,8 @@
       "upper_line_next": 130.57,
       "pos": 0.46,
       "width_atr": 4.7,
-      "ma65": 115.86,
-      "sma30_65m": 115.86,
+      "ma65": 115.6,
+      "sma30_65m": 115.6,
       "above_ma65": false,
       "above_sma30_65m": false,
       "ema9": 116.22,
@@ -1642,8 +1644,8 @@
       "upper_line_next": 176.43,
       "pos": 0.16,
       "width_atr": 4.0,
-      "ma65": 154.01,
-      "sma30_65m": 154.01,
+      "ma65": 154.12,
+      "sma30_65m": 154.12,
       "above_ma65": true,
       "above_sma30_65m": true,
       "ema9": 153.44,
@@ -1671,8 +1673,8 @@
       "upper_line_next": 321.0,
       "pos": 0.19,
       "width_atr": 4.7,
-      "ma65": 266.21,
-      "sma30_65m": 266.21,
+      "ma65": 264.76,
+      "sma30_65m": 264.76,
       "above_ma65": false,
       "above_sma30_65m": false,
       "ema9": 267.24,
@@ -1700,8 +1702,8 @@
       "upper_line_next": 36.38,
       "pos": 0.34,
       "width_atr": 2.4,
-      "ma65": 32.9,
-      "sma30_65m": 32.9,
+      "ma65": 32.94,
+      "sma30_65m": 32.94,
       "above_ma65": true,
       "above_sma30_65m": true,
       "ema9": 32.83,
@@ -1729,15 +1731,15 @@
       "upper_line_next": 43.48,
       "pos": 0.12,
       "width_atr": 3.9,
-      "ma65": 38.72,
-      "sma30_65m": 38.72,
+      "ma65": 38.62,
+      "sma30_65m": 38.62,
       "above_ma65": false,
       "above_sma30_65m": false,
       "ema9": 38.74,
       "under_ema9": true,
       "atr": 1.54,
       "industry": "Oil & Gas Midstream",
-      "group_pctl": 86,
+      "group_pctl": 85,
       "lines": {
         "start": "2026-07-24",
         "end": "2026-10-20",
@@ -1758,8 +1760,8 @@
       "upper_line_next": 218.7,
       "pos": 0.92,
       "width_atr": 4.2,
-      "ma65": 215.42,
-      "sma30_65m": 215.42,
+      "ma65": 215.52,
+      "sma30_65m": 215.52,
       "above_ma65": false,
       "above_sma30_65m": false,
       "ema9": 215.43,
@@ -1787,8 +1789,8 @@
       "upper_line_next": 473.29,
       "pos": 0.34,
       "width_atr": 3.4,
-      "ma65": 437.26,
-      "sma30_65m": 437.26,
+      "ma65": 437.68,
+      "sma30_65m": 437.68,
       "above_ma65": true,
       "above_sma30_65m": true,
       "ema9": 436.79,
@@ -1816,15 +1818,15 @@
       "upper_line_next": 46.23,
       "pos": 0.5,
       "width_atr": 5.4,
-      "ma65": 39.8,
-      "sma30_65m": 39.8,
+      "ma65": 39.86,
+      "sma30_65m": 39.86,
       "above_ma65": true,
       "above_sma30_65m": true,
       "ema9": 39.87,
       "under_ema9": false,
       "atr": 1.62,
       "industry": "Internet Retail",
-      "group_pctl": 41,
+      "group_pctl": 40,
       "lines": {
         "start": "2026-03-26",
         "end": "2026-10-20",
@@ -1868,7 +1870,7 @@
       "higher_low": true,
       "range5_atr": 2.2,
       "industry": "Software—Application",
-      "group_pctl": 85,
+      "group_pctl": 87,
       "text": "PEG 2026-08-28 +24% (4.9x vol), back in the PEG range 83.74-108.00, pivot 101.39"
     },
     {
@@ -1902,7 +1904,7 @@
       "higher_low": true,
       "range5_atr": 2.1,
       "industry": "Software—Application",
-      "group_pctl": 85,
+      "group_pctl": 87,
       "text": "PEG 2026-08-27 +12% (3.9x vol), back in the PEG range 205.62-254.48, pivot 251.94"
     },
     {
@@ -3458,8 +3460,8 @@
       "potential trend reversal: ±4% flow turned to buying on 2026-10-20 (day 1 of 2)",
       "pool lists: score -2 → DEFENSIVE",
       "pool (167): Leading 47% of Leading+Lagging · Leading 45 / Mediocre 71 / Lagging 50",
-      "pool flow 5d -19.4% (8 up, 37 down)",
-      "pool flow trend mixed (+1.9% -11.2% -0.6% +2.4%)",
+      "pool flow 5d -19.9% (8 up, 38 down)",
+      "pool flow trend mixed (+1.9% -11.1% -0.6% +2.4%)",
       "Market Monitor Expansion (context)"
     ],
     "market_monitor": {
@@ -6513,12 +6515,11 @@
       "etfs": [
         "HYDR"
       ],
-      "n": 5,
+      "n": 4,
       "members": [
         "APD",
         "BE",
         "CMI",
-        "FCEL",
         "PLUG"
       ],
       "score": 37.788,
@@ -6930,9 +6931,9 @@
     }
   ],
   "funnel": {
-    "downloaded": 1768,
+    "downloaded": 1777,
     "stale_last_bar": 2,
-    "universe_numeric": 863,
+    "universe_numeric": 861,
     "candidates": 312,
     "out_universe": 14,
     "focus": 2,
@@ -7137,7 +7138,7 @@
         "industry": "Entertainment",
         "sector": "Communication Services",
         "group_pctl": 75,
-        "group_n": 20,
+        "group_n": 21,
         "group_level": "industry",
         "leader": [],
         "c_shape": "pennant",
@@ -7152,10 +7153,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 2.979593204834707,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 2.98391168125744,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-22"
@@ -7262,7 +7263,7 @@
         "peg_found": false,
         "industry": "Oil & Gas E&P",
         "sector": "Energy",
-        "group_pctl": 94,
+        "group_pctl": 95,
         "group_n": 30,
         "group_level": "industry",
         "leader": [],
@@ -7280,10 +7281,10 @@
         "theme_rank": 1
       },
       "sma30_65m": {
-        "ma65": 47.79413381628739,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 48.06152743544912,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-04"
@@ -7438,7 +7439,7 @@
         "peg_why": [],
         "industry": "Medical Instruments & Supplies",
         "sector": "Healthcare",
-        "group_pctl": 73,
+        "group_pctl": 72,
         "group_n": 22,
         "group_level": "industry",
         "leader": [
@@ -7457,10 +7458,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 56.52814065813044,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 12,
+        "ma65": 56.58777006407253,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-03"
@@ -7487,7 +7488,7 @@
         },
         "sma65": {
           "ok": false,
-          "why": "closed under the 65m EMA50 (84.25 vs 85.93)"
+          "why": "closed under the 65m EMA50 (84.25 vs 85.98)"
         },
         "ema9": {
           "ok": false,
@@ -7702,10 +7703,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 85.92902774450751,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 8,
+        "ma65": 85.97724304360938,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-05"
@@ -7880,7 +7881,7 @@
         "peg_found": false,
         "industry": "Medical Instruments & Supplies",
         "sector": "Healthcare",
-        "group_pctl": 73,
+        "group_pctl": 72,
         "group_n": 22,
         "group_level": "industry",
         "leader": [],
@@ -7899,10 +7900,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 16.028203120328893,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 16.08953195703844,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-28"
@@ -8112,7 +8113,7 @@
         "peg_found": false,
         "industry": "Credit Services",
         "sector": "Financial Services",
-        "group_pctl": 50,
+        "group_pctl": 49,
         "group_n": 20,
         "group_level": "industry",
         "leader": [],
@@ -8133,10 +8134,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 101.86787250294938,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 20,
+        "ma65": 102.07458346249054,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-22"
@@ -8327,8 +8328,8 @@
         ],
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [
           "3m"
@@ -8345,10 +8346,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 30.381042669528664,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 30.49051989082711,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -8505,10 +8506,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 113.32523566094049,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 2,
+        "ma65": 113.84209062145453,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-27"
@@ -8679,8 +8680,8 @@
         "peg_why": [],
         "industry": "Software—Application",
         "sector": "Technology",
-        "group_pctl": 85,
-        "group_n": 74,
+        "group_pctl": 87,
+        "group_n": 76,
         "group_level": "industry",
         "leader": [],
         "c_shape": "flat base",
@@ -8697,10 +8698,10 @@
         "theme_rank": 9
       },
       "sma30_65m": {
-        "ma65": 7.463535442366727,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 7.5040831936676335,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-29"
@@ -8897,10 +8898,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 66.10008879610893,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 1,
+        "ma65": 66.3383131569686,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-29"
@@ -9093,10 +9094,10 @@
         "theme_rank": 16
       },
       "sma30_65m": {
-        "ma65": 68.43369506850725,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 68.73444144505609,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-27"
@@ -9236,7 +9237,7 @@
         "industry": "Entertainment",
         "sector": "Communication Services",
         "group_pctl": 75,
-        "group_n": 20,
+        "group_n": 21,
         "group_level": "industry",
         "leader": [],
         "c_shape": "flat base",
@@ -9254,10 +9255,10 @@
         "theme_rank": 49
       },
       "sma30_65m": {
-        "ma65": 38.417839600935444,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 38.58442183445761,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-04"
@@ -9412,7 +9413,7 @@
         "peg_found": false,
         "industry": "Beverages—Non-Alcoholic",
         "sector": "Consumer Defensive",
-        "group_pctl": 83,
+        "group_pctl": 84,
         "group_n": 9,
         "group_level": "industry",
         "leader": [],
@@ -9436,10 +9437,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 58.67577549435184,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 1,
+        "ma65": 58.87274991111693,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-22"
@@ -9631,7 +9632,7 @@
         "peg_found": false,
         "industry": "Beverages—Non-Alcoholic",
         "sector": "Consumer Defensive",
-        "group_pctl": 83,
+        "group_pctl": 84,
         "group_n": 9,
         "group_level": "industry",
         "leader": [],
@@ -9650,10 +9651,10 @@
         "theme_rank": 42
       },
       "sma30_65m": {
-        "ma65": 204.97333216981974,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 18,
+        "ma65": 205.88013608421846,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-28"
@@ -9848,10 +9849,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 32.499771831757315,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 32.577476298062166,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-29"
@@ -10024,8 +10025,8 @@
         "peg_found": false,
         "industry": "Software—Application",
         "sector": "Technology",
-        "group_pctl": 85,
-        "group_n": 74,
+        "group_pctl": 87,
+        "group_n": 76,
         "group_level": "industry",
         "leader": [],
         "c_shape": "flat base",
@@ -10042,10 +10043,10 @@
         "theme_rank": 7
       },
       "sma30_65m": {
-        "ma65": 153.4248529194128,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 16,
+        "ma65": 153.6930140937666,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-27"
@@ -10253,8 +10254,8 @@
         ],
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "bull flag",
@@ -10274,10 +10275,10 @@
         "theme_rank": 97
       },
       "sma30_65m": {
-        "ma65": 34.478085733612346,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 34.37741230158695,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -10470,10 +10471,10 @@
         "theme_rank": 1
       },
       "sma30_65m": {
-        "ma65": 123.6276455980429,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 124.1514607248537,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-28"
@@ -10705,10 +10706,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 102.58151389445715,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 103.11118265559726,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-02"
@@ -10871,11 +10872,10 @@
         "peg_pivot": 101.39,
         "peg_ok": true,
         "peg_why": [],
-        "peg_earnings": true,
         "industry": "Software—Application",
         "sector": "Technology",
-        "group_pctl": 85,
-        "group_n": 74,
+        "group_pctl": 87,
+        "group_n": 76,
         "group_level": "industry",
         "leader": [
           "3m"
@@ -10894,10 +10894,10 @@
         "theme_rank": 73
       },
       "sma30_65m": {
-        "ma65": 94.37309120354114,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 94.43830954653035,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-19"
@@ -11074,7 +11074,7 @@
         "peg_found": false,
         "industry": "Internet Retail",
         "sector": "Consumer Cyclical",
-        "group_pctl": 41,
+        "group_pctl": 40,
         "group_n": 15,
         "group_level": "industry",
         "leader": [],
@@ -11093,10 +11093,10 @@
         "theme_rank": 48
       },
       "sma30_65m": {
-        "ma65": 82.95206223022443,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 83.66814277214337,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-28"
@@ -11123,7 +11123,7 @@
         },
         "sma65": {
           "ok": false,
-          "why": "closed under the 65m EMA50 (68.87 vs 70.30)"
+          "why": "closed under the 65m EMA50 (68.87 vs 70.17)"
         },
         "ema9": {
           "ok": false,
@@ -11330,10 +11330,10 @@
         "theme_rank": 66
       },
       "sma30_65m": {
-        "ma65": 70.29804539005488,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 70.1725438333737,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-27"
@@ -11507,10 +11507,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 5.122702614415525,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 5.131891770295578,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-26"
@@ -11685,8 +11685,8 @@
         "peg_found": false,
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "ascending base",
@@ -11704,10 +11704,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 37.71269305870439,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 37.8676792572653,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -11863,7 +11863,7 @@
         "industry": "Medical Devices",
         "sector": "Healthcare",
         "group_pctl": 69,
-        "group_n": 28,
+        "group_n": 29,
         "group_level": "industry",
         "leader": [],
         "c_shape": "flat base",
@@ -11880,10 +11880,10 @@
         "theme_rank": 29
       },
       "sma30_65m": {
-        "ma65": 117.70596222329873,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 5,
+        "ma65": 118.14650511383995,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-05"
@@ -12079,10 +12079,10 @@
         "theme_rank": 16
       },
       "sma30_65m": {
-        "ma65": 102.8415249829426,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 103.2715686455812,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-02"
@@ -12294,10 +12294,10 @@
         "theme_rank": 25
       },
       "sma30_65m": {
-        "ma65": 419.0979590965904,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 420.3556292526525,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-06"
@@ -12471,10 +12471,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 267.7150198853979,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 267.5324765215507,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-29"
@@ -12624,7 +12624,7 @@
         "industry": "Medical Devices",
         "sector": "Healthcare",
         "group_pctl": 69,
-        "group_n": 28,
+        "group_n": 29,
         "group_level": "industry",
         "leader": [],
         "c_shape": "pennant",
@@ -12639,10 +12639,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 69.7644916837958,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 17,
+        "ma65": 69.80248257164848,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-02"
@@ -12797,8 +12797,8 @@
         "peg_why": [],
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [
           "1m",
@@ -12817,10 +12817,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 14.184147832374189,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 14.242416694283277,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -13018,8 +13018,8 @@
         "peg_why": [],
         "industry": "Banks—Regional",
         "sector": "Financial Services",
-        "group_pctl": 55,
-        "group_n": 61,
+        "group_pctl": 53,
+        "group_n": 62,
         "group_level": "industry",
         "leader": [],
         "c_shape": "flat base",
@@ -13036,10 +13036,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 9.605715934335944,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 9.622605281743514,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-03"
@@ -13232,8 +13232,8 @@
         "peg_why": [],
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [
           "1m",
@@ -13254,10 +13254,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 90.13027168594364,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 1,
+        "ma65": 90.66795023808596,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -13454,10 +13454,10 @@
         "theme_rank": 48
       },
       "sma30_65m": {
-        "ma65": 21.158962854380242,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 21.273406115419405,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-24"
@@ -13614,10 +13614,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 233.37716798444248,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 36,
+        "ma65": 233.90957054470712,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-04"
@@ -13839,10 +13839,10 @@
         "theme_rank": 31
       },
       "sma30_65m": {
-        "ma65": 619.9917036732129,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 18,
+        "ma65": 620.4296213635228,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-21"
@@ -13999,10 +13999,10 @@
         "theme_rank": 1
       },
       "sma30_65m": {
-        "ma65": 467.1229209626662,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 469.38469921381454,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-03"
@@ -14212,10 +14212,10 @@
         "theme_rank": 51
       },
       "sma30_65m": {
-        "ma65": 116.54467427237607,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 116.60946707781079,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-22"
@@ -14434,10 +14434,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 163.58715573877353,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 31,
+        "ma65": 163.77688015817114,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-05"
@@ -14626,10 +14626,10 @@
         "theme_rank": 31
       },
       "sma30_65m": {
-        "ma65": 400.63161585721394,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 2,
+        "ma65": 400.7923485755875,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-05"
@@ -14846,10 +14846,10 @@
         "theme_rank": 27
       },
       "sma30_65m": {
-        "ma65": 255.75482817403827,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 256.5334518506475,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-26"
@@ -15004,8 +15004,8 @@
         "peg_found": false,
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "falling wedge",
@@ -15027,10 +15027,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 77.26144920069336,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 12,
+        "ma65": 76.97763108549006,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -15248,10 +15248,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 84.85452704012069,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 84.82461022744924,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-03"
@@ -15444,8 +15444,8 @@
         "peg_why": [],
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "box",
@@ -15465,10 +15465,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 65.73331909231054,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 65.85857136378655,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -15659,10 +15659,10 @@
         "theme_rank": 1
       },
       "sma30_65m": {
-        "ma65": 287.0724738258423,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 288.1784763123333,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-28"
@@ -15856,7 +15856,7 @@
         "industry": "Software—Infrastructure",
         "sector": "Technology",
         "group_pctl": 93,
-        "group_n": 67,
+        "group_n": 68,
         "group_level": "industry",
         "leader": [
           "6m"
@@ -15876,10 +15876,10 @@
         "theme_rank": 4
       },
       "sma30_65m": {
-        "ma65": 189.99687752809967,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 8,
+        "ma65": 189.83579016271975,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-03"
@@ -16068,7 +16068,7 @@
         "peg_why": [],
         "industry": "Medical Instruments & Supplies",
         "sector": "Healthcare",
-        "group_pctl": 73,
+        "group_pctl": 72,
         "group_n": 22,
         "group_level": "industry",
         "leader": [],
@@ -16087,10 +16087,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 177.37457675909377,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 177.39823930779386,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-27"
@@ -16279,8 +16279,8 @@
         "peg_found": false,
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "bull flag",
@@ -16300,10 +16300,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 17.537347450121164,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 17.52055385964818,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -16476,8 +16476,8 @@
         ],
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "box",
@@ -16497,10 +16497,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 34.52908265337153,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 34.496954479131965,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -16689,8 +16689,8 @@
         "peg_found": false,
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "falling wedge",
@@ -16712,10 +16712,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 190.00009723614122,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 189.60573898474937,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -16906,10 +16906,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 154.0149287344478,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 154.1246155500369,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-03"
@@ -17083,8 +17083,8 @@
         "peg_why": [],
         "industry": "Trucking",
         "sector": "Industrials",
-        "group_pctl": 51,
-        "group_n": 8,
+        "group_pctl": 54,
+        "group_n": 7,
         "group_level": "industry",
         "leader": [
           "1m"
@@ -17103,10 +17103,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 28.272666781962975,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 28.448836503859717,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-05"
@@ -17340,10 +17340,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 6.339758465514249,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 6.359942037688389,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-05"
@@ -17370,7 +17370,7 @@
         },
         "sma65": {
           "ok": false,
-          "why": "closed under the 65m EMA50 (202.34 vs 202.74)"
+          "why": "closed under the 65m EMA50 (202.34 vs 202.82)"
         },
         "ema9": {
           "ok": false,
@@ -17567,10 +17567,10 @@
         "theme_rank": 66
       },
       "sma30_65m": {
-        "ma65": 202.73566680533077,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 202.81792873281694,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-22"
@@ -17764,8 +17764,8 @@
         ],
         "industry": "Software—Application",
         "sector": "Technology",
-        "group_pctl": 85,
-        "group_n": 74,
+        "group_pctl": 87,
+        "group_n": 76,
         "group_level": "industry",
         "leader": [
           "1m"
@@ -17784,10 +17784,10 @@
         "theme_rank": 4
       },
       "sma30_65m": {
-        "ma65": 171.10354730418416,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 171.8132572536703,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-03"
@@ -18005,8 +18005,8 @@
         ],
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "falling wedge",
@@ -18028,10 +18028,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 84.48483565240146,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 84.63429598651398,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -18170,8 +18170,8 @@
         "peg_found": false,
         "industry": "Software—Application",
         "sector": "Technology",
-        "group_pctl": 85,
-        "group_n": 74,
+        "group_pctl": 87,
+        "group_n": 76,
         "group_level": "industry",
         "leader": [
           "3m",
@@ -18191,10 +18191,10 @@
         "theme_rank": 9
       },
       "sma30_65m": {
-        "ma65": 209.1390738280987,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 210.31407841433517,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-05"
@@ -18404,7 +18404,7 @@
         "industry": "Software—Infrastructure",
         "sector": "Technology",
         "group_pctl": 93,
-        "group_n": 67,
+        "group_n": 68,
         "group_level": "industry",
         "leader": [],
         "c_shape": "flat base",
@@ -18422,10 +18422,10 @@
         "theme_rank": 7
       },
       "sma30_65m": {
-        "ma65": 38.71514385799955,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 38.775236783476466,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-10-28"
@@ -18619,8 +18619,8 @@
         "peg_found": false,
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "pennant",
@@ -18642,10 +18642,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 23.181992693108963,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 23.250200926180316,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -18671,8 +18671,8 @@
           "why": null
         },
         "sma65": {
-          "ok": false,
-          "why": "closed under the 65m EMA50 (52.30 vs 52.47)"
+          "ok": true,
+          "why": null
         },
         "ema9": {
           "ok": false,
@@ -18833,8 +18833,8 @@
         "peg_found": false,
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [],
         "c_shape": "falling wedge",
@@ -18855,10 +18855,10 @@
         "theme_rank": 15
       },
       "sma30_65m": {
-        "ma65": 52.47123734954037,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 1,
+        "ma65": 52.22589993990575,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -18885,7 +18885,7 @@
         },
         "sma65": {
           "ok": false,
-          "why": "closed under the 65m EMA50 (142.70 vs 148.18)"
+          "why": "closed under the 65m EMA50 (142.70 vs 146.68)"
         },
         "ema9": {
           "ok": false,
@@ -19013,8 +19013,8 @@
         "peg_why": [],
         "industry": "Biotechnology",
         "sector": "Healthcare",
-        "group_pctl": 84,
-        "group_n": 91,
+        "group_pctl": 83,
+        "group_n": 95,
         "group_level": "industry",
         "leader": [
           "6m"
@@ -19038,10 +19038,10 @@
         "theme_rank": 31
       },
       "sma30_65m": {
-        "ma65": 148.18488012343238,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 146.67720756695277,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": null
@@ -19253,10 +19253,10 @@
         "theme_rank": null
       },
       "sma30_65m": {
-        "ma65": 85.34770283251919,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 5,
+        "ma65": 85.72767685072833,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-25"
@@ -19432,7 +19432,7 @@
         "industry": "Software—Infrastructure",
         "sector": "Technology",
         "group_pctl": 93,
-        "group_n": 67,
+        "group_n": 68,
         "group_level": "industry",
         "leader": [],
         "c_shape": "descending triangle",
@@ -19450,10 +19450,10 @@
         "theme_rank": 7
       },
       "sma30_65m": {
-        "ma65": 48.24786786184673,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 0,
+        "ma65": 48.282390495632775,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-03"
@@ -19649,7 +19649,7 @@
         "peg_found": false,
         "industry": "Internet Retail",
         "sector": "Consumer Cyclical",
-        "group_pctl": 41,
+        "group_pctl": 40,
         "group_n": 15,
         "group_level": "industry",
         "leader": [],
@@ -19667,10 +19667,10 @@
         "theme_rank": 48
       },
       "sma30_65m": {
-        "ma65": 109.12353348184737,
-        "n_buckets": 150,
-        "last_bucket": "2026-10-20#5",
-        "incomplete": 1,
+        "ma65": 109.61509964150812,
+        "n_buckets": 175,
+        "last_bucket": "2026-10-20#6",
+        "incomplete": 50,
         "missing_days": []
       },
       "next_earnings": "2026-11-04"
