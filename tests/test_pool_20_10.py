@@ -66,3 +66,15 @@ def test_media_65m_e_ema50():
     assert v is not None and v > sma
     assert abs(v - float(pd.Series([float(x) for x in closes]).ewm(span=50, adjust=False).mean().iloc[-1])) < 1e-9
     assert I.ma65(closes[:C.MA65_LEN - 1]) is None      # storico troppo corto: niente media
+
+
+def test_banda_ingresso_20_10h():
+    """[20/10h di Martin] ingresso solo fra lo 0,05% e l'1,0% oltre il livello del trigger, nel verso del trade."""
+    from jeffcoach import config as C
+    assert C.ENTRY_BAND
+    assert C.in_entry_band(100.5, 100.0, "long")          # +0,5% sopra l'ORH: dentro
+    assert not C.in_entry_band(100.02, 100.0, "long")     # sul livello: fuori
+    assert not C.in_entry_band(101.5, 100.0, "long")      # +1,5%: si insegue, fuori
+    assert C.in_entry_band(99.5, 100.0, "short")          # -0,5% sotto l'ORL: dentro
+    assert not C.in_entry_band(98.5, 100.0, "short")      # troppo lontano: fuori
+    assert not C.in_entry_band(100.5, 100.0, "short")     # dalla parte sbagliata

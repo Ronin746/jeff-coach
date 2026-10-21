@@ -361,3 +361,24 @@ QQQ_TREND_SWINGS = False            # [20/10g di Martin] massimi e minimi di swi
 #                                     esteso e scartavano i pullback buoni, quindi restano spenti
 H60_SLOPE_BARS = 5                  # barre orarie per la pendenza della media
 SWING_60M_K = 3                     # barre a destra e sinistra per un massimo/minimo di swing (solo con QQQ_TREND_SWINGS)
+
+# ---------------------------------------------------------------- banda d'ingresso [20/10h di Martin, ANDREA 21/10]
+# Dal bot di Martin (martincoach/config.py, versione 2026-10-20h): il prezzo d'ingresso deve stare fra lo 0,05% e
+# l'1,0% dalla parte giusta del livello del trigger (sopra per i long, sotto per gli short). Qui il livello e' quello
+# della rottura (ORH/ORL, pivot, media 65m): sotto lo 0,05% si sta entrando sul livello stesso, oltre l'1,0% si
+# insegue. Fuori banda l'ingresso aspetta, il trigger resta libero. Studio su Martin 20/07-16/10: ingressi sul
+# livello o oltre -0,23R di media, anticipati di 0,07-0,84% +1,43R.
+ENTRY_BAND = True
+ENTRY_DIST_MIN_PCT = 0.05
+ENTRY_DIST_MAX_PCT = 1.0
+
+
+def entry_dist_pct(price: float, level: float, side: str = "long") -> float:
+    """Distanza in % del prezzo dal livello, positiva dalla parte del trade (sopra per i long, sotto per gli short)."""
+    return (level / price - 1) * 100 * (1 if side == "short" else -1)
+
+
+def in_entry_band(price: float, level: float, side: str = "long") -> bool:
+    if not ENTRY_BAND or not level or not price:
+        return True
+    return ENTRY_DIST_MIN_PCT <= entry_dist_pct(price, level, side) <= ENTRY_DIST_MAX_PCT

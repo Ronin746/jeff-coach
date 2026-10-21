@@ -430,6 +430,9 @@ def run_once(dry_run: bool = False) -> dict:
             continue
         if price < orh:
             continue
+        if not C.in_entry_band(price, orh, "long"):
+            rec["skipped"] = f"outside entry band ({C.entry_dist_pct(price, orh):.2f}% from ORH)"
+            continue                           # [20/10h] fuori banda: si aspetta, il trigger resta libero
         if C.CHASE_MAX_ATR_ABOVE_ORH is not None and ref.get("atr") and (price - orh) / ref["atr"] > C.CHASE_MAX_ATR_ABOVE_ORH:
             rec["skipped"] = "chase"
             continue
@@ -477,6 +480,9 @@ def run_once(dry_run: bool = False) -> dict:
         k = f"{t}|ShortFocus|30m-low"
         if lst != "Focus" or orl is None or k in day or mins < C.ORH_MINUTES or price > orl:
             continue
+        if not C.in_entry_band(price, orl, "short"):
+            rec["skipped"] = f"outside entry band ({C.entry_dist_pct(price, orl, 'short'):.2f}% from ORL)"
+            continue                           # [20/10h] fuori banda: si aspetta
         need = rvol_needed(ref)
         if C.ENTRY_RVOL_REQUIRED and need is not None and rvol < need * max(1.0, mins / C.ORH_MINUTES):
             rec["skipped"] = f"rvol {rvol:.0%}"
@@ -510,6 +516,8 @@ def run_once(dry_run: bool = False) -> dict:
             scan.append(dict(ticker=t, list="Channel", price=lv["price"], ma65=round(lv["sma"], 2)))
             if lv["price"] <= lv["sma"]:
                 continue
+            if not C.in_entry_band(lv["price"], lv["sma"], "long"):
+                continue                           # [20/10h] recupero della media 65m oltre la banda: si aspetta
             k = f"{t}|Channel|sma30-65m"
             if recent_alert(day, t):
                 continue
@@ -559,7 +567,7 @@ def run_once(dry_run: bool = False) -> dict:
                     low = float(sub[sub.index.date == today].Low.min())
                     # crossback: ieri o oggi il minimo è tornato sulle medie (EMA9 o EMA21)
                     touched = x.get("on_emas") or low <= max(x["ema9"] or 0, x["ema21"] or 0) + C.DTL["ema_touch_atr"] * (x["atr"] or 0)
-                    if day.get(kb) and touched and price > (x["ema9"] or 0):
+                    if day.get(kb) and touched and price > (x["ema9"] or 0) and C.in_entry_band(price, sma, "long"):
                         msg, title = fmt_dtl_pullback(x, price, sma, rv), "wedge pop · pullback"
             if not msg or recent_alert(day, t):
                 continue
