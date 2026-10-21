@@ -59,11 +59,13 @@ COMPRESSION_DAYS_MIN = 2
 COMPRESSION_WINDOW = 3
 MA65_KIND = "ema"              # [ANDREA 20/10] media sulle barre 65m RTH: EMA50 al posto della SMA30
 MA65_LEN = 50                  # (prima: SMA 30 [RONIN 06/10]). Il close daily deve stare SOPRA
-MA65_SESSIONS = 25             # sedute di barre a 5 minuti da scaricare: la EMA50 su bucket da 65m vuole piu'
+MA65_SESSIONS = 25             # sedute di barre a 5 minuti da scaricare: la EMA50 oraria (7 barre al giorno) vuole piu'
 #                                storico della SMA30 (50 bucket = ~8 sedute, con 25 la media e' ben avviata)
 MA65_LIVE_PERIOD = "30d"       # 5m scaricati negli alert per la media 65m (con la SMA30 bastavano 7 giorni)
 SMA65_LEN = MA65_LEN           # vecchio nome, tenuto per compatibilita'
-BUCKET_MIN = 65
+BUCKET_MIN = 60                # [ANDREA 21/10] media intraday sulle barre da 1 ORA (EMA50), prima bucket da 65 minuti.
+#                                Barre ancorate all'apertura delle 9:30 ET come TradingView (9:30, 10:30, ... 15:30 di mezz'ora)
+MA_TF_LABEL = "1h" if BUCKET_MIN == 60 else f"{BUCKET_MIN}m"   # etichetta nei messaggi, nella card e nel grafico
 
 # ---------------------------------------------------------------- Stalk
 # Stalk = universo ok + utili ok + RS >= 80 + sopra la SMA200, con almeno un gate Focus aperto, e:

@@ -80,38 +80,26 @@ def sector_line(name: str, st: Optional[dict]) -> str:
 
 
 def regime_line(reg: Optional[dict], themes_line: Optional[str] = None) -> str:
-    """Parte del regime in testa alla card, come Martin-coach [RONIN 13/10, 15/10, 16/10]: regime con i motivi,
-    Market Monitor letto come Pradeep (±4%, 25% nel trimestre, T2108, studio 20%), tabella ±4% a 20 giorni,
-    avviso di potential trend reversal, temi. Il grafico studio 20% / T2108 è l'immagine dello stesso riquadro."""
+    """Parte del regime in testa alla card, come la card di Martin [ANDREA 21/10]: regime con i motivi del pool,
+    blocco Breadth (liste del pool con variazioni a 1 e 5 sedute, flussi, liste dell'universo, IWM vs QQQ, mega cap,
+    leader, scan +4%) e temi. Niente Market Monitor, tabella ±4% e banner del trend reversal (come Martin); il grafico
+    studio 20% / T2108 resta l'immagine del riquadro. Senza pool (riserva) i motivi citano il Market Monitor."""
     if not reg:
         return ""
     bias = {"SHORT": "DEFENSIVE"}.get(reg["bias"], reg["bias"])
     rule = {"MIXED": f"max {C.REGIME_MIXED_MAX_FOCUS} Focus",
             "SHORT": f"Focus only with a LEADING/BUILDING theme (max {C.REGIME_DEFENSIVE_MAX_FOCUS})"}.get(reg["bias"])
     rev = reg.get("reversal")
-    if rev and rev.get("direction") == "buying":
-        rule = "no Focus limit (potential trend reversal)"
-    L = [f"Regime **{bias}**" + (f" · {rule}" if rule else "") + " — " + "; ".join(reg.get("why") or [])]
-    if rev:
-        L.append(f"⚠️ **POTENTIAL TREND REVERSAL** — ±4% flow turned to **{rev['direction']}** on {rev['date']} "
-                 f"(day {rev['day']} of {C.REVERSAL_DAYS})")
-    mm = reg.get("market_monitor")
-    if mm:
-        own = " (own calc)" if mm.get("source") == "own" else ""
-        if mm.get("read") == "pradeep":
-            L.append(f"Market Monitor **{mm['state']}**{own} · ±4% `{mm['up4']:.0f}` / `{mm['down4']:.0f}`"
-                     + (f" · 25%Q `{mm['up25q']:.0f}` / `{mm['down25q']:.0f}`" if mm.get("up25q") is not None and mm.get("down25q") is not None else "")
-                     + (f" · T2108 `{mm['t2108']:.0f}%`" if mm.get("t2108") is not None else "")
-                     + (f" · 20% study `{mm['up20w']:.0f}`" if mm.get("up20w") is not None else ""))
-        else:
-            L.append(f"Market Monitor **{mm['state']}**{own} · ±4% `{mm['up4']:.0f}` / `{mm['down4']:.0f}`"
-                     + (f" · 5D `{mm['ratio5']:.2f}` · 10D `{mm['ratio10']:.2f}`" if mm.get("ratio10") is not None else "")
-                     + (f" · T2108 `{mm['t2108']:.0f}%`" if mm.get("t2108") is not None else ""))
-    if reg.get("mm_hist"):
-        from .breadth_chart import table_20d
-        tb = table_20d(reg["mm_hist"])
-        if tb:
-            L.append("**±4% last 20 days** (▲ buying · ▼ selling)\n" + tb)
+    if rev and rev.get("direction") == "buying":      # cambia le regole dei Focus: resta come regola, non come banner
+        rule = f"no Focus limit (±4% flow turned to buying on {rev['date']})"
+    pooled = bool(reg.get("pool_card"))
+    why = [w.split(" · Leading ")[0] for w in (reg.get("why") or [])
+           if not w.startswith("potential trend reversal") and not (pooled and w.startswith("Market Monitor"))]
+    L = [f"Regime **{bias}**" + (f" · {rule}" if rule else "") + " — " + "; ".join(why)]
+    from .martin_breadth import card_lines
+    bl = card_lines(reg.get("martin_breadth"), reg.get("pool_card"))
+    if bl:
+        L.append("\n".join(bl))
     if themes_line:
         L.append(f"Themes: {themes_line}")
     return "\n".join(L)
@@ -153,8 +141,8 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
         head = f"**WATCHLIST — {title_date}**" + (f" (close {as_of})" if as_of else "")
         rl = regime_line(regime, (themes or {}).get("line"))
         parts = ([f"{head}\n{rl}"] if rl else []) + [("" if rl else f"{head}\n\n") + sect("FOCUS", focus, f_lim),
-                 sect(f"STALK — above 65m {_ma65()} ({len(up)})", up, s_lim),
-                 sect(f"STALK — below 65m {_ma65()} ({len(down)})", down, s_lim)]
+                 sect(f"STALK — above {C.MA_TF_LABEL} {_ma65()} ({len(up)})", up, s_lim),
+                 sect(f"STALK — below {C.MA_TF_LABEL} {_ma65()} ({len(down)})", down, s_lim)]
         if dtl_breaks:          # rotture della trendline discendente in chiusura con volume >= 1,5x [RONIN 09/10]
             rows = [dict(d, reason_en=(f"downtrend line break, vol {d['break_vol']}× avg" if d.get("break_ago") == 0 else
                                        f"downtrend line broken {d['break_date'][5:]}, confirmed today with vol {d['confirm_vol']}× avg")
@@ -191,8 +179,8 @@ def short_card_descriptions(title_date: str, focus: list[dict], stalk: list[dict
 
     for f_lim, s_lim in ((None, None), (None, 70), (None, 45), (80, 30), (60, 0), (0, 0)):
         d = [f"**SHORT WATCHLIST — {title_date}**\n\n" + sect("SHORT FOCUS", focus, f_lim),
-             sect(f"SHORT STALK — below 65m {_ma65()} ({len(dn)})", dn, s_lim),
-             sect(f"SHORT STALK — above 65m {_ma65()} ({len(up)})", up, s_lim)]
+             sect(f"SHORT STALK — below {C.MA_TF_LABEL} {_ma65()} ({len(dn)})", dn, s_lim),
+             sect(f"SHORT STALK — above {C.MA_TF_LABEL} {_ma65()} ({len(up)})", up, s_lim)]
         if all(len(x) <= CARD_LIMIT for x in d):
             return d
     return [x[:CARD_LIMIT] for x in d]
@@ -201,8 +189,8 @@ def short_card_descriptions(title_date: str, focus: list[dict], stalk: list[dict
 def short_tv_txt(focus, stalk_below, stalk_above) -> str:
     """Sezioni short del txt TradingView, dopo quelle long nella stessa riga [RONIN 12/10]."""
     out = ["###SHORT FOCUS", *[tv_symbol(t, e) for t, e in focus],
-           f"###SHORT STALK BELOW 65m {_ma65()}", *[tv_symbol(t, e) for t, e in stalk_below],
-           f"###SHORT STALK ABOVE 65m {_ma65()}", *[tv_symbol(t, e) for t, e in stalk_above]]
+           f"###SHORT STALK BELOW {C.MA_TF_LABEL.upper()} {_ma65()}", *[tv_symbol(t, e) for t, e in stalk_below],
+           f"###SHORT STALK ABOVE {C.MA_TF_LABEL.upper()} {_ma65()}", *[tv_symbol(t, e) for t, e in stalk_above]]
     return ",".join(out)
 
 
@@ -223,6 +211,6 @@ def tv_txt(focus: Iterable[tuple[str, str]], stalk: Iterable[tuple[str, str]],
     if stalk_below is None:
         out += ["###STALK", *[tv_symbol(t, e) for t, e in stalk]]
     else:
-        out += [f"###STALK ABOVE 65m {_ma65()}", *[tv_symbol(t, e) for t, e in stalk],
-                f"###STALK BELOW 65m {_ma65()}", *[tv_symbol(t, e) for t, e in stalk_below]]
+        out += [f"###STALK ABOVE {C.MA_TF_LABEL.upper()} {_ma65()}", *[tv_symbol(t, e) for t, e in stalk],
+                f"###STALK BELOW {C.MA_TF_LABEL.upper()} {_ma65()}", *[tv_symbol(t, e) for t, e in stalk_below]]
     return ",".join(out)

@@ -60,7 +60,9 @@ def compute(session: date, workdir, use_cache: bool) -> dict:
         tmap = {}
     # ETF dei temi (classifica sui loro 7 fattori, come Martin 16/10) e SPY (riferimento di Ratatouille)
     tetf = sorted({e for v in (tmap.get("theme_etfs") or {}).values() for e in v})
-    idx_syms = [x for x in dict.fromkeys(list(C.REGIME_INDICES) + [C.BASKET_BENCHMARK] + tetf) if x not in syms]
+    from .martin_breadth import MEGA_CAPS            # breadth alla Martin nella card [ANDREA 21/10]
+    idx_syms = [x for x in dict.fromkeys(list(C.REGIME_INDICES) + [C.BASKET_BENCHMARK] + tetf + ["QQQ", "IWM"] + list(MEGA_CAPS))
+                if x not in syms]
     daily = D.download_daily(list(syms) + ["^GSPC"] + idx_syms, start, as_of)
     spx = daily.get("^GSPC")
     if spx is None or spx.index[-1].date() != as_of:
@@ -187,6 +189,13 @@ def themes_and_regime(daily: dict, spx, metrics: dict, tmap: dict, as_of, stocks
     if rev:
         reg["why"].insert(0, f"potential trend reversal: ±4% flow turned to {rev['direction']} on {rev['date']} "
                              f"(day {rev['day']} of {C.REVERSAL_DAYS})")
+    try:                                   # parte del regime come la card di Martin [ANDREA 21/10]
+        from . import martin_breadth as MB
+        tof = {s: i.get("primary") for s, i in (tmap.get("tickers") or {}).items() if i.get("primary")}
+        reg["martin_breadth"] = MB.compute(daily, list(stocks), tof)
+        reg["pool_card"] = MB.pool_card(pool)
+    except Exception as e:
+        log.warning("breadth alla Martin: %s", e)
     win = sorted(d for d in up20 if d <= as_of.isoformat())[-C.PB_UP20_WINDOW:]
     reg["down20_hi"] = max([up20[d].get("down20w") or 0 for d in win] or [0])
     reg["up20_hi"] = max([up20[d].get("up20w") or 0 for d in win] or [0])
@@ -694,11 +703,11 @@ def summary_it(res: dict, doc: dict) -> str:
             return f"{c['ticker']} ({where}, linea bassa {c['lower_line_next']})"
         L.append(f"Canale rialzista, parte bassa ({len(cw)}):")
         if rec:
-            L.append("  recuperata la SMA30 65m, ancora sotto la EMA9: " + "; ".join(f(c) for c in rec))
+            L.append("  recuperata la EMA50 1h, ancora sotto la EMA9: " + "; ".join(f(c) for c in rec))
         if ok:
-            L.append("  sopra SMA30 65m ed EMA9: " + "; ".join(f(c) for c in ok))
+            L.append("  sopra EMA50 1h ed EMA9: " + "; ".join(f(c) for c in ok))
         if wait:
-            L.append("  sotto la SMA30 65m (alert se la recupera): " + "; ".join(f(c) for c in wait))
+            L.append("  sotto la EMA50 1h (alert se la recupera): " + "; ".join(f(c) for c in wait))
     dw = a.get("dtl_watch") or []
     if dw:
         L.append(f"Trendline discendente (wedge pop) ({len(dw)}):")
@@ -709,7 +718,7 @@ def summary_it(res: dict, doc: dict) -> str:
             L.append("  rotta in chiusura con volume: " + "; ".join(
                 f"{d['ticker']} (vol {d['break_vol']}x, linea dal picco {d['start'][5:]} a {d['start_high']})" for d in b))
         if pb:
-            L.append("  rotta da poco, si segue il pullback (alert sul crossback: tocco di EMA9/21 e recupero della SMA30 65m sopra la EMA9): " + "; ".join(
+            L.append("  rotta da poco, si segue il pullback (alert sul crossback: tocco di EMA9/21 e recupero della EMA50 1h sopra la EMA9): " + "; ".join(
                 f"{d['ticker']} (rotta il {d['break_date'][5:]}, vol {d['break_vol']}x)" for d in pb))
         if nr:
             L.append("  sotto la linea e vicina, entro 1 ATR (alert se la rompe con RVOL >= 1,5): " + "; ".join(

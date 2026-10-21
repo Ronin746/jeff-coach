@@ -182,7 +182,7 @@ def fmt_dtl_break(x, price, line, rvol):
 
 def fmt_dtl_pullback(x, price, sma, rvol):
     return f"{x['ticker']} · Wedge pop", "\n".join([
-        f"65m {C.MA65_KIND.upper()}{C.MA65_LEN} reclaimed `{sma:.2f}` above the daily EMA9 `{x['ema9']}`", f"Price: `{price:.2f}`",
+        f"{C.MA_TF_LABEL} {C.MA65_KIND.upper()}{C.MA65_LEN} reclaimed `{sma:.2f}` above the daily EMA9 `{x['ema9']}`", f"Price: `{price:.2f}`",
         f"Downtrend line broken {x['break_date'][5:]} (vol {x['break_vol']}×) · line now `{x['line_next']}`",
         f"Daily EMA21 `{x['ema21']}`" + (f" · RVOL `{rvol:.2f}`" if rvol is not None else "")])
 
@@ -341,7 +341,7 @@ def fmt_entry(t, orh, price, rvol, rvol30, need=None, lod_atr=None, against=Fals
 def fmt_channel(c, price, sma):
     under = price <= (c.get("ema9") or 0)
     return f"{c['ticker']} · Channel", "\n".join([
-        f"65m {C.MA65_KIND.upper()}{C.MA65_LEN} reclaimed `{sma:.2f}`", f"Price: `{price:.2f}`",
+        f"{C.MA_TF_LABEL} {C.MA65_KIND.upper()}{C.MA65_LEN} reclaimed `{sma:.2f}`", f"Price: `{price:.2f}`",
         f"Daily EMA9: `{c['ema9']:.2f}`" + (" (still under)" if under else ""),
         (f"Broken line (backtest): `{c['upper_line_next']:.2f}`" if c["state"] == "backtest of the broken line"
          else f"Channel lower line: `{c['lower_line_next']:.2f}`"), f"Position: {c['state']}"])

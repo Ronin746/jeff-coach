@@ -78,3 +78,32 @@ def test_banda_ingresso_20_10h():
     assert C.in_entry_band(99.5, 100.0, "short")          # -0,5% sotto l'ORL: dentro
     assert not C.in_entry_band(98.5, 100.0, "short")      # troppo lontano: fuori
     assert not C.in_entry_band(100.5, 100.0, "short")     # dalla parte sbagliata
+
+
+def test_media_intraday_oraria_21_10():
+    """[ANDREA 21/10] la media del reclaim di Sydney e' la EMA50 sulle barre da 1 ora (ancorate alle 9:30 ET)."""
+    import pandas as pd
+    from jeffcoach import config as C
+    from jeffcoach.data import buckets_65m
+    assert C.BUCKET_MIN == 60 and C.MA_TF_LABEL == "1h" and C.MA65_KIND == "ema" and C.MA65_LEN == 50
+    idx = pd.date_range("2026-10-20 09:30", "2026-10-20 15:55", freq="5min", tz="America/New_York")
+    b = buckets_65m(pd.DataFrame({"Close": range(len(idx))}, index=idx))
+    assert [x[1] for x in b] == list(range(7))            # 9:30, 10:30, ... 15:30: sette barre al giorno
+    assert [x[3] for x in b] == [12] * 6 + [6]             # l'ultima e' di mezz'ora
+
+
+def test_card_regime_alla_martin_21_10():
+    from jeffcoach import output as O
+    reg = dict(bias="SHORT", score=-2, why=["pool lists: score -2 → DEFENSIVE",
+               "pool (167): Leading 47% of Leading+Lagging · Leading 45 / Mediocre 71 / Lagging 50",
+               "pool flow 5d -19.4% (8 up, 37 down)", "Market Monitor Expansion (context)"],
+               market_monitor=dict(state="Expansion", up4=363, down4=108), mm_hist=[{"date": "2026-10-20", "up4": 1, "down4": 2}],
+               pool_card=dict(n=167, lists={"Leading": 45, "Mediocre": 71, "Lagging": 50}, flow5=-19.4, up_5d=8, down_5d=37,
+                              lists_1d={"Leading": 44, "Mediocre": 72, "Lagging": 50}, lists_5d=None, flow_daily=[1.9]),
+               martin_breadth=None)
+    out = O.regime_line(reg, "Oil & gas (leading)").split("\n")
+    assert out[0].startswith("Regime **DEFENSIVE** · Focus only with a LEADING/BUILDING theme")
+    assert out[0].endswith("pool lists: score -2 → DEFENSIVE; pool (167): Leading 47% of Leading+Lagging; pool flow 5d -19.4% (8 up, 37 down)")
+    assert out[1] == "**Breadth** · monitored pool `167` names" and out[2] == "- Leading `45` (+1 1d)"
+    assert out[-1] == "Themes: Oil & gas (leading)"
+    assert "Market Monitor" not in "\n".join(out) and "±4%" not in "\n".join(out)
