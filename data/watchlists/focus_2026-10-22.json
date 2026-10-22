@@ -4,7 +4,7 @@
   "ranking_bar": "2026-10-21",
   "ranking_bar_status": "completed_rth_daily",
   "timezone": "Europe/Rome",
-  "asof_rome": "2026-10-22 13:56 CEST",
+  "asof_rome": "2026-10-22 13:57 CEST",
   "focus": [
     "ATRC"
   ],
@@ -14557,6 +14557,7 @@
         "peg_pivot": 101.39,
         "peg_ok": true,
         "peg_why": [],
+        "peg_earnings": true,
         "industry": "Software—Application",
         "sector": "Technology",
         "group_pctl": 89,
@@ -17300,6 +17301,7 @@
         "peg_pivot": 43.86,
         "peg_ok": true,
         "peg_why": [],
+        "peg_earnings": true,
         "industry": "Software—Infrastructure",
         "sector": "Technology",
         "group_pctl": 94,
@@ -19495,6 +19497,7 @@
         "peg_pivot": 75.98,
         "peg_ok": true,
         "peg_why": [],
+        "peg_earnings": true,
         "industry": "Software—Infrastructure",
         "sector": "Technology",
         "group_pctl": 94,
