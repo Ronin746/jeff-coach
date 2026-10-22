@@ -1,0 +1,24 @@
+**Watchlist 2026-10-22** (close 21/10)
+Focus (1): ATRC
+Stalk (50): APA, DK, VEEV, CVE, PR, OSCR, HUM, W, ASO, CDNA, TEAM, ANF, AUGO, CBRL, ECO, ESTC, FIVN, GRAL, HAE, ILMN, MATX, NSIT, NTRA, PARR, QLYS, SN, XP, RVTY, TRMD, NTNX, SEZL, CNK, RXO, ELF, SHOP, IOT, KSS, COKE, SAIL, VRNS, URBN, ITUB, SIG, TMO, CCC, CDW, EL, INSP, SNAP, NICE
+
+Entrano in Focus: nessuno · Escono: NTRA (pattern 5d range 2.2 ATR)
+Gruppi più forti: Oil & Gas Refining & Marketing (100: DK, PARR); Marine Shipping (99: ECO, MATX); Electronics & Computer Distribution (98: NSIT); Health Information Services (98: VEEV); REIT—Hotel & Motel (97); Oil & Gas Integrated (96: CVE)
+Forza del gruppo dei Focus (percentile): ATRC 74
+Canale rialzista, parte bassa (11):
+  recuperata la EMA50 1h, ancora sotto la EMA9: INSW (bordo basso, linea bassa 111.23); TWLO (bordo basso, linea bassa 246.41)
+  sopra EMA50 1h ed EMA9: NTRA (bordo basso, linea bassa 398.35); QLYS (bordo basso, linea bassa 181.16); ZETA (bordo basso, linea bassa 32.43); TRMD (bordo basso, linea bassa 37.73); PLTR (sulla EMA21, linea bassa 189.12); SAIL (bordo basso, linea bassa 18.89)
+  sotto la EMA50 1h (alert se la recupera): PBF (bordo basso, linea bassa 77.82); PENG (backtest della linea rotta 61.78); S (bordo basso, linea bassa 21.33)
+Trendline discendente (wedge pop) (41):
+  rotta in chiusura con volume: MEDP (vol 4.35x, linea dal picco 07-23 a 677.9)
+  rotta da poco, si segue il pullback (alert sul crossback: tocco di EMA9/21 e recupero della EMA50 1h sopra la EMA9): AMLX (rotta il 10-20, vol 0.69x); ASAN (rotta il 10-15, vol 1.01x); CHYM (rotta il 10-20, vol 0.47x); VAL (rotta il 10-12, vol 0.38x); WDAY (rotta il 10-15, vol 0.94x); ACN (rotta il 10-16, vol 1.22x); IT (rotta il 10-15, vol 1.04x); COKE (rotta il 10-09, vol 1.19x); RIG (rotta il 10-19, vol 1.36x); CTSH (rotta il 10-15, vol 1.14x); CART (rotta il 10-08, vol 0.64x); GLBE (rotta il 10-20, vol 1.08x); NOG (rotta il 10-16, vol 0.77x); EPAM (rotta il 10-15, vol 1.26x); BILL (rotta il 10-15, vol 0.89x); SNAP (rotta il 10-09, vol 1.32x)
+  sotto la linea e vicina, entro 1 ATR (alert se la rompe con RVOL >= 1,5): AXTI (linea 63.99, 0.83 ATR); ESTC (linea 98.12, 0.1 ATR); FIVN (linea 35.42, 0.16 ATR); MRVL (linea 250.04, 0.39 ATR); VSXY (linea 92.51, 0.81 ATR); SNOW (linea 329.6, 0.52 ATR); BTSG (linea 63.62, 0.74 ATR); CRM (linea 249.76, 0.98 ATR); LTH (linea 41.33, 0.57 ATR); MDB (linea 400.97, 0.47 ATR); SAIL (linea 19.53, 0.01 ATR); ADI (linea 412.46, 0.55 ATR); SBLK (linea 29.38, 0.79 ATR); STLD (linea 247.07, 0.06 ATR); SEI (linea 68.51, 0.13 ATR); DIOD (linea 92.03, 0.76 ATR); MT (linea 62.57, 0.19 ATR); MTDR (linea 57.88, 0.11 ATR); PATH (linea 13.84, 0.27 ATR); PCOR (linea 60.91, 0.03 ATR); FIVE (linea 229.5, 0.8 ATR); INSP (linea 73.05, 0.73 ATR); ALKS (linea 43.35, 0.02 ATR); SPHR (linea 117.29, 0.68 ATR)
+Reazione ritardata agli utili (8): IOT (utili 09-04 +16%, pivot 43.86, minimo crescente); DELL (utili 09-02 +9%, pivot 595.06, minimo crescente); GTLB (utili 09-02 +22%, pivot 57.89, minimo crescente); ESTC (utili 08-28 +24%, pivot 101.39, minimo crescente); NTNX (utili 08-27 +9%, pivot 75.98, minimo crescente); CRM (utili 08-27 +12%, pivot 251.94, minimo crescente); DG (utili 08-27 +4%, pivot 137.08, minimo crescente); DE (utili 08-20 +5%, pivot 660.39, minimo crescente)
+Triangoli ascendenti (4): OSCR (tetto 35.01, 6 tocchi, Stalk); PARR (tetto 89.45, 7 tocchi, Stalk); RVTY (tetto 159.48, 4 tocchi, Stalk); WIX (tetto 85.37, 3 tocchi, Out)
+Numeri ok ma senza pattern di continuation (fuori lista): AMLX, AMRX, BBY, BRKR, BTG, BTSG, CACI, CART, DAVE, DBX, FIVE, HRB, LTH, RELY, SBLK, SM, SWKS, VIRT, VSXY
+Regime: MIXED — potential trend reversal: ±4% flow turned to buying on 2026-10-20 (day 2 of 2); pool lists: score +0 → MIXED; pool (158): Leading 51% of Leading+Lagging · Leading 50 / Mediocre 59 / Lagging 48; pool flow 5d -2.5% (12 up, 16 down); pool flow trend mixed (-11.1% -0.6% +2.4% +4.8%); Market Monitor Expansion (context)
+Temi LEADING/BUILDING (7 su 87): OIL AND GAS DOWNSTREAM (LEADING), CRM (LEADING), OIL AND GAS UPSTREAM (LEADING), HEALTH INSURANCE (BUILDING), GOVERNMENT CONTRACTORS (BUILDING), SPECIALTY RETAIL (BUILDING), PAYMENT PROCESSING (BUILDING)
+Esclusi per stadio del tema (WEAK/BEARISH): NTAP (DATA STORAGE WEAK)
+Potential trend reversal: flusso ±4% girato verso buying il 2026-10-20 (giorno 2 di 2)
+Utili 2026-10-22..2026-10-28: AMC 2026-10-22, BFH 2026-10-22, CAKE 2026-10-27, CNC 2026-10-27, COCO 2026-10-22, DHT 2026-10-28, DINO 2026-10-28, EAT 2026-10-28, EBAY 2026-10-28, ETSY 2026-10-28, FCX 2026-10-27, FFIV 2026-10-27, FORM 2026-10-28, FTNT 2026-10-28, GFL 2026-10-28, GGB 2026-10-26, GKOS 2026-10-28, IQV 2026-10-27, NEM 2026-10-22, NUE 2026-10-26, PSX 2026-10-28, RGEN 2026-10-27, RNG 2026-10-22, SLB 2026-10-23, STNG 2026-10-28, TENB 2026-10-28, UMC 2026-10-28, WDC 2026-10-22, YPF 2026-10-28
+Remy: 51 nomi
