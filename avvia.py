@@ -71,6 +71,10 @@ def load_env() -> None:
 
 
 load_env()
+# Remy spento [RONIN 22/10, Andrea]: sul server al suo posto gira Martin multi-edge. REMY_ATTIVO=0 nel .env ferma lo
+# scanner dei pivot a 30 minuti e il sync delle sue watchlist; Sydney resta com'è e il codice di Remy resta nel repo
+# (si riaccende togliendo la riga o con REMY_ATTIVO=1).
+REMY_ATTIVO = os.environ.get("REMY_ATTIVO", "1").strip() != "0"
 sys.path.insert(0, str(BASE))
 from jeffcoach import alerts, config as C  # noqa: E402  (dopo load_env: config legge le variabili)
 from jeffcoach import discord as D  # noqa: E402
@@ -356,10 +360,13 @@ def main() -> int:
         log.info("già in esecuzione: esco")
         return 0
     log.info("avvio (dry_run=%s) — ora New York %s", a.dry_run, now_et().strftime("%Y-%m-%d %H:%M"))
+    if not REMY_ATTIVO:
+        log.info("Remy spento (REMY_ATTIVO=0): solo Sydney")
     if a.once:
         log.info("alert: %s", json.dumps(alerts.run_once(dry_run=True), default=str))
-        log.info("Remy scan rc=%s", remy_scan(True))
-        remy_sync(True)
+        if REMY_ATTIVO:
+            log.info("Remy scan rc=%s", remy_scan(True))
+            remy_sync(True)
         return 0
     global TURNO
     TURNO = Turno(a.invia_da, a.invia_fino, a.stato_git)
@@ -384,12 +391,12 @@ def main() -> int:
         log.info("oggi niente seduta o seduta già chiusa: esco")
         return 0
     stop = threading.Event()
-    if a.senza_sync and not a.dry_run:
+    if a.senza_sync and not a.dry_run and REMY_ATTIVO:
         # turno B: il file dei titoli in più lo fa il turno A, ma il commit di A arriva a fine turno.
         # Se manca quello di oggi lo costruisco io (una volta, in un thread a parte).
         threading.Thread(target=lambda: remy_universo(False), daemon=True, name="universo").start()
-    ts = [threading.Thread(target=f, args=(a.dry_run, stop), daemon=True, name=f.__name__)
-          for f in (coach_loop, remy_loop) + (() if a.senza_sync else (sync_loop,))]
+    loops = (coach_loop,) + ((remy_loop,) + (() if a.senza_sync else (sync_loop,)) if REMY_ATTIVO else ())
+    ts = [threading.Thread(target=f, args=(a.dry_run, stop), daemon=True, name=f.__name__) for f in loops]
     for t in ts:
         t.start()
     try:

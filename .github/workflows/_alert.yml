@@ -24,6 +24,7 @@ env:
   AVVIA_LOG_STDOUT: "1"
   AVVIA_MUTO_URL: http://127.0.0.1:8765/muto
   PASSAGGIO_NY: "13:00"
+  REMY_ATTIVO: "0"            # [22/10, Andrea] Remy spento: al suo posto Martin multi-edge sul server; il codice resta
   COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ vars.CLOUD_ALERT_LIVE == 'true' && secrets.COACH_ALERT_DISCORD_WEBHOOK_URL || 'http://127.0.0.1:8765/sydney' }}
   DISCORD_WEBHOOK_URL: ${{ vars.CLOUD_ALERT_LIVE == 'true' && secrets.REMY_DISCORD_WEBHOOK_URL || 'http://127.0.0.1:8765/remy' }}
 
