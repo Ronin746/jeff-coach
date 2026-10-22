@@ -1,12 +1,21 @@
 {
- "built_utc": "2026-10-22T11:16:06.633142+00:00",
+ "built_utc": "2026-10-22T11:52:39.252784+00:00",
  "membership": "lst",
  "manual_hash": "{\"aggiungi\": {}, \"togli\": {}}",
  "sources": {
   "baskets": "https://app.lonestocktrader.com/dashboard/basket-charts"
  },
- "baskets_fetched_utc": "2026-10-21T17:45:00+00:00",
- "basket_changes": null,
+ "baskets_fetched_utc": "2026-10-22T11:51:12.733919+00:00",
+ "basket_changes": {
+  "baskets_added": [
+   "BIOTECHNOLOGY",
+   "DIAGNOSTICS & TESTING",
+   "LIFE SCIENCE TOOLS & SERVICES",
+   "MEDICAL DEVICES",
+   "PHARMACEUTICALS"
+  ],
+  "note": "aggiunti a mano da Andrea il 22/10 (nuovi basket del sito)"
+ },
  "tickers": {
   "MTLS": {
    "primary": "3D PRINTING",
@@ -53,7 +62,8 @@
   "ZTS": {
    "primary": "AGRIBUSINESS",
    "themes": [
-    "AGRIBUSINESS"
+    "AGRIBUSINESS",
+    "PHARMACEUTICALS"
    ],
    "source": "lst"
   },
@@ -354,7 +364,8 @@
   "ABSI": {
    "primary": "AI",
    "themes": [
-    "AI"
+    "AI",
+    "BIOTECHNOLOGY"
    ],
    "source": "lst"
   },
@@ -599,7 +610,9 @@
    "primary": "AI HEALTHCARE",
    "themes": [
     "AI HEALTHCARE",
-    "INDEX QQQE"
+    "DIAGNOSTICS & TESTING",
+    "INDEX QQQE",
+    "MEDICAL DEVICES"
    ],
    "source": "lst"
   },
@@ -621,7 +634,8 @@
   "IQV": {
    "primary": "AI HEALTHCARE",
    "themes": [
-    "AI HEALTHCARE"
+    "AI HEALTHCARE",
+    "LIFE SCIENCE TOOLS & SERVICES"
    ],
    "source": "lst"
   },
@@ -841,10 +855,11 @@
    "source": "lst"
   },
   "PACB": {
-   "primary": "GENOMICS",
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
    "themes": [
     "ARKK",
-    "GENOMICS"
+    "GENOMICS",
+    "LIFE SCIENCE TOOLS & SERVICES"
    ],
    "source": "lst"
   },
@@ -857,26 +872,30 @@
    "source": "lst"
   },
   "ILMN": {
-   "primary": "GENOMICS",
+   "primary": "DIAGNOSTICS & TESTING",
    "themes": [
     "ARKK",
+    "DIAGNOSTICS & TESTING",
     "GENOMICS",
-    "INDEX QQQE"
+    "INDEX QQQE",
+    "LIFE SCIENCE TOOLS & SERVICES"
    ],
    "source": "lst"
   },
   "NTRA": {
-   "primary": "GENOMICS",
+   "primary": "DIAGNOSTICS & TESTING",
    "themes": [
     "ARKK",
+    "DIAGNOSTICS & TESTING",
     "GENOMICS"
    ],
    "source": "lst"
   },
   "VCYT": {
-   "primary": "GENOMICS",
+   "primary": "DIAGNOSTICS & TESTING",
    "themes": [
     "ARKK",
+    "DIAGNOSTICS & TESTING",
     "GENOMICS"
    ],
    "source": "lst"
@@ -928,6 +947,7 @@
    "primary": "GENOMICS",
    "themes": [
     "ARKK",
+    "BIOTECHNOLOGY",
     "GENOMICS"
    ],
    "source": "lst"
@@ -936,6 +956,7 @@
    "primary": "GENOMICS",
    "themes": [
     "ARKK",
+    "BIOTECHNOLOGY",
     "GENOMICS"
    ],
    "source": "lst"
@@ -984,10 +1005,11 @@
    "source": "lst"
   },
   "TXG": {
-   "primary": "GENOMICS",
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
    "themes": [
     "ARKK",
-    "GENOMICS"
+    "GENOMICS",
+    "LIFE SCIENCE TOOLS & SERVICES"
    ],
    "source": "lst"
   },
@@ -1025,10 +1047,11 @@
    "source": "lst"
   },
   "TWST": {
-   "primary": "GENOMICS",
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
    "themes": [
     "ARKK",
-    "GENOMICS"
+    "GENOMICS",
+    "LIFE SCIENCE TOOLS & SERVICES"
    ],
    "source": "lst"
   },
@@ -1036,6 +1059,7 @@
    "primary": "GENOMICS",
    "themes": [
     "ARKK",
+    "BIOTECHNOLOGY",
     "GENOMICS"
    ],
    "source": "lst"
@@ -1097,9 +1121,10 @@
    "source": "lst"
   },
   "WGS": {
-   "primary": "ARKK",
+   "primary": "DIAGNOSTICS & TESTING",
    "themes": [
-    "ARKK"
+    "ARKK",
+    "DIAGNOSTICS & TESTING"
    ],
    "source": "lst"
   },
@@ -1301,6 +1326,889 @@
    "themes": [
     "BATTERIES",
     "ELECTRIFICATION"
+   ],
+   "source": "lst"
+  },
+  "ABCL": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ACAD": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ACLX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ACRV": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ADCT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ADMA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "AGIO": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "AKBA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ALLO": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "ALNY": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "ALXO": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ANAB": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ANNX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ARCT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ARGX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ARQT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ARVN": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ARWR": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "ASND": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "AVBP": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "AXSM": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "BBIO": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "BCYC": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "BMRN": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "BNTX": {
+   "primary": "VACCINE",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS",
+    "VACCINE"
+   ],
+   "source": "lst"
+  },
+  "CABA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CAPR": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CELC": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CGEM": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CGON": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CLDX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CMPS": {
+   "primary": "PSYCHEDELICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "PSYCHEDELICS"
+   ],
+   "source": "lst"
+  },
+  "COGT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CORT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CRBU": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "CRVS": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CTMX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "CYTK": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "DNLI": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "EDIT": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "ELVN": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ENTA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ERAS": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "EXEL": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "FATE": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "FDMT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "GERN": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "GMAB": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "HALO": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "HRMY": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "IBRX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "IMCR": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "IMNM": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "IMTX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "IMVT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "INCY": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "INSM": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "IONS": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "IOVA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "IRON": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "IRWD": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "JANX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "KRRO": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "KRYS": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "KURA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "KYMR": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "LEGN": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "LGND": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "LQDA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "MDGL": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "MIRM": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "MNMD": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "MRNA": {
+   "primary": "VACCINE",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS",
+    "INDEX QQQE",
+    "VACCINE"
+   ],
+   "source": "lst"
+  },
+  "NKTR": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "NMRA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "NRIX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "OCUL": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "OLMA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "OMER": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ONC": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ORIC": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "PCVX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "PHAT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "PLRX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "PRAX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "PRME": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "PRTA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "PTCT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "PTGX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "RARE": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "RCUS": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "RCKT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "REGN": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS",
+    "INDEX QQQE"
+   ],
+   "source": "lst"
+  },
+  "REPL": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "RGNX": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "RIGL": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "RLAY": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "RNA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ROIV": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "RVMD": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "RYTM": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "SANA": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "SLN": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "SMMT": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "SNDX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "SPRY": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "SRPT": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "STOK": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "SYRE": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "TARS": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "TGTX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "TSHA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "TVTX": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "TYRA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "URGN": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "VERA": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "VIR": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "VRTX": {
+   "primary": "GENOMICS",
+   "themes": [
+    "BIOTECHNOLOGY",
+    "GENOMICS",
+    "INDEX QQQE"
+   ],
+   "source": "lst"
+  },
+  "VRDN": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "XENE": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "XERS": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ZLAB": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
+   ],
+   "source": "lst"
+  },
+  "ZNTL": {
+   "primary": "BIOTECHNOLOGY",
+   "themes": [
+    "BIOTECHNOLOGY"
    ],
    "source": "lst"
   },
@@ -3086,6 +3994,144 @@
    ],
    "source": "lst"
   },
+  "ABT": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "BDX": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "BIO": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "CAI": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING"
+   ],
+   "source": "lst"
+  },
+  "CDNA": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "EXAS": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING"
+   ],
+   "source": "lst"
+  },
+  "FLGT": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "GH": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING"
+   ],
+   "source": "lst"
+  },
+  "GRAL": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "IDXX": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "INDEX QQQE"
+   ],
+   "source": "lst"
+  },
+  "LH": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING"
+   ],
+   "source": "lst"
+  },
+  "MYGN": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "GENOMICS"
+   ],
+   "source": "lst"
+  },
+  "NEO": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING"
+   ],
+   "source": "lst"
+  },
+  "OSUR": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING"
+   ],
+   "source": "lst"
+  },
+  "QDEL": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING"
+   ],
+   "source": "lst"
+  },
+  "QGEN": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "GENOMICS",
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "RVTY": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "TMO": {
+   "primary": "DIAGNOSTICS & TESTING",
+   "themes": [
+    "DIAGNOSTICS & TESTING",
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
   "LMT": {
    "primary": "GOVERNMENT CONTRACTORS",
    "themes": [
@@ -4280,77 +5326,20 @@
    ],
    "source": "lst"
   },
-  "MRNA": {
-   "primary": "VACCINE",
+  "A": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
    "themes": [
     "GENOMICS",
-    "INDEX QQQE",
-    "VACCINE"
-   ],
-   "source": "lst"
-  },
-  "MYGN": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "CDNA": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "GRAL": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "RARE": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "QGEN": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "A": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
+    "LIFE SCIENCE TOOLS & SERVICES"
    ],
    "source": "lst"
   },
   "GILD": {
-   "primary": "GENOMICS",
+   "primary": "PHARMACEUTICALS",
    "themes": [
     "GENOMICS",
-    "INDEX QQQE"
-   ],
-   "source": "lst"
-  },
-  "LEGN": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "REGN": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS",
-    "INDEX QQQE"
+    "INDEX QQQE",
+    "PHARMACEUTICALS"
    ],
    "source": "lst"
   },
@@ -4361,100 +5350,7 @@
    ],
    "source": "lst"
   },
-  "VRTX": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS",
-    "INDEX QQQE"
-   ],
-   "source": "lst"
-  },
-  "VIR": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "SRPT": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "ALNY": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "FLGT": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "RGNX": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "BNTX": {
-   "primary": "VACCINE",
-   "themes": [
-    "GENOMICS",
-    "VACCINE"
-   ],
-   "source": "lst"
-  },
-  "EDIT": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "BMRN": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "ARWR": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "ALLO": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "SANA": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
   "QURE": {
-   "primary": "GENOMICS",
-   "themes": [
-    "GENOMICS"
-   ],
-   "source": "lst"
-  },
-  "CRBU": {
    "primary": "GENOMICS",
    "themes": [
     "GENOMICS"
@@ -4479,7 +5375,8 @@
   "LLY": {
    "primary": "GLP1",
    "themes": [
-    "GLP1"
+    "GLP1",
+    "PHARMACEUTICALS"
    ],
    "source": "lst"
   },
@@ -4969,6 +5866,7 @@
    "primary": "ROBOTICS",
    "themes": [
     "INDEX QQQE",
+    "MEDICAL DEVICES",
     "ROBOTICS"
    ],
    "source": "lst"
@@ -4981,13 +5879,6 @@
    "source": "lst"
   },
   "ORLY": {
-   "primary": "INDEX QQQE",
-   "themes": [
-    "INDEX QQQE"
-   ],
-   "source": "lst"
-  },
-  "IDXX": {
    "primary": "INDEX QQQE",
    "themes": [
     "INDEX QQQE"
@@ -5215,9 +6106,10 @@
    "source": "lst"
   },
   "DXCM": {
-   "primary": "INDEX QQQE",
+   "primary": "MEDICAL DEVICES",
    "themes": [
-    "INDEX QQQE"
+    "INDEX QQQE",
+    "MEDICAL DEVICES"
    ],
    "source": "lst"
   },
@@ -5391,7 +6283,8 @@
   "TRNS": {
    "primary": "INDUSTRIAL DISTRIBUTION",
    "themes": [
-    "INDUSTRIAL DISTRIBUTION"
+    "INDUSTRIAL DISTRIBUTION",
+    "LIFE SCIENCE TOOLS & SERVICES"
    ],
    "source": "lst"
   },
@@ -5705,6 +6598,139 @@
    ],
    "source": "lst"
   },
+  "ALMR": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "AVTR": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "AZTA": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "BRKR": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "CDXS": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "CRL": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "CTKB": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "CYRX": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "DHR": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "ICLR": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "MEDP": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "MLAB": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "MRVI": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "MTD": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "NEOG": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "OABI": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "RGEN": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "TECH": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
+  "WAT": {
+   "primary": "LIFE SCIENCE TOOLS & SERVICES",
+   "themes": [
+    "LIFE SCIENCE TOOLS & SERVICES"
+   ],
+   "source": "lst"
+  },
   "LIT": {
    "primary": "LITHIUM",
    "themes": [
@@ -5863,6 +6889,280 @@
    "primary": "MARINE SHIPPING",
    "themes": [
     "MARINE SHIPPING"
+   ],
+   "source": "lst"
+  },
+  "ALGN": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "ATRC": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "AXGN": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "BAX": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "BLCO": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "BSX": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "COO": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "EW": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "GKOS": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "GMED": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "HAE": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "IART": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "INGN": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "INMD": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "INSP": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "ITGR": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "LUNG": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "MASI": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "MDT": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "MMSI": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "NVCR": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "OFIX": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "PEN": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "PODD": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "PRCT": {
+   "primary": "ROBOTICS",
+   "themes": [
+    "MEDICAL DEVICES",
+    "ROBOTICS"
+   ],
+   "source": "lst"
+  },
+  "RMD": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "RXST": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "SENS": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "SIBN": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "STAA": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "STE": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "STIM": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "STVN": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "SYK": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "TNDM": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "TFX": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "TMCI": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "UTMD": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
+   ],
+   "source": "lst"
+  },
+  "ZBH": {
+   "primary": "MEDICAL DEVICES",
+   "themes": [
+    "MEDICAL DEVICES"
    ],
    "source": "lst"
   },
@@ -6722,6 +8022,203 @@
    ],
    "source": "lst"
   },
+  "ABBV": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "AMPH": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "AMRX": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "ANIP": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "BHC": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "BMY": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "COLL": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "EOLS": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "GSK": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "HRTX": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "INDV": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "INVA": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "JAZZ": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "JNJ": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "KMDA": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "MNKD": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "MRK": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "NVS": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "OGN": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "PFE": {
+   "primary": "VACCINE",
+   "themes": [
+    "PHARMACEUTICALS",
+    "VACCINE"
+   ],
+   "source": "lst"
+  },
+  "PRGO": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "RPRX": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "SNY": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "SUPN": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "TAK": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "TEVA": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "UTHR": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
+  "VTRS": {
+   "primary": "PHARMACEUTICALS",
+   "themes": [
+    "PHARMACEUTICALS"
+   ],
+   "source": "lst"
+  },
   "DRUG": {
    "primary": "PSYCHEDELICS",
    "themes": [
@@ -6737,13 +8234,6 @@
    "source": "lst"
   },
   "PSIL": {
-   "primary": "PSYCHEDELICS",
-   "themes": [
-    "PSYCHEDELICS"
-   ],
-   "source": "lst"
-  },
-  "CMPS": {
    "primary": "PSYCHEDELICS",
    "themes": [
     "PSYCHEDELICS"
@@ -7577,13 +9067,6 @@
    "source": "lst"
   },
   "NDSN": {
-   "primary": "ROBOTICS",
-   "themes": [
-    "ROBOTICS"
-   ],
-   "source": "lst"
-  },
-  "PRCT": {
    "primary": "ROBOTICS",
    "themes": [
     "ROBOTICS"
@@ -8481,13 +9964,6 @@
     "VACCINE"
    ],
    "source": "lst"
-  },
-  "PFE": {
-   "primary": "VACCINE",
-   "themes": [
-    "VACCINE"
-   ],
-   "source": "lst"
   }
  },
  "themes": {
@@ -8501,6 +9977,7 @@
   "ARKK": "lst",
   "AUTONOMOUS DRIVING": "lst",
   "BATTERIES": "lst",
+  "BIOTECHNOLOGY": "lst",
   "BRAZIL": "lst",
   "CANNABIS": "lst",
   "CAR DEALERS": "lst",
@@ -8519,6 +9996,7 @@
   "DATA CENTERS": "lst",
   "DATA STORAGE": "lst",
   "DEPARTMENT STORES": "lst",
+  "DIAGNOSTICS & TESTING": "lst",
   "DRONES": "lst",
   "EDGE CLOUD": "lst",
   "ELECTRIFICATION": "lst",
@@ -8543,10 +10021,12 @@
   "INTERNET B2C": "lst",
   "KOREA": "lst",
   "LIDAR": "lst",
+  "LIFE SCIENCE TOOLS & SERVICES": "lst",
   "LITHIUM": "lst",
   "LNG": "lst",
   "MAG7": "lst",
   "MARINE SHIPPING": "lst",
+  "MEDICAL DEVICES": "lst",
   "MEME": "lst",
   "MINERS": "lst",
   "NVIDIA VC": "lst",
@@ -8557,6 +10037,7 @@
   "OIL AND GAS UPSTREAM": "lst",
   "OPTICAL NETWORK INFRA": "lst",
   "PAYMENT PROCESSING": "lst",
+  "PHARMACEUTICALS": "lst",
   "PSYCHEDELICS": "lst",
   "QUANTUM COMPUTING": "lst",
   "RAILROAD": "lst",
@@ -8769,6 +10250,135 @@
    "CBAT",
    "TE",
    "EOSE"
+  ],
+  "BIOTECHNOLOGY": [
+   "ABCL",
+   "ABSI",
+   "ACAD",
+   "ACLX",
+   "ACRV",
+   "ADCT",
+   "ADMA",
+   "AGIO",
+   "AKBA",
+   "ALLO",
+   "ALNY",
+   "ALXO",
+   "ANAB",
+   "ANNX",
+   "ARCT",
+   "ARGX",
+   "ARQT",
+   "ARVN",
+   "ARWR",
+   "ASND",
+   "AVBP",
+   "AXSM",
+   "BBIO",
+   "BCYC",
+   "BEAM",
+   "BMRN",
+   "BNTX",
+   "CABA",
+   "CAPR",
+   "CELC",
+   "CGEM",
+   "CGON",
+   "CLDX",
+   "CMPS",
+   "COGT",
+   "CORT",
+   "CRBU",
+   "CRSP",
+   "CRVS",
+   "CTMX",
+   "CYTK",
+   "DNLI",
+   "EDIT",
+   "ELVN",
+   "ENTA",
+   "ERAS",
+   "EXEL",
+   "FATE",
+   "FDMT",
+   "GERN",
+   "GMAB",
+   "HALO",
+   "HRMY",
+   "IBRX",
+   "IMCR",
+   "IMNM",
+   "IMTX",
+   "IMVT",
+   "INCY",
+   "INSM",
+   "IONS",
+   "IOVA",
+   "IRON",
+   "IRWD",
+   "JANX",
+   "KRRO",
+   "KRYS",
+   "KURA",
+   "KYMR",
+   "LEGN",
+   "LGND",
+   "LQDA",
+   "MDGL",
+   "MIRM",
+   "MNMD",
+   "MRNA",
+   "NKTR",
+   "NMRA",
+   "NRIX",
+   "NTLA",
+   "OCUL",
+   "OLMA",
+   "OMER",
+   "ONC",
+   "ORIC",
+   "PCVX",
+   "PHAT",
+   "PLRX",
+   "PRAX",
+   "PRME",
+   "PRTA",
+   "PTCT",
+   "PTGX",
+   "RARE",
+   "RCUS",
+   "RCKT",
+   "REGN",
+   "REPL",
+   "RGNX",
+   "RIGL",
+   "RLAY",
+   "RNA",
+   "ROIV",
+   "RVMD",
+   "RYTM",
+   "SANA",
+   "SLN",
+   "SMMT",
+   "SNDX",
+   "SPRY",
+   "SRPT",
+   "STOK",
+   "SYRE",
+   "TARS",
+   "TGTX",
+   "TSHA",
+   "TVTX",
+   "TYRA",
+   "URGN",
+   "VERA",
+   "VIR",
+   "VRTX",
+   "VRDN",
+   "XENE",
+   "XERS",
+   "ZLAB",
+   "ZNTL"
   ],
   "BRAZIL": [
    "XP",
@@ -9082,6 +10692,31 @@
    "DDS",
    "BURL",
    "ROST"
+  ],
+  "DIAGNOSTICS & TESTING": [
+   "ABT",
+   "BDX",
+   "BIO",
+   "CAI",
+   "CDNA",
+   "EXAS",
+   "FLGT",
+   "GEHC",
+   "GH",
+   "GRAL",
+   "IDXX",
+   "ILMN",
+   "LH",
+   "MYGN",
+   "NEO",
+   "NTRA",
+   "OSUR",
+   "QDEL",
+   "QGEN",
+   "RVTY",
+   "TMO",
+   "VCYT",
+   "WGS"
   ],
   "DRONES": [
    "LMT",
@@ -9612,6 +11247,38 @@
    "LIDR",
    "AEVA"
   ],
+  "LIFE SCIENCE TOOLS & SERVICES": [
+   "A",
+   "ALMR",
+   "AVTR",
+   "AZTA",
+   "BIO",
+   "BRKR",
+   "CDXS",
+   "CRL",
+   "CTKB",
+   "CYRX",
+   "DHR",
+   "ILMN",
+   "IQV",
+   "ICLR",
+   "MEDP",
+   "MLAB",
+   "MRVI",
+   "MTD",
+   "NEOG",
+   "OABI",
+   "PACB",
+   "QGEN",
+   "RGEN",
+   "RVTY",
+   "TECH",
+   "TMO",
+   "TRNS",
+   "TWST",
+   "TXG",
+   "WAT"
+  ],
   "LITHIUM": [
    "LIT",
    "SQM",
@@ -9652,6 +11319,52 @@
    "TDW",
    "SBLK",
    "HTCO"
+  ],
+  "MEDICAL DEVICES": [
+   "ABT",
+   "ALGN",
+   "ATRC",
+   "AXGN",
+   "BAX",
+   "BDX",
+   "BLCO",
+   "BSX",
+   "COO",
+   "DXCM",
+   "EW",
+   "GEHC",
+   "GKOS",
+   "GMED",
+   "HAE",
+   "IART",
+   "INGN",
+   "INMD",
+   "INSP",
+   "ISRG",
+   "ITGR",
+   "LUNG",
+   "MASI",
+   "MDT",
+   "MMSI",
+   "NVCR",
+   "OFIX",
+   "PEN",
+   "PODD",
+   "PRCT",
+   "RMD",
+   "RXST",
+   "SENS",
+   "SIBN",
+   "STAA",
+   "STE",
+   "STIM",
+   "STVN",
+   "SYK",
+   "TNDM",
+   "TFX",
+   "TMCI",
+   "UTMD",
+   "ZBH"
   ],
   "MEME": [
    "GME",
@@ -9866,6 +11579,39 @@
    "WEX",
    "KLAR",
    "PAY"
+  ],
+  "PHARMACEUTICALS": [
+   "ABBV",
+   "AMPH",
+   "AMRX",
+   "ANIP",
+   "BHC",
+   "BMY",
+   "COLL",
+   "EOLS",
+   "GILD",
+   "GSK",
+   "HRTX",
+   "INDV",
+   "INVA",
+   "JAZZ",
+   "JNJ",
+   "KMDA",
+   "LLY",
+   "MNKD",
+   "MRK",
+   "NVS",
+   "OGN",
+   "PFE",
+   "PRGO",
+   "RPRX",
+   "SNY",
+   "SUPN",
+   "TAK",
+   "TEVA",
+   "UTHR",
+   "VTRS",
+   "ZTS"
   ],
   "PSYCHEDELICS": [
    "DRUG",
@@ -10317,408 +12063,207 @@
  },
  "changes": {
   "added": [
-   "ACB",
-   "ACDC",
-   "AEHR",
-   "AIT",
-   "ALLE",
-   "ALLT",
-   "AMC",
-   "AMKR",
-   "AMWL",
-   "AON",
-   "AOSL",
-   "ARBE",
-   "ARCO",
-   "AREC",
-   "ARKX",
-   "ARLP",
-   "ASH",
-   "ASIX",
-   "ASPI",
-   "ASTL",
-   "AXTA",
-   "BAK",
-   "BBD",
-   "BCPC",
-   "BH",
-   "BJRI",
-   "BLMN",
-   "BLNK",
-   "BLSH",
-   "BLZE",
-   "BNED",
-   "BOBS",
-   "BORR",
-   "BRCB",
-   "BSBR",
-   "BTBT",
-   "BWLP",
-   "BWMX",
-   "BXC",
-   "BYND",
-   "CACI",
-   "CAKE",
-   "CARS",
-   "CBAT",
-   "CBRL",
-   "CC",
-   "CCEP",
-   "CCL",
-   "CDNL",
-   "CE",
-   "CGC",
-   "CHA",
-   "CHKP",
-   "CHPT",
-   "CIG",
-   "CLBT",
-   "CNH",
-   "CNNE",
-   "COPX",
-   "CRML",
-   "CSTM",
-   "DAVE",
-   "DDI",
-   "DIN",
-   "DNUT",
-   "DPRO",
-   "DRIV",
-   "DTIL",
-   "DXYZ",
-   "E",
-   "ECVT",
-   "EDEN",
-   "EDU",
-   "EE",
-   "EFNL",
-   "EIRL",
-   "ELVA",
-   "EMN",
-   "ENOR",
-   "EPOL",
-   "ESI",
-   "ETN",
-   "EVI",
-   "EVLV",
-   "EVTC",
-   "EWD",
-   "EWG",
-   "EWI",
-   "EWK",
-   "EWL",
-   "EWN",
-   "EWO",
-   "EWP",
-   "EWQ",
-   "EWU",
-   "EWY",
-   "FER",
-   "FLNG",
-   "FLR",
-   "FLWS",
-   "FORM",
-   "FOUR",
-   "FPS",
-   "FROG",
-   "FSTR",
-   "FTI",
-   "FUL",
-   "FWRD",
-   "FWRG",
-   "GDRX",
-   "GDS",
-   "GEMI",
-   "GIC",
-   "GITS",
-   "GLNG",
-   "GPRO",
-   "GRVY",
-   "GSHD",
-   "HEAL",
-   "HIMX",
-   "HITI",
-   "HNRG",
-   "HTCO",
-   "HUN",
-   "HYDR",
-   "IEP",
-   "IESC",
-   "IEUR",
-   "IEV",
-   "IGV",
-   "INOD",
-   "INTR",
-   "IOSP",
-   "ITUB",
-   "JACK",
-   "JOBY",
-   "KB",
-   "KBR",
-   "KLAR",
-   "KLIC",
-   "KOP",
-   "KRO",
-   "KRUS",
-   "KT",
-   "KWR",
-   "LFMD",
-   "LI",
-   "LIDR",
-   "LIT",
-   "LOCO",
-   "LPL",
-   "LWLG",
-   "LXU",
-   "MATV",
-   "MEOH",
-   "MGA",
-   "MGNI",
-   "MIR",
-   "MMS",
-   "MNDY",
-   "MSB",
-   "MSOS",
-   "MX",
-   "NATH",
-   "NB",
-   "NBR",
-   "NC",
-   "NCLH",
-   "NDLS",
-   "NE",
-   "NEU",
-   "NGVT",
-   "NICE",
-   "NKLR",
-   "NRP",
-   "NVT",
-   "OKE",
-   "OLN",
-   "OMDA",
-   "OPEN",
-   "OPRT",
-   "OZEM",
-   "PAGS",
-   "PAY",
-   "PBI",
-   "PDS",
-   "PLAB",
-   "PLAY",
-   "POET",
-   "PRM",
-   "PRZO",
-   "PSIL",
-   "PTLO",
-   "PZZA",
-   "QGEN",
-   "QMCO",
-   "QTUM",
-   "RAIL",
-   "RAVE",
-   "RBBN"
-  ],
-  "removed": [
-   "AAGFF",
-   "AAMI",
-   "AAP",
-   "AARD",
-   "AAT",
-   "AAUC",
-   "AAUKF",
-   "AB",
-   "ABAT",
-   "ABBRF",
    "ABBV",
    "ABCL",
-   "ABLZF",
-   "ABR",
    "ABT",
-   "ABUS",
-   "ABVX",
-   "ACA",
    "ACAD",
-   "ACB-TO",
-   "ACDVF",
-   "ACEL",
-   "ACGBF",
-   "ACHC",
-   "ACHV",
-   "ACI",
-   "ACIU",
-   "ACIW",
-   "ACKDF",
-   "ACN",
-   "ACRS",
-   "AD",
-   "ADC",
+   "ACLX",
+   "ACRV",
    "ADCT",
-   "ADEA",
    "ADMA",
-   "ADPT",
-   "ADSLF",
-   "ADTN",
-   "ADTTF",
-   "ADUS",
-   "AEC",
-   "AEE",
-   "AEGXF",
-   "AEM-TO",
-   "AEO",
-   "AEOXF",
-   "AES",
-   "AEUXF",
-   "AFG",
-   "AFGYF",
-   "AFL",
-   "AFRAF",
-   "AG-TO",
    "AGIO",
-   "AGL",
-   "AGNC",
-   "AGPPF",
-   "AGYS",
-   "AHCO",
-   "AHR",
-   "AHRT",
-   "AIAGF",
-   "AICAF",
-   "AIG",
-   "AIP",
-   "AIR",
-   "AIZ",
-   "AKESF",
-   "AKR",
-   "ALBHF",
-   "ALCPF",
-   "ALEAF",
-   "ALEGF",
-   "ALG",
-   "ALGEF",
-   "ALGM",
+   "AKBA",
    "ALGN",
-   "ALGT",
-   "ALKS",
-   "ALKT",
-   "ALL",
-   "ALLY",
-   "ALM",
    "ALMR",
-   "ALMS",
-   "ALNPF",
-   "ALNT",
-   "ALOY",
-   "ALRM",
-   "ALV",
-   "ALVO",
-   "ALX",
-   "AMADF",
-   "AMAL",
-   "AMBQ",
-   "AMCR",
-   "AMFPF",
-   "AMG",
-   "AMH",
-   "AMKBF",
-   "AMLIF",
-   "AMLX",
-   "AMN",
-   "AMP",
+   "ALXO",
    "AMPH",
-   "AMPL",
-   "AMRC",
    "AMRX",
-   "AMSF",
-   "AMTB",
-   "AMVMF",
    "ANAB",
-   "ANDE",
-   "ANF",
-   "ANFGF",
-   "ANGI",
-   "ANGO",
    "ANIP",
-   "ANL",
-   "ANNSF",
    "ANNX",
-   "ANPDF",
-   "ANPMF",
-   "ANRO",
-   "ANSNF",
-   "AORT",
-   "APAM",
-   "APELF",
-   "APH",
-   "API",
-   "APLE",
-   "APO",
-   "APP",
-   "APPF",
-   "APPN",
-   "APPS",
-   "APTV",
-   "AQST",
-   "ARCB",
    "ARCT",
-   "ARDX",
-   "ARE",
-   "ARES",
-   "ARGTF",
    "ARGX",
-   "ARIS",
-   "ARKB",
-   "ARMK",
-   "AROW",
-   "ARPRF",
    "ARQT",
-   "ARREF",
    "ARVN",
-   "ARYTF",
-   "ASCLF",
-   "ASEJF",
-   "ASKLF",
-   "ASM",
-   "ASMXF",
    "ASND",
-   "ASPN",
-   "ASR",
-   "ASRHF",
-   "ASTE",
-   "ASTH",
-   "ASTVF",
-   "ASX",
-   "ATEC",
-   "ATEX",
-   "ATHM",
-   "ATI",
-   "ATKR",
-   "ATO",
-   "ATOGF",
    "ATRC",
-   "ATRO",
-   "ATROB",
-   "ATS",
-   "ATUSF",
-   "AUB",
-   "AUEEF",
-   "AUGO",
-   "AUHEF",
-   "AUKUF",
-   "AUPH",
-   "AURA",
-   "AUTL",
-   "AUTLF",
-   "AUTSF",
-   "AVAH",
    "AVBP",
-   "AVIR",
-   "AVPT",
-   "AVR",
-   "AVTX",
-   "AVVOF",
-   "AVXL",
-   "AVY",
-   "AWK"
-  ]
+   "AVTR",
+   "AXGN",
+   "AXSM",
+   "AZTA",
+   "BAX",
+   "BBIO",
+   "BCYC",
+   "BDX",
+   "BHC",
+   "BIO",
+   "BLCO",
+   "BMY",
+   "BRKR",
+   "BSX",
+   "CABA",
+   "CAI",
+   "CAPR",
+   "CDXS",
+   "CELC",
+   "CGEM",
+   "CGON",
+   "CLDX",
+   "COGT",
+   "COLL",
+   "COO",
+   "CORT",
+   "CRL",
+   "CRVS",
+   "CTKB",
+   "CTMX",
+   "CYRX",
+   "CYTK",
+   "DHR",
+   "DNLI",
+   "ELVN",
+   "ENTA",
+   "EOLS",
+   "ERAS",
+   "EW",
+   "EXAS",
+   "EXEL",
+   "FATE",
+   "FDMT",
+   "GERN",
+   "GH",
+   "GKOS",
+   "GMAB",
+   "GMED",
+   "GSK",
+   "HAE",
+   "HALO",
+   "HRMY",
+   "HRTX",
+   "IART",
+   "IBRX",
+   "ICLR",
+   "IMCR",
+   "IMNM",
+   "IMTX",
+   "IMVT",
+   "INCY",
+   "INDV",
+   "INGN",
+   "INMD",
+   "INSM",
+   "INSP",
+   "INVA",
+   "IONS",
+   "IOVA",
+   "IRON",
+   "IRWD",
+   "ITGR",
+   "JANX",
+   "JAZZ",
+   "JNJ",
+   "KMDA",
+   "KRRO",
+   "KRYS",
+   "KURA",
+   "KYMR",
+   "LGND",
+   "LH",
+   "LQDA",
+   "LUNG",
+   "MASI",
+   "MDGL",
+   "MDT",
+   "MEDP",
+   "MIRM",
+   "MLAB",
+   "MMSI",
+   "MNKD",
+   "MNMD",
+   "MRK",
+   "MRVI",
+   "MTD",
+   "NEO",
+   "NEOG",
+   "NKTR",
+   "NMRA",
+   "NRIX",
+   "NVCR",
+   "NVS",
+   "OABI",
+   "OCUL",
+   "OFIX",
+   "OGN",
+   "OLMA",
+   "OMER",
+   "ONC",
+   "ORIC",
+   "OSUR",
+   "PCVX",
+   "PEN",
+   "PHAT",
+   "PLRX",
+   "PODD",
+   "PRAX",
+   "PRGO",
+   "PRME",
+   "PRTA",
+   "PTCT",
+   "PTGX",
+   "QDEL",
+   "RCKT",
+   "RCUS",
+   "REPL",
+   "RGEN",
+   "RIGL",
+   "RLAY",
+   "RMD",
+   "RNA",
+   "ROIV",
+   "RPRX",
+   "RVMD",
+   "RVTY",
+   "RXST",
+   "RYTM",
+   "SENS",
+   "SIBN",
+   "SLN",
+   "SMMT",
+   "SNDX",
+   "SNY",
+   "SPRY",
+   "STAA",
+   "STE",
+   "STIM",
+   "STOK",
+   "STVN",
+   "SUPN",
+   "SYK",
+   "SYRE",
+   "TAK",
+   "TARS",
+   "TECH",
+   "TEVA",
+   "TFX",
+   "TGTX",
+   "TMCI",
+   "TMO",
+   "TNDM",
+   "TSHA",
+   "TVTX",
+   "TYRA",
+   "URGN",
+   "UTHR",
+   "UTMD",
+   "VERA",
+   "VRDN",
+   "VTRS",
+   "WAT",
+   "XENE",
+   "XERS",
+   "ZBH"
+  ],
+  "removed": []
  }
 }
