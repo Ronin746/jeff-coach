@@ -1,0 +1,1613 @@
+{
+  "ACN": {
+    "calendar": [
+      "2026-12-17"
+    ],
+    "earnings_dates": [
+      "2026-12-17"
+    ],
+    "past_dates": [
+      "2026-10-01"
+    ],
+    "errors": []
+  },
+  "AI": {
+    "calendar": [
+      "2026-09-02"
+    ],
+    "earnings_dates": [
+      "2026-12-09"
+    ],
+    "past_dates": [
+      "2026-09-02"
+    ],
+    "errors": []
+  },
+  "ALKS": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-07-28"
+    ],
+    "errors": []
+  },
+  "AMC": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-07-20"
+    ],
+    "errors": []
+  },
+  "AMLX": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "ANF": {
+    "calendar": [
+      "2026-11-25"
+    ],
+    "earnings_dates": [
+      "2026-11-25"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "AR": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "ASO": {
+    "calendar": [
+      "2026-12-08"
+    ],
+    "earnings_dates": [
+      "2026-12-08"
+    ],
+    "past_dates": [
+      "2026-09-09"
+    ],
+    "errors": []
+  },
+  "ASST": {
+    "calendar": [
+      "2026-11-10"
+    ],
+    "earnings_dates": [
+      "2026-11-10"
+    ],
+    "past_dates": [
+      "2026-08-10"
+    ],
+    "errors": []
+  },
+  "ATRC": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-07-23"
+    ],
+    "errors": []
+  },
+  "AXGN": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "BBD": {
+    "calendar": [
+      "2026-10-22"
+    ],
+    "earnings_dates": [
+      "2027-02-04"
+    ],
+    "past_dates": [
+      "2026-08-04",
+      "2026-10-21"
+    ],
+    "errors": []
+  },
+  "BFH": {
+    "calendar": [
+      "2026-10-22"
+    ],
+    "earnings_dates": [
+      "2027-01-28"
+    ],
+    "past_dates": [
+      "2026-07-22",
+      "2026-10-21"
+    ],
+    "errors": []
+  },
+  "BILL": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-19"
+    ],
+    "errors": []
+  },
+  "BMY": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "BTE": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "CBRL": {
+    "calendar": [
+      "2026-12-09"
+    ],
+    "earnings_dates": [
+      "2026-12-09"
+    ],
+    "past_dates": [
+      "2026-09-23"
+    ],
+    "errors": []
+  },
+  "CDNA": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "CF": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "CHYM": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "CLF": {
+    "calendar": [
+      "2026-10-19"
+    ],
+    "earnings_dates": [
+      "2027-02-08"
+    ],
+    "past_dates": [
+      "2026-07-23",
+      "2026-10-19"
+    ],
+    "errors": []
+  },
+  "CNC": {
+    "calendar": [
+      "2026-10-27"
+    ],
+    "earnings_dates": [
+      "2026-10-27"
+    ],
+    "past_dates": [
+      "2026-07-28"
+    ],
+    "errors": []
+  },
+  "CNK": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "COKE": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [],
+    "errors": []
+  },
+  "CRCL": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "CRM": {
+    "calendar": [
+      "2026-12-02"
+    ],
+    "earnings_dates": [
+      "2026-12-02"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "CRWD": {
+    "calendar": [
+      "2026-12-01"
+    ],
+    "earnings_dates": [
+      "2026-12-01"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "CTSH": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "CTVA": {
+    "calendar": [
+      "2026-11-11"
+    ],
+    "earnings_dates": [
+      "2026-11-11"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "CVE": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "DAVE": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "DELL": {
+    "calendar": [
+      "2026-11-27"
+    ],
+    "earnings_dates": [
+      "2026-11-27"
+    ],
+    "past_dates": [
+      "2026-09-01"
+    ],
+    "errors": []
+  },
+  "DG": {
+    "calendar": [
+      "2026-08-27"
+    ],
+    "earnings_dates": [
+      "2026-12-03"
+    ],
+    "past_dates": [
+      "2026-08-27"
+    ],
+    "errors": []
+  },
+  "DHT": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "DINO": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [
+      "2026-07-28"
+    ],
+    "errors": []
+  },
+  "DK": {
+    "calendar": [
+      "2026-11-06"
+    ],
+    "earnings_dates": [
+      "2026-11-06"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "DOW": {
+    "calendar": [
+      "2026-10-22"
+    ],
+    "earnings_dates": [
+      "2027-01-28"
+    ],
+    "past_dates": [
+      "2026-07-23",
+      "2026-10-21"
+    ],
+    "errors": []
+  },
+  "DT": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "EAT": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [
+      "2026-08-12"
+    ],
+    "errors": []
+  },
+  "ECO": {
+    "calendar": [
+      "2026-11-11"
+    ],
+    "earnings_dates": [
+      "2026-11-11"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "EL": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "past_dates": [
+      "2026-08-19"
+    ],
+    "errors": []
+  },
+  "ELF": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "ENTG": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "EPAM": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "EQH": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "ESTC": {
+    "calendar": [
+      "2026-11-19"
+    ],
+    "earnings_dates": [
+      "2026-11-19"
+    ],
+    "past_dates": [
+      "2026-08-27"
+    ],
+    "errors": []
+  },
+  "ETSY": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "FANG": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "past_dates": [
+      "2026-08-03"
+    ],
+    "errors": []
+  },
+  "FIVE": {
+    "calendar": [
+      "2026-12-02"
+    ],
+    "earnings_dates": [
+      "2026-12-02"
+    ],
+    "past_dates": [
+      "2026-09-02"
+    ],
+    "errors": []
+  },
+  "FIVN": {
+    "calendar": [
+      "2026-11-09"
+    ],
+    "earnings_dates": [
+      "2026-11-09"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "FRO": {
+    "calendar": [
+      "2026-08-28"
+    ],
+    "earnings_dates": [
+      "2026-11-30"
+    ],
+    "past_dates": [
+      "2026-08-27"
+    ],
+    "errors": []
+  },
+  "FSLY": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "FTI": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "GGB": {
+    "calendar": [
+      "2026-10-26"
+    ],
+    "earnings_dates": [
+      "2026-10-26"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "GKOS": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "GLBE": {
+    "calendar": [
+      "2026-11-18"
+    ],
+    "earnings_dates": [
+      "2026-11-18"
+    ],
+    "past_dates": [
+      "2026-08-12"
+    ],
+    "errors": []
+  },
+  "GME": {
+    "calendar": [
+      "2026-12-08"
+    ],
+    "earnings_dates": [
+      "2026-12-08"
+    ],
+    "past_dates": [
+      "2026-09-08"
+    ],
+    "errors": []
+  },
+  "GRAL": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "GTLB": {
+    "calendar": [
+      "2026-12-01"
+    ],
+    "earnings_dates": [
+      "2026-12-01"
+    ],
+    "past_dates": [
+      "2026-09-01"
+    ],
+    "errors": []
+  },
+  "HAE": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "HPQ": {
+    "calendar": [
+      "2026-11-24"
+    ],
+    "earnings_dates": [
+      "2026-11-24"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "HTFL": {
+    "calendar": [
+      "2026-11-12"
+    ],
+    "earnings_dates": [
+      "2026-11-12"
+    ],
+    "past_dates": [
+      "2026-08-13"
+    ],
+    "errors": []
+  },
+  "HUM": {
+    "calendar": [
+      "2026-11-06"
+    ],
+    "earnings_dates": [
+      "2026-11-06"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "INSP": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "past_dates": [
+      "2026-08-03"
+    ],
+    "errors": []
+  },
+  "INSW": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-10"
+    ],
+    "errors": []
+  },
+  "IOT": {
+    "calendar": [
+      "2026-12-03"
+    ],
+    "earnings_dates": [
+      "2026-12-03"
+    ],
+    "past_dates": [
+      "2026-09-03"
+    ],
+    "errors": []
+  },
+  "IT": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "ITUB": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "KNTK": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "KSPI": {
+    "calendar": [
+      "2026-11-09"
+    ],
+    "earnings_dates": [
+      "2026-11-09"
+    ],
+    "past_dates": [],
+    "errors": []
+  },
+  "LTH": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "M": {
+    "calendar": [
+      "2026-12-02"
+    ],
+    "earnings_dates": [
+      "2026-12-02"
+    ],
+    "past_dates": [
+      "2026-09-10"
+    ],
+    "errors": []
+  },
+  "MANH": {
+    "calendar": [
+      "2026-10-27"
+    ],
+    "earnings_dates": [
+      "2026-10-27"
+    ],
+    "past_dates": [
+      "2026-07-28"
+    ],
+    "errors": []
+  },
+  "MNDY": {
+    "calendar": [
+      "2026-11-09"
+    ],
+    "earnings_dates": [
+      "2026-11-09"
+    ],
+    "past_dates": [
+      "2026-08-10"
+    ],
+    "errors": []
+  },
+  "MPC": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "MTDR": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "NET": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "NICE": {
+    "calendar": [
+      "2026-11-12"
+    ],
+    "earnings_dates": [
+      "2026-11-12"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "NOG": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "NSIT": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "NTAP": {
+    "calendar": [
+      "2026-12-01"
+    ],
+    "earnings_dates": [
+      "2026-12-01"
+    ],
+    "past_dates": [
+      "2026-09-02"
+    ],
+    "errors": []
+  },
+  "NTNX": {
+    "calendar": [
+      "2026-11-25"
+    ],
+    "earnings_dates": [
+      "2026-11-25"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "NTRA": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "NUE": {
+    "calendar": [
+      "2026-10-26"
+    ],
+    "earnings_dates": [
+      "2026-10-26"
+    ],
+    "past_dates": [
+      "2026-07-27"
+    ],
+    "errors": []
+  },
+  "NVDA": {
+    "calendar": [
+      "2026-11-17"
+    ],
+    "earnings_dates": [
+      "2026-11-17"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "P": {
+    "calendar": [
+      "2026-08-26"
+    ],
+    "earnings_dates": [
+      "2026-12-01"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "PANW": {
+    "calendar": [
+      "2026-11-19"
+    ],
+    "earnings_dates": [
+      "2026-11-19"
+    ],
+    "past_dates": [
+      "2026-09-01"
+    ],
+    "errors": []
+  },
+  "PATH": {
+    "calendar": [
+      "2026-12-02"
+    ],
+    "earnings_dates": [
+      "2026-12-02"
+    ],
+    "past_dates": [
+      "2026-09-03"
+    ],
+    "errors": []
+  },
+  "PLTR": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "past_dates": [
+      "2026-08-03"
+    ],
+    "errors": []
+  },
+  "PR": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "PSX": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "QCOM": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "RGEN": {
+    "calendar": [
+      "2026-10-27"
+    ],
+    "earnings_dates": [
+      "2026-10-27"
+    ],
+    "past_dates": [
+      "2026-07-28"
+    ],
+    "errors": []
+  },
+  "RIG": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "RNG": {
+    "calendar": [
+      "2026-10-22"
+    ],
+    "earnings_dates": [
+      "2027-02-18"
+    ],
+    "past_dates": [
+      "2026-07-23",
+      "2026-10-22"
+    ],
+    "errors": []
+  },
+  "RVTY": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "RXO": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "S": {
+    "calendar": [
+      "2026-08-27"
+    ],
+    "earnings_dates": [
+      "2026-12-03"
+    ],
+    "past_dates": [
+      "2026-08-27"
+    ],
+    "errors": []
+  },
+  "SAIL": {
+    "calendar": [
+      "2026-09-09"
+    ],
+    "earnings_dates": [
+      "2026-12-15"
+    ],
+    "past_dates": [
+      "2026-09-09"
+    ],
+    "errors": []
+  },
+  "SBLK": {
+    "calendar": [
+      "2026-11-18"
+    ],
+    "earnings_dates": [
+      "2026-11-18"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "SBS": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-12"
+    ],
+    "errors": []
+  },
+  "SEZL": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "SHOP": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "SIG": {
+    "calendar": [
+      "2026-12-01"
+    ],
+    "earnings_dates": [
+      "2026-12-01"
+    ],
+    "past_dates": [
+      "2026-09-09"
+    ],
+    "errors": []
+  },
+  "SLB": {
+    "calendar": [
+      "2027-01-22"
+    ],
+    "earnings_dates": [
+      "2026-10-23",
+      "2027-01-22"
+    ],
+    "past_dates": [
+      "2026-07-24"
+    ],
+    "errors": []
+  },
+  "SMTC": {
+    "calendar": [
+      "2026-11-23"
+    ],
+    "earnings_dates": [
+      "2026-11-23"
+    ],
+    "past_dates": [
+      "2026-08-25"
+    ],
+    "errors": []
+  },
+  "SN": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "SNAP": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-03"
+    ],
+    "errors": []
+  },
+  "SNOW": {
+    "calendar": [
+      "2026-12-02"
+    ],
+    "earnings_dates": [
+      "2026-12-02"
+    ],
+    "past_dates": [
+      "2026-09-02"
+    ],
+    "errors": []
+  },
+  "STLD": {
+    "calendar": [
+      "2026-10-19"
+    ],
+    "earnings_dates": [
+      "2027-01-25"
+    ],
+    "past_dates": [
+      "2026-07-20",
+      "2026-10-19"
+    ],
+    "errors": []
+  },
+  "STNG": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "SWK": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "TEAM": {
+    "calendar": [
+      "2026-11-05"
+    ],
+    "earnings_dates": [
+      "2026-11-05"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "TEVA": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-07-29"
+    ],
+    "errors": []
+  },
+  "TMO": {
+    "calendar": [
+      "2026-10-21"
+    ],
+    "earnings_dates": [
+      "2027-01-28"
+    ],
+    "past_dates": [
+      "2026-07-23",
+      "2026-10-21"
+    ],
+    "errors": []
+  },
+  "TRI": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "TRMD": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "TTAN": {
+    "calendar": [
+      "2026-12-03"
+    ],
+    "earnings_dates": [
+      "2026-12-03"
+    ],
+    "past_dates": [
+      "2026-09-08"
+    ],
+    "errors": []
+  },
+  "TWLO": {
+    "calendar": [
+      "2026-10-29"
+    ],
+    "earnings_dates": [
+      "2026-10-29"
+    ],
+    "past_dates": [
+      "2026-08-06"
+    ],
+    "errors": []
+  },
+  "TXN": {
+    "calendar": [
+      "2026-10-21"
+    ],
+    "earnings_dates": [
+      "2027-01-26"
+    ],
+    "past_dates": [
+      "2026-07-22",
+      "2026-10-21"
+    ],
+    "errors": []
+  },
+  "URBN": {
+    "calendar": [
+      "2026-11-25"
+    ],
+    "earnings_dates": [
+      "2026-11-25"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "UTHR": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "VAL": {
+    "calendar": [
+      "2026-11-02"
+    ],
+    "earnings_dates": [
+      "2026-11-02"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "VCTR": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-05"
+    ],
+    "errors": []
+  },
+  "VCYT": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-07-30"
+    ],
+    "errors": []
+  },
+  "VEEV": {
+    "calendar": [
+      "2026-11-25"
+    ],
+    "earnings_dates": [
+      "2026-11-25"
+    ],
+    "past_dates": [
+      "2026-08-26"
+    ],
+    "errors": []
+  },
+  "VG": {
+    "calendar": [
+      "2026-11-10"
+    ],
+    "earnings_dates": [
+      "2026-11-10"
+    ],
+    "past_dates": [
+      "2026-08-11"
+    ],
+    "errors": []
+  },
+  "VRNS": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-07-28"
+    ],
+    "errors": []
+  },
+  "VSXY": {
+    "calendar": [
+      "2026-12-03"
+    ],
+    "earnings_dates": [
+      "2026-12-03"
+    ],
+    "past_dates": [
+      "2026-09-03"
+    ],
+    "errors": []
+  },
+  "W": {
+    "calendar": [
+      "2026-11-04"
+    ],
+    "earnings_dates": [
+      "2026-11-04"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "WDAY": {
+    "calendar": [
+      "2026-08-27"
+    ],
+    "earnings_dates": [
+      "2026-12-01"
+    ],
+    "past_dates": [
+      "2026-08-27"
+    ],
+    "errors": []
+  },
+  "YPF": {
+    "calendar": [
+      "2026-10-28"
+    ],
+    "earnings_dates": [
+      "2026-10-28"
+    ],
+    "past_dates": [],
+    "errors": []
+  },
+  "ZBRA": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  },
+  "ZETA": {
+    "calendar": [
+      "2026-11-03"
+    ],
+    "earnings_dates": [
+      "2026-11-03"
+    ],
+    "past_dates": [
+      "2026-08-04"
+    ],
+    "errors": []
+  }
+}
