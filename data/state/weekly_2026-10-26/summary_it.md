@@ -1,0 +1,5 @@
+**Weekly 2026-10-26** (close 23/10)
+Focus (7): MATX, ZBRA, TEVA, AMC, NTNX, PLTR, AMG
+Stalk (57): DELL, OKTA, ATRC, CRWD, DDOG, DK, ESTC, FIVN, GH, LFST, MRVL, MU, NSIT, NTAP, NTRA, OSCR, PANW, PARR, QLYS, RVTY, SN, SNOW, TRMD, ZETA, AMRX, VAL, HPQ, HUM, CRGY, IMAX, CNK, DBX, MGNI, DAVE, ELF, IOT, SWKS, A, TDW, WAT, KNTK, VRNS, W, BRKR, COKE, SWK, TMO, ADI, BIO, JXN, CF, CRBG, EQH, FIVE, M, SLB, KSPI
+Pattern settimanale in formazione (numeri ok, manca solo il pattern): ATRC (flat base); DDOG (flat base); DK (flat base); GH (flat base); NTAP (flat base); NTRA (flat base); RVTY (flat base); HUM (flat base); IMAX (flat base); SWKS (flat base); A (flat base); VRNS (flat base); CF (ascending triangle); M (ascending base)
+Utili 2026-10-26..2026-10-30: CAKE 2026-10-27, CHEF 2026-10-28, CNC 2026-10-27, CROX 2026-10-29, CVE 2026-10-29, CVLT 2026-10-27, FCX 2026-10-27, FFIV 2026-10-27, FTI 2026-10-29, FTNT 2026-10-28, GGB 2026-10-26, GKOS 2026-10-28, LLY 2026-10-29, LTH 2026-10-29, MRK 2026-10-29, NOW 2026-10-28, NUE 2026-10-26, PTEN 2026-10-28, RGEN 2026-10-27, STNG 2026-10-28, TWLO 2026-10-29, VIST 2026-10-28, YPF 2026-10-28
