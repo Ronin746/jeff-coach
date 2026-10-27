@@ -7,9 +7,10 @@ name: Market Monitor nostro
 # Scrive data/breadth/market_monitor_full.json e la calibrazione su Stockbee; la lista la usa solo se
 # Stockbee, NEL e l'archivio non hanno la riga del giorno.
 on:
-  schedule:
-    - cron: "0 22 * * 1-5"
-    - cron: "0 23 * * 1-5"
+  # [sospeso 27/10, Andrea] cron su GitHub fermo su richiesta. Si lancia ancora a mano (Run workflow).
+  # schedule:
+  #   - cron: "0 22 * * 1-5"
+  #   - cron: "0 23 * * 1-5"
   workflow_dispatch:
 
 permissions:
