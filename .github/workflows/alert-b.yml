@@ -5,10 +5,11 @@ name: Alert turno B (dalle 19:05 Roma)
 # 16:00 / 17:00 / 17:30 UTC: con l'ora legale USA parte il primo (12:00 NY), con l'ora solare il secondo
 # (12:00 NY). Gli altri sono la riserva: escono subito se il turno è già attivo.
 on:
-  schedule:
-    - cron: "0 16 * * 1-5"
-    - cron: "0 17 * * 1-5"
-    - cron: "30 17 * * 1-5"
+  # [sospeso 27/10, Andrea] cron su GitHub fermo: lo fa il server Oracle. Si lancia ancora a mano (Run workflow).
+  # schedule:
+  #   - cron: "0 16 * * 1-5"
+  #   - cron: "0 17 * * 1-5"
+  #   - cron: "30 17 * * 1-5"
   workflow_dispatch:
 
 permissions:

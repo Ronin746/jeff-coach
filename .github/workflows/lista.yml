@@ -3,9 +3,10 @@ name: Lista Focus/Stalk del mattino
 # 07:00 e 08:00 UTC = 09:00/10:00 Roma con l'ora legale, 08:00/09:00 con l'ora solare.
 # Il primo dei due che parte fa la lista, il secondo esce subito (--skip-if-done).
 on:
-  schedule:
-    - cron: "0 6 * * 1-5"
-    - cron: "0 7 * * 1-5"
+  # [sospeso 27/10, Andrea] cron su GitHub fermo: lo fa il server Oracle. Si lancia ancora a mano (Run workflow).
+  # schedule:
+  #   - cron: "0 6 * * 1-5"
+  #   - cron: "0 7 * * 1-5"
   workflow_dispatch:
     inputs:
       session:
