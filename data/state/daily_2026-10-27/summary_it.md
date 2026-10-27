@@ -1,0 +1,22 @@
+**Watchlist 2026-10-27** (close 26/10)
+Focus (3): GTLB, HAE, SN
+Stalk (32): PR, HUM, TEAM, ANF, ATRC, BTE, CBRL, DHT, FIVN, FRO, HTFL, NSIT, RVTY, RXO, TRMD, VEEV, VSXY, ZETA, NTNX, DBX, ELF, IOT, NOG, WAT, W, CRM, SHOP, TMO, SIG, CDW, ASO, NICE
+
+Entrano in Focus: GTLB, SN · Escono: ELF (under 65m EMA50 (-0.2%)), VSXY (over 5% from SMA5; 1 tight day)
+Gruppi più forti: Oil & Gas Refining & Marketing (100); Marine Shipping (99); Oil & Gas Drilling (98); Electronics & Computer Distribution (98: NSIT); Oil & Gas Integrated (97); REIT—Hotel & Motel (96)
+Forza del gruppo dei Focus (percentile): GTLB 91, HAE 67, SN 38
+Canale rialzista, parte bassa (10):
+  sopra EMA50 1h ed EMA9: RNG (bordo basso, linea bassa 81.89); DT (bordo basso, linea bassa 62.6); INSW (bordo basso, linea bassa 110.18); NTRA (bordo basso, linea bassa 414.8); RVTY (bordo basso, linea bassa 155.12); NET (bordo basso, linea bassa 309.29); TMO (bordo basso, linea bassa 670.92)
+  sotto la EMA50 1h (alert se la recupera): PBR (backtest della linea rotta 22.42); AMC (bordo basso, linea bassa 2.92); PBR-A (backtest della linea rotta 20.53)
+Trendline discendente (wedge pop) (31):
+  rotta da poco, si segue il pullback (alert sul crossback: tocco di EMA9/21 e recupero della EMA50 1h sopra la EMA9): AMLX (rotta il 10-20, vol 0.69x); ESTC (rotta il 10-23, vol 0.86x); FIVN (rotta il 10-23, vol 1.25x); HPQ (rotta il 10-21, vol 0.56x); SEZL (rotta il 10-21, vol 0.78x); IT (rotta il 10-15, vol 1.04x); MTDR (rotta il 10-23, vol 1.14x); NOG (rotta il 10-16, vol 0.77x); WDAY (rotta il 10-15, vol 0.94x); ACN (rotta il 10-16, vol 1.22x); NE (rotta il 10-23, vol 1.79x); DOW (rotta il 10-14, vol 0.95x); GLBE (rotta il 10-20, vol 1.08x); URI (rotta il 10-21, vol 1.58x); VCYT (rotta il 10-21, vol 0.6x); CF (rotta il 10-15, vol 1.21x); SLB (rotta il 10-16, vol 0.99x); PATH (rotta il 10-23, vol 0.55x)
+  sotto la linea e vicina, entro 1 ATR (alert se la rompe con RVOL >= 1,5): MRVL (linea 247.29, 0.9 ATR); VCTR (linea 110.39, 0.48 ATR); WDC (linea 370.48, 0.77 ATR); NUE (linea 264.95, 0.99 ATR); SBLK (linea 28.95, 0.02 ATR); VG (linea 14.3, 0.77 ATR); CRM (linea 251.02, 0.45 ATR); MDB (linea 396.46, 0.36 ATR); BFH (linea 105.09, 0.97 ATR); ALKS (linea 44.49, 0.13 ATR); MOG-A (linea 368.51, 0.78 ATR); KMX (linea 53.73, 0.57 ATR); APPF (linea 222.32, 0.87 ATR)
+Reazione ritardata agli utili (8): CLF (utili 10-19 +17%, pivot 14.58, minimo crescente); IOT (utili 09-04 +16%, pivot 45.32, minimo crescente); SNOW (utili 09-03 +23%, pivot 368.63, minimo crescente); DELL (utili 09-02 +9%, pivot 579.74, minimo crescente); GTLB (utili 09-02 +22%, pivot 57.89, minimo crescente); CRM (utili 08-27 +12%, pivot 252.42, minimo crescente); NVDA (utili 08-27 +6%, pivot 228.64, minimo crescente); SMTC (utili 08-25 +4%, pivot 178.24, minimo crescente)
+Triangoli ascendenti (1): RVTY (tetto 161.67, 5 tocchi, Stalk)
+Numeri ok ma senza pattern di continuation (fuori lista): ALKS, BRKR, GLBE, HRB, KMX, NAVN, NTRA, SWKS, TXG
+Regime: MIXED — pool lists: score -1 → MIXED; pool (166): Leading 49% of Leading+Lagging · Leading 53 / Mediocre 58 / Lagging 55; pool flow 5d -1.2% (12 up, 14 down); pool flow trend mixed (+4.8% -8.2% +2.3% -3.6%); Market Monitor Expansion (context)
+Focus tenuti in Stalk dal regime: W
+Temi LEADING/BUILDING (8 su 92): OIL AND GAS UPSTREAM (LEADING), CYBER SECURITY (LEADING), OIL AND GAS DRILLING (BUILDING), GOVERNMENT CONTRACTORS (BUILDING), HEALTH INSURANCE (BUILDING), OIL AND GAS MIDSTREAM (BUILDING), LNG (BUILDING), TELEHEALTH (BUILDING)
+Esclusi per stadio del tema (WEAK/BEARISH): NTAP (DATA STORAGE WEAK); UTHR (PHARMACEUTICALS WEAK)
+Utili 2026-10-27..2026-11-02: AR 2026-10-28, AXGN 2026-10-28, AXTI 2026-10-29, BAX 2026-10-29, BMY 2026-10-29, CDNA 2026-10-29, CTSH 2026-10-29, CVE 2026-10-29, DINO 2026-10-28, EAT 2026-10-28, EL 2026-11-02, ENTG 2026-10-29, EQH 2026-11-02, FORM 2026-10-28, FTI 2026-10-29, GKOS 2026-10-28, ILMN 2026-10-29, INSP 2026-11-02, IQV 2026-10-27, LTH 2026-10-29, MANH 2026-10-27, NOW 2026-10-28, PBF 2026-10-29, PLTR 2026-11-02, RGEN 2026-10-27, RIG 2026-11-02, STM 2026-10-29, STNG 2026-10-28, TWLO 2026-10-29, UMC 2026-10-28, VAL 2026-11-02, WEX 2026-10-28, YPF 2026-10-28 · senza data: NE, NUE, PBR-A
+Remy: 35 nomi
