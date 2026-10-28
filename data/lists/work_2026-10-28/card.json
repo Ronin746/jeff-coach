@@ -1,0 +1,44 @@
+{
+  "embeds": [
+    {
+      "description": "**JEFF COACH WATCHLIST · multi-edge — 2026-10-28** (close 2026-10-27)\nBias **MIXED** · risk `0.15%` per trade — Martin bias (pool lists): score -1 → MIXED; Martin pool (139): Leading 43% of Leading+Lagging; pool flow 5d -2.2% (17 up, 20 down); pool flow trend mixed (-9.5% +3.7% -5.9% +5.8%)\n**Breadth (Martin)** · Martin pool `139` names · above EMA21 (universe) `57%`\n- Leading `42` (+7 1d, +10 5d)\n- Mediocre `42` (-2 1d, -13 5d)\n- Lagging `55` (-3 1d, +7 5d)\nPool flow 5d `-2.2%` (17 up, 20 down) · daily `+4.4%` `-9.5%` `+3.7%` `-5.9%` `+5.8%`\nUniverse lists L `317` (+8 1d, +21 5d) · M `291` (-11 1d, -12 5d) · G `267` (+1 1d, -4 5d)\nIWM vs QQQ 1M `+2.1` pts · IWM >9 >21 · mega caps above 9 `6/10` · leaders below 9 `1/20` below 21 `3/20`\nScan +4%: `33` names · together: SEMIS AI 3\nThemes: CRM (active), OIL AND GAS UPSTREAM (ignition), OIL AND GAS DOWNSTREAM (active)",
+      "color": 15844367,
+      "image": {
+        "url": "attachment://breadth.png"
+      }
+    },
+    {
+      "description": "**FOCUS LONG — mixed market, best only**\n• **W** — Leading · RS +16.6 · ADR 4.3% · sup `108.46` 4.1% away · EMA21 + gap + 2× SH · edges 4/5 (M&T S&R PA/VOL MTF) · SPECIALTY RETAIL (ignition) · Jeff RS 91 · VCP 0\n• **M** — Leading · RS +5.8 · ADR 3.8% · sup `23.23` 2.7% away · EMA21 + EMA50 + EMA9w · edges 3/5 (S&R PA/VOL RS) · DEPARTMENT STORES (neutral) · Jeff RS 80 · VCP 14\n• **TMO** — Leading · RS +4.2 · ADR 3.2% · sup `681.96` 1.6% away · 2× AVWAP SL + EMA9 + SH · edges 3/5 (M&T MTF RS) · DIAGNOSTICS & TESTING (active) · Jeff RS 88 · VCP 18\n• **GLBE** — Leading · RS +7.8 · ADR 3.7% · sup `40.83` 1.8% away · AVWAP SL + EMA9 + 2× SH · edges 0/5 · Jeff RS 83 · VCP 1\n\nTracking: 88 long — in the attached TradingView file",
+      "color": 3066993,
+      "url": "https://www.tradingview.com/symbols/W/",
+      "image": {
+        "url": "attachment://focus_W.png"
+      }
+    },
+    {
+      "url": "https://www.tradingview.com/symbols/W/",
+      "color": 3066993,
+      "image": {
+        "url": "attachment://focus_M.png"
+      }
+    },
+    {
+      "url": "https://www.tradingview.com/symbols/W/",
+      "color": 3066993,
+      "image": {
+        "url": "attachment://focus_TMO.png"
+      }
+    },
+    {
+      "url": "https://www.tradingview.com/symbols/W/",
+      "color": 3066993,
+      "image": {
+        "url": "attachment://focus_GLBE.png"
+      }
+    },
+    {
+      "description": "**PEG — delayed reaction to earnings** (alerts at the level, like the Focus)\n• **CLF** — PEG 10-19 +17% (5.7x vol) · gap range 12.12-14.58 · pivot 14.58 · no alert level (best support 4 levels 7.3% away) · Jeff RS 85 · STEEL\n• **IOT** — PEG 09-04 +16% (4.6x vol) · gap range 38.75-45.12 · pivot 45.32 · no alert level (best support 3 levels 0.9% away) · Jeff RS 89 · SOFTWARE\n• **SNOW** — PEG 09-03 +23% (4.2x vol) · gap range 305.84-384.56 · pivot 356.84 · no alert level (best support 3 levels 2.2% away) · Jeff RS 98 · SOFTWARE\n• **DELL** — PEG 09-02 +9% (5.6x vol) · gap range 425.00-497.99 · pivot 548.39 · no alert level (best support 1 level 6.5% away) · Jeff RS 99 · EDGE CLOUD\n• **GTLB** — PEG 09-02 +22% (6.5x vol) · gap range 45.09-55.55 · pivot 57.22 · no alert level (best support 3 levels 11.6% away) · Jeff RS 98 · SOFTWARE\n• **CRM** — PEG 08-27 +12% (3.9x vol) · gap range 205.62-254.48 · pivot 252.42 · no alert level (best support 3 levels 0.4% away) · Jeff RS 86 · CRM",
+      "color": 3066993
+    }
+  ]
+}
