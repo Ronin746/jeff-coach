@@ -177,13 +177,69 @@ def download_daily(symbols: Iterable[str], start: str, end_inclusive: date, chun
                 sub = df[s] if isinstance(df.columns, pd.MultiIndex) else df
             except KeyError:
                 continue
-            sub = sub[["Open", "High", "Low", "Close", "Volume"]].dropna(subset=["Close"])
+            sub = sub[["Open", "High", "Low", "Close", "Volume"]].dropna(how="all")
             sub = sub[sub.index.date <= end_inclusive]
             if len(sub):
                 sub.index = pd.DatetimeIndex(sub.index.date)
                 out[s] = sub.astype(float)
         log.info("daily %d/%d", min(i + chunk, len(syms)), len(syms))
-    return out
+    fill_missing_closes(out, end_inclusive)
+    return {s: df for s, df in ((s, df.dropna(subset=["Close"])) for s, df in out.items()) if len(df)}
+
+
+def _download_60m(syms: list[str], start: date, end: date) -> pd.DataFrame:
+    return _yf().download(syms, start=start.isoformat(), end=end.isoformat(), interval="60m", auto_adjust=False,
+                          prepost=False, group_by="ticker", threads=True, progress=False)
+
+
+def fill_missing_closes(frames: dict[str, pd.DataFrame], end_inclusive: date, days_back: int = 7,
+                        fetch=None, chunk: int = 200) -> int:
+    """Barre daily di Yahoo con Open/High/Low ma senza Close [28/10: la seduta del 27/10 su quasi tutto l'universo,
+    la lista del mattino era vuota]: la chiusura si prende dall'ultima barra a 60 minuti (RTH) di quel giorno, dentro
+    il minimo e il massimo della barra daily. Solo le barre degli ultimi `days_back` giorni; le altre restano scartate.
+    Riempie `frames` sul posto e restituisce quante chiusure ha messo."""
+    first = pd.Timestamp(end_inclusive - timedelta(days=days_back))
+    need = {}
+    for s, df in frames.items():
+        m = df.Close.isna() & df.High.notna() & df.Low.notna() & (df.index >= first)
+        if m.any():
+            need[s] = list(df.index[m])
+    if not need:
+        return 0
+    fetch = fetch or _download_60m
+    syms = sorted(need)
+    lo = min(d for ds in need.values() for d in ds).date()
+    hi = max(d for ds in need.values() for d in ds).date() + timedelta(days=1)
+    filled = 0
+    for i in range(0, len(syms), chunk):
+        ch = syms[i:i + chunk]
+        try:
+            h = fetch(ch, lo, hi)
+        except Exception as e:
+            log.warning("barre a 60 minuti per le chiusure mancanti: %s", e)
+            continue
+        if h is None or h.empty:
+            continue
+        for s in ch:
+            try:
+                sub = h[s] if isinstance(h.columns, pd.MultiIndex) else h
+            except KeyError:
+                continue
+            sub = sub.dropna(subset=["Close"])
+            if not len(sub):
+                continue
+            ix = sub.index.tz_convert(ET) if sub.index.tz is not None else sub.index
+            days = pd.Series(ix.date, index=sub.index)
+            df = frames[s]
+            for d in need[s]:
+                bars = sub[days.values == d.date()]
+                if not len(bars):
+                    continue
+                c = float(bars.Close.iloc[-1])
+                df.loc[d, "Close"] = min(max(c, float(df.loc[d, "Low"])), float(df.loc[d, "High"]))
+                filled += 1
+    log.warning("Yahoo senza chiusura daily: %d titoli; chiusure prese dalle barre a 60 minuti: %d", len(need), filled)
+    return filled
 
 
 # ------------------------------------------------------------------ 65 minuti

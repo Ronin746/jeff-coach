@@ -114,3 +114,37 @@ def test_trendline_discendente_rotta_con_volume():
     assert m["dt_found"] and m["dt_broken"] and m["dt_break_ago"] == 0
     assert m["dt_break_vol"] >= 1.5
     assert dtl.state(m) == "break"
+
+
+import numpy as np  # noqa: E402
+import pandas as pd  # noqa: E402
+from datetime import date  # noqa: E402
+
+
+def test_chiusure_mancanti_di_yahoo_dalle_barre_a_60_minuti():
+    """28/10: Yahoo ha dato la barra daily del 27/10 senza Close su quasi tutto l'universo (lista del mattino vuota).
+    La chiusura si prende dall'ultima barra a 60 minuti del giorno, dentro minimo e massimo; senza barre resta scartata."""
+    from jeffcoach import data as D
+    ix = pd.DatetimeIndex([pd.Timestamp("2026-10-23"), pd.Timestamp("2026-10-26"), pd.Timestamp("2026-10-27")])
+    frames = {
+        "AAPL": pd.DataFrame({"Open": [349.1, 343.9, 343.2], "High": [351.7, 347.1, 347.8], "Low": [345.8, 341.0, 342.4],
+                              "Close": [347.7, 343.9, np.nan], "Volume": [3.9e7, 4.2e7, 3.9e7]}, index=ix),
+        "NVDA": pd.DataFrame({"Open": [211.0, 213.1, 218.3], "High": [213.9, 217.8, 219.2], "Low": [210.2, 212.6, 215.5],
+                              "Close": [211.0, 216.0, np.nan], "Volume": [8e7, 9e7, 8.4e7]}, index=ix),
+        "MSFT": pd.DataFrame({"Open": [1.0, 1.0, 1.0], "High": [2.0, 2.0, 2.0], "Low": [0.5, 0.5, 0.5],
+                              "Close": [1.5, 1.5, np.nan], "Volume": [1, 1, 1]}, index=ix),
+    }
+    seen = {}
+
+    def fetch(syms, lo, hi):
+        seen["call"] = (tuple(syms), lo, hi)
+        t = pd.DatetimeIndex(["2026-10-27 14:30", "2026-10-27 15:30"]).tz_localize("America/New_York")
+        cols = pd.MultiIndex.from_product([["AAPL", "NVDA"], ["Open", "High", "Low", "Close", "Volume"]])
+        return pd.DataFrame([[1, 1, 1, 347.17, 1, 1, 1, 1, 217.37, 1], [1, 1, 1, 347.08, 1, 1, 1, 1, 230.0, 1]],
+                            index=t, columns=cols)
+    n = D.fill_missing_closes(frames, date(2026, 10, 27), fetch=fetch)
+    assert n == 2 and seen["call"] == (("AAPL", "MSFT", "NVDA"), date(2026, 10, 27), date(2026, 10, 28))
+    assert frames["AAPL"].Close.iloc[-1] == 347.08
+    assert frames["NVDA"].Close.iloc[-1] == 219.2           # fuori dalla barra daily: tagliata al massimo
+    assert np.isnan(frames["MSFT"].Close.iloc[-1])           # senza barre a 60 minuti resta vuota (poi scartata)
+    assert D.fill_missing_closes({"X": frames["AAPL"]}, date(2026, 10, 27), fetch=fetch) == 0
