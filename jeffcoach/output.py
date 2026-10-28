@@ -54,6 +54,8 @@ def sector_groups(rows: list[dict]) -> list[tuple[str, list[dict]]]:
 
 
 def by_sector(rows: list[dict]) -> list[dict]:
+    if not C.CARD_SECTOR_GROUPS:        # [ANDREA 28/10] niente divisione per settore: resta l'ordine della lista
+        return list(rows)
     return [r for _, rr in sector_groups(rows) for r in rr]
 
 
@@ -169,6 +171,8 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
     def sect(title: str, rows: list[dict], lim: Optional[int]) -> str:
         if not rows:
             return f"**{title}**\n• none"
+        if not C.CARD_SECTOR_GROUPS:    # [ANDREA 28/10] una lista sola, senza intestazioni di settore
+            return f"**{title}**\n" + "\n".join(card_line(r, lim) for r in rows)
         blocks = [sector_line(sec, (sectors or {}).get(sec)) + "\n" + "\n".join(card_line(r, lim) for r in rr)
                   for sec, rr in sector_groups(rows)]
         return f"**{title}**\n" + "\n\n".join(blocks)
@@ -187,7 +191,8 @@ def card_descriptions(title_date: str, focus: list[dict], stalk: list[dict],
                                       + ("" if d.get("above_sma200") else " · under SMA200"))
                     for d in dtl_breaks]
             parts.append(sect(f"DOWNTREND LINE BREAK — vol ≥1.5× ({len(rows)})", rows, s_lim))
-        for ts in (themes_head(themes), themes_head_3m(themes), themes_ranking(themes), themes_section(themes)):
+        extra = (themes_ranking(themes), themes_section(themes)) if C.CARD_THEMES_RANKING else ()   # [ANDREA 28/10]
+        for ts in (themes_head(themes), themes_head_3m(themes), *extra):
             if ts:
                 parts.append(ts)
         return parts                                # una sezione per embed, sempre [RONIN 09/10]
@@ -210,6 +215,8 @@ def short_card_descriptions(title_date: str, focus: list[dict], stalk: list[dict
     def sect(title: str, rows: list[dict], lim: Optional[int]) -> str:
         if not rows:
             return f"**{title}**\n• none"
+        if not C.CARD_SECTOR_GROUPS:    # [ANDREA 28/10]
+            return f"**{title}**\n" + "\n".join(card_line(r, lim) for r in rows)
         blocks = [f"__{sec}__\n" + "\n".join(card_line(r, lim) for r in rr) for sec, rr in sector_groups(rows)]
         return f"**{title}**\n" + "\n\n".join(blocks)
 

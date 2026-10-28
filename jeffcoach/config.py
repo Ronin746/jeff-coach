@@ -276,6 +276,10 @@ THEME_ETF_HOLDINGS_URL = "https://raw.githubusercontent.com/i-manage-risk/NEL/ma
 THEME_SOURCE = "lst"
 LST_MIN_SCORED = 3               # un basket entra in classifica con almeno 3 titoli con storia sufficiente
 THEME_RANK_ROWS = 15             # basket nella classifica complessiva della card
+# [ANDREA 28/10] card più semplice: niente classifica dei temi (Overall ranking, Weakest, LEADING / BUILDING,
+# WEAK / BEARISH): restano i due grafici RS. Niente divisione per settore: una lista sola per sezione.
+CARD_THEMES_RANKING = False
+CARD_SECTOR_GROUPS = False
 THEME_DV_MIN = 75e6              # un titolo conta in un tema con controvalore medio >= 75M$ (come Martin)
 THEME_MIN_MEMBERS = 3            # un tema entra in classifica con almeno 3 titoli liquidi
 # Trend del tema: indice a pesi uguali dei suoi titoli (mediana delle variazioni giornaliere).

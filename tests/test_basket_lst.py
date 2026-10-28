@@ -34,6 +34,6 @@ def test_basket_lst_classifica_e_card():
     d = card_descriptions("2026-10-21", [], [], themes=themes, as_of="2026-10-20")
     assert any(x.startswith("**THEMES** · groups as of 2026-10-20") for x in d)
     assert any(x.startswith("Month RS (x) vs Quarter RS (y)") for x in d) and not any("Lone Stock" in x for x in d)
-    assert any("Overall ranking" in x and "**UP**" in x for x in d)
+    assert not any("Overall ranking" in x or "LEADING / BUILDING" in x for x in d)     # [ANDREA 28/10] tolta
     pngs = RC.render_all(rk["points"])
     assert set(pngs) == {"themes_rs.png", "themes_rs_3m.png"}
