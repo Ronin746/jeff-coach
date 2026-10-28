@@ -2,11 +2,11 @@
   "ok": true,
   "status": 200,
   "message_id": "1565023857046323232",
-  "method": "POST",
+  "method": "PATCH",
   "messages": 1,
   "message_ids": [
     "1565023857046323232"
   ],
   "session": "2026-10-28",
-  "card_hash": "97e889ff837e551b"
+  "card_hash": "506d5c8fd919bceb"
 }

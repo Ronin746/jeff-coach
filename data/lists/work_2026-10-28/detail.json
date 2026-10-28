@@ -224,8 +224,8 @@
   "reversal": null,
   "martin_breadth": {
     "lists": {
-      "Leading": 317,
-      "Mediocre": 291,
+      "Leading": 318,
+      "Mediocre": 289,
       "Lagging": 267
     },
     "lists_5d": {
@@ -244,12 +244,12 @@
       56.7,
       54.5,
       53.7,
-      54.3
+      54.4
     ],
     "mediocre": {
-      "share": 33.3,
+      "share": 33.1,
       "share_5d": 34.8,
-      "growth_pct": -4.0,
+      "growth_pct": -4.6,
       "from_leading": 44,
       "from_lagging": 38,
       "to_leading": 61,
@@ -286,43 +286,43 @@
     "leaders_below21": 3,
     "leaders_n": 20,
     "above21_pct": 57.0,
-    "lead_n": 317,
+    "lead_n": 318,
     "lead_above9_pct": 79.0,
-    "lead_above21_pct": 91.0
+    "lead_above21_pct": 92.0
   },
   "martin_pool": {
-    "n": 139,
+    "n": 136,
     "lists": {
       "Leading": 42,
-      "Mediocre": 42,
-      "Lagging": 55
+      "Mediocre": 40,
+      "Lagging": 54
     },
     "lists_1d": {
       "Leading": 35,
-      "Mediocre": 44,
-      "Lagging": 58
+      "Mediocre": 43,
+      "Lagging": 57
     },
     "lists_5d": {
       "Leading": 32,
       "Mediocre": 55,
       "Lagging": 48
     },
-    "share": 43.29896907216495,
-    "lead_pct": 30.215827338129497,
+    "share": 43.75,
+    "lead_pct": 30.88235294117647,
     "flow5": -2.2,
     "flow_daily": [
       -10.6,
       -1.6,
       -11.5,
       0.7,
-      -10.1,
+      -9.5,
       -1.4,
       2.2,
       4.4,
-      -9.5,
+      -9.6,
       3.7,
       -5.9,
-      5.8
+      5.9
     ],
     "series": {
       "2026-10-12": {
@@ -336,23 +336,23 @@
         "G": 35
       },
       "2026-10-14": {
-        "L": 35,
+        "L": 34,
         "M": 61,
         "G": 39
       },
       "2026-10-15": {
-        "L": 34,
+        "L": 33,
         "M": 64,
         "G": 40
       },
       "2026-10-16": {
-        "L": 28,
+        "L": 27,
         "M": 67,
         "G": 45
       },
       "2026-10-19": {
         "L": 28,
-        "M": 64,
+        "M": 63,
         "G": 45
       },
       "2026-10-20": {
@@ -361,9 +361,9 @@
         "G": 48
       },
       "2026-10-21": {
-        "L": 37,
+        "L": 36,
         "M": 49,
-        "G": 50
+        "G": 49
       },
       "2026-10-22": {
         "L": 28,
@@ -377,13 +377,13 @@
       },
       "2026-10-26": {
         "L": 35,
-        "M": 44,
-        "G": 58
+        "M": 43,
+        "G": 57
       },
       "2026-10-27": {
         "L": 42,
-        "M": 42,
-        "G": 55
+        "M": 40,
+        "G": 54
       }
     },
     "members": {
@@ -415,8 +415,8 @@
       "DDOG": "Leading",
       "ASX": "Leading",
       "SNPS": "Leading",
-      "VRT": "Lagging",
       "CEG": "Lagging",
+      "VRT": "Lagging",
       "PWR": "Mediocre",
       "INTU": "Mediocre",
       "APP": "Lagging",
@@ -434,16 +434,15 @@
       "ALAB": "Mediocre",
       "NOK": "Lagging",
       "HUM": "Leading",
-      "TER": "Mediocre",
       "VST": "Lagging",
-      "COHR": "Lagging",
+      "TER": "Mediocre",
       "FIX": "Lagging",
+      "NBIS": "Mediocre",
+      "COHR": "Lagging",
       "P": "Leading",
       "NTAP": "Leading",
-      "NBIS": "Mediocre",
       "ILMN": "Leading",
       "CVNA": "Lagging",
-      "MCHP": "Mediocre",
       "ZS": "Leading",
       "COIN": "Lagging",
       "OKTA": "Leading",
@@ -456,9 +455,9 @@
       "CNC": "Leading",
       "AXON": "Lagging",
       "UAL": "Lagging",
+      "FLEX": "Lagging",
       "CRWV": "Lagging",
       "EXPE": "Mediocre",
-      "FLEX": "Lagging",
       "RKT": "Lagging",
       "CRDO": "Mediocre",
       "MDB": "Leading",
@@ -477,8 +476,8 @@
       "SOFI": "Mediocre",
       "TSEM": "Mediocre",
       "SWKS": "Leading",
-      "CRCL": "Lagging",
       "NRG": "Lagging",
+      "CRCL": "Lagging",
       "MTSI": "Mediocre",
       "CRL": "Leading",
       "U": "Mediocre",
@@ -488,8 +487,8 @@
       "FICO": "Lagging",
       "MKSI": "Lagging",
       "CDE": "Lagging",
-      "AKAM": "Lagging",
       "CRS": "Lagging",
+      "AKAM": "Lagging",
       "CART": "Leading",
       "TEM": "Leading",
       "IONQ": "Lagging",
@@ -497,7 +496,6 @@
       "FN": "Lagging",
       "BMNR": "Mediocre",
       "ASTS": "Lagging",
-      "LULU": "Mediocre",
       "CHTR": "Lagging",
       "STRL": "Lagging",
       "TXG": "Leading",
@@ -509,13 +507,12 @@
       "AAL": "Lagging",
       "XP": "Mediocre",
       "FPS": "Lagging",
-      "CTVA": "Mediocre",
       "CLF": "Leading",
+      "CTVA": "Mediocre",
       "PATH": "Leading",
       "NCLH": "Lagging",
       "AAOI": "Lagging",
       "MXL": "Mediocre",
-      "HIMS": "Lagging",
       "WULF": "Lagging",
       "APLD": "Lagging",
       "MMED": "Mediocre",
@@ -745,7 +742,7 @@
   "bias_score": -1,
   "score_bias": "MISTO",
   "risk_pct": 0.15,
-  "bias_why": "Martin bias (pool lists): score -1 → MIXED; Martin pool (139): Leading 43% of Leading+Lagging; pool flow 5d -2.2% (17 up, 20 down); pool flow trend mixed (-9.5% +3.7% -5.9% +5.8%)",
+  "bias_why": "Martin bias (pool lists): score -1 → MIXED; Martin pool (136): Leading 44% of Leading+Lagging; pool flow 5d -2.2% (17 up, 20 down); pool flow trend mixed (-9.6% +3.7% -5.9% +5.9%)",
   "market_monitor": {
     "date": "2026-10-27",
     "state": "Expansion",
@@ -832,10 +829,10 @@
     ]
   },
   "breadth": {
-    "leading": 317,
+    "leading": 318,
     "lagging": 267,
-    "mediocre": 291,
-    "share": 0.543,
+    "mediocre": 289,
+    "share": 0.544,
     "share_prev": 0.522,
     "upgrades": [
       "AMD",
@@ -1036,11 +1033,6 @@
       "corr": 0.76
     },
     {
-      "ticker": "AZO",
-      "theme": "SPECIALTY RETAIL",
-      "corr": 0.74
-    },
-    {
       "ticker": "EXE",
       "theme": "OIL AND GAS UPSTREAM",
       "corr": 0.74
@@ -1064,6 +1056,11 @@
       "ticker": "SGI",
       "theme": "HOMEBUILDING",
       "corr": 0.73
+    },
+    {
+      "ticker": "AZO",
+      "theme": "SPECIALTY RETAIL",
+      "corr": 0.72
     },
     {
       "ticker": "FDS",
@@ -1955,6 +1952,7 @@
     "ASO",
     "SUNB",
     "FROG",
+    "RHI",
     "NICE",
     "AMC",
     "CBRL",
@@ -1967,7 +1965,6 @@
     "MUR",
     "ECO",
     "GRAL",
-    "DSGX",
     "HRI",
     "SOFI",
     "PNR",
@@ -2045,6 +2042,7 @@
     "ASO",
     "SUNB",
     "FROG",
+    "RHI",
     "NICE",
     "AMC",
     "CBRL",
@@ -2057,7 +2055,6 @@
     "MUR",
     "ECO",
     "GRAL",
-    "DSGX",
     "HRI",
     "SOFI",
     "PNR",
@@ -2522,7 +2519,7 @@
       "jeff_comp": 3,
       "jeff_ext": 2.4,
       "jeff_ema9_atr": 0.41,
-      "jeff_ma1h": 229.5292
+      "jeff_ma1h": 229.5291
     },
     {
       "ticker": "CF",
@@ -2815,7 +2812,7 @@
       "jeff_comp": 2,
       "jeff_ext": 0.0,
       "jeff_ema9_atr": 0.65,
-      "jeff_ma1h": 13.3643
+      "jeff_ma1h": 13.3642
     },
     {
       "ticker": "RNG",
@@ -2967,7 +2964,7 @@
       "jeff_comp": 1,
       "jeff_ext": 2.64,
       "jeff_ema9_atr": 0.71,
-      "jeff_ma1h": 83.3354
+      "jeff_ma1h": 83.3366
     },
     {
       "ticker": "FIVE",
@@ -4002,7 +3999,7 @@
       "jeff_comp": 2,
       "jeff_ext": 1.35,
       "jeff_ema9_atr": 0.19,
-      "jeff_ma1h": 554.2744
+      "jeff_ma1h": 554.2737
     },
     {
       "ticker": "IMAX",
@@ -4588,7 +4585,7 @@
       "jeff_comp": 1,
       "jeff_ext": 0.22,
       "jeff_ema9_atr": -0.83,
-      "jeff_ma1h": 130.6775
+      "jeff_ma1h": 130.6772
     },
     {
       "ticker": "VRSN",
@@ -4984,7 +4981,7 @@
       "jeff_comp": 2,
       "jeff_ext": 0.15,
       "jeff_ema9_atr": 0.02,
-      "jeff_ma1h": 78.9816
+      "jeff_ma1h": 78.9818
     },
     {
       "ticker": "COKE",
@@ -9558,7 +9555,7 @@
       "group_etf": "DRIV",
       "group_up": false,
       "group_dn": true,
-      "rs_group": 12.27,
+      "rs_group": 12.29,
       "group_fav": 1,
       "group_adr": 1.472,
       "group_sup": []
@@ -11541,6 +11538,117 @@
       "in_pool": false
     },
     {
+      "ticker": "RHI",
+      "side": "long",
+      "setup": "pullback long",
+      "list": "Leading",
+      "level": 37.51,
+      "level_members": [
+        "EMA21",
+        "EMA21w",
+        "EMA50"
+      ],
+      "confluence": 3,
+      "dist_pct": 11.85,
+      "adr": 5.21,
+      "dv5": 143176480.0,
+      "e9d": 39.33,
+      "atr_d": 2.29,
+      "rs21": 16.22,
+      "rs63": -4.43,
+      "ext50_atr": 1.36,
+      "theme": null,
+      "theme_phase": null,
+      "theme_stage": null,
+      "exch": "NYQ",
+      "earnings": "2027-01-28",
+      "open": [
+        "confluence"
+      ],
+      "zone_levels": 5,
+      "adv50": 79976749.0,
+      "jeff_rs": 92,
+      "tf_w": 1,
+      "tf_h": null,
+      "tf_ok": 2,
+      "n_edges": 3,
+      "edges": [
+        "SR",
+        "MTF",
+        "RS"
+      ],
+      "edge_score": 2.69,
+      "edge_detail": {
+        "MT": {
+          "ok": false,
+          "score": 0.33,
+          "why": [
+            "mas",
+            "gaps",
+            "big_volume"
+          ]
+        },
+        "SR": {
+          "ok": true,
+          "score": 0.69,
+          "why": {
+            "wsum": 5.5,
+            "tests": 0,
+            "tfs": "WD",
+            "levels": [
+              "AVWAP swing low 2026-10-08",
+              "EMA21",
+              "EMA21w",
+              "EMA50",
+              "swing high 2026-09-21"
+            ]
+          }
+        },
+        "PV": {
+          "ok": false,
+          "score": 0.0,
+          "why": [
+            "distribution"
+          ]
+        },
+        "MTF": {
+          "ok": true,
+          "score": 0.67,
+          "why": {
+            "W": true,
+            "D": true,
+            "H": null
+          }
+        },
+        "RS": {
+          "ok": true,
+          "score": 1.0,
+          "why": {
+            "rs5": 23.45,
+            "rs21": 16.22,
+            "quad": null,
+            "rotation": false
+          }
+        }
+      },
+      "tl": {
+        "value": 32.83,
+        "touches": 2,
+        "dist_pct": 27.8,
+        "channel": false
+      },
+      "hz": {
+        "kind": "zone",
+        "price": 35.41,
+        "lo": 34.71,
+        "hi": 36.21,
+        "touches": 12
+      },
+      "score": 2.62,
+      "grade": "",
+      "in_pool": false
+    },
+    {
       "ticker": "NICE",
       "side": "long",
       "setup": "pullback long",
@@ -13066,144 +13174,6 @@
           7
         ]
       ]
-    },
-    {
-      "ticker": "DSGX",
-      "side": "long",
-      "setup": "pullback long",
-      "list": "Leading",
-      "level": 81.21,
-      "level_members": [
-        "AVWAP volume day 2026-08-31",
-        "swing high 2026-09-15",
-        "swing high 2026-09-23"
-      ],
-      "confluence": 3,
-      "dist_pct": 13.51,
-      "adr": 3.06,
-      "dv5": 47734665.0,
-      "e9d": 91.0,
-      "atr_d": 2.69,
-      "rs21": 18.98,
-      "rs63": 9.18,
-      "ext50_atr": 3.99,
-      "theme": null,
-      "theme_phase": null,
-      "theme_stage": null,
-      "exch": "NMS",
-      "earnings": "2026-12-02",
-      "open": [
-        "confluence"
-      ],
-      "zone_levels": 5,
-      "adv50": 51476813.0,
-      "jeff_rs": 85,
-      "tf_w": 1,
-      "tf_h": -1,
-      "tf_ok": 2,
-      "n_edges": 3,
-      "edges": [
-        "MT",
-        "SR",
-        "RS"
-      ],
-      "edge_score": 4.07,
-      "edge_detail": {
-        "MT": {
-          "ok": true,
-          "score": 0.9,
-          "why": [
-            "structure",
-            "mas",
-            "trendline",
-            "channel",
-            "candles",
-            "gaps",
-            "volume_contrast",
-            "holds_21"
-          ]
-        },
-        "SR": {
-          "ok": true,
-          "score": 1.0,
-          "why": {
-            "wsum": 10.0,
-            "tests": 0,
-            "tfs": "WD",
-            "levels": [
-              "AVWAP volume day 2026-08-31",
-              "EMA21w",
-              "EMA50w",
-              "HZW 79.39-81.25 x9",
-              "gap",
-              "swing high 2026-09-15",
-              "swing high 2026-09-23",
-              "weekly high 2026-06-05"
-            ]
-          }
-        },
-        "PV": {
-          "ok": false,
-          "score": 0.5,
-          "why": [
-            "volume_dry"
-          ]
-        },
-        "MTF": {
-          "ok": false,
-          "score": 0.67,
-          "why": {
-            "W": true,
-            "D": true,
-            "H": false
-          }
-        },
-        "RS": {
-          "ok": true,
-          "score": 1.0,
-          "why": {
-            "rs5": 1.66,
-            "rs21": 18.98,
-            "quad": null,
-            "rotation": false
-          }
-        }
-      },
-      "tl": {
-        "value": 84.66,
-        "touches": 3,
-        "dist_pct": 8.9,
-        "channel": true
-      },
-      "hz": {
-        "kind": "zone",
-        "price": 80.84,
-        "lo": 79.39,
-        "hi": 81.25,
-        "touches": 9
-      },
-      "score": 2.909,
-      "grade": "",
-      "in_pool": false,
-      "group": "Software",
-      "group_etf": "IGV",
-      "group_up": true,
-      "group_dn": false,
-      "rs_group": 1.21,
-      "group_fav": 1,
-      "group_adr": 2.286,
-      "group_sup": [
-        [
-          98.4744,
-          101.8688,
-          2
-        ],
-        [
-          102.0907,
-          113.1681,
-          14
-        ]
-      ]
     }
   ],
   "potent": [
@@ -14458,7 +14428,7 @@
       "lead": 0.389,
       "above21": 0.694,
       "rs21": 8.1,
-      "red_rs": 1.717,
+      "red_rs": 1.694,
       "scans5": 4,
       "liq": 0.926,
       "struct": 0.806,
@@ -14775,7 +14745,7 @@
       "lead": 0.444,
       "above21": 0.722,
       "rs21": 3.345,
-      "red_rs": 1.105,
+      "red_rs": 1.343,
       "scans5": 2,
       "liq": 1.011,
       "struct": 0.611,
@@ -17571,11 +17541,11 @@
     }
   ],
   "jeff": {
-    "universe": 835,
-    "out_universe": 828,
+    "universe": 833,
+    "out_universe": 822,
     "out_universe_why": {
       "ATR%": 526,
-      "adv$": 302
+      "adv$": 296
     },
     "earnings_window": [
       "2026-10-28",
@@ -17614,8 +17584,8 @@
       "BAX": "2026-10-29",
       "GKOS": "2026-10-28",
       "AMG": "2026-11-02",
-      "LTH": "2026-10-29",
       "MTCH": "2026-11-02",
+      "LTH": "2026-10-29",
       "SM": "2026-11-03",
       "HNGE": "2026-11-02",
       "JXN": "2026-11-03",
