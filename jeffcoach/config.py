@@ -34,7 +34,8 @@ LOGS = HOME / "logs"
 # [JEFF] jeff-coach scrive solo col webhook di Sydney (card e alert, dal 14/10); mai quello di Dua (LISA_...) né quello
 # di Remy / multi-edge di Martin (DISCORD_WEBHOOK_URL)
 WEBHOOK_ENV = ("COACH_ALERT_DISCORD_WEBHOOK_URL",)
-FORBIDDEN_WEBHOOK_ENV = ("LISA_DISCORD_WEBHOOK_URL", "DISCORD_WEBHOOK_URL", "REMY_DISCORD_WEBHOOK_URL")
+FORBIDDEN_WEBHOOK_ENV = ("LISA_DISCORD_WEBHOOK_URL", "DISCORD_WEBHOOK_URL", "REMY_DISCORD_WEBHOOK_URL",
+                         "COACH_CARD_DISCORD_WEBHOOK_URL")   # [JEFF] l'ultimo è la card di Dua nel .env di prima
 BOT_NAME = os.environ.get("JEFF_COACH_NAME", "Sydney")
 CARD_COLOR = 0x2ECC71                # [JEFF] verde di JeffCoach (Martin: viola)
 ALERT_COLOR = {"long": 0x2ECC71, "short": 0xE74C3C, "info": 0xF1C40F}   # long bordo verde, short rosso, anche livello e uscite [RONIN 13/10]

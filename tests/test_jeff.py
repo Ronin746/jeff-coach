@@ -84,6 +84,13 @@ def test_webhook_solo_sydney(monkeypatch):
     assert DS.webhook() is None
     monkeypatch.setenv("COACH_ALERT_DISCORD_WEBHOOK_URL", "https://discord.com/api/webhooks/sydney")
     assert DS.webhook() == "https://discord.com/api/webhooks/sydney"
+    # .env sbagliato: nella riga di Sydney c'è il webhook di un altro bot -> niente invio
+    for k, other in (("DISCORD_WEBHOOK_URL", "remy"), ("LISA_DISCORD_WEBHOOK_URL", "dua"),
+                     ("COACH_CARD_DISCORD_WEBHOOK_URL", "card-dua")):
+        monkeypatch.setenv(k, f"https://discord.com/api/webhooks/{other}")
+        monkeypatch.setenv("COACH_ALERT_DISCORD_WEBHOOK_URL", f"https://discord.com/api/webhooks/{other}")
+        assert DS.webhook() is None
+    assert "COACH_CARD_DISCORD_WEBHOOK_URL" in C.FORBIDDEN_WEBHOOK_ENV
 
 
 # ------------------------------------------------------------------ formule identiche a prima

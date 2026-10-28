@@ -43,9 +43,14 @@ def load_env_file() -> None:
 
 def webhook() -> Optional[str]:
     load_env_file()
+    # [JEFF] mai il canale di un altro bot: se l'URL di Sydney è lo stesso di Dua, Remy o Martin multi-edge, niente invio
+    banned = {(os.environ.get(k) or "").strip() for k in getattr(C, "FORBIDDEN_WEBHOOK_ENV", ())} - {""}  # [JEFF]
     for k in C.WEBHOOK_ENV:
         v = os.environ.get(k)
         if v and v.startswith("http"):
+            if v.strip() in banned:                                                   # [JEFF]
+                log.error("webhook di %s uguale a quello di un altro bot: non lo uso", k)  # [JEFF] l'URL non si stampa
+                return None                                                           # [JEFF]
             return v.strip()
     return None
 
