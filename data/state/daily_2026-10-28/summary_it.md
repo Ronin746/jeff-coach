@@ -1,10 +1,22 @@
 **Watchlist 2026-10-28** (close 27/10)
-Focus (0): nessuno
-Stalk (0): nessuno
+Focus (3): GTLB, HTFL, SN
+Stalk (36): PR, DVN, ICLR, ANF, BTE, CBRL, DHT, ECO, FIVN, FRO, HAE, HUM, LFST, NSIT, RXO, TEAM, TRMD, VSXY, ZETA, VEEV, AMC, FFIV, NTNX, ELF, MANH, W, DBX, IOT, NOG, TMO, SIG, WDAY, UTHR, ASO, DSGX, CDW
 
-Entrano in Focus: nessuno · Escono: GTLB (outside the universe gates (ATR%/adv$/mcap) or no data), HAE (outside the universe gates (ATR%/adv$/mcap) or no data), SN (outside the universe gates (ATR%/adv$/mcap) or no data)
-Gruppi più forti: Entertainment (100); Banks—Regional (80); Oil & Gas Midstream (60); Utilities—Regulated Electric (40); Utilities—Regulated Gas (20); Asset Management (0)
-Regime: MIXED — pool lists: score -1 → MIXED; pool (0): Leading 0% of Leading+Lagging · Leading 0 / Mediocre 0 / Lagging 0; pool flow 5d +3.0% (50 up, 45 down); pool flow trend mixed (-8.2% +2.3% -3.6% +1.2%); Market Monitor Expansion (context)
-Temi LEADING/BUILDING (1 su 2): OIL AND GAS MIDSTREAM (BUILDING)
-Utili 2026-10-28..2026-11-03: MSGS 2026-10-30
-Remy: 0 nomi
+Entrano in Focus: HTFL · Escono: HAE (1 tight day)
+Gruppi più forti: Oil & Gas Refining & Marketing (100); Marine Shipping (99: ECO); REIT—Hotel & Motel (98); Electronics & Computer Distribution (98: NSIT); Health Information Services (97: HTFL, VEEV); Oil & Gas Drilling (96)
+Forza del gruppo dei Focus (percentile): GTLB 90, HTFL 97, SN 49
+Canale rialzista, parte bassa (14):
+  sopra EMA50 1h ed EMA9: RNG (bordo basso, linea bassa 82.37); FRO (bordo basso, linea bassa 49.69); NTRA (bordo basso, linea bassa 401.23); PENG (backtest della linea rotta 62.56); TRMD (bordo basso, linea bassa 38.82); AMC (bordo basso, linea bassa 2.93); NET (bordo basso, linea bassa 310.35); MUR (backtest della linea rotta 43.06); TMO (bordo basso, linea bassa 673.46)
+  sotto la EMA50 1h (alert se la recupera): DHT (bordo basso, linea bassa 22.37); ECO (bordo basso, linea bassa 90.22); INSW (bordo basso, linea bassa 110.58); PBR (backtest della linea rotta 23.06); IQV (bordo basso, linea bassa 265.24)
+Trendline discendente (wedge pop) (34):
+  rotta da poco, si segue il pullback (alert sul crossback: tocco di EMA9/21 e recupero della EMA50 1h sopra la EMA9): AMLX (rotta il 10-20, vol 0.69x); ESTC (rotta il 10-23, vol 0.86x); FIVN (rotta il 10-23, vol 1.25x); SNOW (rotta il 10-26, vol 0.56x); VSXY (rotta il 10-26, vol 1.16x); HPQ (rotta il 10-21, vol 0.56x); NUE (rotta il 10-20, vol 1.11x); TXN (rotta il 10-26, vol 1.25x); NOG (rotta il 10-16, vol 0.77x); WDAY (rotta il 10-15, vol 0.94x); FIVE (rotta il 10-26, vol 0.7x); VCYT (rotta il 10-21, vol 0.6x); ACN (rotta il 10-16, vol 1.22x); NE (rotta il 10-23, vol 1.79x); NOV (rotta il 10-16, vol 0.94x); SLB (rotta il 10-16, vol 0.99x); DOW (rotta il 10-14, vol 0.95x); GLBE (rotta il 10-20, vol 1.08x); M (rotta il 10-15, vol 1.54x)
+  sotto la linea e vicina, entro 1 ATR (alert se la rompe con RVOL >= 1,5): MRVL (linea 246.37, 0.23 ATR); PURR (linea 10.14, 0.57 ATR); AMC (linea 3.05, 0.44 ATR); VCTR (linea 110.07, 0.06 ATR); SNX (linea 262.38, 0.97 ATR); SEI (linea 67.7, 0.48 ATR); DIOD (linea 90.45, 0.47 ATR); VG (linea 14.27, 0.69 ATR); SBLK (linea 28.81, 0.15 ATR); MDB (linea 394.96, 0.28 ATR); RGEN (linea 181.95, 0.8 ATR); STLD (linea 246.73, 0.04 ATR); DAL (linea 83.5, 0.75 ATR); KMX (linea 53.46, 0.07 ATR); NOK (linea 8.71, 0.18 ATR)
+Reazione ritardata agli utili (6): CLF (utili 10-19 +17%, pivot 14.58, minimo crescente); IOT (utili 09-04 +16%, pivot 45.32, minimo crescente); SNOW (utili 09-03 +23%, pivot 356.84, minimo crescente); DELL (utili 09-02 +9%, pivot 548.39, minimo crescente); GTLB (utili 09-02 +22%, pivot 57.22, minimo crescente); CRM (utili 08-27 +12%, pivot 252.42, minimo crescente)
+Triangoli ascendenti (1): IOT (tetto 45.32, 4 tocchi, Stalk)
+Numeri ok ma senza pattern di continuation (fuori lista): BRKR, CRGY, GLBE, INTC, KNTK, LLY, NAVN, NTRA, SNOW, SNX, SWKS
+Regime: MIXED — pool lists: score -1 → MIXED; pool (170): Leading 50% of Leading+Lagging · Leading 57 / Mediocre 56 / Lagging 57; pool flow 5d -1.8% (20 up, 23 down); pool flow trend mixed (-8.2% +2.3% -3.6% +1.8%); Market Monitor Expansion (context)
+Focus tenuti in Stalk dal regime: AMC, IOT, W
+Temi LEADING/BUILDING (8 su 92): OIL AND GAS UPSTREAM (LEADING), CYBER SECURITY (LEADING), LIFE SCIENCE TOOLS & SERVICES (BUILDING), OIL AND GAS DRILLING (BUILDING), GOVERNMENT CONTRACTORS (BUILDING), OIL AND GAS MIDSTREAM (BUILDING), LNG (BUILDING), TELEHEALTH (BUILDING)
+Esclusi per stadio del tema (WEAK/BEARISH): CLF (STEEL WEAK); M (DEPARTMENT STORES WEAK); NTAP (DATA STORAGE WEAK)
+Utili 2026-10-28..2026-11-03: ALKS 2026-11-03, AMD 2026-11-03, AR 2026-10-28, ATRC 2026-11-03, AXGN 2026-10-28, AXTI 2026-10-29, BAX 2026-10-29, CDNA 2026-10-29, CNK 2026-11-03, DINO 2026-10-28, DT 2026-11-03, EL 2026-11-02, ENTG 2026-10-29, ETSY 2026-10-28, FORM 2026-10-28, FRSH 2026-11-03, FTI 2026-10-29, GFL 2026-10-28, GKOS 2026-10-28, HNGE 2026-11-02, ILMN 2026-10-29, INSP 2026-11-02, LTH 2026-10-29, MSGS 2026-10-30, MTDR 2026-11-03, NOW 2026-10-28, PLTR 2026-11-02, PSX 2026-10-28, RIG 2026-11-02, RVTY 2026-11-03, SHOP 2026-11-03, SMCI 2026-11-03, STNG 2026-10-28, UMC 2026-10-28, WAT 2026-11-03 · senza data: ICLR
+Remy: 39 nomi
