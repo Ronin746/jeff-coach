@@ -57,7 +57,12 @@ aggancia da solo.
 | Prove della parte di Jeff (configurazione vera) | `python tests/test_jeff.py` |
 | Prove della base (le stesse di Martin) | `python tests/test_offline.py` |
 | La base è ancora quella di Martin? | `python strumenti/identita_base.py /percorso/martin-coach` |
-| Prova con dati veri | cambia `prova.txt` e fai push (risultato in `data/prove/`) |
+| Prova con dati veri | crea o cambia `prova.txt` su main e fai push (risultato in `data/prove/`) |
+| Alert di prova su Discord / rifare la lista di oggi | crea o cambia `prova_alert.txt` / `rifai_oggi.txt` su main (o Run workflow) |
+
+I file `prova.txt`, `prova_alert.txt`, `rifai_oggi.txt` e `mm_storico.txt` non sono nel repo apposta: così il merge del
+codice nuovo su main non lancia da solo un alert di prova, la lista rifatta con la card su Discord o lo storico del
+Market Monitor. I workflow che li usano partono solo da main.
 
 ## Allineamento con Martin
 Il codice della base ha gli stessi file di `martincoach/` con il nome `jeffcoach/`; ogni riga cambiata porta `[JEFF]`.

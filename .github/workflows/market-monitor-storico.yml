@@ -2,9 +2,11 @@ name: Market Monitor nostro - storico dal 2015
 
 # Ricostruisce data/breadth/market_monitor_full.json dal 2015 sull'universo completo (~5.700 azioni USA).
 # Serve quando si aggiunge una colonna (16/10: studio 20% di Pradeep Bonde, up20w/down20w). Solo a mano.
+# [JEFF] o creando/cambiando mm_storico.txt su main (il file non è nel repo: crearlo è già un cambio).
 on:
   workflow_dispatch:
   push:
+    branches: [main]                # [JEFF] solo main
     paths:
       - "mm_storico.txt"
 

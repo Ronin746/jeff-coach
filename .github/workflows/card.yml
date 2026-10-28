@@ -4,6 +4,7 @@ name: Card Discord (Sydney)
 # Pubblica solo se la card è cambiata: POST la prima volta, poi PATCH sullo stesso messaggio.
 on:
   push:
+    branches: [main]                # [JEFF] solo main: un push su un altro branch non tocca Discord
     paths:
       - "data/lists/work_*/review.json"
   # [sospeso 27/10, Andrea] cron su GitHub fermo: lo fa il server Oracle. Si lancia ancora a mano (Run workflow).

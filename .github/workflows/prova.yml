@@ -1,9 +1,11 @@
 name: Prova con dati veri (senza Discord)
 
-# Si lancia cambiando prova.txt: calcola la lista di oggi con i dati Yahoo veri in data/prove/ (cartella a parte),
-# senza toccare la lista pubblica, il giornale o Discord, e salva il risultato nel repo per controllarlo.
+# Si lancia creando o cambiando prova.txt su main [JEFF: il file non è nel repo]: calcola la lista di oggi con i dati
+# Yahoo veri in data/prove/ (cartella a parte), senza toccare la lista pubblica, il giornale o Discord, e salva il
+# risultato nel repo per controllarlo.
 on:
   push:
+    branches: [main]                # [JEFF] solo main
     paths:
       - "prova.txt"
   workflow_dispatch:

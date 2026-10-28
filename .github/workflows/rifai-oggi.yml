@@ -1,10 +1,12 @@
 name: Rifai la lista di oggi e aggiorna la card
 
-# Si lancia cambiando rifai_oggi.txt (o a mano): ricalcola la lista della seduta di oggi con le regole attuali
-# (sovrascrive quella del mattino, la revisione di Claude resta applicata), aggiorna la card di Sydney sullo stesso
-# messaggio (PATCH) e salva. Il server la prende al suo prossimo "aggiorna" (13:30 Roma) e riavvia gli alert.
+# Si lancia creando o cambiando rifai_oggi.txt su main (o a mano) [JEFF: il file non è nel repo]: ricalcola la lista
+# della seduta di oggi con le regole attuali (sovrascrive quella del mattino, la revisione di Claude resta applicata),
+# aggiorna la card di Sydney sullo stesso messaggio (PATCH) e salva. Il server la prende al suo prossimo "aggiorna"
+# (13:30 Roma) e riavvia gli alert.
 on:
   push:
+    branches: [main]                # [JEFF] solo main: un push su un altro branch non tocca la card
     paths:
       - "rifai_oggi.txt"
   workflow_dispatch:
