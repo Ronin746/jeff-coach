@@ -1,6 +1,7 @@
-"""Download dati (Yahoo via yfinance): universo, daily, 5 minuti, info, utili.
+"""Download dati (Yahoo via yfinance): universo, industrie, daily, intraday, utili.
 
-Regole dati [RONIN 01/10]: solo barre RTH completate, auto_adjust=False, mai premarket.
+Ripreso da jeff-coach (stesse funzioni collaudate), adattato alle soglie di Martin.
+Solo barre RTH completate per il daily, auto_adjust=False.
 """
 from __future__ import annotations
 
@@ -9,13 +10,11 @@ import logging
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta, timezone
-from pathlib import Path
 from typing import Iterable, Optional
 
 import pandas as pd
 
 from . import config as C
-from . import indicators as I
 from .calendar_us import ET
 
 log = logging.getLogger("jeffcoach.data")
@@ -70,13 +69,14 @@ def build_universe(max_age_days: int = 6, force: bool = False) -> dict[str, dict
                 continue
             px = x.get("regularMarketPrice") or 0
             av = x.get("averageDailyVolume3Month") or 0
-            if px * av < C.SCREEN_ADV_PREFILTER:
+            if px * av < C.SCREEN_DV_PREFILTER:
                 continue
             et = x.get("earningsTimestamp")
             out[x["symbol"]] = dict(
                 exchange=x.get("exchange"), mcap=x.get("marketCap"), name=x.get("longName") or x.get("shortName"),
                 earnings=(datetime.fromtimestamp(et, timezone.utc).date().isoformat() if et else None),
-                earnings_est=bool(x.get("isEarningsDateEstimate")))
+                earnings_est=bool(x.get("isEarningsDateEstimate")),
+                quote_type=x.get("quoteType"))
         offset += len(quotes)
     C.STATE.mkdir(parents=True, exist_ok=True)
     tmp = UNIVERSE_FILE.with_suffix(".tmp")
@@ -137,27 +137,12 @@ def build_industry_map(max_age_days: int = 6, force: bool = False) -> dict[str, 
     return out
 
 
-def extra_symbols() -> set[str]:
-    """Simboli in più da non perdere: cache daily di Remy (solo lettura) + lista del giorno prima."""
-    s: set[str] = set()
-    if C.REMY_DAILY_CACHE.exists():
-        for p in C.REMY_DAILY_CACHE.glob("*.json"):
-            s.add(p.stem.split("_", 1)[-1])
-    prev = C.AGREED / "today.json"
-    if prev.exists():
-        try:
-            s.update(t["ticker"] for t in json.loads(prev.read_text(encoding="utf-8")).get("tickers", []))
-        except Exception:
-            pass
-    return {yahoo_symbol(x) for x in s if x and not x.startswith("^")}
-
-
 # ------------------------------------------------------------------ daily
 def download_daily(symbols: Iterable[str], start: str, end_inclusive: date, chunk: int = 200) -> dict[str, pd.DataFrame]:
     """Daily OHLCV auto_adjust=False fino a end_inclusive (nessuna barra successiva)."""
     yf = _yf()
     syms = sorted(set(symbols))
-    end = (end_inclusive + timedelta(days=1)).isoformat()
+    end = (end_inclusive + timedelta(days=2)).isoformat()   # +2: il giorno in corso a New York resta incluso
     out: dict[str, pd.DataFrame] = {}
     for i in range(0, len(syms), chunk):
         ch = syms[i:i + chunk]
@@ -242,99 +227,6 @@ def fill_missing_closes(frames: dict[str, pd.DataFrame], end_inclusive: date, da
     return filled
 
 
-# ------------------------------------------------------------------ 65 minuti
-def buckets_65m(sub: pd.DataFrame, days: Optional[set] = None) -> list[tuple]:
-    """Barre 5m RTH -> bucket 65m (giorno, n. bucket, close, n. barre 5m). Il bucket in corso usa l'ultima 5m."""
-    sub = sub.dropna(subset=["Close"]).copy()
-    sub.index = sub.index.tz_convert(ET)
-    mins = sub.index.hour * 60 + sub.index.minute - (9 * 60 + 30)
-    keep = (mins >= 0) & (mins < 390)
-    if days is not None:
-        keep &= pd.Index([d.isoformat() in days for d in sub.index.date])
-    sub = sub[keep]
-    mins = sub.index.hour * 60 + sub.index.minute - (9 * 60 + 30)
-    sub["d"] = [d.isoformat() for d in sub.index.date]
-    sub["b"] = (mins // C.BUCKET_MIN).astype(int)
-    return [(d, b, float(g.Close.iloc[-1]), len(g)) for (d, b), g in sub.groupby(["d", "b"], sort=True)]
-
-
-def hourly(symbol: str, period: str = "6mo") -> Optional[pd.DataFrame]:
-    """Barre da 60 minuti in ora di New York (solo ore regolari), per il trend dell'indice [ANDREA 20/10]."""
-    yf = _yf()
-    try:
-        df = yf.download(symbol, period=period, interval="60m", auto_adjust=False, progress=False, threads=False)
-        if isinstance(df.columns, pd.MultiIndex):
-            df = df[symbol]
-        df = df.dropna(subset=["Close"]).copy()
-        df.index = df.index.tz_convert(ET)
-        return df if len(df) else None
-    except Exception as e:
-        log.warning("barre orarie di %s non disponibili: %s", symbol, e)
-        return None
-
-
-def ma_65m(symbols: Iterable[str], sessions: list[date], chunk: int = 60) -> dict[str, dict]:
-    """Media (EMA50 dal 20/10, prima SMA30) su barre a 65 minuti RTH costruite dai 5 minuti (prepost=False).
-    6 bucket al giorno dalle 09:30 ET (09:30, 10:35, 11:40, 12:45, 13:50, 14:55); close del bucket =
-    close dell'ultima 5m disponibile nel bucket (come TradingView). SMA = media degli ultimi 30 close."""
-    yf = _yf()
-    syms = sorted(set(symbols))
-    want = {d.isoformat() for d in sessions}
-    start = (sessions[0] - timedelta(days=1)).isoformat()
-    end = (sessions[-1] + timedelta(days=1)).isoformat()
-    out: dict[str, dict] = {}
-    for i in range(0, len(syms), chunk):
-        ch = syms[i:i + chunk]
-        df = None
-        for attempt in range(3):
-            try:
-                df = yf.download(ch, start=start, end=end, interval="5m", prepost=False, auto_adjust=False,
-                                 group_by="ticker", threads=True, progress=False)
-                break
-            except Exception as e:
-                log.warning("5m %s: %s", i, e)
-                time.sleep(5)
-        for s in ch:
-            try:
-                sub = df[s].dropna(subset=["Close"]) if df is not None else None
-            except KeyError:
-                sub = None
-            if sub is None or sub.empty:
-                out[s] = {"err": "no 5m data"}
-                continue
-            buckets = buckets_65m(sub, want)
-            missing_days = sorted(want - {d for d, *_ in buckets})
-            if len(buckets) < C.MA65_LEN:
-                out[s] = {"err": f"solo {len(buckets)} bucket 65m", "missing_days": missing_days}
-                continue
-            last = buckets[-C.MA65_LEN:]
-            out[s] = {"ma65": I.ma65([x[2] for x in buckets]), "n_buckets": len(buckets),
-                      "last_bucket": f"{last[-1][0]}#{last[-1][1]}", "incomplete": sum(1 for x in last if x[3] < 13),
-                      "missing_days": missing_days}
-        log.info("65m %d/%d", min(i + chunk, len(syms)), len(syms))
-    return out
-
-
-# ------------------------------------------------------------------ info e utili
-def fetch_info(symbols: Iterable[str], workers: int = 10) -> dict[str, dict]:
-    yf = _yf()
-
-    def one(t):
-        err = ""
-        for _ in range(3):
-            try:
-                i = yf.Ticker(t).info or {}
-                if not i.get("quoteType"):          # risposta vuota (crumb/429): non è un dato, si riprova
-                    raise RuntimeError("info vuota")
-                return t, {k: i.get(k) for k in ("quoteType", "marketCap", "sector", "industry", "longName", "exchange")}
-            except Exception as e:
-                err = str(e)[:120]
-                time.sleep(3)
-        return t, {"err": err}
-    with ThreadPoolExecutor(workers) as ex:
-        return dict(ex.map(one, sorted(set(symbols))))
-
-
 def fetch_earnings(symbols: Iterable[str], since: date, workers: int = 8) -> dict[str, dict]:
     """Prossime date utili da due fonti yfinance: calendar e get_earnings_dates."""
     yf = _yf()
@@ -360,4 +252,78 @@ def fetch_earnings(symbols: Iterable[str], since: date, workers: int = 8) -> dic
         return dict(ex.map(one, sorted(set(symbols))))
 
 
-sma30_65m = ma_65m          # vecchio nome [20/10]
+# ------------------------------------------------------------------ Market Monitor (NEL / Stockbee)
+MM_FILE = C.STATE / "market_monitor.json"
+
+
+def fetch_market_monitor() -> list[dict]:
+    """Market Monitor di Stockbee (righe dalla più recente). Fonti in ordine [RONIN 15/10]:
+    1. il Google Sheet pubblico di Stockbee, letto direttamente (stockbee.py: è la fonte da cui legge anche NEL);
+    2. il file già pronto nel repo pubblico di NEL;
+    3. l'archivio nel repo (data/breadth/market_monitor_nel.json), a cui ogni download riuscito si aggiunge;
+    4. se manca la riga del giorno, il regime usa il calcolo nostro (breadth.own_rows) — vedi daily.build."""
+    import urllib.request
+    from . import breadth as B
+    from . import stockbee as SB
+    try:
+        return B.archive_nel(SB.fetch())[:300]
+    except Exception as e:
+        log.warning("Market Monitor dal foglio Stockbee: %s", e)
+    for url in C.MM_URLS:
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "JeffCoach/1.0"})
+            rows = json.loads(urllib.request.urlopen(req, timeout=60).read())
+            if isinstance(rows, list) and rows and "date" in rows[0]:
+                return B.archive_nel(rows)[:300]
+        except Exception as e:
+            log.warning("Market Monitor %s: %s", url, e)
+    arch = B.nel_archive()
+    if arch:
+        log.warning("Market Monitor: NEL non raggiungibile, uso l'archivio (ultima riga %s)", arch[0]["date"])
+        return arch[:300]
+    if MM_FILE.exists():
+        log.warning("Market Monitor: uso la copia salvata")
+        return json.loads(MM_FILE.read_text(encoding="utf-8"))
+    return []
+
+
+# ------------------------------------------------------------------ intraday
+def download_intraday(symbols: Iterable[str], period: str = "1d", interval: str = "1m",
+                      prepost: bool = False) -> dict[str, pd.DataFrame]:
+    """Barre intraday in ora di New York (un solo download per tutti i nomi)."""
+    yf = _yf()
+    syms = sorted(set(symbols))
+    if not syms:
+        return {}
+    df = None
+    for attempt in range(3):
+        try:
+            df = yf.download(syms, period=period, interval=interval, prepost=prepost, auto_adjust=False,
+                             group_by="ticker", progress=False, threads=True)
+            break
+        except Exception as e:
+            log.warning("intraday %s: %s", interval, e)
+            time.sleep(3)
+    out: dict[str, pd.DataFrame] = {}
+    if df is None or df.empty:
+        return out
+    for s in syms:
+        try:
+            sub = df[s] if isinstance(df.columns, pd.MultiIndex) else df
+            sub = sub[["Open", "High", "Low", "Close", "Volume"]].dropna(subset=["Close"]).copy()
+        except KeyError:
+            continue
+        if len(sub):
+            sub.index = sub.index.tz_convert(ET)
+            out[s] = sub.astype(float)
+    return out
+
+
+def next_earnings(symbols: Iterable[str], since: date) -> dict[str, Optional[str]]:
+    """Prossima data utili (la più vicina >= since) da calendar/get_earnings_dates."""
+    res = fetch_earnings(symbols, since)
+    out = {}
+    for t, r in res.items():
+        ds = sorted(d for d in set(r.get("calendar", [])) | set(r.get("earnings_dates", [])) if d >= since.isoformat())
+        out[t] = ds[0] if ds else None
+    return out

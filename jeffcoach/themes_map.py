@@ -306,7 +306,8 @@ def refresh_lst() -> dict:
 
 
 def refresh(force: bool = False) -> dict:
-    """Mappa aggiornata: si riscaricano le fonti il lunedì o se la mappa ha più di 6 giorni; altrimenti quella salvata."""
+    """Mappa aggiornata. Dal 21/10 i temi sono i basket di Lone Stock Trader (C.THEME_SOURCE = "lst"); con "etf" la
+    vecchia mappa dagli ETF tematici: si riscaricano le fonti il lunedì o se la mappa ha più di 6 giorni."""
     if getattr(C, "THEME_SOURCE", "etf") == "lst":
         return refresh_lst()
     old = None

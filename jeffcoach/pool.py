@@ -1,16 +1,19 @@
-"""Pool dei titoli monitorati e sue liste Leading / Mediocre / Lagging [ANDREA 20/10].
+"""Il "pool" di Martin: i titoli che avrebbe nelle sue liste Leading / Mediocre / Lagging [RONIN 17/10o, Andrea].
 
-Portato dal bot di Martin (Ronin746/Martin-coach, martincoach/pool.py), dove lo studio delle 99 trascrizioni delle live
-ha tarato le soglie: i titoli di cui Martin parla hanno dollar volume alto, ADR oltre il 3,5% e forza relativa a 3-6 mesi
-nell'alto dell'universo. Qui l'universo e' quello di Jeff Sun, quindi il pool e' la sua watchlist ricostruita.
+Studio (studi/pool_martin.py, 99 trascrizioni + log delle live, ott 2025 - ott 2026, 1.170 menzioni di 218 titoli):
+i titoli di cui parla Martin hanno un dollar volume mediano di 1,3 mld$/giorno (10° percentile ~200M$), ADR mediano 6,4%,
++132% dal minimo a 52 settimane, 12 sedute da +4% nelle ultime 60, e il 75% è stato tra i primi ~8% per forza relativa a
+3 mesi negli ultimi 6 mesi (leader o ex-leader). Liste: 53% Leading, 34% Mediocre, 13% Lagging.
 
 Regola (ogni giorno, solo dati fino alla chiusura):
-  candidati = dollar volume a 20 sedute nel 30% piu' alto dell'universo e percentile di forza relativa (rendimento a 3 o
-              6 mesi tra i titoli liquidi) almeno POOL_RS_MIN in un momento qualsiasi degli ultimi 6 mesi,
-              piu' ADR a 20 sedute almeno POOL_ADR_MIN;
-  liste     = Leading se prezzo > EMA50 > EMA150, Lagging se prezzo < EMA50 < EMA150, Mediocre il resto.
-Flusso: ogni titolo del pool che scende di una lista vale -1, due liste -2, chi sale + (in quota dei titoli del pool alla
-data di partenza). Il flusso a 5 sedute e la tendenza dei flussi giornalieri decidono il regime (regime.pool_state).
+  candidati = dollar volume a 20 sedute nel 30% più alto dell'universo e percentile di forza relativa (rendimento a 3 o
+              6 mesi tra i titoli liquidi) almeno POOL_RS_MIN in un momento qualsiasi degli ultimi 6 mesi;
+  pool      = i POOL_N candidati con il punteggio più alto (percentile ADR + percentile sedute da +4% a 60 giorni +
+              forza relativa massima a 6 mesi).
+Con 130 titoli copre il 67% delle menzioni (72% senza le mega cap, che Martin segue a parte come "pillars").
+Le liste sono quelle di Martin: Leading = prezzo > EMA50 > EMA150, Lagging = prezzo < EMA50 < EMA150, Mediocre il resto.
+Flusso: ogni titolo del pool che scende di una lista vale -1, due liste -2, chi sale + (in % dei titoli del pool alla
+data di partenza: Martin li tiene in lista anche quando peggiorano).
 """
 from __future__ import annotations
 
@@ -38,10 +41,16 @@ def pool_breadth(daily: dict, syms: list[str], index: pd.DatetimeIndex, days: in
     liq = dv20 >= C.POOL_LIQ_RS
     p63 = (c / c.shift(63) - 1).where(liq).rank(axis=1, pct=True)
     p126 = (c / c.shift(126) - 1).where(liq).rank(axis=1, pct=True)
-    rsmax = np.maximum(p63.rolling(126, min_periods=20).max(), p126.rolling(126, min_periods=20).max())
+    w = C.POOL_RS_WINDOW                       # finestra della forza massima (126 = 6 mesi; studio 27/10: 252)
+    rsmax = np.maximum(p63.rolling(w, min_periods=20).max(), p126.rolling(w, min_periods=20).max())
     big = (c.pct_change(fill_method=None) >= 0.04).astype(float).where(c.notna()).rolling(60, min_periods=20).sum()
     cand = (dv20.rank(axis=1, pct=True) >= C.POOL_DV_RANK) & (rsmax >= C.POOL_RS_MIN) & c.notna()
-    if C.POOL_ADR_MIN is not None:             # [19/10c, Andrea] ADR a 20 sedute almeno 3,5%
+    if C.POOL_ADR_REL is not None:             # ADR relativo al mercato del giorno (studio 27/10, studi/pool_martin/
+        #                                        parametri.py): almeno POOL_ADR_REL volte l'ADR mediano dei titoli
+        #                                        negoziabili (dv20 >= POOL_ADR_REL_DV, prezzo >= PRICE_MIN)
+        trad = (dv20 >= C.POOL_ADR_REL_DV) & (c >= C.PRICE_MIN)
+        cand &= adr.ge(C.POOL_ADR_REL * adr.where(trad).median(axis=1), axis=0)
+    elif C.POOL_ADR_MIN is not None:           # [19/10c, Andrea] ADR a 20 sedute almeno 3,5%
         cand &= adr >= C.POOL_ADR_MIN
     if C.POOL_ADR_RANK is not None:            # [19/10b] soglie in percentile: la dimensione del pool segue il mercato
         cand &= adr.rank(axis=1, pct=True) >= C.POOL_ADR_RANK
@@ -70,6 +79,15 @@ def pool_breadth(daily: dict, syms: list[str], index: pd.DatetimeIndex, days: in
 
     f1, f5 = flow(1), flow(5)
     L, M, G = (lead & pool).sum(axis=1), (med & pool).sum(axis=1), (lag & pool).sum(axis=1)
+    # andamento delle tre liste in % [RONIN 27/10, Andrea]: pool di Martin e universo liquido della lista (dollar volume
+    # a 5 sedute >= DV_MIN, prezzo >= PRICE_MIN, come la breadth della lista)
+    uni = ((c * v).rolling(C.DV_DAYS, min_periods=C.DV_DAYS).mean() >= C.DV_MIN) & (c >= C.PRICE_MIN) & (nbar >= 160)
+    npool, nuni = pool.sum(axis=1), uni.sum(axis=1)
+    pc = lambda a, n, d: round(float(a[d] / n[d] * 100), 1) if n[d] else None
+    uL, uM, uG = (lead & uni).sum(axis=1), (med & uni).sum(axis=1), (lag & uni).sum(axis=1)
+    lists_hist = [dict(date=str(d.date()), n=int(npool[d]), L=pc(L, npool, d), M=pc(M, npool, d), G=pc(G, npool, d),
+                       un=int(nuni[d]), uL=pc(uL, nuni, d), uM=pc(uM, nuni, d), uG=pc(uG, nuni, d))
+                  for d in c.index[-C.LISTS_CHART_DAYS:]]
     tail = slice(-days, None)
     t, t5 = c.index[-1], c.index[-6]
     lab = lambda d, s: "Leading" if lead.at[d, s] else ("Lagging" if lag.at[d, s] else "Mediocre")
@@ -86,6 +104,7 @@ def pool_breadth(daily: dict, syms: list[str], index: pd.DatetimeIndex, days: in
         flow5=round(float(f5.iloc[-1]), 1) if f5.iloc[-1] == f5.iloc[-1] else None,
         flow_daily=[round(float(x), 1) for x in f1.iloc[tail] if x == x],
         series={str(d.date()): dict(L=int(L[d]), M=int(M[d]), G=int(G[d])) for d in c.index[tail]},
+        lists_hist=lists_hist,
         members={s: lab(t, s) for s in members},
         moved_5d=sorted(moved),
         down_5d=sum(1 for _, a, b in moved if (a, b) in (("Leading", "Mediocre"), ("Mediocre", "Lagging"), ("Leading", "Lagging"))),

@@ -1,27 +1,18 @@
-"""Alert intraday (sostituisce rth_alert_loop.py di Sydney, stesse regole e stessi messaggi).
+"""Alert intraday + gestione intraday dei trade simulati (gira sul server, sempre acceso).
 
-Regole [RONIN 30/09, 04/10, 05/10]:
-  - legge SOLO coach-agreed/today.json; se session_date non è la seduta di oggi non parte nulla;
-  - RVOL: Focus e Stalk, una volta per nome, quando il volume RTH cumulato arriva al 30% della
-    media a 50 giorni, solo nella prima ora. Non è un ingresso;
-  - ingresso: SOLO Focus, dopo 30 minuti, prezzo >= massimo dei primi 30 minuti (ORH). Una volta per nome;
-  - [RONIN 08/10, regole di Jeff] l'ingresso parte solo con il RVOL richiesto (niente sotto 1 mld $ di controvalore
-    medio: 18-40% entro 30 minuti secondo il volume di ieri, poi a ritmo) e con prezzo - minimo del giorno <= 0,70 ATR;
-    niente PDH nei messaggi;
-  - canale [RONIN 08/10]: i nomi nella parte bassa di un canale rialzista (lettura D, "channel_watch" in today.json)
-    che hanno chiuso SOTTO la media 65m (EMA50 dal 20/10): un alert, una volta per nome, quando il prezzo la recupera, anche se
-    è ancora sotto la EMA9 giornaliera. Non è un ingresso Focus: è un "guardalo".
+Per ogni Focus della lista del giorno:
+  1. "livello raggiunto": il prezzo arriva entro LEVEL_TOUCH_PCT dal livello di confluenza (una volta);
+  2. "trigger": dopo il tocco, rottura del massimo (long) / minimo (short) della barra precedente,
+     su 5m per tutta la seduta [RONIN 27/10d-e; prima 1m, 5m, 15m]; attesa d'apertura EARLY_MIN. Stop = LOD/HOD, oppure estremo della barra
+     se il LOD/HOD è troppo lontano; scartato se lo stop supera min(2%, 0,5 ADR).
+     Un trigger che passa tutti i filtri apre un trade simulato e manda l'alert; se un filtro lo blocca
+     (gap degli indici, freno giornaliero, pausa, inseguimento, stop largo, esposizione) diventa un trade
+     ombra: niente alert, solo giornale.
+Per ogni posizione aperta: gap oltre lo stop all'apertura, stop, trim a R, (short) barra oraria sopra la EMA50.
 
-Correzioni rispetto al loop precedente:
-  - orari calcolati in America/New_York: funziona anche nelle settimane in cui l'apertura è alle 14:30 di Roma
-    (26-30 ottobre 2026, marzo) e nei giorni di chiusura anticipata;
-  - nessun gate ATR%/adv$ ricalcolato sui dati live: la lista è già filtrata e un Focus concordato non viene
-    più bloccato in silenzio;
-  - un solo download a ciclo per tutti i nomi (prima: 2-3 chiamate Yahoo per nome ogni 90 secondi);
-  - media volume e ATR dalle sole barre daily COMPLETATE (prima la barra di oggi in corso entrava nell'ATR).
-
-Uso:  python -m jeffcoach.alerts --loop      (dal cron, esce da solo a fine seduta)
-      python -m jeffcoach.alerts --once --dry-run
+Uso:
+  python -m jeffcoach.alerts --service           (systemd: sempre acceso, lavora solo in seduta)
+  python -m jeffcoach.alerts --once --dry-run --force-window
 """
 from __future__ import annotations
 
@@ -31,582 +22,665 @@ import logging
 import sys
 import time
 from datetime import date, datetime, timedelta
-from typing import Any, Optional
+from typing import Optional
 
 import pandas as pd
 
 from . import config as C
+from . import gruppo as GR
+from . import data as D
 from . import indicators as I
-from .calendar_us import ET, ROME, close_et, is_session, now_et, open_et
+from . import journal as J
+from .calendar_us import ET, close_et, is_session, now_et, open_et
+from .chart import alert_chart
 from .discord import send_alert
+from .edges import edges_text, hz_text, tl_text
 from .output import write_atomic
 
 log = logging.getLogger("jeffcoach.alerts")
-FIRED = C.STATE / "alerts" / "fired.json"
-LAST_SCAN = C.STATE / "alerts" / "last_scan.json"
+_hourly_cache: dict = {"ts": None, "bars": {}}
 
 
-# ------------------------------------------------------------------ finestra
-def minutes_from_open(now: Optional[datetime] = None) -> Optional[float]:
-    n = (now or now_et()).astimezone(ET)
+# ------------------------------------------------------------------ finestra e stato
+def minutes_from_open(now: datetime) -> Optional[float]:
+    n = now.astimezone(ET)
     if not is_session(n.date()):
         return None
     return (n - open_et(n.date())).total_seconds() / 60.0
 
 
-def in_window(now: Optional[datetime] = None) -> bool:
-    n = (now or now_et()).astimezone(ET)
-    if not is_session(n.date()):
-        return False
-    return open_et(n.date()) - timedelta(minutes=5) <= n <= close_et(n.date())
+def in_window(now: datetime) -> bool:
+    n = now.astimezone(ET)
+    return is_session(n.date()) and open_et(n.date()) <= n <= close_et(n.date()) + timedelta(minutes=2)
 
 
-# ------------------------------------------------------------------ input
-_last_fetch = [0.0]
-
-
-def fetch_remote_today() -> None:
-    """In locale: scarica coach-agreed/today.json dal repo GitHub (JEFF_COACH_AGREED_URL), al massimo ogni 5 minuti."""
-    import os
-    import urllib.request
-    url = os.environ.get("JEFF_COACH_AGREED_URL")
-    if not url or time.time() - _last_fetch[0] < 300:
-        return
-    _last_fetch[0] = time.time()
-    try:
-        req = urllib.request.Request(f"{url}?t={int(time.time())}", headers={"User-Agent": "JeffCoach/2.0", "Cache-Control": "no-cache"})
-        raw = urllib.request.urlopen(req, timeout=20).read()
-        json.loads(raw)                                     # solo JSON valido
-        write_atomic(C.AGREED / "today.json", raw.decode("utf-8"), as_json=False)
-    except Exception as e:
-        log.warning("today.json remoto non scaricato: %s", e)
-
-
-def load_rows(today: date) -> list[dict]:
-    fetch_remote_today()
-    p = C.AGREED / "today.json"
+def load_list(today: date) -> Optional[dict]:
+    p = C.LISTS / "today.json"
     if not p.exists():
-        log.warning("manca %s", p)
-        return []
-    d = json.loads(p.read_text(encoding="utf-8"))
-    if d.get("session_date") != today.isoformat():
-        log.info("today.json è della seduta %s, non di oggi %s: nessun alert", d.get("session_date"), today)
-        return []
-    rows = []
-    for r in d.get("tickers") or []:
-        if r.get("list") in ("Focus", "Stalk") and r.get("ticker"):
-            rows.append({"ticker": r["ticker"].upper(), "list": r["list"], "extreme_rvol_ok": bool(r.get("extreme_rvol_ok")),
-                         "against_regime": bool(r.get("against_regime"))})
-    return rows
-
-
-def load_short_rows(today: date) -> list[dict]:
-    """Sezione short della lista [RONIN 12/10] (today.json è già stato aggiornato da load_rows)."""
-    p = C.AGREED / "today.json"
-    if not C.SHORT["enabled"] or not p.exists():
-        return []
-    d = json.loads(p.read_text(encoding="utf-8"))
-    if d.get("session_date") != today.isoformat():
-        return []
-    return [{"ticker": r["ticker"].upper(), "list": r["list"]} for r in d.get("short_tickers") or []
-            if r.get("list") in ("Focus", "Stalk") and r.get("ticker")]
-
-
-def load_channel(today: date) -> list[dict]:
-    p = C.AGREED / "today.json"
-    if not C.CHANNEL_ALERT or not p.exists():
-        return []
-    d = json.loads(p.read_text(encoding="utf-8"))
-    if d.get("session_date") != today.isoformat():
-        return []
-    return [c for c in d.get("channel_watch") or [] if c.get("above_ma65", c.get("above_sma30_65m")) is False and c.get("ticker")]
-
-
-_chan_cache: dict = {"ts": 0.0, "bars": {}}
-
-
-# ------------------------------------------------------------------ trendline discendente [RONIN 09/10]
-def load_dtl(today: date) -> list[dict]:
-    p = C.AGREED / "today.json"
-    if not C.DTL_ALERT or not p.exists():
-        return []
-    d = json.loads(p.read_text(encoding="utf-8"))
-    if d.get("session_date") != today.isoformat():
-        return []
-    return [x for x in d.get("dtl_watch") or [] if x.get("kind") in ("near", "pullback") and x.get("ticker")]
-
-
-_dtl_cache: dict = {"ts": 0.0, "df": {}}
-
-
-def live_5m(tickers: list[str]) -> dict[str, pd.DataFrame]:
-    """5 minuti degli ultimi 10 giorni (ora di New York), al massimo ogni CHANNEL_POLL_SEC."""
-    import yfinance as yf
-    if time.time() - _dtl_cache["ts"] >= C.CHANNEL_POLL_SEC or set(tickers) - set(_dtl_cache["df"]):
-        df = yf.download(tickers, period="10d", interval="5m", prepost=False, auto_adjust=False,
-                         group_by="ticker", progress=False, threads=True)
-        out = {}
-        for t in tickers:
-            try:
-                sub = (df[t] if isinstance(df.columns, pd.MultiIndex) else df).dropna(subset=["Close"]).copy()
-                sub.index = sub.index.tz_convert(ET)
-                out[t] = sub
-            except Exception:
-                pass
-        _dtl_cache.update(ts=time.time(), df=out)
-    return _dtl_cache["df"]
-
-
-def rvol_time_of_day(sub: pd.DataFrame, today: date) -> Optional[float]:
-    """RVOL all'ora del giorno: volume di oggi fino all'ultima barra / media delle sedute prima alla stessa ora."""
-    if sub is None or not len(sub):
         return None
-    d = sub[sub.index.date == today]
-    if not len(d):
+    d = json.loads(p.read_text(encoding="utf-8"))
+    return d if d.get("session_date") == today.isoformat() else None
+
+
+def state_path(today: date):
+    return C.ALERTS_STATE / f"{today}.json"
+
+
+def load_state(today: date) -> dict:
+    p = state_path(today)
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {"fired": {}, "touched": {}, "new_trades": 0}
+
+
+# ------------------------------------------------------------------ barre
+def today_bars(b: pd.DataFrame, today: date) -> pd.DataFrame:
+    o, c = open_et(today), close_et(today)
+    return b[(b.index >= o) & (b.index < c)]
+
+
+def resample(b: pd.DataFrame, tf: int, today: date) -> pd.DataFrame:
+    """Barre da tf minuti allineate all'apertura; l'ultima è quella in corso."""
+    if tf == 1:
+        return b.copy()
+    return b.resample(f"{tf}min", origin=open_et(today), label="left", closed="left").agg(
+        {"Open": "first", "High": "max", "Low": "min", "Close": "last", "Volume": "sum"}).dropna(subset=["Close"])
+
+
+def trigger_tf(mins: float) -> int:
+    return 1 if mins < C.TRIGGER_1M_UNTIL_MIN else (5 if mins < C.TRIGGER_5M_UNTIL_MIN else 15)
+
+
+def early_reason(side: str, mins: float, b: pd.DataFrame, qqq_gap: Optional[float], lvl: Optional[float] = None,
+                 adr: Optional[float] = None) -> Optional[str]:
+    """Regole d'apertura [ML: "devo stare fermo nei primi 15 minuti", 23/04, EP103; RONIN 17/10]: nei primi EARLY_MIN
+    minuti niente trigger, salvo apertura già sul livello giusto (entro EARLY_OPEN_NEAR_ADR ADR: gap dentro la
+    resistenza per lo short, gap down sul supporto per il long [ML 14/07, 13/08]); in quel caso i long vogliono anche
+    la prima candela 1m stretta (< 1,5%). Con il QQQ in gap up i long aspettano INDEX_GAP_UP_LONG_WAIT_MIN minuti, in
+    gap down gli short INDEX_GAP_DOWN_SHORT_WAIT_MIN. None = si può entrare."""
+    if side == "short" and qqq_gap is not None and qqq_gap <= -C.INDEX_GAP_BLOCK_PCT and mins < C.INDEX_GAP_DOWN_SHORT_WAIT_MIN:
+        return f"QQQ in gap {qqq_gap:+.2f}%: short dopo {C.INDEX_GAP_DOWN_SHORT_WAIT_MIN} minuti"
+    if side == "long" and qqq_gap is not None and qqq_gap >= C.INDEX_GAP_BLOCK_PCT and mins < C.INDEX_GAP_UP_LONG_WAIT_MIN:
+        return f"QQQ in gap {qqq_gap:+.2f}%: long dopo {C.INDEX_GAP_UP_LONG_WAIT_MIN} minuti"
+    if mins >= C.EARLY_MIN or not len(b):
         return None
-    tod = d.index[-1].time()
-    prev = sub[(sub.index.date < today)]
-    prev = prev[[t <= tod for t in prev.index.time]]
-    per_day = prev.groupby(prev.index.date).Volume.sum()
-    if len(per_day) < 3 or per_day.mean() <= 0:
-        return None
-    return float(d.Volume.sum() / per_day.mean())
+    f = b.iloc[0]
+    o = float(f.Open)
+    near = False
+    if lvl and adr and o:
+        dist = (o / lvl - 1) * 100
+        near = (dist >= -C.EARLY_OPEN_NEAR_ADR * adr) if side == "short" else (dist <= C.EARLY_OPEN_NEAR_ADR * adr)
+    if not near:
+        return f"primi {C.EARLY_MIN} minuti: apertura lontana dal livello"
+    if side == "long":
+        rng = (float(f.High) - float(f.Low)) / o * 100 if o else 0.0
+        if rng >= C.EARLY_LONG_FIRST_BAR_MAX_PCT:
+            return f"primi {C.EARLY_MIN} minuti: prima candela 1m ampia {rng:.1f}%"
+    return None
 
 
-def fmt_dtl_break(x, price, line, rvol):
-    return f"{x['ticker']} · DTL break", "\n".join([
-        f"Downtrend line broken `{line:.2f}`", f"Price: `{price:.2f}`", f"RVOL (time of day): `{rvol:.2f}`",
-        f"Line from {x['start'][5:]} high `{x['start_high']}` · touches {x['touches']}",
-        f"Daily EMA9 `{x['ema9']}` · EMA21 `{x['ema21']}`" + ("" if x.get("above_sma200") else " · under SMA200")])
+def hourly_bars(tickers: list[str]) -> dict[str, pd.DataFrame]:
+    """Barre orarie (per la regola EMA50 oraria degli short), aggiornate ogni 15 minuti."""
+    now = time.time()
+    if _hourly_cache["ts"] and now - _hourly_cache["ts"] < 900 and set(tickers) <= set(_hourly_cache["bars"]):
+        return _hourly_cache["bars"]
+    bars = D.download_intraday(tickers, period="1mo", interval="60m") if tickers else {}
+    _hourly_cache.update(ts=now, bars=bars)
+    return bars
 
 
-def fmt_dtl_pullback(x, price, sma, rvol):
-    return f"{x['ticker']} · Wedge pop", "\n".join([
-        f"{C.MA_TF_LABEL} {C.MA65_KIND.upper()}{C.MA65_LEN} reclaimed `{sma:.2f}` above the daily EMA9 `{x['ema9']}`", f"Price: `{price:.2f}`",
-        f"Downtrend line broken {x['break_date'][5:]} (vol {x['break_vol']}×) · line now `{x['line_next']}`",
-        f"Daily EMA21 `{x['ema21']}`" + (f" · RVOL `{rvol:.2f}`" if rvol is not None else "")])
-
-
-def live_ma65(tickers: list[str], today: date) -> dict[str, dict]:
-    """Media 65m col bucket in corso (come TradingView): EMA50 dal 20/10 [ANDREA], prima SMA30. L'ultimo close di
-    bucket è il prezzo attuale. Un download 5m per i soli nomi del canale, al massimo ogni CHANNEL_POLL_SEC."""
-    import yfinance as yf
-    from .data import buckets_65m
-    if time.time() - _chan_cache["ts"] >= C.CHANNEL_POLL_SEC or set(tickers) - set(_chan_cache["bars"]):
-        df = yf.download(tickers, period=C.MA65_LIVE_PERIOD, interval="5m", prepost=False, auto_adjust=False,
-                         group_by="ticker", progress=False, threads=True)
-        bars = {}
-        for t in tickers:
-            try:
-                sub = df[t] if isinstance(df.columns, pd.MultiIndex) else df
-                bars[t] = buckets_65m(sub)
-            except Exception:
-                pass
-        _chan_cache.update(ts=time.time(), bars=bars)
-    out = {}
-    for t, b in _chan_cache["bars"].items():
-        if len(b) < C.MA65_LEN or b[-1][0] != today.isoformat():
-            continue
-        ma = I.ma65([x[2] for x in b])
-        if ma is None:
-            continue
-        out[t] = dict(sma=ma, price=b[-1][2], bucket=f"{b[-1][0]}#{b[-1][1]}")
-    return out
-
-
-def daily_refs(tickers: list[str], today: date) -> dict[str, dict]:
-    """Media volume 50gg (= sma(volume[1],50) sulla barra di oggi) e ATR14 dalle barre completate. Cache giornaliera."""
-    p = C.STATE / "alerts" / f"refs_{today}.json"
-    cache = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
-    need = [t for t in tickers if t not in cache]
-    if need:
-        import yfinance as yf
-        df = yf.download(need, period="6mo", interval="1d", auto_adjust=False, group_by="ticker",
-                         progress=False, threads=True)
-        for t in need:
-            try:
-                sub = df[t] if isinstance(df.columns, pd.MultiIndex) else df
-                sub = sub.dropna(subset=["Close"])
-                sub = sub[sub.index.date < today]              # solo sedute completate
-                atr = float(I.atr(sub).iloc[-1])
-                cache[t] = {"avg_vol_50": float(sub.Volume.iloc[-50:].mean()),
-                            "adv": float((sub.Volume * sub.Close).iloc[-50:].mean()), "atr": atr,
-                            "prev_rvol": float(sub.Volume.iloc[-1] / sub.Volume.iloc[-51:-1].mean())}
-            except Exception as e:
-                log.warning("refs %s: %s", t, e)
-        write_atomic(p, cache)
-    return cache
-
-
-def intraday(tickers: list[str], today: date) -> dict[str, pd.DataFrame]:
-    import yfinance as yf
-    df = yf.download(tickers, period="1d", interval="5m", prepost=False, auto_adjust=False,
-                     group_by="ticker", progress=False, threads=True)
-    out = {}
-    for t in tickers:
-        try:
-            sub = df[t] if isinstance(df.columns, pd.MultiIndex) else df
-            sub = sub.dropna(subset=["Close"]).copy()
-            sub.index = sub.index.tz_convert(ET)
-            sub = sub[(sub.index.date == today)]
-            o = open_et(today)
-            sub = sub[(sub.index >= o) & (sub.index < close_et(today))]
-            if len(sub):
-                out[t] = sub
-        except Exception:
-            pass
-    return out
-
-
-# ------------------------------------------------------------------ regole d'ingresso di Jeff [RONIN 08/10]
-def rvol_needed(ref: dict) -> Optional[float]:
-    """RVOL richiesto entro 30 minuti; None = non serve (nomi oltre 1 mld $ di controvalore medio)."""
-    if (ref.get("adv") or 0) >= C.ENTRY_NO_RVOL_ADV:
-        return None
-    pv = ref.get("prev_rvol")
-    if pv is None:
-        return 0.25
-    lo, hi = C.ENTRY_RVOL_PREV_LO, C.ENTRY_RVOL_PREV_HI
-    f = min(1.0, max(0.0, (pv - lo) / (hi - lo)))
-    return C.ENTRY_RVOL_MIN + f * (C.ENTRY_RVOL_MAX - C.ENTRY_RVOL_MIN)
-
-
-_QH: dict = {}
-
-
-def _qqq_hourly(day):
-    """Barre orarie dell'indice, scaricate una volta per giro (cache per seduta)."""
-    if day not in _QH:
-        from . import data as D
-        _QH.clear()
-        _QH[day] = D.hourly(C.QQQ_TREND_SYMBOL)
-    return _QH[day]
-
-
-def trend_60m(qh, price: float, side: str) -> "Optional[bool]":
-    """Trend a 60 minuti dell'indice [ANDREA 20/10, dal bot di Martin (martincoach/alerts.trend_60m)]: prezzo dalla parte
-    giusta della media oraria (QQQ_TREND_MA) e media inclinata nel verso del trade su H60_SLOPE_BARS barre. Con
-    QQQ_TREND_SWINGS anche gli ultimi due massimi e minimi di swing nel verso del trade (spenti: chiedevano un indice
-    già esteso). None se mancano le barre."""
+def trend_60m(qh: Optional[pd.DataFrame], price: float, side: str) -> Optional[bool]:
+    """Trend a 60m [RONIN 20/10d, Andrea]: prezzo dalla parte giusta della EMA50 oraria ed EMA50 inclinata nel verso
+    del trade (H60_SLOPE_BARS barre). Con QQQ_TREND_SWINGS anche la struttura: ultimi due massimi e minimi di swing
+    crescenti (long) o decrescenti (short), tolta il 20/10g [Andrea]. None se mancano le barre."""
     if qh is None or len(qh) < 60:
         return None
     ch = qh.Close.astype(float).copy()
-    ch.iloc[-1] = price                      # l'ultima barra oraria è in corso: conta il prezzo di adesso
-    kind, n = C.QQQ_TREND_MA
-    ma = I.ema(ch, n) if kind == "ema" else ch.rolling(n).mean()
-    slope = float(ma.iloc[-1] - ma.iloc[-1 - C.H60_SLOPE_BARS])
-    k = 1 if side == "long" else -1
-    ok = k * (price - float(ma.iloc[-1])) > 0 and k * slope > 0
-    if not C.QQQ_TREND_SWINGS:
-        return bool(ok)
-    h, l, w = qh.High.astype(float).values, qh.Low.astype(float).values, C.SWING_60M_K
-    sh = [h[i] for i in range(w, len(h) - w) if h[i] == max(h[i - w:i + w + 1])]
-    sl = [l[i] for i in range(w, len(l) - w) if l[i] == min(l[i - w:i + w + 1])]
+    ch.iloc[-1] = price
+    kind, n = C.QQQ_TREND_MA                     # ("ema", 50) dal 20/10d; ("sma", 30) in prova [Andrea 20/10]
+    e50 = I.ema(ch, n) if kind == "ema" else ch.rolling(n).mean()
+    d50 = float(e50.iloc[-1] - e50.iloc[-1 - C.H60_SLOPE_BARS])
+    h, l = qh.High.astype(float).values, qh.Low.astype(float).values
+    k = C.SWING_60M_K
+    sh = [h[i] for i in range(k, len(h) - k) if h[i] == max(h[i - k:i + k + 1])]
+    sl = [l[i] for i in range(k, len(l) - k) if l[i] == min(l[i - k:i + k + 1])]
     if len(sh) < 2 or len(sl) < 2:
         return False
-    return bool(ok and k * (sh[-1] - sh[-2]) > 0 and k * (sl[-1] - sl[-2]) > 0)
+    if side == "long":
+        return bool(price > float(e50.iloc[-1]) and d50 > 0 and (not C.QQQ_TREND_SWINGS or (sh[-1] > sh[-2] and sl[-1] > sl[-2])))
+    return bool(price < float(e50.iloc[-1]) and d50 < 0 and (not C.QQQ_TREND_SWINGS or (sh[-1] < sh[-2] and sl[-1] < sl[-2])))
 
 
-def index_trend(day, price_now: "Optional[float]", side: str = "long") -> "Optional[bool]":
-    """Conferma dell'indice per gli ingressi: True in trend, False contro, None se non si può dire [ANDREA 20/10]."""
-    if not C.QQQ_GATE:
+def qqq_gate(side: str, ctx: Optional[dict], qb: Optional[pd.DataFrame], qh: Optional[pd.DataFrame]) -> Optional[str]:
+    """Conferma del QQQ all'ingresso [RONIN 20/10c-d, Andrea]. Long: QQQ in trend a 60m (sopra la EMA50 oraria in
+    salita, massimi e minimi crescenti) e su un suo supporto daily (toccato oggi entro QQQ_LEVEL_ADR ADR, prezzo ancora
+    entro QQQ_LEVEL_NEAR_ADR ADR). Short: il contrario, su una resistenza. Ritorna il motivo dello scarto o None."""
+    if not C.QQQ_GATE or not ctx or qb is None or not len(qb):
         return None
-    qh = _qqq_hourly(day)
-    if qh is None:
+    px = float(qb.Close.iloc[-1])
+    tr = trend_60m(qh, px, side) if C.QQQ_GATE_TREND else None
+    if tr is False:
+        return "QQQ 60m not trending " + ("up" if side == "long" else "down")
+    if not C.QQQ_GATE_LEVEL:
         return None
-    px = price_now if price_now is not None else float(qh.Close.iloc[-1])
-    return trend_60m(qh, px, side)
+    adr = (ctx.get("adr") or 1.5) / 100
+    for lv in ctx.get("supports" if side == "long" else "resistances") or []:
+        tol, near = lv * adr * C.QQQ_LEVEL_ADR, lv * adr * C.QQQ_LEVEL_NEAR_ADR
+        hit = (float(qb.Low.min()) <= lv + tol) if side == "long" else (float(qb.High.max()) >= lv - tol)
+        if hit and abs(px - lv) <= near:
+            return None
+    return "QQQ not at a daily " + ("support" if side == "long" else "resistance")
 
 
-def entry_checks(price: float, lod: float, rvol: float, mins: float, ref: dict) -> tuple[bool, str, Optional[float]]:
-    """Ritorna (ok, motivo se no, RVOL richiesto). Ritmo: la soglia vale a 30 minuti, poi cresce col tempo."""
-    need = rvol_needed(ref)
-    if C.ENTRY_RVOL_REQUIRED and need is not None and rvol < need * max(1.0, mins / C.ORH_MINUTES):
-        return False, f"rvol {rvol:.0%} < {need * max(1.0, mins / C.ORH_MINUTES):.0%}", need
-    if C.ENTRY_LOD_BLOCKS and ref.get("atr") and (price - lod) / ref["atr"] > C.LOD_ATR_RONIN:
-        return False, f"LoD {(price - lod) / ref['atr']:.0%} ATR > 70%", need
-    return True, "", need
+# ------------------------------------------------------------------ messaggi
+def _members(r: dict) -> str:
+    from .output import members_text
+    return members_text(r.get("level_members") or [], 4)
 
 
-# ------------------------------------------------------------------ messaggi (formato invariato)
-def fmt_entry(t, orh, price, rvol, rvol30, need=None, lod_atr=None, against=False):
-    lines = [f"30m high `{orh:.2f}`", f"Price: `{price:.2f}`",
-             f"RVOL now: `{100 * rvol:.0f}%`", f"RVOL first 30m: `{'n/a' if rvol30 is None else f'{100 * rvol30:.0f}%'}`",
-             f"RVOL needed: `{'none (liquid)' if need is None else f'{100 * need:.0f}%'}`"]
-    if lod_atr is not None:
-        lines.append(f"LoD: `{100 * lod_atr:.0f}%` ATR")
-    return f"{t} · Focus" + (" · against the regime" if against else ""), "\n".join(lines)
+_SYNC: dict = {}
 
 
-def fmt_channel(c, price, sma):
-    under = price <= (c.get("ema9") or 0)
-    return f"{c['ticker']} · Channel", "\n".join([
-        f"{C.MA_TF_LABEL} {C.MA65_KIND.upper()}{C.MA65_LEN} reclaimed `{sma:.2f}`", f"Price: `{price:.2f}`",
-        f"Daily EMA9: `{c['ema9']:.2f}`" + (" (still under)" if under else ""),
-        (f"Broken line (backtest): `{c['upper_line_next']:.2f}`" if c["state"] == "backtest of the broken line"
-         else f"Channel lower line: `{c['lower_line_next']:.2f}`"), f"Position: {c['state']}"])
+def _sync(r: dict) -> str:
+    """Sincronia [RONIN 17/10]: QQQ ed ETF del tema rispetto a 9/21/50 daily al prezzo di adesso."""
+    out = []
+    for k in ("QQQ", r.get("sync_etf")):
+        lv, px = (_SYNC.get("levels") or {}).get(k), (_SYNC.get("px") or {}).get(k)
+        if not k or not lv or px is None:
+            continue
+        out.append(f"{k} `{px:.2f}` " + " ".join((">" if px > lv[n] else "<") + n[1:] for n in ("e9", "e21", "e50") if lv.get(n)))
+    return ("Sync: " + " · ".join(out)) if out else ""
 
 
-def fmt_rvol(t, rvol, minutes, price):
-    return f"{t} · RVOL", "\n".join([f"RVOL `{100 * rvol:.0f}%`", f"`{minutes:.0f}` minutes from the open", f"Price: `{price:.2f}`"])
+def _context(r: dict) -> str:
+    rs = r.get("rs21")
+    parts = [r.get("list") or "", f"RS `{rs:+.1f}`" if rs is not None else "",
+             f"ADR `{r['adr']:.1f}%`" if r.get("adr") is not None else ""]
+    if r.get("theme"):
+        ph = r.get("theme_phase")
+        parts.append(r["theme"] + (f" ({C.PHASE_EN.get(ph, ph)})" if ph else ""))
+    if r.get("grade"):
+        parts.append(f"review **{r['grade']}**")
+    sy = _sync(r)
+    # multi-edge e trendline del giorno [RONIN 22/10]
+    ed = " · ".join(x for x in (edges_text(r), tl_text(r), hz_text(r)) if x)
+    return " · ".join(p for p in parts if p) + (f"\n{ed}" if ed else "") + (f"\n{sy}" if sy else "")
 
 
-def fmt_short_entry(t, orl, price, rvol, rvol30, need=None, hod_atr=None, hod=None):
-    """Short [RONIN 12/10]: rottura del minimo dei primi 30 minuti, stop sul massimo del giorno."""
-    lines = [f"30m low `{orl:.2f}`", f"Price: `{price:.2f}`",
-             f"RVOL now: `{100 * rvol:.0f}%`", f"RVOL first 30m: `{'n/a' if rvol30 is None else f'{100 * rvol30:.0f}%'}`",
-             f"RVOL needed: `{'none (liquid)' if need is None else f'{100 * need:.0f}%'}`"]
-    if hod_atr is not None:
-        lines.append(f"HoD: `{100 * hod_atr:.0f}%` ATR" + (f" (stop `{hod:.2f}`)" if hod is not None else ""))
-    return f"{t} · SHORT · Focus", "\n".join(lines)
+def plan_entry_sl(r: dict, b: pd.DataFrame, tf: int, today: date) -> Optional[tuple[float, float, str]]:
+    """Entry e SL pianificati per l'avviso al livello: rottura dell'ultima barra chiusa del timeframe del trigger;
+    SL a LOD/HOD, o all'estremo di quella barra se il LOD/HOD supera min(2%, 0,5 ADR) [ML]."""
+    rb = resample(b, tf, today)
+    if len(rb) < 2:
+        return None
+    bar = rb.iloc[-2]
+    max_stop = min(C.STOP_MAX_PCT, C.STOP_MAX_ADR_FRAC * (r.get("adr") or 99))
+    if r["side"] == "long":
+        entry, sl, src = float(bar.High), float(b.Low.min()), "LOD"
+        if (entry - sl) / entry * 100 > max_stop:
+            sl, src = float(bar.Low), f"{tf}m bar low"
+    else:
+        entry, sl, src = float(bar.Low), float(b.High.max()), "HOD"
+        if (sl - entry) / entry * 100 > max_stop:
+            sl, src = float(bar.High), f"{tf}m bar high"
+    return entry, sl, src
 
 
-def fmt_short_rvol(t, rvol, minutes, price):
-    return f"{t} · SHORT · RVOL", "\n".join([f"RVOL `{100 * rvol:.0f}%`", f"`{minutes:.0f}` minutes from the open", f"Price: `{price:.2f}`"])
+def fmt_level(r: dict, price: float, tf: int, failed: bool = False,
+              plan: Optional[tuple[float, float, str]] = None) -> tuple[str, str]:
+    """Come gli alert di Sydney: titolo 'TICKER · setup', una misura per riga con il valore evidenziato,
+    contenuti del metodo Martin [RONIN 13/10]."""
+    long = r["side"] == "long"
+    dist = (price / r["level"] - 1) * 100
+    lines = [f"Confluence {'support' if long else 'resistance'} `{r['level']:.2f}`" + (f" · {_members(r)}" if _members(r) else ""),
+             f"Price: `{price:.2f}` · `{dist:+.1f}%` from the level",
+             (f"**Failed {'breakdown' if long else 'breakout'}**: crossed the level and came back — best setup" if failed
+              else f"Turning at the level ({'green' if long else 'red'} 5m bar)"),
+             f"Plan: {r['side'].upper()} on the break of the prior {tf}m bar {'high' if long else 'low'}",
+             (f"Entry `{plan[0]:.2f}` · SL `{plan[1]:.2f}` (`{abs(plan[0] - plan[1]) / plan[0] * 100:.2f}%`, {plan[2]})"
+              if plan else ""),
+             _context(r)]
+    if r.get("note"):
+        lines.append(r["note"])
+    title = f"{r['ticker']} · " + ((f"Failed {'breakdown' if long else 'breakout'} at {'support' if long else 'resistance'}") if failed
+                                   else f"At {'support' if long else 'resistance'}")
+    return title, "\n".join(x for x in lines if x)
+
+
+def fmt_trigger(p: dict, tf: int, stop_src: str, r: dict) -> tuple[str, str]:
+    long = p["side"] == "long"
+    per = abs(p["entry"] - p["stop"])
+    trim_r = C.LONG_TRIM_R if long else C.SHORT_TRIM_R
+    tgt = p["entry"] + trim_r * per if long else p["entry"] - trim_r * per
+    lines = [f"Entry `{p['entry']:.2f}` · SL `{p['stop']:.2f}` (`{p['stop_pct']:.2f}%`, {stop_src})",
+             f"Size `{p['size_pct']:.1f}%` · Risk `{p['risk_pct']:.2f}%` (sim. 100k)",
+             f"Level `{p['level']:.2f}`" + (f" · {_members(r)}" if _members(r) else ""),
+             f"1R `{per:.2f}` · first trim `{tgt:.2f}` ({trim_r:g}R)",
+             f"Minute `{p['minutes_from_open']}` from the open · {_context(r)}"]
+    # falso breakout/breakdown da un nome dei tracking [16/10]: "Failed breakdown" per i long, "Failed breakout" per gli
+    # short [RONIN 17/10, Andrea]
+    kind = ("Failed breakdown" if p["side"] == "long" else "Failed breakout") if r.get("fakeout") else "Pullback"
+    return f"{p['ticker']} · {kind} {p['side']} · {tf}m trigger", "\n".join(lines)
+
+
+def fmt_exit(p: dict, kind: str, price: float, reason: str) -> tuple[str, str]:
+    r = J.r_of(p, price)
+    return f"{p['ticker']} · {kind} ({p['side']})", "\n".join([
+        f"Price: `{price:.2f}` · `{r:+.1f}R`", reason[:1].upper() + reason[1:],
+        f"Entry `{p['entry']:.2f}` · Stop `{p['stop']:.2f}` · opened {p['date_open']}"])
+
+
+def _exit_msg(p: dict, kind: str, price: float, reason: str) -> tuple:
+    """(lato, titolo, testo, grafico): bordo del lato della posizione, grafico con entrata, stop e uscita."""
+    t, b = fmt_exit(p, kind, price, reason)
+    return (p["side"], t, b, dict(ticker=p["ticker"], side=p["side"], level=p.get("level"), entry=p["entry"],
+                                  stop=p["stop"], exit_px=price, tf=5, title=kind.lower()))
+
+
+# ------------------------------------------------------------------ gestione posizioni
+def _ext_trims(p: dict, bar) -> list[tuple[float, int, str]]:
+    """Parziali nelle estensioni dalla EMA9 daily (modo ext_h50): [(prezzo, azioni, etichetta)] toccati da questa barra."""
+    e9, atr = p.get("e9d"), p.get("atr_d")
+    if not e9 or not atr:
+        return []
+    k = 1 if p["side"] == "long" else -1
+    out = []
+    for mult, q in (C.LONG_EXT_TRIMS if p["side"] == "long" else C.SHORT_EXT_TRIMS):
+        if mult in p.setdefault("ext_trims", []):
+            continue
+        px = e9 + k * mult * atr
+        beyond_entry = (px > p["entry"]) if k == 1 else (px < p["entry"])
+        hit = (bar.High >= px) if k == 1 else (bar.Low <= px)
+        if beyond_entry and hit:
+            p["ext_trims"].append(mult)
+            out.append((px, max(1, int(round(p["shares"] * q))), f"{'+' if k == 1 else '-'}{mult:g} ATR dalla EMA9 daily"))
+    return out
+
+
+def manage_positions(ps: list[dict], bars: dict[str, pd.DataFrame], today: date, dry_run: bool) -> list[str]:
+    msgs = []
+    ext = C.MGMT_MODE == "ext_h50"
+    need_h = sorted({p["ticker"] for p in ps if p["shares_open"] > 0 and (ext or p["side"] == "short")})
+    hb = hourly_bars(need_h) if need_h else {}
+    for p in ps:
+        b = bars.get(p["ticker"])
+        if b is None or not len(b) or p["shares_open"] <= 0:
+            continue
+        seen = p.get("seen_ts")
+        new = b[b.index > pd.Timestamp(seen)] if seen else b
+        if p["date_open"] == today.isoformat() and not seen:
+            new = b[b.index >= pd.Timestamp(p["time_open_rome"]).tz_convert(ET).floor("min")]
+        if not len(new):
+            continue
+        tk = f"open_checked_{today}"
+        if p["date_open"] != today.isoformat() and not p.get(tk):
+            o = float(b.Open.iloc[0])
+            p[tk] = True
+            if (p["side"] == "long" and o <= p["stop"]) or (p["side"] == "short" and o >= p["stop"]):
+                p["gap_through_stop"] = True
+                J.fill(p, p["shares_open"], o, "exit", "gap oltre lo stop all'apertura")
+                if not p["shadow"]:
+                    msgs.append((_exit_msg(p, "Stop (gap)", o, "gap through stop at the open")))
+                continue
+        long_ = p["side"] == "long"
+        per = abs(p["entry"] - p["stop"])
+        for ix, bar in new.iterrows():
+            J.update_extremes(p, float(bar.High), float(bar.Low))
+            if (long_ and bar.Low <= p["stop"]) or (not long_ and bar.High >= p["stop"]):
+                J.fill(p, p["shares_open"], p["stop"], "exit", "stop")
+                if not p["shadow"]:
+                    msgs.append((_exit_msg(p, "Stop", p["stop"], "stop hit")))
+                break
+            if ext:
+                for px, sh, why in _ext_trims(p, bar):
+                    J.fill(p, sh, px, "trim", f"parziale {why}")
+                    if not p["shadow"]:
+                        msgs.append((_exit_msg(p, "Trim" if long_ else "Cover part", px,
+                                               f"{'sell' if long_ else 'cover'} part: {why.replace('ATR dalla EMA9 daily', 'ATR from the daily 9 EMA')}")))
+                fav = (bar.High - p["entry"]) if long_ else (p["entry"] - bar.Low)
+                if per and fav >= C.TRAIL_H50_AFTER_R * per:
+                    p["trail_on"] = True
+                if p["shares_open"] <= 0:
+                    break
+                continue
+            if long_:
+                tgt = p["entry"] + C.LONG_TRIM_R * per
+                if not p["trimmed"] and bar.High >= tgt:
+                    p["trimmed"] = True
+                    J.fill(p, max(1, int(p["shares"] * C.LONG_TRIM_FRAC)), tgt, "trim", f"trim {C.LONG_TRIM_R:g}R")
+                    if not p["shadow"]:
+                        msgs.append((_exit_msg(p, "Trim", tgt, f"sell {C.LONG_TRIM_FRAC:.0%} into strength")))
+            else:
+                tgt = p["entry"] - C.SHORT_TRIM_R * per
+                if not p["trimmed"] and bar.Low <= tgt:
+                    p["trimmed"] = True
+                    J.fill(p, max(1, int(p["shares"] * C.SHORT_TRIM_FRAC)), tgt, "trim", f"copertura {C.SHORT_TRIM_R:g}R")
+                    if not p["shadow"]:
+                        msgs.append((_exit_msg(p, "Cover part", tgt, f"cover {C.SHORT_TRIM_FRAC:.0%} into weakness")))
+        p["seen_ts"] = str(new.index[-1])
+        # EMA50 oraria: trailing di entrambi i lati dopo +1R (ext_h50) oppure uscita degli short (classic)
+        use_h = p["shares_open"] > 0 and p["ticker"] in hb and (p.get("trail_on") if ext else not long_)
+        if use_h:
+            n = C.TRAIL_H50_EMA if ext else C.SHORT_EXIT_HOURLY_EMA
+            h = hb[p["ticker"]]
+            h = h[h.index + timedelta(hours=1) <= b.index[-1] + timedelta(minutes=1)]      # solo barre orarie chiuse
+            if len(h) > n:
+                e = I.ema(h.Close, n)
+                opened = pd.Timestamp(p["time_open_rome"]).tz_convert(ET)
+                crossed = (h.Close.iloc[-1] < e.iloc[-1]) if long_ else (h.Close.iloc[-1] > e.iloc[-1])
+                if h.index[-1] + timedelta(hours=1) > opened and crossed:
+                    px = float(b.Close.iloc[-1])
+                    J.fill(p, p["shares_open"], px, "exit", f"barra oraria {'sotto' if long_ else 'sopra'} la EMA50 oraria")
+                    if not p["shadow"]:
+                        msgs.append((_exit_msg(p, "Exit", px, f"hourly close {'below' if long_ else 'above'} the hourly 50 EMA")))
+    return msgs
 
 
 # ------------------------------------------------------------------ ciclo
-def recent_alert(day: dict, ticker: str) -> bool:
-    """Vero se per questo titolo è già partito un alert (di qualsiasi tipo) negli ultimi ALERT_COOLDOWN_MIN minuti
-    [RONIN 12/10: niente alert a ridosso sullo stesso titolo]."""
-    lim = datetime.now(ROME) - timedelta(minutes=C.ALERT_COOLDOWN_MIN)
-    for k, v in day.items():
-        if k.startswith(f"{ticker}|") and isinstance(v, dict) and v.get("ts"):
-            try:
-                if datetime.fromisoformat(v["ts"]) >= lim:
-                    return True
-            except ValueError:
-                pass
-    return False
-
-
-def run_once(dry_run: bool = False) -> dict:
-    now = now_et()
-    today = now.date()
+def run_once(dry_run: bool = False, now: Optional[datetime] = None) -> dict:
+    now = now or now_et()
+    today = now.astimezone(ET).date()
     mins = minutes_from_open(now)
-    rows = load_rows(today)
-    srows = load_short_rows(today)
-    if (not rows and not srows and not load_channel(today) and not load_dtl(today)) or mins is None or mins < 0:
-        return {"scanned": 0, "minutes": mins}
-    tickers = sorted({r["ticker"] for r in rows} | {r["ticker"] for r in srows})
-    refs = daily_refs(tickers, today) if tickers else {}
-    bars = intraday(sorted(set(tickers) | ({C.QQQ_TREND_SYMBOL} if C.QQQ_GATE else set())), today) if tickers else {}
-    qb = bars.get(C.QQQ_TREND_SYMBOL)       # conferma dell'indice all'ingresso [ANDREA 20/10]
-    qpx = float(qb.Close.iloc[-1]) if qb is not None and len(qb) else None
-    qqq_up, qqq_dn = index_trend(today, qpx, "long"), index_trend(today, qpx, "short")
-    state = json.loads(FIRED.read_text(encoding="utf-8")) if FIRED.exists() else {}
-    day = state.setdefault(today.isoformat(), {})
-    fired, scan = [], []
-    for r in rows:
-        t, lst = r["ticker"], r["list"]
-        b, ref = bars.get(t), refs.get(t)
-        if b is None or not ref or not ref.get("avg_vol_50"):
-            continue
-        price = float(b.Close.iloc[-1])
-        cum = float(b.Volume.sum())
-        rvol = cum / ref["avg_vol_50"]
-        first = b[b.index < open_et(today) + timedelta(minutes=C.ORH_MINUTES)]
-        orh = float(first.High.max()) if len(first) else None
-        rvol30 = float(first.Volume.sum()) / ref["avg_vol_50"] if len(first) and mins >= C.ORH_MINUTES else None
-        lod_atr = (price - float(b.Low.min())) / ref["atr"] if ref.get("atr") else None
-        rec = dict(ticker=t, list=lst, price=price, rvol=round(rvol, 3), rvol30=rvol30, orh=orh,
-                   lod_atr=None if lod_atr is None else round(lod_atr, 2), lod_ok=None if lod_atr is None else lod_atr <= C.LOD_ATR_RONIN,
-                   mega_liquid=(ref.get("adv") or 0) >= C.MEGA_LIQUID_ADV)
-        scan.append(rec)
-        # RVOL 30% nella prima ora, Focus e Stalk
-        k = f"{t}|{lst}|rvol-30"
-        if 0 < mins <= C.RVOL_ALERT_WINDOW_MIN and rvol >= C.RVOL_ALERT and k not in day \
-                and not recent_alert(day, t):
-            res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_rvol(t, rvol, mins, price))
-            if res.get("sent"):
-                day[k] = {"ts": datetime.now(ROME).isoformat(), "rvol": rvol, "price": price}
-                fired.append(k)
-        # ingresso: solo Focus, dopo 30 minuti, rottura dell'ORH
-        k = f"{t}|Focus|30m-high"
-        if lst != "Focus" or orh is None or k in day:
-            continue
-        early_ok = r["extreme_rvol_ok"] and not rec["mega_liquid"]
-        if mins < C.ORH_MINUTES and not early_ok:
-            continue
-        if price < orh:
-            continue
-        if not C.in_entry_band(price, orh, "long"):
-            rec["skipped"] = f"outside entry band ({C.entry_dist_pct(price, orh):.2f}% from ORH)"
-            continue                           # [20/10h] fuori banda: si aspetta, il trigger resta libero
-        if C.CHASE_MAX_ATR_ABOVE_ORH is not None and ref.get("atr") and (price - orh) / ref["atr"] > C.CHASE_MAX_ATR_ABOVE_ORH:
-            rec["skipped"] = "chase"
-            continue
-        if C.QQQ_GATE and qqq_up is False:
-            rec["skipped"] = "qqq not trending up"      # si aspetta la conferma dell'indice [ANDREA 20/10]
-            continue
-        ok, why, need = entry_checks(price, float(b.Low.min()), rvol, mins, ref)
-        rec["rvol_needed"] = need
-        if not ok:
-            rec["skipped"] = why               # si riprova al giro dopo (il volume può arrivare)
-            continue
-        if recent_alert(day, t):
-            rec["skipped"] = "cooldown"        # alert su questo titolo da poco: si riprova dopo
-            continue
-        res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_entry(t, orh, price, rvol, rvol30, need, rec["lod_atr"],
-                                                                                            r.get("against_regime")))
-        if res.get("sent"):
-            day[k] = {"ts": datetime.now(ROME).isoformat(), "price": price, "orh": orh, "rvol": rvol, "lod_atr": rec["lod_atr"]}
-            fired.append(k)
-        else:
-            log.warning("alert %s non inviato: %s", t, res.get("reason"))
-    # SHORT [RONIN 12/10]: stesse regole al contrario. RVOL nella prima ora (Focus e Stalk); ingresso solo Focus,
-    # dopo 30 minuti, rottura del minimo dei primi 30 minuti, massimo del giorno entro 0,7 ATR (stop sul massimo)
-    for r in srows:
-        t, lst = r["ticker"], r["list"]
-        b, ref = bars.get(t), refs.get(t)
-        if b is None or not ref or not ref.get("avg_vol_50"):
-            continue
-        price = float(b.Close.iloc[-1])
-        rvol = float(b.Volume.sum()) / ref["avg_vol_50"]
-        first = b[b.index < open_et(today) + timedelta(minutes=C.ORH_MINUTES)]
-        orl = float(first.Low.min()) if len(first) else None
-        rvol30 = float(first.Volume.sum()) / ref["avg_vol_50"] if len(first) and mins >= C.ORH_MINUTES else None
-        hod = float(b.High.max())
-        hod_atr = (hod - price) / ref["atr"] if ref.get("atr") else None
-        rec = dict(ticker=t, list=f"Short {lst}", price=price, rvol=round(rvol, 3), rvol30=rvol30, orl=orl,
-                   hod_atr=None if hod_atr is None else round(hod_atr, 2))
-        scan.append(rec)
-        k = f"{t}|Short{lst}|rvol-30"
-        if 0 < mins <= C.RVOL_ALERT_WINDOW_MIN and rvol >= C.RVOL_ALERT and k not in day and not recent_alert(day, t):
-            res = {"sent": True, "dry_run": True} if dry_run else send_alert(*fmt_short_rvol(t, rvol, mins, price), color=C.SHORT_COLOR)
-            if res.get("sent"):
-                day[k] = {"ts": datetime.now(ROME).isoformat(), "rvol": rvol, "price": price}
-                fired.append(k)
-        k = f"{t}|ShortFocus|30m-low"
-        if lst != "Focus" or orl is None or k in day or mins < C.ORH_MINUTES or price > orl:
-            continue
-        if not C.in_entry_band(price, orl, "short"):
-            rec["skipped"] = f"outside entry band ({C.entry_dist_pct(price, orl, 'short'):.2f}% from ORL)"
-            continue                           # [20/10h] fuori banda: si aspetta
-        need = rvol_needed(ref)
-        if C.ENTRY_RVOL_REQUIRED and need is not None and rvol < need * max(1.0, mins / C.ORH_MINUTES):
-            rec["skipped"] = f"rvol {rvol:.0%}"
-            continue
-        if C.ENTRY_LOD_BLOCKS and hod_atr is not None and hod_atr > C.LOD_ATR_RONIN:
-            rec["skipped"] = f"HoD {hod_atr:.0%} ATR > 70%"
-            continue
-        if C.QQQ_GATE and qqq_dn is False:
-            rec["skipped"] = "qqq not trending down"    # short: l'indice deve essere nel verso del trade [ANDREA 20/10]
-            continue
-        if recent_alert(day, t):
-            rec["skipped"] = "cooldown"
-            continue
-        res = ({"sent": True, "dry_run": True} if dry_run
-               else send_alert(*fmt_short_entry(t, orl, price, rvol, rvol30, need, hod_atr, hod), color=C.SHORT_COLOR))
-        if res.get("sent"):
-            day[k] = {"ts": datetime.now(ROME).isoformat(), "price": price, "orl": orl, "rvol": rvol, "hod_atr": hod_atr}
-            fired.append(k)
-    # canale: recupero della media 65m (una volta per nome)
-    chan = [c for c in load_channel(today) if f"{c['ticker']}|Channel|sma30-65m" not in day]
-    if chan and mins >= 0:
-        try:
-            live = live_ma65([c["ticker"] for c in chan], today)
-        except Exception as e:
-            log.warning("canale 65m: %s", e)
-            live = {}
-        for c in chan:
-            t, lv = c["ticker"], live.get(c["ticker"])
-            if not lv:
+    lst = load_list(today)
+    with J.lock():
+        ps = J.positions()
+        st = load_state(today)
+        focus = ((lst or {}).get("focus") or []) + ((lst or {}).get("counter_focus") or [])   # + lato opposto [RONIN 13/10]
+        focus = focus + ((lst or {}).get("fakeout_watch") or [])     # + tracking, solo falso breakout [RONIN 16/10]
+        tickers = sorted({r["ticker"] for r in focus} | {p["ticker"] for p in ps} | {"QQQ"}
+                         | {r["sync_etf"] for r in focus if r.get("sync_etf")}           # ETF per la sincronia [17/10]
+                         | {r["group_etf"] for r in focus if r.get("group_etf")})        # ETF del gruppo [28/10a]
+        raw = D.download_intraday(tickers, period="1d", interval="1m")
+        bars = {t: today_bars(b, today) for t, b in raw.items()}
+        bars = {t: b for t, b in bars.items() if len(b)}
+        _SYNC.update(levels=(lst or {}).get("sync_levels") or {}, px={t: float(b.Close.iloc[-1]) for t, b in bars.items()})
+        msgs = manage_positions(ps, bars, today, dry_run)
+        ps = J.commit(ps, today)              # salva subito: open_trade rilegge le posizioni dal file
+
+        # gap degli indici all'apertura
+        q = bars.get("QQQ")
+        if q is not None and lst and lst.get("qqq_prev_close") and "qqq_gap" not in st:
+            st["qqq_gap"] = round((float(q.Open.iloc[0]) / lst["qqq_prev_close"] - 1) * 100, 2)
+        gap = st.get("qqq_gap")
+        js = J.state()
+        paused = (not C.ALERTS_ONLY) and js.get("pause_until") and today.isoformat() <= js["pause_until"]
+
+        for r in focus if (lst and mins is not None and mins >= 1) else []:
+            t, side = r["ticker"], r["side"]
+            b = bars.get(t)
+            if b is None or r.get("level") is None:
                 continue
-            scan.append(dict(ticker=t, list="Channel", price=lv["price"], ma65=round(lv["sma"], 2)))
-            if lv["price"] <= lv["sma"]:
+            price = float(b.Close.iloc[-1])
+            lvl = r["level"]
+            fk = bool(r.get("fakeout"))
+            # avvicinamento al livello (prima del tocco) e, con mercato forte, alla resistenza per il breakout [RONIN 14/10]
+            appr_pct = min(C.APPROACH_PCT, C.APPROACH_ADR_FRAC * (r.get("adr") or 99))
+            ap = st.setdefault("approach", {})
+            if not fk and t not in ap and ((side == "short" and lvl * (1 - appr_pct / 100) <= price < lvl)
+                                or (side == "long" and lvl < price <= lvl * (1 + appr_pct / 100))):
+                ap[t] = now.isoformat()
+                where = "resistance" if side == "short" else "support"
+                msgs.append(("info", f"{t} · Approaching {where}",
+                             f"Confluence {where} `{lvl:.2f}`" + (f" · {_members(r)}" if _members(r) else "")
+                             + f"\nPrice: `{price:.2f}` · `{(price / lvl - 1) * 100:+.1f}%` from the level"
+                             + f"\nWatch for the turn at the level ({'red' if side == 'short' else 'green'} 5m bar or failed "
+                             + f"{'breakout' if side == 'short' else 'breakdown'})\n{_context(r)}",
+                             dict(ticker=t, side=side, level=lvl, tf=5, title=f"approaching {where}")))
+            bo = r.get("breakout_level")
+            if not fk and side == "long" and bo and lst.get("bias") in C.BREAKOUT_ALERT_BIASES:
+                bk = st.setdefault("breakout", {})
+                if f"{t}|near" not in bk and bo * (1 - appr_pct / 100) <= price < bo:
+                    bk[f"{t}|near"] = now.isoformat()
+                    msgs.append(("long", f"{t} · Approaching breakout level",
+                                 f"Resistance `{bo:.2f}` (10-day high) · strong market\nPrice: `{price:.2f}` · "
+                                 f"`{(price / bo - 1) * 100:+.1f}%` from the level\nPlan: LONG on the break of `{bo:.2f}`\n{_context(r)}",
+                                 dict(ticker=t, side="long", level=bo, tf=5, title="approaching breakout")))
+                if f"{t}|break" not in bk and price > bo:
+                    bk[f"{t}|break"] = now.isoformat()
+                    msgs.append(("long", f"{t} · Breaking out",
+                                 f"Above the 10-day high `{bo:.2f}` · price `{price:.2f}`\nStrong market: check volume and the hold "
+                                 f"of the level on the 5m\n{_context(r)}",
+                                 dict(ticker=t, side="long", level=bo, tf=5, title="breakout")))
+            # tocco RECENTE del livello, prezzo ancora vicino e inversione [RONIN 14/10]
+            rec = b[b.index >= b.index[-1] - timedelta(minutes=C.TOUCH_LOOKBACK_MIN)]
+            touched = (float(rec.Low.min()) <= lvl * (1 + C.LEVEL_TOUCH_PCT / 100)) if side == "long" \
+                else (float(rec.High.max()) >= lvl * (1 - C.LEVEL_TOUCH_PCT / 100))
+            near_pct = min(C.LEVEL_NEAR_PCT, C.LEVEL_NEAR_ADR_FRAC * (r.get("adr") or 99))
+            near = abs(price / lvl - 1) * 100 <= near_pct
+            # failed breakdown (long) / failed breakout (short): ha passato il livello ed è tornato dall'altra parte
+            failed = (float(rec.Low.min()) < lvl and price > lvl) if side == "long" else (float(rec.High.max()) > lvl and price < lvl)
+            last5 = resample(b, 5, today)
+            turning = len(last5) and ((float(last5.Close.iloc[-1]) > float(last5.Open.iloc[-1])) if side == "long"
+                                      else (float(last5.Close.iloc[-1]) < float(last5.Open.iloc[-1])))
+            if not fk and touched and near and (failed or turning) and t not in st["touched"]:
+                st["touched"][t] = now.isoformat()
+                tf_now = trigger_tf(mins)
+                lt, lb = fmt_level(r, price, tf_now, failed, plan_entry_sl(r, b, tf_now, today))
+                if r.get("counter"):
+                    lb = "*Against the regime (top quality) — for information only, the bot does not take it.*\n" + lb
+                msgs.append((side, lt, lb,
+                             dict(ticker=t, side=side, level=lvl, tf=tf_now, title=f"at {'support' if side == 'long' else 'resistance'}")))
+            key = f"{t}|{side}|trigger"
+            if not touched or not near or key in st["fired"]:     # ingresso solo vicino al livello [RONIN 14/10]
                 continue
-            if not C.in_entry_band(lv["price"], lv["sma"], "long"):
-                continue                           # [20/10h] recupero della media 65m oltre la banda: si aspetta
-            k = f"{t}|Channel|sma30-65m"
-            if recent_alert(day, t):
+            if fk and not failed:          # tracking: solo il falso breakout/breakdown sul livello [RONIN 16/10]
                 continue
-            img = None
-            if not dry_run and C.CHANNEL_CHART:
-                from .chart import channel_chart          # grafico daily + 65m nell'alert [RONIN 09/10]
-                img = channel_chart(c, _chan_cache["bars"].get(t), lv["price"], lv["sma"])
-            res = ({"sent": True, "dry_run": True} if dry_run
-                   else send_alert(*fmt_channel(c, lv["price"], lv["sma"]), image=img))
-            if res.get("sent"):
-                day[k] = {"ts": datetime.now(ROME).isoformat(), "price": lv["price"], "ma65": lv["sma"]}
-                fired.append(k)
-    # trendline discendente: rottura in seduta con RVOL alto (near) e crossback dopo la rottura (pullback)
-    dl = [x for x in load_dtl(today) if f"{x['ticker']}|DTL|alert" not in day]
-    if dl and mins >= 0:
-        try:
-            live = live_5m([x["ticker"] for x in dl])
-        except Exception as e:
-            log.warning("trendline 5m: %s", e)
-            live = {}
-        from .data import buckets_65m
-        for x in dl:
-            t, sub = x["ticker"], live.get(x["ticker"])
-            if sub is None or not len(sub) or sub.index[-1].date() != today:
+            tf = trigger_tf(mins)
+            rb = resample(b, tf, today)
+            if len(rb) < 2:
                 continue
-            price = float(sub.Close.iloc[-1])
-            rv = rvol_time_of_day(sub, today)
-            k = f"{t}|DTL|alert"
-            msg = None
-            if x["kind"] == "near":
-                line = x["line_next"]
-                scan.append(dict(ticker=t, list="DTL near", price=price, line=line, rvol=rv))
-                if price > line + C.DTL["break_atr_vol"] * (x["atr"] or 0) and (rv or 0) >= C.DTL["live_rvol_min"]:
-                    msg, title = fmt_dtl_break(x, price, line, rv), "downtrend line break"
+            prev, cur = rb.iloc[-2], rb.iloc[-1]
+            # la rottura deve avvenire nella barra in corso; ingresso al livello di rottura (o all'apertura se c'è gap)
+            if side == "long":
+                if not float(cur.High) > float(prev.High):
+                    continue
+                price = max(float(prev.High), float(cur.Open))
             else:
-                b = buckets_65m(sub)
-                if len(b) < C.MA65_LEN or b[-1][0] != today.isoformat():
+                if not float(cur.Low) < float(prev.Low):
                     continue
-                sma = I.ma65([q[2] for q in b])
-                if sma is None:
-                    continue
-                kb = f"{t}|DTL|below65"
-                scan.append(dict(ticker=t, list="DTL pullback", price=price, ma65=round(sma, 2)))
-                if price <= sma:
-                    day[kb] = True                  # sotto la media 65m: si aspetta il recupero
-                else:
-                    low = float(sub[sub.index.date == today].Low.min())
-                    # crossback: ieri o oggi il minimo è tornato sulle medie (EMA9 o EMA21)
-                    touched = x.get("on_emas") or low <= max(x["ema9"] or 0, x["ema21"] or 0) + C.DTL["ema_touch_atr"] * (x["atr"] or 0)
-                    if day.get(kb) and touched and price > (x["ema9"] or 0) and C.in_entry_band(price, sma, "long"):
-                        msg, title = fmt_dtl_pullback(x, price, sma, rv), "wedge pop · pullback"
-            if not msg or recent_alert(day, t):
+                price = min(float(prev.Low), float(cur.Open))
+            # stop: LOD/HOD, oppure l'estremo della barra di trigger se il LOD/HOD è troppo lontano
+            max_stop = min(C.STOP_MAX_PCT, C.STOP_MAX_ADR_FRAC * (r.get("adr") or 99))
+            stop_src = "LOD" if side == "long" else "HOD"
+            if side == "long":
+                stop = float(b.Low.min())
+                if (price - stop) / price * 100 > max_stop:
+                    stop, stop_src = float(prev.Low), f"prior {tf}m bar low"
+                stop_pct = (price - stop) / price * 100
+                chase = price > lvl * (1 + C.CHASE_MAX_PCT / 100)
+                gap_block = False             # gap up del QQQ: si aspetta (early_reason), non si blocca la seduta [RONIN 14/10]
+            else:
+                stop = float(b.High.max())
+                if (stop - price) / price * 100 > max_stop:
+                    stop, stop_src = float(prev.High), f"prior {tf}m bar high"
+                stop_pct = (stop - price) / price * 100
+                chase = price < lvl * (1 - C.CHASE_MAX_PCT / 100)
+                gap_block = False             # gap down del QQQ: si aspetta (early_reason), non si blocca la seduta [RONIN 15/10]
+            reason = None
+            if stop_pct <= 0:
                 continue
-            img = None
-            if not dry_run and C.CHANNEL_CHART:
-                from .chart import channel_chart
-                img = channel_chart(dict(x, chart_title=title), None, price, None)
-            res = {"sent": True, "dry_run": True} if dry_run else send_alert(*msg, image=img)
+            # banda d'ingresso [20/10h, Andrea]: si entra un po' prima del livello, mai sul livello o oltre
+            if C.ENTRY_BAND:
+                dist = (lvl / price - 1) * 100 * (1 if side == "short" else -1)
+                if not (C.ENTRY_DIST_MIN_PCT <= dist <= C.ENTRY_DIST_MAX_PCT):
+                    continue               # fuori banda: si aspetta, il trigger resta libero
+            if C.TF_60M_TRIGGER:       # consonanza a 60m sulla EMA50 oraria [RONIN 17/10; ML: "short sulla 50 EMA 60m
+                #                        allineata con la 9 daily"]: per gli short 50 oraria in discesa e prezzo non sopra
+                #                        (tolleranza H60_TOL_ADR ADR, l'overshoot del livello), per i long il contrario
+                hb = hourly_bars([x["ticker"] for x in focus]).get(t)
+                if hb is not None and len(hb) >= 25 and C.H60_MODE == "ema9_21":   # regola del 17/10a
+                    ch = hb.Close.astype(float).copy()
+                    ch.iloc[-1] = price
+                    e9h, e21h = float(I.ema(ch, 9).iloc[-1]), float(I.ema(ch, 21).iloc[-1])
+                    if (side == "long" and e9h < e21h) or (side == "short" and e9h > e21h):
+                        continue
+                elif hb is not None and len(hb) >= 60:
+                    ch = hb.Close.astype(float).copy()
+                    ch.iloc[-1] = price            # barra oraria in corso al prezzo di adesso
+                    e50, e21 = I.ema(ch, 50), I.ema(ch, 21)
+                    now50, prev50 = float(e50.iloc[-1]), float(e50.iloc[-1 - C.H60_SLOPE_BARS])
+                    now21, prev21 = float(e21.iloc[-1]), float(e21.iloc[-1 - C.H60_SLOPE_BARS])   # anche la 21 [RONIN 17/10]
+                    tol = C.H60_TOL_ADR * (r.get("adr") or 0) / 100 * now50
+                    if side == "short" and not (now50 < prev50 and now21 < prev21 and price <= now50 + tol):
+                        continue           # non ancora: il trigger resta libero per le barre dopo
+                    if side == "long" and not (now50 > prev50 and now21 > prev21 and price >= now50 - tol):
+                        continue
+            why_q = qqq_gate(side, lst.get("qqq_ctx"), bars.get("QQQ"), hourly_bars([x["ticker"] for x in focus] + ["QQQ"]).get("QQQ"))
+            if why_q:                  # QQQ non conferma: si aspetta, il trigger resta libero [RONIN 20/10c, Andrea]
+                continue
+            # apertura: il segnale diventa un trade ombra (per misurarlo) e il trigger vero resta libero per dopo
+            early = early_reason(side, mins, b, gap, lvl, r.get("adr"))
+            if early:
+                ekey = f"{t}|{side}|early"
+                if ekey not in st["fired"]:
+                    J.open_trade(dict(r, bias=lst.get("bias"), risk_pct_day=lst.get("risk_pct"), trigger_tf=f"{tf}m"),
+                                 price, stop, early, today, mins)
+                    st["fired"][ekey] = now.isoformat()
+                continue
+            if stop_pct > max_stop:
+                reason = f"stop largo {stop_pct:.1f}%"
+            elif chase:
+                reason = "inseguimento oltre il 3% dal livello"
+            elif gap_block:
+                reason = f"QQQ in gap {gap:+.2f}% contro il lato"
+            elif (r.get("dv5") or 0) < (C.SHORT_DV_MIN if side == "short" else C.LONG_DV_MIN):
+                reason = "liquidità sotto il minimo"
+            elif paused:
+                reason = "pausa dopo serie di perdite"
+            elif not C.ALERTS_ONLY and st["new_trades"] >= C.MAX_NEW_TRADES_DAY:
+                reason = "freno: massimo trade del giorno"
+            elif side == "long" and (why_g := GR.long_near_support(r, bars.get(r.get("group_etf") or ""))):
+                reason = why_g             # [RONIN 28/10a] ETF del gruppo lontano dal supporto: trade ombra, niente alert
+            aware = bool(r.get("counter")) and reason is None     # lato opposto: alert solo se passa tutti gli altri filtri
+            if r.get("counter"):
+                reason = reason or "contro regime"
+            risk_day = (lst.get("risk_pct") or C.RISK_PCT) * (C.EXLEADER_RISK_MULT if r.get("short_type") == "top ex-leader" else 1)
+            ctx = dict(r, bias=lst.get("bias"), risk_pct_day=risk_day, qqq_trend=(lst.get("indices", {}).get("QQQ") or {}).get("trend"),
+                       iwm_trend=(lst.get("indices", {}).get("IWM") or {}).get("trend"),
+                       breadth_lead=(lst.get("breadth") or {}).get("share"), trigger_tf=f"{tf}m", confluence=r.get("confluence"))
+            p = J.open_trade(ctx, price, stop, reason, today, mins)
+            st["fired"][key] = now.isoformat()
+            if not p["shadow"] or aware:
+                if not p["shadow"]:
+                    st["new_trades"] += 1
+                tt, tb = fmt_trigger(p, tf, stop_src, r)
+                if aware:
+                    tb = "*Against the regime (top quality) — for information only: the bot does not take it, it is tracked separately and not counted in the trade limit.*\n" + tb
+                msgs.append((side, tt, tb,
+                             dict(ticker=t, side=side, level=lvl, entry=p["entry"], stop=p["stop"], tf=tf,
+                                  title=f"{('failed breakdown' if side == 'long' else 'failed breakout') if fk else 'pullback'} {side} · {tf}m trigger")))
+        sent = []
+        for kind, title, body, ch in msgs:
+            img = img2 = None
+            if ch:            # grafico daily (il pannello intraday sotto solo con ALERT_INTRADAY_PANEL) [RONIN 13/10; 28/10]
+                img = alert_chart(ch["ticker"], ch["side"], bars.get(ch["ticker"]), ch.get("tf", 5), today,
+                                  level=ch.get("level"), entry=ch.get("entry"), stop=ch.get("stop"),
+                                  exit_px=ch.get("exit_px"), title=ch.get("title", ""), panel=C.ALERT_INTRADAY_PANEL)
+                img2 = group_chart(ch["ticker"], ch["side"], focus, bars, today)
+            res = send_alert(title, body, kind, dry_run, image=img, image2=img2)
             if res.get("sent"):
-                day[k] = {"ts": datetime.now(ROME).isoformat(), "price": price, "kind": x["kind"]}
-                fired.append(k)
-    for d in [d for d in state if d < (today - timedelta(days=7)).isoformat()]:
-        del state[d]
-    if not dry_run:                       # una prova non deve "consumare" gli alert veri del giorno
-        write_atomic(FIRED, state)
-    write_atomic(LAST_SCAN, {"ts_rome": datetime.now(ROME).isoformat(), "minutes": mins, "fired": fired, "scan": scan})
-    return {"scanned": len(scan), "fired": fired, "minutes": round(mins, 1)}
+                sent.append(title)
+            else:
+                log.warning("alert non inviato: %s %s", title, res.get("reason"))
+        write_atomic(state_path(today), st)
+        # pausa dopo serie di perdite
+        if not C.ALERTS_ONLY and J.loss_streak() >= C.LOSS_STREAK_PAUSE and not paused:
+            from .calendar_us import sessions_from
+            js["pause_until"] = sessions_from(today, C.PAUSE_SESSIONS + 1)[-1].isoformat()
+            J.save_state(js)
+    return {"minutes": None if mins is None else round(mins, 1), "focus": len(focus), "positions": len(J.positions()), "sent": sent}
+
+
+def group_chart(ticker: str, side: str, focus: list[dict], bars: dict, today: date) -> Optional[bytes]:
+    """Seconda immagine degli alert [RONIN 28/10, Andrea]: il daily dell'ETF del gruppo del titolo, con le sue aree di
+    supporto (long) o resistenza (short)."""
+    if not C.ALERT_GROUP_CHART:
+        return None
+    r = next((x for x in focus if x["ticker"] == ticker and x.get("group_etf")), None)
+    if r is None:
+        r = next((x for x in focus if x["ticker"] == ticker), None)
+    etf = (r or {}).get("group_etf")
+    if not etf:
+        return None
+    try:
+        areas = [(a[0], a[1]) for a in (r.get("group_sup") or [])] if side == "long" else None
+        return alert_chart(etf, side, bars.get(etf), 5, today, title=f"group ETF of {ticker} · {r.get('group')}",
+                           panel=False, areas=areas)
+    except Exception as e:
+        log.warning("grafico ETF del gruppo %s: %s", etf, e)
+        return None
+
+
+def prova_alert(ticker: Optional[str] = None, dry_run: bool = False) -> dict:
+    """Alert d'ingresso di PROVA (titolo 'TEST · ...'): primo Focus, un ticker, oppure 'long'/'short' (primo nome
+    di quel lato tra Focus e Stalk). Barre a 5 minuti
+    dell'ultima seduta: serve solo a vedere formato e grafico su Discord. Non tocca giornale né stato degli alert."""
+    lst = load_list(now_et().date()) or json.loads((C.LISTS / "today.json").read_text(encoding="utf-8"))
+    focus = lst.get("focus") or []
+    det_p = C.LISTS / f"work_{lst.get('session')}" / "detail.json"
+    cands = json.loads(det_p.read_text(encoding="utf-8")).get("candidates", []) if det_p.exists() else []
+    pool = focus + [c for c in cands if c.get("level") is not None]
+    want = ticker.lower() if ticker and ticker.lower() in ("long", "short") else None
+    if want:                                   # "short"/"long": il primo nome di quel lato (Focus, poi Stalk)
+        r = next((x for x in pool if x["side"] == want), None)
+    elif ticker:
+        r = next((x for x in pool if x["ticker"] == ticker.upper()), None)
+    else:
+        r = focus[0] if focus else None
+    if r is None:
+        return {"sent": False, "reason": f"nessun nome adatto nella lista ({ticker or 'Focus'})"}
+    raw = D.download_intraday([r["ticker"]], period="5d", interval="5m").get(r["ticker"])
+    if raw is None or not len(raw):
+        return {"sent": False, "reason": "barre intraday non disponibili"}
+    day = raw.index[-1].date()
+    b = today_bars(raw, day)
+    if len(b) < 3:
+        return {"sent": False, "reason": "poche barre"}
+    k = max(2, len(b) // 3)
+    long = r["side"] == "long"
+    if long:                                   # rottura del massimo della barra precedente, stop sul LOD
+        entry, stop = float(b.High.iloc[k - 1]), float(b.Low.iloc[:k + 1].min())
+        if stop >= entry:
+            stop = entry * 0.99
+    else:                                      # rottura del minimo della barra precedente, stop sull'HOD
+        entry, stop = float(b.Low.iloc[k - 1]), float(b.High.iloc[:k + 1].max())
+        if stop <= entry:
+            stop = entry * 1.01
+    stop_pct = abs(entry - stop) / entry * 100
+    size_pct = min(C.SIZE_MAX_PCT, C.RISK_PCT / stop_pct * 100)
+    p = dict(ticker=r["ticker"], side=r["side"], entry=entry, stop=stop, stop_pct=stop_pct, size_pct=size_pct,
+             risk_pct=size_pct * stop_pct / 100, level=r["level"], minutes_from_open=k * 5, date_open=day.isoformat())
+    title, body = fmt_trigger(p, 5, "LOD" if long else "HOD", r)
+    img = alert_chart(r["ticker"], r["side"], b.iloc[:k + 1], 5, day, level=r["level"], entry=entry, stop=stop,
+                      title=f"pullback {r['side']} · 5m trigger (TEST)")
+    body = f"*Test message: example built on {day} bars, not a real signal.*\n" + body
+    return send_alert("TEST · " + title, body, r["side"], dry_run, image=img)
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--prova", nargs="?", const="", help="manda un alert di PROVA: ticker, long o short (facoltativo)")
     ap.add_argument("--once", action="store_true")
-    ap.add_argument("--loop", action="store_true")
+    ap.add_argument("--service", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force-window", action="store_true")
     a = ap.parse_args(argv)
     C.LOGS.mkdir(parents=True, exist_ok=True)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s",
                         handlers=[logging.StreamHandler(sys.stdout), logging.FileHandler(C.LOGS / "alerts.log")])
-    if a.loop:
-        while in_window():
+    if a.prova is not None:
+        print(json.dumps(prova_alert(a.prova or None, a.dry_run), default=str))
+        return 0
+    if a.service:
+        while True:
             try:
-                log.info(json.dumps(run_once(a.dry_run)))
+                if in_window(now_et()):
+                    log.info(json.dumps(run_once(a.dry_run)))
+                    time.sleep(C.POLL_SEC)
+                else:
+                    time.sleep(60)
             except Exception as e:
                 log.exception("ciclo: %s", e)
-            time.sleep(C.POLL_SEC)
-        log.info("fuori finestra RTH: esco")
-        return 0
-    if not in_window() and not a.force_window:
+                time.sleep(C.POLL_SEC)
+    if not in_window(now_et()) and not a.force_window:
         print(json.dumps({"skipped": True, "reason": "fuori seduta"}))
         return 0
     print(json.dumps(run_once(a.dry_run), default=str))

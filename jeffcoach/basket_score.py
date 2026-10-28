@@ -143,3 +143,59 @@ def basket_stats(members: list[str], sc: pd.DataFrame) -> Optional[dict]:
                 ret3m=float(b["3m_return"].mean() * 100), ret1m=float(b["1m_return"].mean() * 100),
                 ret1w=float(b["1w_return"].mean() * 100), ret3d=float(b["3d_return"].mean() * 100),
                 n_scored=len(b), top_pick=b.Final_Score.idxmax())
+
+
+
+# ------------------------------------------------------------------ classifica sulla performance degli ETF [RONIN 17/10]
+def _ema(c: pd.Series, n: int) -> pd.Series:
+    return c.ewm(span=n, adjust=False).mean()
+
+
+def etf_levels(df: pd.DataFrame) -> Optional[dict]:
+    """Livelli dell'ETF: sopra la EMA9/21/50 daily, 9 sopra 21, EMA50 in salita, close weekly sopra la EMA9 weekly."""
+    if df is None or len(df) < 60:
+        return None
+    c = df["Close"].ffill().dropna()
+    e9, e21, e50 = _ema(c, 9), _ema(c, 21), _ema(c, 50)
+    w = c.resample("W-FRI").last().dropna()
+    ew9 = _ema(w, 9)
+    last = float(c.iloc[-1])
+    lv = {"9": last > e9.iloc[-1], "21": last > e21.iloc[-1], "50": last > e50.iloc[-1],
+          "9>21": e9.iloc[-1] > e21.iloc[-1], "50up": e50.iloc[-1] > e50.iloc[-6], "w9": float(w.iloc[-1]) > ew9.iloc[-1]}
+    return {k: bool(v) for k, v in lv.items()}
+
+
+def etf_perf_scores(daily: dict[str, pd.DataFrame], etfs: list[str], bench: pd.DataFrame,
+                    w: Optional[dict] = None) -> pd.DataFrame:
+    """Classifica dei temi sulla performance dei loro ETF [RONIN 17/10, Andrea: "riporta il ranking a prima dei 7
+    fattori, cioè sulla performance degli ETF, considerando anche i livelli degli ETF"]: rendimento relativo allo SPY a
+    1 settimana, 1 mese e 3 mesi, più la struttura (livelli: EMA 9/21/50, 9>21, 50 in salita, 9 weekly). Ogni misura
+    è un percentile tra gli ETF dei temi; Final_Score = media pesata (THEME_PERF_WEIGHTS)."""
+    w = w or C.THEME_PERF_WEIGHTS
+    if bench is None or len(bench) < 64:
+        return pd.DataFrame()
+    bc = bench["Close"].ffill()
+    def ret(c, n):
+        return float(c.iloc[-1] / c.iloc[-1 - n] - 1) if len(c) > n and c.iloc[-1 - n] else None
+    rows = {}
+    for e in etfs:
+        df = daily.get(e)
+        if df is None or len(df) < 64:
+            continue
+        c = df["Close"].ffill().dropna()
+        lv = etf_levels(df)
+        if lv is None:
+            continue
+        r = {n: ret(c, d) for n, d in (("1w", 5), ("1m", 21), ("3m", 63), ("3d", 3))}
+        b = {n: ret(bc, d) for n, d in (("1w", 5), ("1m", 21), ("3m", 63))}
+        if any(r[k] is None for k in ("1w", "1m", "3m")):
+            continue
+        rows[e] = {"rs_1w": r["1w"] - (b["1w"] or 0), "rs_1m": r["1m"] - (b["1m"] or 0), "rs_3m": r["3m"] - (b["3m"] or 0),
+                   "levels": sum(lv.values()) / len(lv), "lv": lv,
+                   "1w_return": r["1w"], "1m_return": r["1m"], "3m_return": r["3m"], "3d_return": r["3d"] or 0.0}
+    if not rows:
+        return pd.DataFrame()
+    f = pd.DataFrame.from_dict(rows, orient="index")
+    parts = {"rs_1w": _pct(f.rs_1w), "rs_1m": _pct(f.rs_1m), "rs_3m": _pct(f.rs_3m), "levels": _pct(f.levels)}
+    f["Final_Score"] = sum(parts[k] * w[k] for k in w) / sum(w.values())
+    return f
