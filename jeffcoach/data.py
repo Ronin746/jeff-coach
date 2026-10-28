@@ -36,11 +36,14 @@ UNIVERSE_FILE = C.STATE / "universe_meta.json"
 def build_universe(max_age_days: int = 6, force: bool = False) -> dict[str, dict]:
     """Screener Yahoo: azioni USA, mcap > 1 mld, borse NMS/NYQ/ASE/NGM/NCM.
     Si rinnova se più vecchio di `max_age_days` (mcap e utili cambiano: non usare una foto ferma)."""
+    # [JEFF] lo screener tiene anche i titoli dell'universo di Jeff (prefiltro 30M$ invece di 50M$) e salva il
+    # controvalore dv3m: l'universo di Martin (regime, breadth, pool) resta quello con dv3m >= SCREEN_DV_PREFILTER
+    prefilter = min(C.SCREEN_DV_PREFILTER, C.JEFF_SCREEN_ADV_PREFILTER) if C.JEFF else C.SCREEN_DV_PREFILTER
     if UNIVERSE_FILE.exists() and not force:
         doc = json.loads(UNIVERSE_FILE.read_text(encoding="utf-8"))
         age = datetime.now(timezone.utc) - datetime.fromisoformat(doc["built_utc"])
-        if age < timedelta(days=max_age_days):
-            return doc["symbols"]
+        if age < timedelta(days=max_age_days) and (not C.JEFF or (doc.get("prefilter") or 1e18) <= prefilter):
+            return doc["symbols"]                     # [JEFF] con Jeff serve il file nuovo (prefiltro e dv3m)
     yf = _yf()
     from yfinance import EquityQuery as Q
     q = Q("and", [Q("eq", ["region", "us"]), Q("gt", ["intradaymarketcap", C.MCAP_MIN]),
@@ -69,18 +72,19 @@ def build_universe(max_age_days: int = 6, force: bool = False) -> dict[str, dict
                 continue
             px = x.get("regularMarketPrice") or 0
             av = x.get("averageDailyVolume3Month") or 0
-            if px * av < C.SCREEN_DV_PREFILTER:
+            if px * av < prefilter:                        # [JEFF] (Martin: C.SCREEN_DV_PREFILTER)
                 continue
             et = x.get("earningsTimestamp")
             out[x["symbol"]] = dict(
                 exchange=x.get("exchange"), mcap=x.get("marketCap"), name=x.get("longName") or x.get("shortName"),
                 earnings=(datetime.fromtimestamp(et, timezone.utc).date().isoformat() if et else None),
                 earnings_est=bool(x.get("isEarningsDateEstimate")),
-                quote_type=x.get("quoteType"))
+                quote_type=x.get("quoteType"), dv3m=px * av)            # [JEFF] controvalore medio a 3 mesi
         offset += len(quotes)
     C.STATE.mkdir(parents=True, exist_ok=True)
     tmp = UNIVERSE_FILE.with_suffix(".tmp")
-    tmp.write_text(json.dumps({"built_utc": datetime.now(timezone.utc).isoformat(), "symbols": out}), encoding="utf-8")
+    tmp.write_text(json.dumps({"built_utc": datetime.now(timezone.utc).isoformat(), "prefilter": prefilter,   # [JEFF]
+                               "symbols": out}), encoding="utf-8")
     tmp.replace(UNIVERSE_FILE)
     log.info("universo Yahoo: %d azioni", len(out))
     return out

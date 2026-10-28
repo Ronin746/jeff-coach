@@ -1,4 +1,4 @@
-"""Giornale dei trade simulati con le regole di Martin [RONIN 13/10: file a parte, equity 100k].
+"""Giornale dei trade simulati con le regole di Martin [RONIN 13/10: file a parte, equity 100k] (jeff-coach: giornale suo, da zero).
 
 File (data/journal/):
   positions.json   posizioni aperte (vere e "ombra")
@@ -36,7 +36,7 @@ TRADE_FIELDS = [
     "risk_usd", "risk_pct", "trimmed", "date_close", "exit_price_avg", "exit_reason", "pnl_usd", "r_multiple", "mfe_r", "mae_r",
     "days_held", "gap_through_stop", "taken_by_andrea", "notes",
     "n_edges", "edges", "edge_score",                       # multi-edge [RONIN 22/10]
-]
+] + (["jeff_rs", "jeff_vcp"] if C.JEFF else [])             # [JEFF] RS Rating e VCP di Jeff all'apertura
 EVENT_FIELDS = ["ts_rome", "id", "shadow", "ticker", "side", "kind", "shares", "price", "reason"]
 
 
@@ -207,6 +207,7 @@ def open_trade(ctx: dict, entry_raw: float, stop: float, shadow_reason: Optional
         exits=[], hi=entry, lo=entry, gap_through_stop=False,
         e9d=ctx.get("e9d"), atr_d=ctx.get("atr_d"), ext_trims=[], trail_on=False, taken_by_andrea="", notes="",
         n_edges=ctx.get("n_edges"), edges=" ".join(ctx.get("edges") or []), edge_score=ctx.get("edge_score"),
+        **({"jeff_rs": ctx.get("jeff_rs"), "jeff_vcp": ctx.get("jeff_vcp")} if C.JEFF else {}),       # [JEFF]
     )
     ps.append(p)
     save_positions(ps)

@@ -1,11 +1,11 @@
 {
- "built_utc": "2026-10-22T11:52:39.252784+00:00",
+ "built_utc": "2026-10-22T11:52:36.770970+00:00",
  "membership": "lst",
  "manual_hash": "{\"aggiungi\": {}, \"togli\": {}}",
  "sources": {
   "baskets": "https://app.lonestocktrader.com/dashboard/basket-charts"
  },
- "baskets_fetched_utc": "2026-10-22T11:51:12.733919+00:00",
+ "baskets_fetched_utc": "2026-10-22T11:51:12.731668+00:00",
  "basket_changes": {
   "baskets_added": [
    "BIOTECHNOLOGY",

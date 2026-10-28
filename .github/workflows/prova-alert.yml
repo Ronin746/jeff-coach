@@ -1,0 +1,33 @@
+name: Alert di prova su Discord (Sydney)
+
+# Si lancia cambiando prova_alert.txt (o a mano): manda nel canale di Sydney un alert d'ingresso "TEST · ..."
+# sul primo Focus della lista di oggi, con il grafico daily + 5m dell'ultima seduta. Non tocca giornale né liste.
+on:
+  push:
+    paths:
+      - "prova_alert.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONUTF8: "1"
+      COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_ALERT_DISCORD_WEBHOOK_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Alert di prova
+        run: |
+          if [ -z "$COACH_ALERT_DISCORD_WEBHOOK_URL" ]; then echo "::error::secret COACH_ALERT_DISCORD_WEBHOOK_URL mancante"; exit 1; fi
+          T=$(head -1 prova_alert.txt 2>/dev/null | tr -d '[:space:]' | grep -iE '^[A-Z.\-]+$' || true)
+          python -m jeffcoach.alerts --prova $T | tee esito.txt
+          grep -q '"sent": true' esito.txt

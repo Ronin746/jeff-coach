@@ -1,0 +1,59 @@
+name: Card Discord (Sydney)
+
+# Dopo la revisione di Claude (push di review.json); di riserva alle 10:30 UTC (il server la fa alle 10:45 Roma).
+# Pubblica solo se la card è cambiata: POST la prima volta, poi PATCH sullo stesso messaggio.
+on:
+  push:
+    paths:
+      - "data/lists/work_*/review.json"
+  # [sospeso 27/10, Andrea] cron su GitHub fermo: lo fa il server Oracle. Si lancia ancora a mano (Run workflow).
+  # schedule:
+  #   - cron: "30 10 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeff-coach-data
+  cancel-in-progress: false
+
+env:
+  JEFF_COACH_HOME: ${{ github.workspace }}/data
+  COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_ALERT_DISCORD_WEBHOOK_URL }}
+  PYTHONUTF8: "1"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/lists/*/compute.pkl
+          key: compute-none
+          restore-keys: compute-
+      - name: Applica la revisione e pubblica
+        run: |
+          S=$(python -c "from jeffcoach.calendar_us import today_rome,is_session;d=today_rome();print(d if is_session(d) else 'none')")
+          [ "$S" = "none" ] && { echo "oggi niente seduta"; exit 0; }
+          [ -f "data/lists/$S.json" ] || { echo "lista $S non pronta"; exit 0; }
+          python -m jeffcoach.daily --session $S --from-cache || python -m jeffcoach.daily --session $S
+          python -m jeffcoach.discord card --session $S --if-changed | tee /tmp/card.txt
+          grep -q '"ok": true' /tmp/card.txt || (echo "Card NON pubblicata"; exit 1)
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name "jeff-coach-bot"
+          git config user.email "jeff-coach-bot@users.noreply.github.com"
+          git add -A data
+          git diff --cached --quiet && exit 0
+          git commit -m "Card"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 10; done
+          exit 1

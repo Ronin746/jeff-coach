@@ -1,0 +1,11 @@
+[Unit]
+Description=Jeff Coach - salvataggio dei dati e aggiornamento del codice
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=@USER@
+WorkingDirectory=@DIR@
+ExecStart=@DIR@/server/fasi.sh aggiorna
+ExecStartPost=+/bin/systemctl try-restart jeffcoach-alert.service

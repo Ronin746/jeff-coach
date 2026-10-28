@@ -1,11 +1,17 @@
-"""Tutte le regole del bot Martin Luk, in un solo posto.
+"""Tutte le regole di Jeff Coach multi-edge, in un solo posto.
+
+[JEFF 28/10] Base: le regole del bot Martin Luk nella versione dell'istanza multi-edge (Ronin746/Martin-coach, main
+@062aae2, regole 2026-10-28b-meta), copiate senza cambiarle. Sopra, alla fine del file, la parte di Jeff Sun che Andrea
+ha scelto di tenere: universo e filtri, gli 8 gate del Focus, la compressione 2 su 3 e la lista PEG (vedi jeff.py).
+Ogni riga cambiata rispetto alla base porta il segno [JEFF].
 
 Ogni costante ha la fonte tra parentesi quadre:
-  [ML ...]    regola di Martin Luk (live, articoli, intervista) — vedi METODOLOGIA_MARTIN.md
+  [ML ...]    regola di Martin Luk (live, articoli, intervista) — vedi METODOLOGIA.md
   [RONIN ...] scelta di Andrea
+  [JS ...]    regola di Jeff Sun (@jfsrev)
   (impl.)     soglia che serve a MISURARE una regola (non è una regola nuova): si ricalibra solo con l'ok di Andrea
 Nessun'altra parte del codice deve contenere numeri di regola. Ogni modifica va scritta nel registro
-di METODOLOGIA_MARTIN.md (data, regola, motivo).
+di METODOLOGIA.md (data, regola, motivo).
 """
 from __future__ import annotations
 
@@ -24,10 +30,13 @@ REPORTS = HOME / "reports"
 ALERTS_STATE = HOME / "alerts"      # alert già mandati (scritto solo dal server)
 LOGS = HOME / "logs"
 
-# Webhook: unico canale per watchlist e alert, bot "Dua" [RONIN 13/10]. Mai stamparlo né scriverlo nel repo.
-WEBHOOK_ENV = ("LISA_DISCORD_WEBHOOK_URL",)
-BOT_NAME = os.environ.get("JEFF_COACH_NAME", "Dua")
-CARD_COLOR = 0x8E44AD
+# Webhook: unico canale per watchlist e alert [RONIN 13/10]. Mai stamparlo né scriverlo nel repo.
+# [JEFF] jeff-coach scrive solo col webhook di Sydney (card e alert, dal 14/10); mai quello di Dua (LISA_...) né quello
+# di Remy / multi-edge di Martin (DISCORD_WEBHOOK_URL)
+WEBHOOK_ENV = ("COACH_ALERT_DISCORD_WEBHOOK_URL",)
+FORBIDDEN_WEBHOOK_ENV = ("LISA_DISCORD_WEBHOOK_URL", "DISCORD_WEBHOOK_URL", "REMY_DISCORD_WEBHOOK_URL")
+BOT_NAME = os.environ.get("JEFF_COACH_NAME", "Sydney")
+CARD_COLOR = 0x2ECC71                # [JEFF] verde di JeffCoach (Martin: viola)
 ALERT_COLOR = {"long": 0x2ECC71, "short": 0xE74C3C, "info": 0xF1C40F}   # long bordo verde, short rosso, anche livello e uscite [RONIN 13/10]
 
 # ---------------------------------------------------------------- universo [ML]
@@ -554,8 +563,11 @@ MB_LEADERS_BELOW9_GOOD = 0.15
 # la versione multi-edge sul suo webhook, con la stessa card. L'istanza multi-edge ha JEFF_COACH_META=1 nel suo .env:
 # edge accesi, trendline sui grafici, e liste, giornale, alert, report e cache in data/meta/ (storico, breadth e temi
 # li legge da data/ come Dua, senza riscriverli).
-META_INSTANCE = os.environ.get("JEFF_COACH_META") == "1"
-WRITE_HISTORY = not META_INSTANCE   # lo storico (liste, potent, temi) lo scrive solo Dua: è uguale per le due istanze
+# [JEFF 28/10] jeff-coach gira SEMPRE come l'istanza multi-edge (Andrea: "un sistema multi edge molto vicino a quello del
+# multiedge"), con le stesse impostazioni qui sotto, ma da sola: dati in data/ (niente data/meta) e storico scritto da
+# lei. JEFF_COACH_META=0 serve solo alle prove della base (stesso comportamento di Dua).
+META_INSTANCE = os.environ.get("JEFF_COACH_META", "1") == "1"     # [JEFF] acceso di default
+WRITE_HISTORY = True                # [JEFF] istanza unica del repo: lo storico lo scrive lei (Martin: not META_INSTANCE)
 if META_INSTANCE:
     META_EDGES = True
     META_RANK = True
@@ -572,6 +584,73 @@ if META_INSTANCE:
     CONFLUENCE_MIN = 4
     CARD_FOCUS_CHARTS = True        # [ANDREA 28/10] grafici dei Focus nella card (solo il titolo)
     RULES_VERSION = RULES_VERSION + "-meta"
-    _META_HOME = HOME / "meta"
-    STATE, LISTS, JOURNAL, REPORTS, ALERTS_STATE, LOGS = (_META_HOME / x for x in
-                                                          ("state", "lists", "journal", "reports", "alerts", "logs"))
+    # [JEFF] niente cartella data/meta: liste, giornale, alert, report e cache restano in data/ (istanza unica)
+
+
+# ================================================================ Jeff Sun sulla base multi-edge [ANDREA 28/10]
+# Scelte di Andrea del 28/10:
+#   - gli 8 gate del Focus si AGGIUNGONO alle regole long di Martin: Focus solo con tutti e 8 chiusi, altrimenti tracking;
+#     dove misurano la stessa cosa vale la soglia di Jeff (estensione dalla SMA50, distanza dalla EMA9);
+#   - universo e filtri di Jeff AL POSTO di quelli di Martin per le idee di trade (liquidità, volatilità, esclusioni,
+#     utili); regime, breadth, pool e temi restano calcolati come in Martin, sul suo universo;
+#   - solo long (lo short di Jeff è sospeso dal 13/10);
+#   - lista PEG delayed reaction nella card, nel txt e nei trade del sistema (livello, trigger e giornale di Martin).
+# JEFF_COACH_JEFF=0 spegne tutta questa parte (resta la base di Martin: serve alle prove di identità).
+JEFF = os.environ.get("JEFF_COACH_JEFF", "1") == "1"
+JEFF_LONG_ONLY = True               # [RONIN 13/10 + ANDREA 28/10] niente lista, Focus né alert short
+
+# ---- universo e filtri [RONIN 04/10, 08/10, 10/10]: chi non li passa non viene nemmeno valutato come idea
+JEFF_MCAP_MIN = 1e9                 # market cap > 1 mld [RONIN 10/10] (era 500M)
+JEFF_ADV_MIN = 50e6                 # adv$ = sma(volume[1]*close[1], 50) >= 50M$ [RONIN 04/10]
+JEFF_SCREEN_ADV_PREFILTER = 30e6    # prefiltro largo dello screener Yahoo (prezzo x volume medio 3 mesi); il gate vero
+#                                     si ricalcola sui dati
+JEFF_ATR_PCT_MIN = 2.8              # ATR14 di Wilder / close * 100, gate duro [RONIN 04/10]
+JEFF_EXCLUDED_INDUSTRIES = ("Biotechnology",)   # [JS hard 3] + scelta Ronin 08/10: solo Biotechnology
+JEFF_EXCLUDED_TICKERS = {"ADPT"}    # biotech anche se Yahoo lo classifica altrove
+JEFF_EARNINGS_SESSIONS = 5          # fuori se utili nelle prossime 5 sedute, compresa quella della lista [JS] [RONIN]
+JEFF_SPX = "^GSPC"                  # riferimento dell'RS Rating (S&P 500, come prima)
+# regole long di Martin che misurano la stessa cosa di un filtro o di un gate di Jeff: in modalità Jeff non contano
+# (vale Jeff) [ANDREA 28/10]
+JEFF_REPLACES_LONG_CHECKS = (
+    "liquid",                       # 50M$ a 5 sedute + 500k azioni + prezzo >= 5$  -> adv$ a 50 sedute >= 50M$
+    "adr",                          # ADR >= 3,5% (2% sopra 1 mld al giorno)         -> ATR% >= 2,8
+    "not_extended_sma50",           # entro 5 ATR dalla SMA50                         -> gate 3, Atr Ext <= 4
+    "not_extended",                 # entro il 15% sopra la EMA9                      -> gate 6, 0-1,5 ATR sopra la EMA9
+    "not_stretched",                # entro 1,5 ADR dalla EMA9                        -> gate 6
+    "above_ema9",                   # close sopra la EMA9                             -> gate 6
+)
+
+# ---- gate del Focus (devono essere chiusi tutti) [jeff-coach config.py, regole chiuse da Ronin]
+JEFF_RS_MIN = 80                    # 1. RS Rating Fred6724 (pine_replay) >= 80 [RONIN 04/10]
+JEFF_RS_PINE_REPLAY = (195.93, 117.11, 99.04, 91.66, 80.96, 53.64, 24.86)
+JEFF_SMA200_SLOPE_BARS = 5          # 2. sopra la SMA200 e SMA200 di oggi >= quella di 5 barre fa [JS hard 7]
+JEFF_EXT_MAX = 4.0                  # 3. Atr Ext = ((close-SMA50)/SMA50*100)/ATR% <= 4 [RONIN 01/10]
+JEFF_SMA5_MAX_DIST_PCT = 5.0        # 4. |close/SMA5 - 1| <= 5% [RONIN 04/10]
+JEFF_MA1H_KIND, JEFF_MA1H_LEN = "ema", 50   # 5. close daily sopra la EMA50 a 1 ora [ANDREA 20-21/10] (prima SMA30 65m)
+JEFF_BUCKET_MIN = 60                # barre da 1 ora costruite dai 5 minuti, ancorate alle 9:30 ET come TradingView
+JEFF_MA1H_SESSIONS = 25             # sedute di barre a 5 minuti per la EMA50 oraria (7 barre al giorno)
+JEFF_EMA9_MAX_ATR = 1.5             # 6. 0 < (close-EMA9)/ATR14 <= 1,5; la EMA21 è solo contesto [RONIN 06/10 + 08/10]
+JEFF_VCP_MAX = 25.0                 # 7. VCP Tightness <= 25 [RONIN 04/10]
+JEFF_VCP_LEN, JEFF_VCP_ADR_LEN, JEFF_VCP_BASELINE = 5, 20, 50
+JEFF_COMPRESSION_DAYS_MIN = 2       # 8. almeno 2 delle ultime 3 sedute con range% < ADR20% (un solo giorno largo non
+JEFF_COMPRESSION_WINDOW = 3         #    azzera i precedenti, caso PLTR) [JS hard 15; RONIN 08/10]
+
+# ---- PEG delayed reaction [RONIN 08/10; ANDREA 28/10: card, txt e trade del sistema]
+PEG = dict(
+    min_bars_ago=4, max_bars_ago=45,   # il gap è di 4-45 sedute fa (la reazione è "ritardata", al massimo ~2 mesi)
+    gap_min_pct=4.0, gap_min_atr=1.0,  # apertura sopra il close prima di almeno 4% o 1 ATR ...
+    vol_mult=1.5, gap_big_pct=8.0,     # ... con volume del giorno >= 1,5x la media 50 (o gap >= 8%, il volume di Yahoo a volte è basso)
+    range_below_atr=0.5,               # il prezzo è nel range del PEG: dal close prima del gap (fino a 0,5 ATR sotto) ...
+    range_above_atr=1.0,               # ... al massimo del giorno del gap (fino a 1 ATR sopra)
+    range5_max_atr=2.5, atr5_atr20_max=0.8,   # base stretta
+    sma200_tol_atr=0.3,                # mai contro la SMA200 (regola 7 di Jeff)
+    rs_min=60,                         # Jeff li prende anche con RS 66 (ACN)
+)
+# Livello e trigger dei PEG: quelli del sistema (confluenza di supporti di Martin entro LEVEL_MAX_DIST_ADR ADR, con
+# almeno CONFLUENCE_MIN livelli, poi tocco, inversione e rottura della barra a 5 minuti). Senza un livello così il PEG
+# resta nella card e nel txt ma non ha alert.
+PEG_ALERTS = True
+
+if JEFF:
+    RULES_VERSION = RULES_VERSION + "+jeff-2026-10-28"
+    EARNINGS_BLOCK_SESSIONS = JEFF_EARNINGS_SESSIONS     # [JEFF] finestra degli utili di Jeff (Martin: 3)

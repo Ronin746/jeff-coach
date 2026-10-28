@@ -1,0 +1,45 @@
+name: Performance del lunedì
+
+# Lunedì 06:50 / 07:50 UTC. Settimanale ogni lunedì, mensile il primo lunedì del mese. Niente Discord.
+on:
+  # [sospeso 27/10, Andrea] cron su GitHub fermo: lo fa il server Oracle. Si lancia ancora a mano (Run workflow).
+  # schedule:
+  #   - cron: "50 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeff-coach-data
+  cancel-in-progress: false
+
+env:
+  JEFF_COACH_HOME: ${{ github.workspace }}/data
+  COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_ALERT_DISCORD_WEBHOOK_URL }}
+  PYTHONUTF8: "1"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: |
+          python -m jeffcoach.report weekly
+          if [ "$(date +%d)" -le 7 ]; then python -m jeffcoach.report monthly; fi
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name "jeff-coach-bot"
+          git config user.email "jeff-coach-bot@users.noreply.github.com"
+          git add -A data
+          git diff --cached --quiet && exit 0
+          git commit -m "Performance"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 10; done
+          exit 1

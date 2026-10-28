@@ -199,10 +199,14 @@ def _context(r: dict) -> str:
         parts.append(r["theme"] + (f" ({C.PHASE_EN.get(ph, ph)})" if ph else ""))
     if r.get("grade"):
         parts.append(f"review **{r['grade']}**")
+    if r.get("jeff_rs") is not None:            # [JEFF] RS Rating e VCP di Jeff
+        from .jeff import tag as jtag
+        parts.append(jtag(r))
     sy = _sync(r)
     # multi-edge e trendline del giorno [RONIN 22/10]
     ed = " · ".join(x for x in (edges_text(r), tl_text(r), hz_text(r)) if x)
-    return " · ".join(p for p in parts if p) + (f"\n{ed}" if ed else "") + (f"\n{sy}" if sy else "")
+    pg = f"\n{r['peg_text']}" if r.get("peg") and r.get("peg_text") else ""      # [JEFF] PEG delayed reaction
+    return " · ".join(p for p in parts if p) + pg + (f"\n{ed}" if ed else "") + (f"\n{sy}" if sy else "")
 
 
 def plan_entry_sl(r: dict, b: pd.DataFrame, tf: int, today: date) -> Optional[tuple[float, float, str]]:
@@ -240,8 +244,9 @@ def fmt_level(r: dict, price: float, tf: int, failed: bool = False,
              _context(r)]
     if r.get("note"):
         lines.append(r["note"])
-    title = f"{r['ticker']} · " + ((f"Failed {'breakdown' if long else 'breakout'} at {'support' if long else 'resistance'}") if failed
-                                   else f"At {'support' if long else 'resistance'}")
+    title = f"{r['ticker']} · " + ("PEG · " if r.get("peg") else "") + (                                  # [JEFF] PEG
+        (f"Failed {'breakdown' if long else 'breakout'} at {'support' if long else 'resistance'}") if failed
+        else f"At {'support' if long else 'resistance'}")
     return title, "\n".join(x for x in lines if x)
 
 
@@ -258,6 +263,8 @@ def fmt_trigger(p: dict, tf: int, stop_src: str, r: dict) -> tuple[str, str]:
     # falso breakout/breakdown da un nome dei tracking [16/10]: "Failed breakdown" per i long, "Failed breakout" per gli
     # short [RONIN 17/10, Andrea]
     kind = ("Failed breakdown" if p["side"] == "long" else "Failed breakout") if r.get("fakeout") else "Pullback"
+    if r.get("peg"):                             # [JEFF] PEG delayed reaction
+        kind = "PEG"
     return f"{p['ticker']} · {kind} {p['side']} · {tf}m trigger", "\n".join(lines)
 
 
@@ -385,6 +392,8 @@ def run_once(dry_run: bool = False, now: Optional[datetime] = None) -> dict:
         st = load_state(today)
         focus = ((lst or {}).get("focus") or []) + ((lst or {}).get("counter_focus") or [])   # + lato opposto [RONIN 13/10]
         focus = focus + ((lst or {}).get("fakeout_watch") or [])     # + tracking, solo falso breakout [RONIN 16/10]
+        if C.JEFF and C.PEG_ALERTS:   # [JEFF] + PEG delayed reaction con il livello del sistema (non già tra i Focus)
+            focus = focus + [r for r in (lst or {}).get("peg_watch") or [] if r.get("tradable") and not r.get("also_focus")]
         tickers = sorted({r["ticker"] for r in focus} | {p["ticker"] for p in ps} | {"QQQ"}
                          | {r["sync_etf"] for r in focus if r.get("sync_etf")}           # ETF per la sincronia [17/10]
                          | {r["group_etf"] for r in focus if r.get("group_etf")})        # ETF del gruppo [28/10a]
@@ -541,7 +550,8 @@ def run_once(dry_run: bool = False, now: Optional[datetime] = None) -> dict:
                 reason = "inseguimento oltre il 3% dal livello"
             elif gap_block:
                 reason = f"QQQ in gap {gap:+.2f}% contro il lato"
-            elif (r.get("dv5") or 0) < (C.SHORT_DV_MIN if side == "short" else C.LONG_DV_MIN):
+            elif (((r.get("adv50") or 0) < C.JEFF_ADV_MIN) if C.JEFF          # [JEFF] liquidità di Jeff (adv$ a 50 sedute)
+                  else ((r.get("dv5") or 0) < (C.SHORT_DV_MIN if side == "short" else C.LONG_DV_MIN))):
                 reason = "liquidità sotto il minimo"
             elif paused:
                 reason = "pausa dopo serie di perdite"
@@ -566,7 +576,7 @@ def run_once(dry_run: bool = False, now: Optional[datetime] = None) -> dict:
                     tb = "*Against the regime (top quality) — for information only: the bot does not take it, it is tracked separately and not counted in the trade limit.*\n" + tb
                 msgs.append((side, tt, tb,
                              dict(ticker=t, side=side, level=lvl, entry=p["entry"], stop=p["stop"], tf=tf,
-                                  title=f"{('failed breakdown' if side == 'long' else 'failed breakout') if fk else 'pullback'} {side} · {tf}m trigger")))
+                                  title=f"{'PEG' if r.get('peg') else (('failed breakdown' if side == 'long' else 'failed breakout') if fk else 'pullback')} {side} · {tf}m trigger")))   # [JEFF] PEG
         sent = []
         for kind, title, body, ch in msgs:
             img = img2 = None

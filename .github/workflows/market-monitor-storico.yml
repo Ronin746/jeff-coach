@@ -1,0 +1,43 @@
+name: Market Monitor nostro - storico dal 2015
+
+# Ricostruisce data/breadth/market_monitor_full.json dal 2015 sull'universo completo (~5.700 azioni USA).
+# Serve quando si aggiunge una colonna (16/10: studio 20% di Pradeep Bonde, up20w/down20w). Solo a mano.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "mm_storico.txt"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeff-coach-data
+  cancel-in-progress: false
+
+env:
+  JEFF_COACH_HOME: ${{ github.workspace }}/data
+  PYTHONUTF8: "1"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m jeffcoach.breadth storico 2015-06-01 2>&1 | grep -v " INFO daily " | tail -30
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name "jeff-coach-bot"
+          git config user.email "jeff-coach-bot@users.noreply.github.com"
+          git add -A data/breadth
+          git diff --cached --quiet && exit 0
+          git commit -m "Market Monitor nostro: storico con lo studio 20%"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 10; done
+          exit 1

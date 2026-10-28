@@ -1,4 +1,8 @@
-"""Prove senza rete: dati sintetici al posto di Yahoo. Uso: python -m pytest tests -q  (oppure python tests/test_offline.py)"""
+"""Prove senza rete della BASE (bot Martin, Martin-coach main @062aae2): le stesse prove del repo di Martin, con il
+pacchetto rinominato. [JEFF] Girano con la parte di Jeff spenta e il multi-edge spento (JEFF_COACH_JEFF=0,
+JEFF_COACH_META=0), cioè con le regole di Dua come nel repo di Martin: dimostrano che la base è rimasta la stessa.
+Le prove della parte di Jeff e della configurazione vera sono in tests/test_jeff.py.
+Uso: python tests/test_offline.py  oppure  JEFF_TEST_SUITE=base python -m pytest tests -q"""
 from __future__ import annotations
 
 import os
@@ -13,6 +17,8 @@ import pandas as pd
 
 TMP = Path(tempfile.mkdtemp(prefix="mc_test_"))
 os.environ["JEFF_COACH_HOME"] = str(TMP)
+os.environ.setdefault("JEFF_COACH_JEFF", "0")      # [JEFF] base di Martin: parte di Jeff spenta ...
+os.environ.setdefault("JEFF_COACH_META", "0")      # [JEFF] ... e regole di Dua (in Martin il multi-edge è spento di default)
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from jeffcoach import config as C  # noqa: E402
@@ -884,16 +890,18 @@ def test_regole_2026_10_22b_lista_con_edge(monkeypatch):
 
 def test_regole_2026_10_22b_istanza_multi_edge():
     """Istanza multi-edge al posto di Remy [RONIN 22/10, Andrea]: con JEFF_COACH_META=1 gli edge e le trendline si
-    accendono e liste, giornale, alert, report e cache vanno in data/meta/; storico, breadth e temi restano quelli di Dua."""
+    accendono e liste, giornale, alert, report e cache vanno in data/meta/; storico, breadth e temi restano quelli di Dua.
+    [JEFF] In jeff-coach il multi-edge è l'unica istanza del repo: stessi interruttori, ma dati in data/ e storico scritto
+    da lei; JEFF_COACH_META=0 torna alle regole di Dua."""
     import subprocess
     code = ("from jeffcoach import config as C; print(C.META_EDGES, C.META_RANK, C.TL_CHART, C.WRITE_HISTORY, "
             "C.LISTS.relative_to(C.HOME), C.JOURNAL.relative_to(C.HOME), C.ALERTS_STATE.relative_to(C.HOME), "
             "C.HISTORY.relative_to(C.HOME), C.RULES_VERSION.endswith('-meta'), C.META_RANK_MODE)")
     root = str(Path(__file__).resolve().parent.parent)
-    env = dict(os.environ, JEFF_COACH_META="1")
+    env = dict(os.environ, JEFF_COACH_META="1", JEFF_COACH_JEFF="0")
     out = subprocess.run([sys.executable, "-c", code], cwd=root, env=env, capture_output=True, text=True).stdout.split()
-    assert out == ["True", "True", "True", "False", "meta/lists", "meta/journal", "meta/alerts", "history", "True", "side"]
-    env.pop("JEFF_COACH_META")
+    assert out == ["True", "True", "True", "True", "lists", "journal", "alerts", "history", "True", "side"]   # [JEFF]
+    env["JEFF_COACH_META"] = "0"                                                                             # [JEFF]
     out = subprocess.run([sys.executable, "-c", code], cwd=root, env=env, capture_output=True, text=True).stdout.split()
     assert out == ["False", "False", "False", "True", "lists", "journal", "alerts", "history", "False", "count"]
 

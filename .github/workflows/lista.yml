@@ -1,0 +1,62 @@
+name: Lista del mattino
+
+# Riserva del server (che la fa alle 08:00 Roma): 07:45 UTC = 09:45 Roma (ora legale) / 08:45 (ora solare).
+# Esce subito se la lista c'è già (--skip-if-done).
+on:
+  # [sospeso 27/10, Andrea] cron su GitHub fermo: lo fa il server Oracle. Si lancia ancora a mano (Run workflow).
+  # schedule:
+  #   - cron: "45 7 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      session:
+        description: "Seduta YYYY-MM-DD (vuoto = oggi)"
+        required: false
+      force:
+        description: "Rifare anche se esiste già"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeff-coach-data
+  cancel-in-progress: false
+
+env:
+  JEFF_COACH_HOME: ${{ github.workspace }}/data
+  COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_ALERT_DISCORD_WEBHOOK_URL }}
+  PYTHONUTF8: "1"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Calcolo lista
+        run: |
+          ARGS=""
+          if [ -n "${{ github.event.inputs.session }}" ]; then ARGS="--session ${{ github.event.inputs.session }}"; fi
+          if [ "${{ github.event.inputs.force }}" != "true" ]; then ARGS="$ARGS --skip-if-done"; fi
+          python -m jeffcoach.daily $ARGS
+      - name: Salva i dati scaricati per la card
+        uses: actions/cache/save@v4
+        with:
+          path: data/lists/*/compute.pkl
+          key: compute-${{ github.run_id }}
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name "jeff-coach-bot"
+          git config user.email "jeff-coach-bot@users.noreply.github.com"
+          git add -A data
+          git diff --cached --quiet && exit 0
+          git commit -m "Lista"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 10; done
+          exit 1

@@ -51,8 +51,9 @@ def trend_r2(c: pd.Series, windows=(42, 63, 126)) -> Optional[float]:
         r = float(np.corrcoef(np.arange(n), y)[0, 1])
         best = max(best or 0.0, r * r)
     return best
-def compute_metrics(df: pd.DataFrame, qqq: Optional[pd.DataFrame] = None) -> Optional[dict]:
-    """Metriche daily di un titolo sulla sua ultima barra completata."""
+def compute_metrics(df: pd.DataFrame, qqq: Optional[pd.DataFrame] = None, extra_edges: bool = False) -> Optional[dict]:
+    """Metriche daily di un titolo sulla sua ultima barra completata.
+    [JEFF] `extra_edges`: edge anche per i titoli dell'universo di Jeff che non passano la soglia di Martin."""
     if df is None or len(df) < C.EMA_LONG + 10:
         return None
     c = df.Close
@@ -107,7 +108,8 @@ def compute_metrics(df: pd.DataFrame, qqq: Optional[pd.DataFrame] = None) -> Opt
     m["resistances"] = resistance_levels(df, m, e9, e21, e50, ew9, ew21)
     # multi-edge [RONIN 22/10]: trendline e canali, livelli in più (EMA150, weekly, trendline), segni di momentum e di
     # price action; solo per i titoli che possono essere candidati (50M$ al giorno, prezzo minimo), per non rallentare
-    if C.META_EDGES and m["dv5"] >= min(C.LONG_DV_MIN, C.SHORT_DV_MIN) and close >= C.PRICE_MIN:
+    if C.META_EDGES and ((m["dv5"] >= min(C.LONG_DV_MIN, C.SHORT_DV_MIN) and close >= C.PRICE_MIN)
+                         or extra_edges):                  # [JEFF] universo di Jeff
         try:
             tl = TL.find_lines(df, adr)
             m["tl"] = tl
@@ -308,6 +310,9 @@ def long_candidate(t: str, m: dict) -> tuple[bool, dict]:
     why["weekly_healthy"] = (m["w_close"] > m["ew21"] and m["ew9"] > m["ew21"]) if C.LONG_WEEKLY_HEALTHY else True
     cl = best_cluster(m["supports"], m["close"])
     why["confluence"] = bool(cl and cl["count"] >= C.CONFLUENCE_MIN and cl["dist_pct"] <= C.LEVEL_MAX_DIST_ADR * m["adr"])
+    if C.JEFF:          # [JEFF 28/10] dove Martin e Jeff misurano la stessa cosa vale Jeff (universo e gate in jeff.py)
+        for k in C.JEFF_REPLACES_LONG_CHECKS:
+            why.pop(k, None)
     info = {"level": cl, "checks": why, "zone_levels": zone_levels(m["supports"], cl, m["adr"])}
     return all(why.values()), info
 

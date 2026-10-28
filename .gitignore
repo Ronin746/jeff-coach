@@ -2,11 +2,14 @@ __pycache__/
 *.pyc
 .env
 .venv/
-data/state/**/compute.pkl
+*.tmp
+# base (Martin): cache e lavoro di ogni run, log, lucchetto del giornale
+**/compute.pkl
+**/state/
 data/logs/
-data/state/alerts/
-dati/
-logs/
+data/journal/.lock
+# [JEFF] i file di data/state già nel repo (versione di prima) restano tracciati; i nuovi no
+# Remy (spento dal 22/10, il codice resta qui)
 tv-scanner/cache/
 tv-scanner/results/
 tv-scanner/mcp_inbox/
@@ -14,5 +17,4 @@ tv-scanner/signal_state.json
 tv-scanner/last_signals.md
 tv-scanner/last_scan_summary.json
 tv-scanner/*.bak_*
-cloud/sink_out.jsonl
 tv-scanner/pivot_wl_auto.json

@@ -1,0 +1,9 @@
+[Unit]
+Description=Jeff Coach - orario: aggiornamento prima dell'apertura USA (13:30, come prima)
+
+[Timer]
+OnCalendar=Mon..Fri 13:30 Europe/Rome
+Persistent=true
+
+[Install]
+WantedBy=timers.target

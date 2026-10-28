@@ -1,0 +1,51 @@
+name: Rifai la lista di oggi e aggiorna la card
+
+# Si lancia cambiando rifai_oggi.txt (o a mano): ricalcola la lista della seduta di oggi con le regole attuali
+# (sovrascrive quella del mattino, la revisione di Claude resta applicata), aggiorna la card di Sydney sullo stesso
+# messaggio (PATCH) e salva. Il server la prende al suo prossimo "aggiorna" (13:30 Roma) e riavvia gli alert.
+on:
+  push:
+    paths:
+      - "rifai_oggi.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeff-coach-data
+  cancel-in-progress: false
+
+env:
+  JEFF_COACH_HOME: ${{ github.workspace }}/data
+  COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_ALERT_DISCORD_WEBHOOK_URL }}
+  PYTHONUTF8: "1"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Lista e card
+        run: |
+          S=$(python -c "from jeffcoach.calendar_us import today_rome,is_session;d=today_rome();print(d if is_session(d) else 'none')")
+          [ "$S" = "none" ] && { echo "oggi niente seduta"; exit 0; }
+          python -m jeffcoach.daily --session $S | tee /tmp/lista.txt
+          python -m jeffcoach.discord card --session $S --if-changed | tee /tmp/card.txt
+          grep -q '"ok": true' /tmp/card.txt || (echo "Card NON pubblicata"; exit 1)
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name "jeff-coach-bot"
+          git config user.email "jeff-coach-bot@users.noreply.github.com"
+          git add -A data
+          git diff --cached --quiet && exit 0
+          git commit -m "Lista e card rifatte (regole $(python -c 'from jeffcoach import config as C;print(C.RULES_VERSION)'))"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 10; done
+          exit 1

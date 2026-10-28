@@ -1,0 +1,17 @@
+[Unit]
+Description=Jeff Coach - alert di Sydney e gestione intraday dei trade simulati (multi-edge)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=@USER@
+WorkingDirectory=@DIR@
+Environment=PYTHONUTF8=1
+EnvironmentFile=-@DIR@/.env
+Environment=JEFF_COACH_HOME=@DIR@/data
+ExecStart=@DIR@/.venv/bin/python -m jeffcoach.alerts --service
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -1,4 +1,4 @@
-"""Discord: un solo canale per card e alert, bot "Dua" [RONIN 13/10].
+"""Discord: un solo canale per card e alert, bot "Sydney" (webhook di Sydney di jeff-coach) [RONIN 13/10; jeff-coach 28/10].
 
 Regole riprese da jeff-coach: un embed per messaggio, niente menzioni, card una volta al giorno con PATCH
 sulle correzioni, txt TradingView allegato. Il webhook non si stampa mai e non va nel repo (.env / secret).
@@ -264,7 +264,7 @@ def main(argv=None) -> int:
     ap.add_argument("--if-changed", action="store_true")
     a = ap.parse_args(argv)
     if a.what == "test":
-        print(json.dumps(send_alert("Dua · test", "Martin Coach is connected to this channel.", "info", a.dry_run)))
+        print(json.dumps(send_alert(f"{C.BOT_NAME} · test", "Jeff Coach (multi-edge) is connected to this channel.", "info", a.dry_run)))
         return 0
     s = date.fromisoformat(a.session) if a.session else today_rome()
     res = post_card(s, a.dry_run, a.if_changed)

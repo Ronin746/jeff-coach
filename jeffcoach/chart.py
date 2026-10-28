@@ -1,4 +1,4 @@
-"""Grafico degli alert di Dua, nello stile degli alert di Sydney [RONIN 13/10].
+"""Grafico degli alert, nello stile degli alert di Sydney [RONIN 13/10; JEFF: senza il nome di Dua].
 
 Sopra: daily degli ultimi ~6 mesi (candele, scala logaritmica come i grafici di Martin) con EMA 9/21/50/150 [ML], il
 livello di confluenza, la trendline rialzista e quella ribassista con i loro canali paralleli (trendlines.py, le stesse
@@ -257,7 +257,7 @@ def focus_charts(rows: list[dict], session: date, as_of: date, work) -> dict[str
         if t in out or daily.get(t) is None:
             continue
         lv = r.get("level")
-        title = f"focus {r['side']}" + (f" · level {lv:.2f}" if lv else "")
+        title = f"{'PEG' if r.get('peg') else 'focus'} {r['side']}" + (f" · level {lv:.2f}" if lv else "")   # [JEFF] PEG
         png = alert_chart(t, r["side"], None, 5, session, level=lv, title=title, daily=daily[t], panel=False)
         if png:
             fn = f"focus_{t.replace('.', '-').replace('/', '-')}.png"

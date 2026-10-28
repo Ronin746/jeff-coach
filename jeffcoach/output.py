@@ -104,6 +104,34 @@ def card_line(r: dict, note: Optional[str] = None, lim: Optional[int] = None, ta
         parts.append(txt)
     if tag:                      # sempre visibile, anche quando le note si accorciano
         parts.append(tag)
+    if r.get("jeff_rs") is not None and not r.get("peg"):          # [JEFF] RS Rating e VCP di Jeff
+        from .jeff import tag as jtag
+        parts.append(jtag(r))
+    return f"• **{r['ticker']}** — " + " · ".join(p for p in parts if p)
+
+
+def peg_line(r: dict, lim: Optional[int] = None) -> str:
+    """[JEFF] Una voce della lista PEG:
+    • **CLF** — PEG 10-19 +17% (5.7x vol) · gap range 12.12-14.58 · pivot 14.58 · sup `13.20` 1.2% away · EMA21 + gap ·
+      edges 3/5 (S&R PA/VOL MTF) · Jeff RS 85"""
+    from .jeff import tag as jtag
+    parts = [f"PEG {r['peg_date'][5:]} {r['peg_gap_pct']:+.0f}% ({r['peg_vol_mult']:.1f}x vol)",
+             f"gap range {r['peg_low']:.2f}-{r['peg_high']:.2f}", f"pivot {r['peg_pivot']:.2f}",
+             level_text(r) if r.get("tradable") else f"no alert level ({r.get('peg_level_note') or 'no support'})",
+             edges_text(r, compact=True) if r.get("tradable") else "", jtag(r)]
+    if r.get("theme"):
+        parts.append(r["theme"])
+    if r.get("also_focus"):
+        parts.append("also in Focus")
+    elif r.get("tradable") and r.get("counter"):
+        parts.append("against the regime: alerts for information only")
+    if r.get("grade"):
+        parts.append(f"**{r['grade']}**")
+    txt = r.get("note") or ""
+    if lim is not None and len(txt) > lim:
+        txt = (txt[:max(lim - 1, 0)].rstrip() + "…") if lim else ""
+    if txt:
+        parts.append(txt)
     return f"• **{r['ticker']}** — " + " · ".join(p for p in parts if p)
 
 
@@ -126,7 +154,9 @@ def card_embeds(d: dict, premarket: Optional[list[dict]] = None) -> list[dict]:
     color = BIAS_COLOR.get(bias, MIXED_COLOR if bias == "MISTO" else FERMO_COLOR)
     want = {"LONG": "long", "SHORT": "short"}.get(bias)
     risk = d.get("risk_pct")
-    head = [f"**MARTIN WATCHLIST — {d['session']}** (close {d['as_of']})",
+    long_only = C.JEFF and C.JEFF_LONG_ONLY       # [JEFF] solo long
+    title = "JEFF COACH WATCHLIST · multi-edge" if C.JEFF else "MARTIN WATCHLIST"                         # [JEFF]
+    head = [f"**{title} — {d['session']}** (close {d['as_of']})",
             f"Bias **{BIAS_EN.get(bias, bias)}**" + (f" · risk `{risk:.2f}%` per trade" if risk is not None else "") + f" — {d['bias_why']}"]
     mm = d.get("market_monitor") if C.STOCKBEE_IN_CARD else None    # [19/10a] solo il modello di Martin
     if mm:
@@ -202,22 +232,25 @@ def card_embeds(d: dict, premarket: Optional[list[dict]] = None) -> list[dict]:
                        f"(day {rev['day']} of {C.REVERSAL_DAYS}): Focus long and short")
 
     def build(note_lim: Optional[int], max_rows: Optional[int]) -> list[dict]:
+        sides_shown = ("long",) if long_only else ("long", "short")      # [JEFF]
         if rev:
             embeds = [{"description": "\n".join(head), "color": MIXED_COLOR}]
-            for s in ("long", "short"):
+            for s in sides_shown:
                 rows = [r for r in d["focus"] if r["side"] == s]
                 embeds.append({"description": f"**FOCUS {s.upper()} — potential trend reversal**\n"
                                + ("\n".join(card_line(r, None, note_lim) for r in rows) or "• none"), "color": SIDE_COLOR[s],
                                "_rows": [r["ticker"] for r in rows]})
         elif bias == "MISTO":           # long e short selettivi: un riquadro per lato, verde e rosso [RONIN 13/10]
             embeds = [{"description": "\n".join(head), "color": color}]
-            for s in ("long", "short"):
+            for s in sides_shown:                                       # [JEFF] solo long
                 rows = [r for r in d["focus"] if r["side"] == s]
                 embeds.append({"description": f"**FOCUS {s.upper()} — mixed market, best only**\n"
                                + ("\n".join(card_line(r, None, note_lim) for r in rows) or "• none"), "color": SIDE_COLOR[s],
                                "_rows": [r["ticker"] for r in rows]})
         else:
             fo_title = f"FOCUS {bias}" if want else "FOCUS — none (bias FLAT: no entry triggers)"
+            if long_only and bias == "SHORT":    # [JEFF] bot solo long: col regime SHORT niente Focus
+                fo_title = "FOCUS — none (bias SHORT: long-only bot, no entries)"
             fo = "\n".join(card_line(r, None, note_lim) for r in d["focus"]) or ("• none" if want else "")
             embeds = [{"description": "\n".join(head), "color": color},
                       {"description": f"**{fo_title}**" + (f"\n{fo}" if fo else ""), "color": color,
@@ -229,10 +262,16 @@ def card_embeds(d: dict, premarket: Optional[list[dict]] = None) -> list[dict]:
                 embeds.append({"description": f"**FOCUS {s.upper()} — top quality, against the regime (alerts only, not traded)**\n"
                                + "\n".join(card_line(r, None, note_lim) for r in rows), "color": SIDE_COLOR[s],
                                "_rows": [r["ticker"] for r in rows]})
+        pw = d.get("peg_watch") or []
+        if pw:                       # [JEFF] PEG delayed reaction: con il livello hanno alert e trade come i Focus
+            embeds.append({"description": "**PEG — delayed reaction to earnings** (alerts at the level, like the Focus)\n"
+                           + "\n".join(peg_line(r, note_lim) for r in pw), "color": SIDE_COLOR["long"],
+                           "_rows": [r["ticker"] for r in pw if r.get("tradable") and not r.get("also_focus")]})
         tl, ts = d.get("tracking_long") or [], d.get("tracking_short") or []
         if tl or ts:                 # i tracking non vanno nella card: solo nel txt allegato [RONIN 13/10]
             fw = len(d.get("fakeout_watch") or [])
-            embeds[1 if len(embeds) > 1 else 0]["description"] += (f"\n\nTracking: {len(tl)} long · {len(ts)} short — in the attached TradingView file"
+            tr_txt = f"{len(tl)} long" if long_only else f"{len(tl)} long · {len(ts)} short"           # [JEFF]
+            embeds[1 if len(embeds) > 1 else 0]["description"] += (f"\n\nTracking: {tr_txt} — in the attached TradingView file"
                 + (f"\nFailed breakout/breakdown watch: {fw} tracking names alert only on a failed breakdown (long) or failed breakout (short) at the level" if fw else ""))
         tail = []
         if premarket:

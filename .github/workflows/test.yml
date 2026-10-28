@@ -1,0 +1,27 @@
+name: Prove offline
+
+on:
+  push:
+    paths:
+      - "jeffcoach/**"
+      - "tests/**"
+      - "strumenti/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt pytest
+      - name: Base di Martin (regole di Dua, parte di Jeff spenta)
+        run: python tests/test_offline.py && JEFF_TEST_SUITE=base python -m pytest tests -q -p no:cacheprovider
+      - name: Jeff Coach multi-edge (configurazione vera)
+        run: python -m pytest tests -q -p no:cacheprovider
