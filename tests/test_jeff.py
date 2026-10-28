@@ -374,7 +374,7 @@ def test_lista_card_e_txt(monkeypatch):
     assert "###PEG" in txt and "NASDAQ:T04" in txt.split("###PEG")[1] and "SHORT" not in txt
     card = json.loads((work / "card.json").read_text())["embeds"]
     alltext = "\n".join(e.get("description") or "" for e in card)
-    assert "JEFF COACH WATCHLIST" in alltext and "PEG — delayed reaction" in alltext and "**T04**" in alltext
+    assert "**WATCHLIST — " in alltext and "PEG — delayed reaction" in alltext and "**T04**" in alltext
     assert "FOCUS SHORT" not in alltext and "Jeff RS 90" in alltext and "short —" not in alltext
     # misure di mercato di Martin sul suo universo: i titoli solo di Jeff non entrano nelle liste della breadth
     lists = json.loads((C.HISTORY / f"lists_{AS_OF}.json").read_text())

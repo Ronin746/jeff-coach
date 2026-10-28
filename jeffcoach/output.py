@@ -155,7 +155,7 @@ def card_embeds(d: dict, premarket: Optional[list[dict]] = None) -> list[dict]:
     want = {"LONG": "long", "SHORT": "short"}.get(bias)
     risk = d.get("risk_pct")
     long_only = C.JEFF and C.JEFF_LONG_ONLY       # [JEFF] solo long
-    title = "JEFF COACH WATCHLIST · multi-edge" if C.JEFF else "MARTIN WATCHLIST"                         # [JEFF]
+    title = "WATCHLIST" if C.JEFF else "MARTIN WATCHLIST"                         # [JEFF]
     head = [f"**{title} — {d['session']}** (close {d['as_of']})",
             f"Bias **{BIAS_EN.get(bias, bias)}**" + (f" · risk `{risk:.2f}%` per trade" if risk is not None else "") + f" — {d['bias_why']}"]
     mm = d.get("market_monitor") if C.STOCKBEE_IN_CARD else None    # [19/10a] solo il modello di Martin
