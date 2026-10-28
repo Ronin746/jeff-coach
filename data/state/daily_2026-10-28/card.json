@@ -1,0 +1,48 @@
+{
+  "embeds": [
+    {
+      "description": "**WATCHLIST — 2026-10-28** (close 2026-10-27)\nRegime **MIXED** · max 3 Focus — pool lists: score -1 → MIXED; pool (0): Leading 0% of Leading+Lagging; pool flow 5d +3.0% (50 up, 45 down); pool flow trend mixed (-8.2% +2.3% -3.6% +1.2%)\n**Breadth** · monitored pool `0` names · above EMA21 (universe) `58%`\n- Leading `0` (-53 1d, -45 5d)\n- Mediocre `0` (-58 1d, -71 5d)\n- Lagging `0` (-55 1d, -50 5d)\nPool flow 5d `+3.0%` (50 up, 45 down) · daily `+4.8%` `-8.2%` `+2.3%` `-3.6%` `+1.2%`\nUniverse lists L `598` (+16 1d, +102 5d) · M `577` (-31 1d, -37 5d) · G `584` (+15 1d, -64 5d)\nIWM vs QQQ 1M `+2.1` pts · IWM >9 >21 · mega caps above 9 `3/10` · leaders below 9 `3/20` below 21 `3/20`\nScan +4%: `42` names · together: OIL AND GAS DOWNSTREAM 4, CYBER SECURITY 3\nThemes: OIL AND GAS MIDSTREAM (building), EUROPE (weak)",
+      "color": 3066993,
+      "image": {
+        "url": "attachment://breadth.png"
+      }
+    },
+    {
+      "description": "**FOCUS**\n• none",
+      "color": 3066993
+    },
+    {
+      "description": "**STALK — above 1h EMA50 (0)**\n• none",
+      "color": 3066993
+    },
+    {
+      "description": "**STALK — below 1h EMA50 (0)**\n• none",
+      "color": 3066993
+    },
+    {
+      "description": "**THEMES** · groups as of 2026-10-22\nWeek RS (x) vs Month RS (y) · percentile among all groups",
+      "color": 3066993,
+      "image": {
+        "url": "attachment://themes_rs.png"
+      }
+    },
+    {
+      "description": "Month RS (x) vs Quarter RS (y) · percentile among all groups",
+      "color": 3066993,
+      "image": {
+        "url": "attachment://themes_rs_3m.png"
+      }
+    },
+    {
+      "description": "**Overall ranking — 7-factor, equal-weight of members (2 groups)**\n` 1` **OIL AND GAS MIDSTREAM** — 7F `60` (+7 5d) · W `100` M `100` Q `100` Strong · 1W +1.5% 1M +4.9% (PAA, DKL, CQP, MPLX, ET)\n` 2` **EUROPE** — 7F `50` (-2 5d) · W `50` M `50` Q `50` Strong · 1W -0.5% 1M -1.4% (ENOR, EPOL, EWD, EWL, EWU)",
+      "color": 3066993
+    },
+    {
+      "description": "**THEMES** — LEADING / BUILDING (1 of 2) · 7 factors, equal-weight of the group names\n• OIL AND GAS MIDSTREAM — score 60 · BUILDING · 1M +4.9% · vs S&P +4.4% (PAA, DKL, CQP, MPLX, ET)\nWEAK / BEARISH, names excluded (1): EUROPE (WEAK)",
+      "color": 3066993
+    }
+  ],
+  "allowed_mentions": {
+    "parse": []
+  }
+}

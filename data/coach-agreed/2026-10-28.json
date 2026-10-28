@@ -1,0 +1,552 @@
+{
+  "session_date": "2026-10-28",
+  "as_of_close": "2026-10-27",
+  "ranking_bar": "2026-10-27",
+  "ranking_bar_status": "completed_rth_daily",
+  "timezone": "Europe/Rome",
+  "asof_rome": "2026-10-28 08:01 CET",
+  "focus": [],
+  "stalk": [],
+  "tickers": [],
+  "notes": "Single deterministic engine. Focus = every closed gate passes and the pattern reading calls it tight; Stalk = universe + earnings + RS>=80, above the SMA200, new names with at most 1 numeric gate open and an admitted pattern (tight or forming), names already listed while at most 2 numeric gates are open (or RS 70-79 with everything else closed). Alerts: entries on Focus only.",
+  "earnings_check": {
+    "window": "2026-10-28..2026-11-03",
+    "excluded": {
+      "MSGS": "2026-10-30"
+    },
+    "missing_dates": [],
+    "reported_on_reference_day": []
+  },
+  "info_not_verified": [],
+  "changes_vs_previous": {
+    "focus_before": [
+      "GTLB",
+      "HAE",
+      "SN"
+    ],
+    "focus_after": [],
+    "left_focus": [
+      "GTLB",
+      "HAE",
+      "SN"
+    ],
+    "joined_focus": [],
+    "left_list": [
+      "ANF",
+      "ASO",
+      "ATRC",
+      "BTE",
+      "CBRL",
+      "CDW",
+      "CRM",
+      "DBX",
+      "DHT",
+      "ELF",
+      "FIVN",
+      "FRO",
+      "GTLB",
+      "HAE",
+      "HTFL",
+      "HUM",
+      "IOT",
+      "NICE",
+      "NOG",
+      "NSIT",
+      "NTNX",
+      "PR",
+      "RVTY",
+      "RXO",
+      "SHOP",
+      "SIG",
+      "SN",
+      "TEAM",
+      "TMO",
+      "TRMD",
+      "VEEV",
+      "VSXY",
+      "W",
+      "WAT",
+      "ZETA"
+    ],
+    "joined_list": [],
+    "why_left": {
+      "GTLB": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "HAE": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "SN": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "ANF": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "ASO": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "ATRC": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "BTE": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "CBRL": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "CDW": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "CRM": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "DBX": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "DHT": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "ELF": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "FIVN": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "FRO": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "HTFL": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "HUM": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "IOT": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "NICE": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "NOG": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "NSIT": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "NTNX": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "PR": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "RVTY": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "RXO": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "SHOP": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "SIG": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "TEAM": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "TMO": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "TRMD": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "VEEV": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "VSXY": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "W": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "WAT": "outside the universe gates (ATR%/adv$/mcap) or no data",
+      "ZETA": "outside the universe gates (ATR%/adv$/mcap) or no data"
+    }
+  },
+  "stale_stalk": {},
+  "top_groups": [
+    {
+      "industry": "Entertainment",
+      "pctl": 100,
+      "median_rs": 89,
+      "n": 3,
+      "strong": 1,
+      "in_list": []
+    },
+    {
+      "industry": "Banks—Regional",
+      "pctl": 80,
+      "median_rs": 69,
+      "n": 3,
+      "strong": 0,
+      "in_list": []
+    },
+    {
+      "industry": "Oil & Gas Midstream",
+      "pctl": 60,
+      "median_rs": 68,
+      "n": 3,
+      "strong": 0,
+      "in_list": []
+    },
+    {
+      "industry": "Utilities—Regulated Electric",
+      "pctl": 40,
+      "median_rs": 58,
+      "n": 4,
+      "strong": 0,
+      "in_list": []
+    },
+    {
+      "industry": "Utilities—Regulated Gas",
+      "pctl": 20,
+      "median_rs": 44,
+      "n": 4,
+      "strong": 0,
+      "in_list": []
+    },
+    {
+      "industry": "Asset Management",
+      "pctl": 0,
+      "median_rs": 28,
+      "n": 4,
+      "strong": 0,
+      "in_list": []
+    }
+  ],
+  "channel_watch": [],
+  "peg_watch": [],
+  "dtl_watch": [],
+  "triangles": [],
+  "regime": {
+    "bias": "MIXED",
+    "score": -1,
+    "score_bias": "MIXED",
+    "why": [
+      "pool lists: score -1 → MIXED",
+      "pool (0): Leading 0% of Leading+Lagging · Leading 0 / Mediocre 0 / Lagging 0",
+      "pool flow 5d +3.0% (50 up, 45 down)",
+      "pool flow trend mixed (-8.2% +2.3% -3.6% +1.2%)",
+      "Market Monitor Expansion (context)"
+    ],
+    "market_monitor": {
+      "date": "2026-10-27",
+      "state": "Expansion",
+      "up4": 526.0,
+      "down4": 121.0,
+      "ratio5": 1.16,
+      "ratio10": 0.92,
+      "t2108": 42.2,
+      "t2108_d5": 7.53,
+      "up25q": 735.0,
+      "down25q": 1396.0,
+      "read": "pradeep",
+      "label": "Breakouts work",
+      "mm_why": [
+        "buying vs selling 5d -1",
+        "25%Q red",
+        "T2108 42% (+8 5d)",
+        "T30A: T2108 < 20 18 sessions ago"
+      ],
+      "flow5": -1,
+      "t30a": true,
+      "caution": false,
+      "up20w": null,
+      "down20w": null,
+      "source": "Stockbee"
+    },
+    "focus_held_by_regime": {},
+    "mm_hist": [
+      {
+        "date": "2026-09-30",
+        "up4": 153.0,
+        "down4": 187.0,
+        "t2108": 16.74,
+        "up20w": 28.0,
+        "down20w": 29.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-01",
+        "up4": 181.0,
+        "down4": 201.0,
+        "t2108": 18.99,
+        "up20w": 29.0,
+        "down20w": 26.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-02",
+        "up4": 221.0,
+        "down4": 132.0,
+        "t2108": 21.03,
+        "up20w": 25.0,
+        "down20w": 27.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-05",
+        "up4": 255.0,
+        "down4": 189.0,
+        "t2108": 22.39,
+        "up20w": 45.0,
+        "down20w": 20.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-06",
+        "up4": 177.0,
+        "down4": 211.0,
+        "t2108": 23.78,
+        "up20w": 39.0,
+        "down20w": 19.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-07",
+        "up4": 105.0,
+        "down4": 290.0,
+        "t2108": 21.1,
+        "up20w": 33.0,
+        "down20w": 27.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-08",
+        "up4": 179.0,
+        "down4": 291.0,
+        "t2108": 23.55,
+        "up20w": 27.0,
+        "down20w": 17.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-09",
+        "up4": 163.0,
+        "down4": 117.0,
+        "t2108": 25.29,
+        "up20w": 35.0,
+        "down20w": 22.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-12",
+        "up4": 92.0,
+        "down4": 364.0,
+        "t2108": 27.13,
+        "up20w": 14.0,
+        "down20w": 31.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-13",
+        "up4": 128.0,
+        "down4": 428.0,
+        "t2108": 29.4,
+        "up20w": 11.0,
+        "down20w": 47.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-14",
+        "up4": 77.0,
+        "down4": 784.0,
+        "t2108": 24.5,
+        "up20w": 10.0,
+        "down20w": 110.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-15",
+        "up4": 493.0,
+        "down4": 144.0,
+        "t2108": 30.78,
+        "up20w": 14.0,
+        "down20w": 48.0,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-16",
+        "up20w": null,
+        "down20w": null,
+        "up4": 67.0,
+        "down4": 405.0,
+        "t2108": 29.81,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-19",
+        "up20w": null,
+        "down20w": null,
+        "up4": 167.0,
+        "down4": 175.0,
+        "t2108": 29.46,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-20",
+        "up20w": null,
+        "down20w": null,
+        "up4": 370.0,
+        "down4": 110.0,
+        "t2108": 34.67,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-21",
+        "up20w": null,
+        "down20w": null,
+        "up4": 229.0,
+        "down4": 170.0,
+        "t2108": 36.29,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-22",
+        "up20w": null,
+        "down20w": null,
+        "up4": 410.0,
+        "down4": 550.0,
+        "t2108": 41.42,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-23",
+        "up20w": null,
+        "down20w": null,
+        "up4": 170.0,
+        "down4": 204.0,
+        "t2108": 39.17,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-26",
+        "up20w": null,
+        "down20w": null,
+        "up4": 156.0,
+        "down4": 244.0,
+        "t2108": 40.71,
+        "source": "Stockbee"
+      },
+      {
+        "date": "2026-10-27",
+        "up20w": null,
+        "down20w": null,
+        "up4": 526.0,
+        "down4": 121.0,
+        "t2108": 42.2,
+        "source": "Stockbee"
+      }
+    ],
+    "reversal": null,
+    "up20_hi": 45.0,
+    "down20_hi": 110.0,
+    "martin_breadth": {
+      "lists": {
+        "Leading": 598,
+        "Mediocre": 577,
+        "Lagging": 584
+      },
+      "lists_1d": {
+        "Leading": 582,
+        "Mediocre": 608,
+        "Lagging": 569
+      },
+      "lists_5d": {
+        "Leading": 496,
+        "Mediocre": 614,
+        "Lagging": 648
+      },
+      "above21_pct": 58,
+      "iwm_vs_qqq_21d": 2.1,
+      "iwm_above9": true,
+      "iwm_above21": true,
+      "mega_above9": 3,
+      "mega_n": 10,
+      "leaders_below9": 3,
+      "leaders_below21": 3,
+      "leaders_n": 20,
+      "scan_n": 42,
+      "scan_themes": [
+        [
+          "OIL AND GAS DOWNSTREAM",
+          4
+        ],
+        [
+          "CYBER SECURITY",
+          3
+        ]
+      ]
+    },
+    "pool_card": {
+      "n": 0,
+      "lists": {
+        "Leading": 0,
+        "Mediocre": 0,
+        "Lagging": 0
+      },
+      "lists_1d": {
+        "Leading": 53,
+        "Mediocre": 58,
+        "Lagging": 55
+      },
+      "lists_5d": {
+        "Leading": 45,
+        "Mediocre": 71,
+        "Lagging": 50
+      },
+      "share": 0.0,
+      "flow5": 3.0,
+      "flow_daily": [
+        -10.2,
+        -2.0,
+        -14.1,
+        1.9,
+        -11.1,
+        -0.6,
+        2.4,
+        4.8,
+        -8.2,
+        2.3,
+        -3.6,
+        1.2
+      ],
+      "up_5d": 50,
+      "down_5d": 45
+    }
+  },
+  "themes": {
+    "leading": [
+      {
+        "theme": "OIL AND GAS MIDSTREAM",
+        "score": 60,
+        "stage": "BUILDING",
+        "d5": 7.0,
+        "n": 7,
+        "ret21": 4.9,
+        "rs21": 4.4,
+        "etfs": null,
+        "tickers": [
+          "PAA",
+          "DKL",
+          "CQP",
+          "MPLX",
+          "ET"
+        ]
+      }
+    ],
+    "downtrend": [
+      "EUROPE (WEAK)"
+    ],
+    "excluded": {},
+    "n_themes": 2,
+    "map_built": "2026-10-22T11:52:39.252784+00:00",
+    "line": "OIL AND GAS MIDSTREAM (building), EUROPE (weak)",
+    "ranking": [
+      {
+        "theme": "OIL AND GAS MIDSTREAM",
+        "rank": 1,
+        "score": 60,
+        "d5": 7.0,
+        "rs_w": 100.0,
+        "rs_m": 100.0,
+        "rs_q": 100.0,
+        "quadrant": "Strong",
+        "ret1w": 1.5,
+        "ret1m": 4.9,
+        "n": 7,
+        "tickers": [
+          "PAA",
+          "DKL",
+          "CQP",
+          "MPLX",
+          "ET"
+        ]
+      },
+      {
+        "theme": "EUROPE",
+        "rank": 2,
+        "score": 50,
+        "d5": -1.9,
+        "rs_w": 50.0,
+        "rs_m": 50.0,
+        "rs_q": 50.0,
+        "quadrant": "Strong",
+        "ret1w": -0.5,
+        "ret1m": -1.4,
+        "n": 17,
+        "tickers": [
+          "ENOR",
+          "EPOL",
+          "EWD",
+          "EWL",
+          "EWU"
+        ]
+      }
+    ],
+    "bottom": [],
+    "ranked_n": 2,
+    "points": [
+      {
+        "theme": "OIL AND GAS MIDSTREAM",
+        "rs_w": 100.0,
+        "rs_m": 100.0,
+        "rs_q": 100.0,
+        "score": 60
+      },
+      {
+        "theme": "EUROPE",
+        "rs_w": 50.0,
+        "rs_m": 50.0,
+        "rs_q": 50.0,
+        "score": 50
+      }
+    ],
+    "baskets_fetched": "2026-10-22"
+  },
+  "gap_to_fill": {}
+}
