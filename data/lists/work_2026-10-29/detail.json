@@ -224,7 +224,7 @@
   "reversal": null,
   "martin_breadth": {
     "lists": {
-      "Leading": 327,
+      "Leading": 328,
       "Mediocre": 289,
       "Lagging": 278
     },
@@ -244,7 +244,7 @@
       54.5,
       53.7,
       54.3,
-      54.0
+      54.1
     ],
     "mediocre": {
       "share": 32.3,
@@ -290,7 +290,7 @@
     "leaders_below21": 1,
     "leaders_n": 20,
     "above21_pct": 58.0,
-    "lead_n": 327,
+    "lead_n": 328,
     "lead_above9_pct": 79.0,
     "lead_above21_pct": 92.0
   },
@@ -815,10 +815,10 @@
     ]
   },
   "breadth": {
-    "leading": 327,
+    "leading": 328,
     "lagging": 278,
     "mediocre": 289,
-    "share": 0.54,
+    "share": 0.541,
     "share_prev": 0.536,
     "upgrades": [
       "AFRM",

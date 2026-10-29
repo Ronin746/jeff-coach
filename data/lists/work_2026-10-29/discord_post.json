@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "status": 200,
+  "message_id": "1565300457520500838",
+  "method": "POST",
+  "messages": 1,
+  "message_ids": [
+    "1565300457520500838"
+  ],
+  "session": "2026-10-29",
+  "card_hash": "c84b95e9fd6c5f5d"
+}
