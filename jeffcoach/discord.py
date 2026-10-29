@@ -43,6 +43,9 @@ def load_env_file() -> None:
 
 def webhook() -> Optional[str]:
     load_env_file()
+    if C.SOSPESO.exists():                     # [ANDREA 29/10] bot sospeso: niente messaggi
+        log.warning("bot sospeso (file SOSPESO): niente invio su Discord")
+        return None
     # [JEFF] mai il canale di un altro bot: se l'URL di Sydney è lo stesso di Dua, Remy o Martin multi-edge, niente invio
     banned = {(os.environ.get(k) or "").strip() for k in getattr(C, "FORBIDDEN_WEBHOOK_ENV", ())} - {""}  # [JEFF]
     for k in C.WEBHOOK_ENV:

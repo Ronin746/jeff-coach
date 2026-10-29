@@ -77,6 +77,8 @@ def test_webhook_solo_sydney(monkeypatch):
     """Card e alert solo col webhook di Sydney: mai quello di Dua (LISA) né quello di Remy / multi-edge di Martin."""
     from jeffcoach import discord as DS
     monkeypatch.setattr(DS, "load_env_file", lambda: None)
+    from pathlib import Path as _P
+    monkeypatch.setattr(DS.C, "SOSPESO", _P("/non/esiste/SOSPESO"))     # la prova vale con il bot attivo
     for k in ("COACH_ALERT_DISCORD_WEBHOOK_URL", "LISA_DISCORD_WEBHOOK_URL", "DISCORD_WEBHOOK_URL"):
         monkeypatch.delenv(k, raising=False)
     monkeypatch.setenv("LISA_DISCORD_WEBHOOK_URL", "https://discord.com/api/webhooks/dua")
@@ -456,3 +458,15 @@ if __name__ == "__main__":
         sys.exit(pytest.main([__file__, "-q", "-p", "no:cacheprovider"]))
     finally:
         shutil.rmtree(TMP, ignore_errors=True)
+
+
+def test_sospeso_29_10(monkeypatch, tmp_path):
+    """[ANDREA 29/10] Con il file SOSPESO niente messaggi su Discord e alert fermi."""
+    from jeffcoach import discord as DS, alerts as AL
+    monkeypatch.setattr(DS, "load_env_file", lambda: None)
+    monkeypatch.setenv("COACH_ALERT_DISCORD_WEBHOOK_URL", "https://discord.com/api/webhooks/1/x")
+    f = tmp_path / "SOSPESO"
+    f.write_text("x")
+    monkeypatch.setattr(DS.C, "SOSPESO", f)
+    assert DS.webhook() is None
+    assert AL.main(["--once", "--force-window"]) == 0

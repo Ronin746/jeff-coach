@@ -682,6 +682,9 @@ def main(argv=None) -> int:
     if a.service:
         while True:
             try:
+                if C.SOSPESO.exists():           # [ANDREA 29/10] bot sospeso: niente alert, si controlla ogni minuto
+                    time.sleep(60)
+                    continue
                 if in_window(now_et()):
                     log.info(json.dumps(run_once(a.dry_run)))
                     time.sleep(C.POLL_SEC)
@@ -690,6 +693,9 @@ def main(argv=None) -> int:
             except Exception as e:
                 log.exception("ciclo: %s", e)
                 time.sleep(C.POLL_SEC)
+    if C.SOSPESO.exists():                       # [ANDREA 29/10] bot sospeso
+        print(json.dumps({"skipped": True, "reason": "bot sospeso (file SOSPESO)"}))
+        return 0
     if not in_window(now_et()) and not a.force_window:
         print(json.dumps({"skipped": True, "reason": "fuori seduta"}))
         return 0

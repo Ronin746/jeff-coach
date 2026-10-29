@@ -16,6 +16,8 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$DIR"
 PY="$DIR/.venv/bin/python"
+# [ANDREA 29/10] bot sospeso: con il file SOSPESO nel repo le fasi non fanno niente (resta "aggiorna", per riattivarlo)
+if [ -f "$DIR/SOSPESO" ] && [ "${1:-}" != "aggiorna" ]; then echo "Jeff Coach sospeso (file SOSPESO): $1 saltata"; exit 0; fi
 set -a; [ -f .env ] && . ./.env; set +a
 export PYTHONUTF8=1 JEFF_COACH_HOME="$DIR/data"
 

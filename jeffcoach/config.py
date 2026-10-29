@@ -29,6 +29,10 @@ JOURNAL = HOME / "journal"          # giornale dei trade simulati: file a parte 
 REPORTS = HOME / "reports"
 ALERTS_STATE = HOME / "alerts"      # alert già mandati (scritto solo dal server)
 LOGS = HOME / "logs"
+# [ANDREA 29/10] "sospendilo direttamente quel bot incluso gli alert": con il file SOSPESO nella cartella del repo
+# niente liste, card, alert né altri messaggi su Discord (server/fasi.sh esce subito, salvo "aggiorna"; il servizio
+# degli alert resta acceso ma fermo; discord.webhook() non dà l'URL). Per riattivarlo basta togliere il file.
+SOSPESO = Path(__file__).resolve().parent.parent / "SOSPESO"
 
 # Webhook: unico canale per watchlist e alert [RONIN 13/10]. Mai stamparlo né scriverlo nel repo.
 # [JEFF] jeff-coach scrive solo col webhook di Sydney (card e alert, dal 14/10); mai quello di Dua (LISA_...) né quello
