@@ -50,9 +50,17 @@ SMA50"). Diventa Focus solo se chiude anche tutti gli 8 gate:
 8. Compressione: almeno 2 delle ultime 3 sedute con range% sotto l'ADR20% dello stesso giorno (un solo giorno largo non
    azzera quelli prima).
 
-Chi non li chiude resta in tracking (txt di TradingView) e nel riepilogo ("Fermati dai gate di Jeff"). Ordine, numero di
+Chi non li chiude resta fuori dal Focus e finisce nel riepilogo ("Fermati dai gate di Jeff"): se ha un voto alto va
+negli **Stalk** (§J3b), altrimenti in tracking (txt di TradingView). Ordine, numero di
 Focus, regime, alert, trigger, stop e giornale sono quelli della base. Anche i long "contro il regime" (lato opposto,
 §5) vogliono gli 8 gate chiusi. Card e alert mostrano `Jeff RS` e `VCP`; il giornale ha le colonne `jeff_rs` e `jeff_vcp`.
+
+## J3b. Stalk a voto alto [ANDREA 29/10]
+"Lascia gli stalk a voto alto nella watchlist": i candidati long di Martin (setup completo, con il livello di confluenza)
+che non chiudono ancora tutti gli 8 gate di Jeff e hanno **almeno 3 edge su 5** (la soglia META_MIN_EDGES della base),
+nell'ordine di qualità del Focus, al massimo 8. Stanno nella card (sezione STALK LONG, con i gate ancora aperti) e nel txt
+(`###STALK LONG`, prima del tracking e non ripetuti lì). Niente alert né trade: entrano negli alert quando chiudono i gate
+e passano in Focus. Numeri in `config.py` (`JEFF_STALK_MIN_EDGES`, `JEFF_STALK_MAX`).
 
 ## J4. Solo long
 Niente lista, Focus né alert short (lo short di Jeff è sospeso dal 13/10). Il bias resta quello della base: con LONG fino a
@@ -61,20 +69,23 @@ against the regime": alert solo da conoscere, trade ombra nel giornale). Lo stud
 150 titoli +20% in 5 sedute: niente nuovi long).
 
 ## J5. PEG delayed reaction
-Lista di Jeff (post per abbonati, set-ott 2026; lettura identica a prima): gap sugli utili di 4-45 sedute fa, apertura
+Lista di Jeff (post per abbonati, set-ott 2026; lettura identica a prima): gap sugli utili di 4-20 sedute fa (estremi
+compresi; fino al 28/10 4-45) [ANDREA 29/10: "solo come setup entro le 20 sedute"], apertura
 almeno +4% o +1 ATR sul close prima, con volume di almeno 1,5× la media a 50 sedute (o gap di almeno l'8%); prezzo dentro
 il range del giorno del gap (dal close prima del gap, fino a 0,5 ATR sotto, al massimo del giorno del gap, fino a 1 ATR
 sopra); base stretta (range a 5 sedute ≤ 2,5 ATR o ATR5/ATR20 ≤ 0,8); RS di almeno 60 e mai sotto la SMA200 di oltre
 0,3 ATR; una data degli utili il giorno del gap o nei 2 giorni prima. Universo e utili come §J2.
-- **Card** (sezione PEG, i più recenti prima), **txt** (`###PEG`) e **trade del sistema**: il livello è quello della base,
+- **Card**: solo i PEG con il livello, cioè il setup con alert (i più recenti prima); quelli senza livello sono una riga
+  di nomi ("no alert level yet") [ANDREA 29/10]. **txt** (`###PEG`, tutti) e **trade del sistema**: il livello è quello della base,
   la confluenza di supporti entro 1 ADR con almeno 4 livelli; poi tocco, inversione e rottura della barra a 5 minuti con
   tutti i filtri d'ingresso della base (banda, 60m, QQQ, ETF del gruppo, stop massimo). Nel giornale il setup è
   "PEG delayed reaction" (si misura a parte); gli alert hanno "PEG" nel titolo.
-- Senza un livello così il PEG resta in card e txt, senza alert. Con il lato long chiuso dal regime gli alert sono solo
+- Senza un livello così il PEG resta nel txt (e come nome nella card), senza alert. Con il lato long chiuso dal regime gli alert sono solo
   informativi (trade ombra). Un PEG già in Focus si segue come Focus.
 
 ## J6. Cosa non c'è più del JeffCoach di prima
-Lettura unica del pattern (e prima le letture A, B, C), triangolo, canale, trendline discendente, Stalk e sua scadenza,
+Lettura unica del pattern (e prima le letture A, B, C), triangolo, canale, trendline discendente, Stalk di prima (1-2
+gate aperti) e sua scadenza (al loro posto gli Stalk a voto alto di §J3b),
 ingresso sulla rottura dei primi 30 minuti con RVOL e minimo del giorno entro 0,7 ATR, cooldown di 60 minuti, filtro dei
 temi WEAK/BEARISH, regime con al massimo 3 Focus, weekly. Al loro posto c'è la base di Martin. Remy è spento dal 22/10 (al
 suo posto gira il multi-edge di Martin): il codice resta in `tv-scanner/`. Lo storico della versione di prima resta in
@@ -83,13 +94,14 @@ suo posto gira il multi-edge di Martin): il codice resta in `tv-scanner/`. Lo st
 ## J7. Discord
 Card e alert col nome **Sydney** sul suo webhook (`COACH_ALERT_DISCORD_WEBHOOK_URL`, come dal 14/10); mai i webhook di Dua
 (`LISA_DISCORD_WEBHOOK_URL`) o di Remy / multi-edge di Martin. Formati della base (card, messaggio dei temi, alert con
-grafico e grafico dell'ETF del gruppo), con la testata `JEFF COACH WATCHLIST · multi-edge`, la sezione PEG e senza le
+grafico e grafico dell'ETF del gruppo), con la testata `WATCHLIST` (dal 28/10 sera), le sezioni STALK e PEG e senza le
 parti short.
 
 ## J8. Registro delle modifiche (jeff-coach)
 | Data | Regola | Prima → dopo | Chi |
 |---|---|---|---|
 | 2026-10-28 | ristrutturazione completa: base = Martin multi-edge (main @062aae2, regole 2026-10-28b-meta) + universo e filtri di Jeff, 8 gate del Focus (compressione 2 su 3), PEG in card, txt e trade del sistema; solo long; Sydney | motore unico Focus/Stalk di Jeff (main @36a11c0: lettura unica del pattern, Stalk, ORH 30 minuti con RVOL, temi e regime come Martin) | Andrea |
+| 2026-10-29 | (1) PEG solo come setup entro 20 sedute dal gap (4-20, estremi compresi), in card solo quelli con il livello; (2) Stalk a voto alto nella watchlist: fermati dai gate di Jeff con almeno 3 edge su 5, max 8, in card e txt, senza alert; (3) testata della card `WATCHLIST` | PEG 4-45 sedute (l'ultima esclusa), tutti in card anche senza livello; fermati dai gate solo in tracking; testata `JEFF COACH WATCHLIST · multi-edge` | Andrea |
 
 Le modifiche alla base si portano da Martin-coach con lo stesso nome dei file (`martincoach/` → `jeffcoach/`); poi
 `python strumenti/identita_base.py <martin-coach>` deve dire "BASE IDENTICA" e il registro qui sopra prende una riga.

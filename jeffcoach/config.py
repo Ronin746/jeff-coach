@@ -638,7 +638,7 @@ JEFF_COMPRESSION_WINDOW = 3         #    azzera i precedenti, caso PLTR) [JS har
 
 # ---- PEG delayed reaction [RONIN 08/10; ANDREA 28/10: card, txt e trade del sistema]
 PEG = dict(
-    min_bars_ago=4, max_bars_ago=45,   # il gap è di 4-45 sedute fa (la reazione è "ritardata", al massimo ~2 mesi)
+    min_bars_ago=4, max_bars_ago=20,   # il gap è di 4-20 sedute fa: setup solo entro 20 sedute [ANDREA 29/10] (prima 45)
     gap_min_pct=4.0, gap_min_atr=1.0,  # apertura sopra il close prima di almeno 4% o 1 ATR ...
     vol_mult=1.5, gap_big_pct=8.0,     # ... con volume del giorno >= 1,5x la media 50 (o gap >= 8%, il volume di Yahoo a volte è basso)
     range_below_atr=0.5,               # il prezzo è nel range del PEG: dal close prima del gap (fino a 0,5 ATR sotto) ...
@@ -651,7 +651,16 @@ PEG = dict(
 # almeno CONFLUENCE_MIN livelli, poi tocco, inversione e rottura della barra a 5 minuti). Senza un livello così il PEG
 # resta nella card e nel txt ma non ha alert.
 PEG_ALERTS = True
+# In card solo i PEG con il livello (setup con alert); gli altri solo nel txt (###PEG) [ANDREA 29/10: "solo come setup"]
+PEG_CARD_TRADABLE_ONLY = True
+
+# ---- Stalk [ANDREA 29/10: "lascia gli stalk a voto alto nella watchlist"]: candidati long di Martin con il livello che
+# non chiudono ancora tutti gli 8 gate di Jeff, con un voto alto (almeno 3 edge su 5, la soglia META_MIN_EDGES della
+# base). Nella card (sezione STALK, con i gate aperti) e nel txt (###STALK LONG); niente alert né trade.
+JEFF_STALK = True
+JEFF_STALK_MIN_EDGES = 3
+JEFF_STALK_MAX = 8
 
 if JEFF:
-    RULES_VERSION = RULES_VERSION + "+jeff-2026-10-28"
+    RULES_VERSION = RULES_VERSION + "+jeff-2026-10-29"   # [JEFF] 29/10: PEG 20 sedute, Stalk
     EARNINGS_BLOCK_SESSIONS = JEFF_EARNINGS_SESSIONS     # [JEFF] finestra degli utili di Jeff (Martin: 3)

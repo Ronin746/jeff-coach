@@ -31,7 +31,8 @@ def read_peg(df: pd.DataFrame, atr: float) -> dict:
     sma200 = JF.sma(df.Close, 200).to_numpy()
     sma50 = JF.sma(df.Close, 50).to_numpy()
     g = None
-    for i in range(n - 1 - p["min_bars_ago"], max(51, n - 1 - p["max_bars_ago"]), -1):    # il più recente prima
+    # il più recente prima; da min_bars_ago a max_bars_ago sedute fa, estremi compresi [29/10: prima l'ultimo era escluso]
+    for i in range(n - 1 - p["min_bars_ago"], max(50, n - 2 - p["max_bars_ago"]), -1):
         a = atr_s[i - 1] if not np.isnan(atr_s[i - 1]) else atr
         gap = o[i] - c[i - 1]
         avg = v[i - 50:i].mean()

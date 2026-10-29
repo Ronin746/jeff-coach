@@ -262,16 +262,29 @@ def card_embeds(d: dict, premarket: Optional[list[dict]] = None) -> list[dict]:
                 embeds.append({"description": f"**FOCUS {s.upper()} — top quality, against the regime (alerts only, not traded)**\n"
                                + "\n".join(card_line(r, None, note_lim) for r in rows), "color": SIDE_COLOR[s],
                                "_rows": [r["ticker"] for r in rows]})
+        st = d.get("stalk") or []
+        if st:                       # [JEFF 29/10] Stalk a voto alto: candidati con più edge, gate di Jeff ancora aperti
+            embeds.append({"description": f"**STALK LONG — {C.JEFF_STALK_MIN_EDGES}+ edges, Jeff gates still open** (no alerts)\n"
+                           + "\n".join(card_line(r, None, note_lim, tag=f"open: {r.get('jeff_why') or '-'}") for r in st),
+                           "color": SIDE_COLOR["long"]})
         pw = d.get("peg_watch") or []
-        if pw:                       # [JEFF] PEG delayed reaction: con il livello hanno alert e trade come i Focus
+        pt = [r for r in pw if r.get("tradable")] if getattr(C, "PEG_CARD_TRADABLE_ONLY", False) else pw   # [JEFF 29/10]
+        po = [r["ticker"] for r in pw if r not in pt]                                                       # [JEFF 29/10]
+        if pt:                       # [JEFF] PEG delayed reaction: con il livello hanno alert e trade come i Focus
             embeds.append({"description": "**PEG — delayed reaction to earnings** (alerts at the level, like the Focus)\n"
-                           + "\n".join(peg_line(r, note_lim) for r in pw), "color": SIDE_COLOR["long"],
-                           "_rows": [r["ticker"] for r in pw if r.get("tradable") and not r.get("also_focus")]})
+                           + "\n".join(peg_line(r, note_lim) for r in pt)
+                           + (f"\nNo alert level yet (TradingView file only): {', '.join(po)}" if po else ""),
+                           "color": SIDE_COLOR["long"],
+                           "_rows": [r["ticker"] for r in pt if r.get("tradable") and not r.get("also_focus")]})
+        elif po:                     # [JEFF 29/10] solo PEG senza livello: una riga, niente sezione
+            embeds[-1 if len(embeds) > 1 else 0]["description"] += (
+                f"\n\nPEG without an alert level (TradingView file only): {', '.join(po)}")
         tl, ts = d.get("tracking_long") or [], d.get("tracking_short") or []
         if tl or ts:                 # i tracking non vanno nella card: solo nel txt allegato [RONIN 13/10]
             fw = len(d.get("fakeout_watch") or [])
             tr_txt = f"{len(tl)} long" if long_only else f"{len(tl)} long · {len(ts)} short"           # [JEFF]
-            embeds[1 if len(embeds) > 1 else 0]["description"] += (f"\n\nTracking: {tr_txt} — in the attached TradingView file"
+            ti = (-1 if len(embeds) > 1 else 0) if C.JEFF else (1 if len(embeds) > 1 else 0)   # [JEFF] in fondo, dopo Stalk e PEG
+            embeds[ti]["description"] += (f"\n\nTracking: {tr_txt} — in the attached TradingView file"
                 + (f"\nFailed breakout/breakdown watch: {fw} tracking names alert only on a failed breakdown (long) or failed breakout (short) at the level" if fw else ""))
         tail = []
         if premarket:

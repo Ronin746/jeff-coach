@@ -58,7 +58,7 @@ def test_configurazione_multi_edge_e_jeff():
     assert C.WRITE_HISTORY is True                                   # storico suo
     for p in (C.LISTS, C.JOURNAL, C.ALERTS_STATE, C.REPORTS, C.STATE, C.HISTORY):
         assert p.parent == C.HOME                                    # niente data/meta
-    assert C.RULES_VERSION.endswith("-meta+jeff-2026-10-28")
+    assert C.RULES_VERSION.endswith("-meta+jeff-2026-10-29")
     assert C.WEBHOOK_ENV == ("COACH_ALERT_DISCORD_WEBHOOK_URL",) and C.BOT_NAME == "Sydney"
     assert not set(C.WEBHOOK_ENV) & set(C.FORBIDDEN_WEBHOOK_ENV)
     assert C.EARNINGS_BLOCK_SESSIONS == C.JEFF_EARNINGS_SESSIONS == 5
@@ -68,7 +68,7 @@ def test_configurazione_multi_edge_e_jeff():
     assert (C.JEFF_RS_MIN, C.JEFF_SMA200_SLOPE_BARS, C.JEFF_EXT_MAX, C.JEFF_SMA5_MAX_DIST_PCT) == (80, 5, 4.0, 5.0)
     assert (C.JEFF_MA1H_KIND, C.JEFF_MA1H_LEN, C.JEFF_BUCKET_MIN, C.JEFF_MA1H_SESSIONS) == ("ema", 50, 60, 25)
     assert (C.JEFF_EMA9_MAX_ATR, C.JEFF_VCP_MAX, C.JEFF_COMPRESSION_DAYS_MIN, C.JEFF_COMPRESSION_WINDOW) == (1.5, 25.0, 2, 3)
-    assert C.PEG == dict(min_bars_ago=4, max_bars_ago=45, gap_min_pct=4.0, gap_min_atr=1.0, vol_mult=1.5, gap_big_pct=8.0,
+    assert C.PEG == dict(min_bars_ago=4, max_bars_ago=20, gap_min_pct=4.0, gap_min_atr=1.0, vol_mult=1.5, gap_big_pct=8.0,
                          range_below_atr=0.5, range_above_atr=1.0, range5_max_atr=2.5, atr5_atr20_max=0.8,
                          sma200_tol_atr=0.3, rs_min=60)
 
@@ -184,6 +184,14 @@ def test_peg_identico_a_prima():
                 peg_higher_low=True, peg_pivot=73.336031, peg_ok=True, peg_why=[])
     for k, v in gold.items():
         assert (abs(pg[k] - v) < 1e-5) if isinstance(v, float) else pg[k] == v, k
+    # setup solo entro 20 sedute [ANDREA 29/10]: il gap di 20 sedute fa c'è, con il limite a 19 no
+    import copy
+    old = copy.deepcopy(C.PEG)
+    try:
+        C.PEG["max_bars_ago"] = 19
+        assert PG.read_peg(df, float(JF.atr(df).iloc[-1]))["peg_found"] is False
+    finally:
+        C.PEG.clear(); C.PEG.update(old)
     assert PG.confirm_earnings(pg, ["2026-09-10"]) is True       # utili la sera prima del gap
     assert PG.confirm_earnings(pg, ["2026-08-01"]) is False
     assert PG.confirm_earnings(pg, []) is None
@@ -346,6 +354,7 @@ def _install(monkeypatch, bias="LONG"):
 
 def test_lista_card_e_txt(monkeypatch):
     DL, daily, calls = _install(monkeypatch)
+    monkeypatch.setattr(C, "JEFF_STALK_MIN_EDGES", 0)        # dati finti: gli edge non contano, conta dove finiscono
     assert DL.main(["--session", SESSION.isoformat()]) == 0
     work = C.LISTS / f"work_{SESSION}"
     det = json.loads((work / "detail.json").read_text())
@@ -381,6 +390,14 @@ def test_lista_card_e_txt(monkeypatch):
     assert "T06" not in lists and "T09" not in lists and "T05" not in lists
     summ = (work / "summary_it.md").read_text()
     assert "Fermati dai gate di Jeff" in summ and "PEG delayed reaction" in summ and "Fuori per utili" in summ
+    # Stalk a voto alto [ANDREA 29/10]: i fermati dai gate di Jeff con il livello, in card (con i gate aperti) e nel txt,
+    # non doppi nel tracking, senza alert
+    stalk = [r["ticker"] for r in det["stalk"]]
+    assert {"T03", "T11"} <= set(stalk) and not set(stalk) & set(focus)
+    assert not set(stalk) & set(det["tracking_long"]) and len(stalk) <= C.JEFF_STALK_MAX
+    assert "STALK LONG" in alltext and "open: VCP 40" in alltext
+    assert "NASDAQ:T03" in txt.split("###STALK LONG")[1].split("###")[0]
+    assert all(r["ticker"] not in stalk for r in pub["focus"]) and "Stalk (" in summ
 
 
 def test_regime_short_niente_focus_e_peg_informativi(monkeypatch):

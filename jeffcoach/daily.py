@@ -666,6 +666,13 @@ def build(doc: dict, review: dict) -> dict:
     for r in cands + near[:60]:
         side_of.setdefault(r["ticker"], r["side"])
     tracking_long = [t for t in tracking if side_of.get(t, "long") == "long"]     # potent: lato long
+    stalk = []
+    if C.JEFF and C.JEFF_STALK:  # [JEFF 29/10] Stalk a voto alto: i candidati long fermati dai gate di Jeff, con più edge
+        stalk = [dict(r, stalk=True) for r in cands if r["side"] == "long" and r["ticker"] not in fset   # [JEFF]
+                 and not r["demoted"] and not r.get("jeff_ok")                                         # [JEFF]
+                 and (r.get("n_edges") or 0) >= C.JEFF_STALK_MIN_EDGES][:C.JEFF_STALK_MAX]             # [JEFF]
+        sset = {r["ticker"] for r in stalk}                                                            # [JEFF]
+        tracking_long = [t for t in tracking_long if t not in sset]                                    # [JEFF] niente doppioni
     tracking_short = [t for t in tracking if side_of.get(t) == "short"]
 
     # messaggio dei temi sotto la card [RONIN 14/10]
@@ -742,7 +749,7 @@ def build(doc: dict, review: dict) -> dict:
         focus=focus, counter_focus=counter, fakeout_watch=fake, tracking=tracking, tracking_long=tracking_long, tracking_short=tracking_short, candidates=cands, near_misses=near[:60], potent=potent, leader=leader,
         themes=[{k: (E._r(v, 3) if isinstance(v, float) else v) for k, v in r.items()} for r in rows[:40]],
         themes_line=tl, themes_msg=themes_msg, lists=lists, stale=len(doc["stale"]), stale_names=sorted(doc["stale"])[:50],
-        **({"peg_watch": peg, "jeff": jeff_summary(jd, cands, focus, jeff_earn_out)} if C.JEFF else {}),   # [JEFF]
+        **({"peg_watch": peg, "stalk": stalk, "jeff": jeff_summary(jd, cands, focus, jeff_earn_out)} if C.JEFF else {}),   # [JEFF]
     )
 
 
@@ -824,13 +831,17 @@ def summary_it(res: dict) -> str:
         lines.append(f"Jeff: universo {jf['universe']} titoli (fuori {jf['out_universe']}); candidati long di Martin "
                      f"{jf['candidates_long']}, con gli 8 gate chiusi {jf['gates_closed']}")
         if jf.get("held_by_gates"):
-            lines.append("Fermati dai gate di Jeff (in tracking): " + "; ".join(
+            lines.append("Fermati dai gate di Jeff (Stalk o tracking): " + "; ".join(
                 f"{t} ({w})" for t, w in list(jf["held_by_gates"].items())[:20]))
         if jf.get("earnings_out"):
             lo, hi = jf["earnings_window"]
             lines.append(f"Fuori per utili {lo}..{hi}: " + ", ".join(f"{t} {d}" for t, d in sorted(jf["earnings_out"].items())))
         if jf.get("ma1h_missing"):
             lines.append("EMA50 a 1 ora non calcolata (gate 5 aperto): " + ", ".join(jf["ma1h_missing"][:20]))
+    st = res.get("stalk") or []
+    if st:                     # [JEFF 29/10] Stalk a voto alto
+        lines.append(f"Stalk ({len(st)}, almeno {C.JEFF_STALK_MIN_EDGES} edge su 5, gate di Jeff aperti): " + "; ".join(
+            f"{r['ticker']} ({r.get('n_edges')} edge: {r.get('jeff_why')})" for r in st))
     pw = res.get("peg_watch") or []
     if pw:
         lines.append(f"PEG delayed reaction ({len(pw)}): " + "; ".join(
@@ -915,13 +926,14 @@ def main(argv=None) -> int:
     pm = json.loads(pm_p.read_text(encoding="utf-8")) if pm_p.exists() else None
     card = {"embeds": card_embeds(res, pm)}
     pegs = res.get("peg_watch") or []                                                                 # [JEFF]
-    exch = {s: (doc["uni"].get(s) or {}).get("exchange") for s in res["tracking"] + [r["ticker"] for r in res["focus"] + res["counter_focus"] + pegs]}
+    exch = {s: (doc["uni"].get(s) or {}).get("exchange") for s in res["tracking"] + [r["ticker"] for r in res["focus"] + res["counter_focus"] + pegs + (res.get("stalk") or [])]}   # [JEFF] + Stalk
     fx = lambda side: [(r["ticker"], exch.get(r["ticker"])) for r in res["focus"] if r["side"] == side]
     tx = lambda key: [(t, exch.get(t)) for t in res[key]]
     ax = lambda side: [(r["ticker"], exch.get(r["ticker"])) for r in res["counter_focus"] if r["side"] == side]
     txt = tv_txt([("FOCUS LONG", fx("long")), ("FOCUS SHORT", fx("short")),
                   ("TOP QUALITY LONG", ax("long")), ("TOP QUALITY SHORT", ax("short")),
                   ("PEG", [(r["ticker"], exch.get(r["ticker"])) for r in pegs]),                         # [JEFF]
+                  ("STALK LONG", [(r["ticker"], exch.get(r["ticker"])) for r in res.get("stalk") or []]),    # [JEFF 29/10]
                   ("TRACKING LONG", tx("tracking_long")), ("TRACKING SHORT", tx("tracking_short"))])
     public = {k: res[k] for k in ("session", "as_of", "rules_version", "bias", "bias_score", "score_bias", "risk_pct", "bias_why", "market_monitor", "indices",
                                   "qqq_prev_close", "qqq_ctx", "focus", "counter_focus", "fakeout_watch", "sync_levels", "tracking", "tracking_long", "tracking_short", "themes_line", "breadth")}
