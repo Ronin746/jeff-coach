@@ -1,11 +1,12 @@
-name: Lista del mattino
+name: Lista Focus/Stalk del mattino
 
-# Riserva del server (che la fa alle 08:00 Roma): 07:45 UTC = 09:45 Roma (ora legale) / 08:45 (ora solare).
-# Esce subito se la lista c'è già (--skip-if-done).
+# 07:00 e 08:00 UTC = 09:00/10:00 Roma con l'ora legale, 08:00/09:00 con l'ora solare.
+# Il primo dei due che parte fa la lista, il secondo esce subito (--skip-if-done).
 on:
   # [sospeso 27/10, Andrea] cron su GitHub fermo: lo fa il server Oracle. Si lancia ancora a mano (Run workflow).
   # schedule:
-  #   - cron: "45 7 * * 1-5"
+  #   - cron: "0 6 * * 1-5"
+  #   - cron: "0 7 * * 1-5"
   workflow_dispatch:
     inputs:
       session:
@@ -25,11 +26,12 @@ concurrency:
 
 env:
   JEFF_COACH_HOME: ${{ github.workspace }}/data
-  COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_ALERT_DISCORD_WEBHOOK_URL }}
+  JEFF_COACH_AGREED: ${{ github.workspace }}/data/coach-agreed
+  JEFF_COACH_REMY_FILE: ${{ github.workspace }}/data/remy/pivot30_list.txt
   PYTHONUTF8: "1"
 
 jobs:
-  run:
+  lista:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -40,23 +42,25 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - name: Calcolo lista
+        id: run
         run: |
           ARGS=""
           if [ -n "${{ github.event.inputs.session }}" ]; then ARGS="--session ${{ github.event.inputs.session }}"; fi
           if [ "${{ github.event.inputs.force }}" != "true" ]; then ARGS="$ARGS --skip-if-done"; fi
-          python -m jeffcoach.daily $ARGS
-      - name: Salva i dati scaricati per la card
+          python -m jeffcoach.daily $ARGS | tee /tmp/out.txt
+          SESSION=$(python -c "import json,sys;d=json.load(open('data/coach-agreed/today.json',encoding='utf-8'));print(d['session_date'])" 2>/dev/null || echo none)
+          echo "session=$SESSION" >> "$GITHUB_OUTPUT"
+      - name: Salva i dati calcolati per la card (cache)
+        if: steps.run.outputs.session != 'none'
         uses: actions/cache/save@v4
         with:
-          path: data/lists/*/compute.pkl
-          key: compute-${{ github.run_id }}
+          path: data/state/daily_${{ steps.run.outputs.session }}/compute.pkl
+          key: compute-${{ steps.run.outputs.session }}-${{ github.run_id }}
       - name: Commit
-        if: always()
         run: |
           git config user.name "jeff-coach-bot"
           git config user.email "jeff-coach-bot@users.noreply.github.com"
           git add -A data
           git diff --cached --quiet && exit 0
-          git commit -m "Lista"
-          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 10; done
-          exit 1
+          git commit -m "Lista ${{ steps.run.outputs.session }}"
+          git pull --rebase && git push

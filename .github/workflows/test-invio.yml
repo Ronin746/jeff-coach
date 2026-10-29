@@ -1,0 +1,30 @@
+name: Prova invio (regole nuove)
+
+# Rigioca l'ultima seduta con le regole nuove e manda qualche esempio su Discord con "TEST" nel titolo
+# (Remy: 30 minute pivot nelle tre versioni; Sydney: Channel con grafico). Parte cambiando cloud/test_invio.txt.
+on:
+  push:
+    branches: [main]
+    paths: ["cloud/test_invio.txt"]
+  workflow_dispatch:
+
+jobs:
+  prova:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PYTHONUTF8: "1"
+      DISCORD_WEBHOOK_URL: ${{ secrets.REMY_DISCORD_WEBHOOK_URL }}
+      COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_ALERT_DISCORD_WEBHOOK_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt -r tv-scanner/requirements.txt
+      - name: Webhook presenti?
+        run: |
+          [ -n "$DISCORD_WEBHOOK_URL" ] && echo "Remy: si" || echo "Remy: secret REMY_DISCORD_WEBHOOK_URL mancante"
+          [ -n "$COACH_ALERT_DISCORD_WEBHOOK_URL" ] && echo "Sydney: si" || echo "Sydney: secret COACH_ALERT_DISCORD_WEBHOOK_URL mancante"
+      - run: python cloud/test_invio.py --invia

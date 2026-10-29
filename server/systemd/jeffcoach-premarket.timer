@@ -1,9 +1,0 @@
-[Unit]
-Description=Jeff Coach - orario: pre-market (08:50 New York, dopo i bot di Martin)
-
-[Timer]
-OnCalendar=Mon..Fri 08:50 America/New_York
-Persistent=true
-
-[Install]
-WantedBy=timers.target

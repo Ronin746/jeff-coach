@@ -1,17 +1,16 @@
-"""Lista del mattino (deterministica): liste, scan, temi, regime, Focus long/short con i livelli.
+"""Lista Focus/Stalk del mattino (una sola, deterministica).
 
 Uso:
-  python -m jeffcoach.daily                       # seduta di oggi (ora di Roma), close della seduta precedente
-  python -m jeffcoach.daily --session 2026-10-13 --dry-run
-  python -m jeffcoach.daily --from-cache          # riusa i dati scaricati e riapplica review.json (card)
-  python -m jeffcoach.daily --skip-if-done        # esce se la lista di oggi esiste già (doppi cron)
+  python -m jeffcoach.daily                 # seduta di oggi (ora di Roma), close RTH precedente
+  python -m jeffcoach.daily --session 2026-10-08 --dry-run
+  python -m jeffcoach.daily --from-cache    # riusa i dati già scaricati (la card del server lo usa alle 10:45)
 
-Scrive (non con --dry-run):
-  data/lists/today.json + <SEDUTA>.json         lista pubblica (la leggono alert e revisione)
-  data/lists/watchlist_<SEDUTA>.txt              import TradingView (###FOCUS LONG/SHORT, ###TRACKING LONG/SHORT)
-  data/lists/work_<SEDUTA>/                      detail.json, card.json, summary_it.md, review.json, compute.pkl
-  data/history/lists_|potent_|themes_<CLOSE>.json  storico per breadth, scan e temi
-  data/reports/temi_<SEDUTA>.md                  classifica dei temi
+Scrive (se non --dry-run):
+  watchlists/focus_<SEDUTA>.json + focus_today.json        dettaglio completo, ogni gate di ogni nome
+  /workspace/coach-agreed/today.json + <SEDUTA>.json        lista pubblica letta dagli alert
+  /workspace/coach-agreed/watchlist_<SEDUTA>.txt + _today   import TradingView
+  /workspace/tv-scanner/pivot30_list.txt                    Focus+Stalk con RS>=80 per Remy
+  state/daily_<SEDUTA>/card.json, summary_it.md, rows.pkl
 """
 from __future__ import annotations
 
@@ -19,944 +18,905 @@ import argparse
 import json
 import logging
 import pickle
-import re
 import sys
-from datetime import date, timedelta
-
-import pandas as pd
+from datetime import date, datetime, timedelta
 
 from . import config as C
 from . import data as D
-from . import edges as EDG
 from . import engine as E
-from . import orizzontali as HZM
-from . import jeff as JF          # [JEFF]
-from . import peg as PG          # [JEFF]
-from . import journal as J
-from . import themes as T
-from . import themes_map as TM
-from . import breadth as B
-from . import basket_score as BS
-from . import breadth_chart as BC
-from .calendar_us import is_session, prev_session, sessions_from, today_rome
-from .output import card_embeds, themes_embeds, tv_txt, write_atomic
+from . import indicators as I
+from . import channel as CH
+from . import peg as PG
+from .calendar_us import ROME, is_session, prev_session, sessions_from, today_rome, last_sessions
+from .output import above_sma65, by_sector, card_descriptions, short_card_descriptions, short_tv_txt, tv_txt, write_atomic
 
 log = logging.getLogger("jeffcoach.daily")
-NON_STOCK = set(C.INDICES) | set(C.SECTOR_ETFS)
 
 
-# ------------------------------------------------------------------ download e metriche
-def compute(session: date, work, use_cache: bool) -> dict:
-    cache = work / "compute.pkl"
+def _r(x, n=2):
+    return E._r(x, n)
+
+
+def compute(session: date, workdir, use_cache: bool) -> dict:
+    """Scarica e calcola tutto. Ritorna un dizionario serializzabile (rows + contesto)."""
+    as_of = prev_session(session)
+    cache = workdir / "compute.pkl"
     if use_cache and cache.exists():
         return pickle.loads(cache.read_bytes())
-    as_of = prev_session(session)
-    uni = D.build_universe()
+
+    meta = D.build_universe()
     try:
-        ind = D.build_industry_map()
-    except Exception as e:                      # le industrie servono ai temi, non bloccano la lista
-        log.warning("mappa industrie: %s", e)
-        ind = {}
-    syms = [s for s, v in uni.items() if (v.get("quote_type") or "EQUITY") == "EQUITY"
-            and (ind.get(s, {}).get("industry") not in C.EXCLUDED_INDUSTRIES)]
-    # [JEFF] syms resta l'universo di Martin (regime, breadth, pool, Market Monitor nostro); jsyms è quello di Jeff per le
-    # idee di trade; jeff_only = titoli che Martin non scarica (prefiltro 30-50M$, utility e staples)
-    jsyms, jeff_only = [], []
-    if C.JEFF:
-        syms = [s for s in syms if (uni[s].get("dv3m") or C.SCREEN_DV_PREFILTER) >= C.SCREEN_DV_PREFILTER]
-        jsyms = [s for s, v in uni.items() if (v.get("quote_type") or "EQUITY") == "EQUITY" and s not in C.JEFF_EXCLUDED_TICKERS
-                 and ind.get(s, {}).get("industry") not in C.JEFF_EXCLUDED_INDUSTRIES]
-        jeff_only = sorted(set(jsyms) - set(syms))
-        NON_STOCK.add(C.JEFF_SPX)
+        industry = D.build_industry_map()
+    except Exception as e:                  # senza mappa la lista si fa lo stesso, solo senza forza del gruppo
+        log.warning("mappa industrie non disponibile: %s", e)
+        industry = {}
+    syms = set(meta) | D.extra_symbols()
+    start = (as_of - timedelta(days=800)).isoformat()
+    from . import themes_map as TM
     try:
         tmap = TM.refresh()
     except Exception as e:
         log.warning("mappa temi: %s", e)
         tmap = {}
-    theme_etf_syms = sorted({e for v in (tmap.get("theme_etfs") or {}).values() for e in v})
-    NON_STOCK.update(theme_etf_syms)             # gli ETF dei temi servono solo come contesto (blocco settore forte)
-    lst = C.THEME_SOURCE == "lst"
-    basket_syms = sorted({t for v in (tmap.get("baskets") or {}).values() for t in v}) if lst else []
-    sset = set(syms) | set(jeff_only)                # [JEFF] (Martin: set(syms))
-    basket_extra = [t for t in basket_syms if t not in sset and t not in NON_STOCK]   # fuori universo: solo per i basket
-    NON_STOCK.update(basket_extra)
-    start = (as_of - timedelta(days=C.DAILY_HISTORY_DAYS)).isoformat()
-    daily = D.download_daily(syms + jeff_only + sorted(NON_STOCK), start, as_of)      # [JEFF] + jeff_only
-    q = daily.get("QQQ")
-    if q is None or q.index[-1].date() != as_of:
-        from collections import Counter
-        last = Counter(str(df.index[-1].date()) for df in daily.values())
-        raise SystemExit(f"QQQ senza la barra del {as_of} (QQQ: {None if q is None else q.index[-1].date()}; "
-                         f"ultime date dell'universo: {last.most_common(3)}): dati non pronti, non invento la lista")
-    spx = None
-    if C.JEFF:                                   # [JEFF] riferimento dell'RS Rating di Jeff
-        spx = daily.get(C.JEFF_SPX)
-        if spx is None or spx.index[-1].date() != as_of:
-            raise SystemExit(f"{C.JEFF_SPX} senza la barra del {as_of}: dati non pronti, non invento la lista")
-    jset = set(jsyms)
+    # ETF dei temi (classifica sui loro 7 fattori, come Martin 16/10) e SPY (riferimento di Ratatouille)
+    tetf = sorted({e for v in (tmap.get("theme_etfs") or {}).values() for e in v})
+    if C.THEME_SOURCE == "lst":             # titoli dei basket LST fuori universo: solo per i temi, mai candidati [21/10]
+        tetf = sorted({t for v in (tmap.get("baskets") or {}).values() for t in v} - set(syms))
+    from .martin_breadth import MEGA_CAPS            # breadth alla Martin nella card [ANDREA 21/10]
+    idx_syms = [x for x in dict.fromkeys(list(C.REGIME_INDICES) + [C.BASKET_BENCHMARK] + tetf + ["QQQ", "IWM"] + list(MEGA_CAPS))
+                if x not in syms]
+    daily = D.download_daily(list(syms) + ["^GSPC"] + idx_syms, start, as_of)
+    spx = daily.get("^GSPC")
+    if spx is None or spx.index[-1].date() != as_of:
+        raise SystemExit(f"S&P 500 senza la barra del {as_of}: dati non pronti, non invento la lista")
+
     metrics, stale = {}, []
     for s, df in daily.items():
+        if s == "^GSPC" or s in idx_syms:
+            continue
         if df.index[-1].date() != as_of:
             stale.append(s)
             continue
         try:
-            jm = JF.metrics(df, spx.Close) if s in jset else {}          # [JEFF] misure di Jeff (chiavi j_*)
-            m = E.compute_metrics(df, q, extra_edges=JF.liquid(jm)) if jm else E.compute_metrics(df, q)
-        except Exception as e:
+            m = E.compute_metrics(df, spx.Close)
+        except Exception as e:  # dati sporchi su un titolo: non blocca la lista
             log.warning("metriche %s: %s", s, e)
             continue
         if m:
-            m.update(jm)
             metrics[s] = m
-    jo = set(jeff_only)                          # [JEFF] fuori dalle misure di mercato di Martin
-    liquid = sorted((s for s, m in metrics.items() if s not in NON_STOCK and s not in jo and m["dv5"] >= C.DV_MIN), key=lambda s: -metrics[s]["dv5"])
-    tliq = sorted((s for s, m in metrics.items() if s not in NON_STOCK and s not in jo and m["dv5"] >= C.THEME_DV_MIN), key=lambda s: -metrics[s]["dv5"])
-    proxies = [e for v in (tmap.get("proxy_etfs") or {}).values() for e in v if e in metrics]   # ETF senza azioni
-    tetfs = [e for e in theme_etf_syms if e in metrics and (metrics[e].get("dv20") or 0) >= C.THEME_ETF_DV_MIN]
-    extra = [e for e in dict.fromkeys(proxies + tetfs)]
-    closes = pd.DataFrame({s: daily[s].Close for s in tliq[:C.THEME_CLOSES_MAX] + extra}).iloc[-max(C.CORR_WINDOWS) - 2:]
-    doc = dict(session=session, as_of=as_of, uni=uni, ind=ind, metrics=metrics, stale=stale, closes=closes,
-               qqq_close=q.Close, earnings={}, basket_extra=basket_extra, jeff_only=jeff_only)     # [JEFF] jeff_only
-    if lst:                    # basket LST: 7 fattori su TUTTI i titoli dei basket, oggi e 5 sedute fa [RONIN 21/10]
-        try:
-            bsyms = [t for t in basket_syms if t in metrics]
-            bench = daily.get(C.BASKET_BENCHMARK)
-            doc["basket_scores"] = BS.universe_scores(daily, bsyms, bench)
-            cut = {t: daily[t].iloc[:-5] for t in bsyms + [C.BASKET_BENCHMARK] if t in daily}
-            doc["basket_scores_prev"] = BS.universe_scores(cut, bsyms, cut.get(C.BASKET_BENCHMARK))
-            log.info("basket LST: %d titoli con punteggio su %d", len(doc["basket_scores"]), len(basket_syms))
-        except Exception as e:
-            log.warning("punteggi a 7 fattori dei basket: %s", e)
-    tsyms = [s for s in tliq if metrics[s]["close"] >= C.PRICE_MIN] + proxies
-    if not lst:
-        try:                   # classifica dei temi come i basket di Ratatouille: 7 fattori per titolo [RONIN 16/10]
-            doc["basket_scores"] = BS.universe_scores(daily, tsyms, daily.get(C.BASKET_BENCHMARK))
-        except Exception as e:
-            log.warning("punteggi a 7 fattori: %s", e)
-        try:                   # titoli dei temi con lo stesso metodo degli ETF (performance vs SPY + livelli) [RONIN 17/10]
-            doc["stock_perf_scores"] = BS.etf_perf_scores(daily, tsyms, daily.get(C.BASKET_BENCHMARK))
-        except Exception as e:
-            log.warning("punteggi a 7 fattori: %s", e)
-        try:                   # gli stessi 7 fattori sugli ETF dei temi: il tema si misura sul suo ETF [RONIN 16/10]
-            fn = BS.etf_perf_scores if C.THEME_RANKING == "etf_perf" else BS.universe_scores   # [RONIN 17/10]
-            doc["etf_scores"] = fn(daily, tetfs, daily.get(C.BASKET_BENCHMARK))
-            # stessi punteggi 5 sedute fa: variazione d5 e stadio del tema come Ratatouille [RONIN 16/10]
-            cut = {e: daily[e].iloc[:-5] for e in tetfs + [C.BASKET_BENCHMARK] if e in daily}
-            doc["etf_scores_prev"] = fn(cut, tetfs, cut.get(C.BASKET_BENCHMARK))
-        except Exception as e:
-            log.warning("punteggi a 7 fattori ETF: %s", e)
-    if C.JEFF:                 # [JEFF] universo, candidati, PEG, utili e EMA50 a 1 ora di Jeff
-        doc["jeff"] = jeff_compute(daily, metrics, uni, ind, jsyms, session, as_of)
-        doc["earnings"] = doc["jeff"]["earnings"]["next"]
-    else:
-        cand = [s for s in liquid if E.long_candidate(s, metrics[s])[0] or E.short_candidate(s, metrics[s])[0]]
-        try:
-            doc["earnings"] = D.next_earnings(cand, session)
-        except Exception as e:
-            log.warning("utili: %s", e)
-    doc["mm"] = D.fetch_market_monitor()[:60]          # 60: la lettura di Pradeep guarda 30 sedute indietro
-    try:                                            # backup: Market Monitor calcolato sui nostri titoli [RONIN 15/10]
-        own = B.own_rows({s: daily[s] for s in syms if s in daily})
-        doc["mm_own"] = B.update(own, B.nel_archive())[:30]
-    except Exception as e:
-        log.warning("Market Monitor nostro: %s", e)
-        doc["mm_own"] = []
-    try:                       # pool di Martin: le sue liste ricostruite [RONIN 17/10o]
-        from . import pool as PL
-        doc["pool"] = PL.pool_breadth(daily, [s for s in syms if s in daily and s not in NON_STOCK], q.index)
-    except Exception as e:
-        log.warning("pool di Martin: %s", e)
-        doc["pool"] = None
-    if C.GROUP_ETF:              # gruppo del titolo e grafico del suo ETF [RONIN 28/10a]
-        try:
-            from . import gruppo as GR
-            gsyms = [s for s, m in metrics.items() if s not in NON_STOCK and m["dv5"] >= min(C.LONG_DV_MIN, C.SHORT_DV_MIN)]
-            if C.JEFF:         # [JEFF] anche i titoli dell'universo di Jeff
-                gsyms = sorted(set(gsyms) | set(doc["jeff"]["universe"]))
-            doc["gruppo"] = GR.morning(daily, gsyms, as_of)
-        except Exception as e:
-            log.warning("gruppi ETF: %s", e)
-            doc["gruppo"] = {}
-    doc["theme_map"] = tmap        # nella cache: lista e card usano la stessa lettura
-    work.mkdir(parents=True, exist_ok=True)
+
+    # pre-universo numerico (mcap e settore si verificano dopo con info fresche)
+    num_ok = {s for s, m in metrics.items()
+              if m["adv"] and m["adv"] >= C.ADV_MIN and m["atr_pct"] >= C.ATR_PCT_MIN
+              and (meta.get(s, {}).get("mcap") or C.MCAP_MIN + 1) > C.MCAP_MIN}
+    cand = {s for s in num_ok if metrics[s]["above_sma200"] and (metrics[s]["rs"] or 0) >= C.STALK_RS_THEME_MIN}
+    for s in cand:           # lettura D (canale rialzista): solo sui candidati, ~0,04 s a titolo
+        add_channel(metrics[s], daily[s])
+    for s in num_ok:         # reazione ritardata agli utili: anche RS 60-69 (Jeff prende ACN a RS 66)
+        m = metrics[s]
+        if (m.get("rs") or 0) >= C.PEG["rs_min"] and m.get("sma200") and m["close"] >= m["sma200"] - C.PEG["sma200_tol_atr"] * m["atr"]:
+            try:
+                m.update(PG.read_peg(daily[s], m["atr"]))
+            except Exception as e:
+                log.warning("PEG %s: %s", s, e)
+    info: dict = {}          # mcap/settore freschi: si scaricano in build() solo per i nomi che entrano in lista
+    s65 = D.ma_65m(cand, last_sessions(as_of, C.MA65_SESSIONS))
+    # SHORT [RONIN 12/10]: stesse metriche sul grafico capovolto, per i titoli sotto la SMA200
+    short_m, s65s = {}, {}
+    if C.SHORT["enabled"]:
+        from . import short as SH
+        for s in sorted(num_ok):                     # SMA200 non è un gate per lo short [RONIN 12/10]
+            try:
+                m = SH.short_metrics(daily[s], spx.Close)
+            except Exception as e:
+                log.warning("metriche short %s: %s", s, e)
+                continue
+            if m:
+                short_m[s] = m
+        pre_s = [s for s, m in short_m.items()
+                 if len([g for g in SH.numeric_open(m, None) if g != "sma65"]) <= C.SHORT["pre_max_numeric_open"]]
+        if pre_s:
+            s65s = D.ma_65m(pre_s, last_sessions(as_of, C.MA65_SESSIONS))
+    themes, reg = themes_and_regime(daily, spx, metrics, tmap, as_of,
+                                    {s: daily[s] for s in syms if s in daily})
+    doc = dict(session=session, as_of=as_of, meta=meta, metrics=metrics, info=info, sma65=s65, industry=industry,
+               n_downloaded=len(daily) - 1 - len(idx_syms), stale=stale, num_ok=sorted(num_ok), cand=sorted(cand),
+               short_metrics=short_m, sma65_short=s65s, themes=themes, regime=reg)
     cache.write_bytes(pickle.dumps(doc))
     return doc
 
 
-def jeff_compute(daily: dict, metrics: dict, uni: dict, ind: dict, jsyms: list[str], session: date, as_of: date) -> dict:
-    """[JEFF 28/10] Universo di Jeff, candidati long (regole di Martin senza quelle che Jeff sostituisce), PEG, utili da
-    tutte le fonti e EMA50 a 1 ora dei candidati (gate 5). Gira con compute(), quindi finisce nella cache della card."""
-    universe, out_universe = [], {}
-    for s in jsyms:
-        m = metrics.get(s)
-        if not m or "j_close" not in m:
-            continue
-        why = JF.universe_reason(s, m, uni.get(s), (ind.get(s) or {}).get("industry"))
-        if why:
-            out_universe[s] = why
-        else:
-            universe.append(s)
-    cand, near = [], []
-    for s in universe:
-        ok, info = E.long_candidate(s, metrics[s])
-        if ok:
-            cand.append(s)
-        elif E.open_checks(info) == ["confluence"]:          # "a un passo" (come in build): servono anche le sue date
-            near.append(s)
-    peg = []
-    for s in universe:
-        m = metrics[s]
-        if PG.candidate(m):
-            try:
-                m.update(PG.read_peg(daily[s], m["j_atr"]))
-            except Exception as e:
-                log.warning("PEG %s: %s", s, e)
-            if m.get("peg_ok"):
-                peg.append(s)
-    names = sorted(set(cand + near + peg))
+def themes_and_regime(daily: dict, spx, metrics: dict, tmap: dict, as_of, stocks: dict) -> tuple[dict, dict]:
+    """Temi (themes.py) e regime di mercato come Martin-coach (regime.py) [RONIN 13/10, 15/10]. Se una fonte non
+    risponde la lista si fa lo stesso: senza temi nessuno esce per il tema. Market Monitor: foglio Stockbee → NEL →
+    archivio nel repo → replica completa nostra (notturna) → calcolo sui titoli della lista, calibrati su Stockbee."""
+    from . import breadth as B
+    from . import regime as RG
+    from . import themes as TH
     try:
-        raw = D.fetch_earnings(names, since=as_of) if names else {}
+        themes = TH.build(daily, spx.Close, set(metrics), metrics, tmap)
     except Exception as e:
-        log.warning("utili: %s", e)
-        raw = {}
-    ec = JF.earnings_check(names, raw, uni, session)
+        log.warning("temi non disponibili: %s", e)
+        themes = {"rows": [], "ticker": {}, "error": str(e)}
+    mm_rows = []
     try:
-        ma = JF.ma_1h([s for s in cand if s not in ec["out"]], as_of)
+        mm_rows = RG.fetch_market_monitor()
     except Exception as e:
-        log.warning("EMA50 a 1 ora: %s", e)
-        ma = {}
-    log.info("Jeff: universo %d (fuori %d), candidati long %d, a un passo %d, PEG %d, fuori per utili %d",
-             len(universe), len(out_universe), len(cand), len(near), len(peg), len(ec["out"]))
-    return dict(universe=universe, out_universe=out_universe, cand=cand, near=near, peg=peg, earnings_raw=raw,
-                earnings=ec, ma1h={s: v.get("ma1h") for s, v in ma.items()},
-                ma1h_err={s: v["err"] for s, v in ma.items() if "err" in v})
-
-
-# ------------------------------------------------------------------ lista
-def _hist(prefix: str, before: date, n: int) -> dict[str, object]:
-    files = sorted(p for p in C.HISTORY.glob(f"{prefix}_*.json") if p.stem.split("_", 1)[1] < before.isoformat())
-    return {p.stem.split("_", 1)[1]: json.loads(p.read_text(encoding="utf-8")) for p in files[-n:]}
-
-
-def build(doc: dict, review: dict) -> dict:
-    session, as_of, M = doc["session"], doc["as_of"], doc["metrics"]
-    uni, ind = doc["uni"], doc["ind"]
-    NON_STOCK.update(e for v in ((doc.get("theme_map") or {}).get("theme_etfs") or {}).values() for e in v)
-    NON_STOCK.update(doc.get("basket_extra") or [])     # titoli dei basket fuori universo: solo per i temi [21/10]
-    jo = set(doc.get("jeff_only") or [])                 # [JEFF] titoli solo di Jeff: fuori dalle misure di mercato
-    jd = doc.get("jeff") if C.JEFF else None             # [JEFF] universo, candidati, PEG, utili e EMA50 1h di Jeff
-    liquid = {s: m for s, m in M.items() if s not in NON_STOCK and s not in jo and m["dv5"] >= C.DV_MIN and m["close"] >= C.PRICE_MIN}
-    lists = {s: m["list"] for s, m in liquid.items()}
-    nL = sum(v == "Leading" for v in lists.values())
-    nG = sum(v == "Lagging" for v in lists.values())
-    share = nL / (nL + nG) if (nL + nG) else None
-    prev_lists = _hist("lists", as_of, 5)
-    share_prev = None
-    if prev_lists:
-        old = next(iter(prev_lists.values()))
-        oL = sum(v == "Leading" for v in old.values())
-        oG = sum(v == "Lagging" for v in old.values())
-        share_prev = oL / (oL + oG) if (oL + oG) else None
-    last_lists = list(prev_lists.values())[-1] if prev_lists else {}
-    upgrades = sorted(s for s, v in lists.items() if v == "Leading" and last_lists.get(s) in ("Mediocre", "Lagging"))
-    downgrades = sorted(s for s, v in lists.items() if v == "Lagging" and last_lists.get(s) in ("Mediocre", "Leading"))
-
-    # scan
-    potent = sorted((s for s, m in liquid.items() if m["close"] > m["e50"] and (m["ret1"] or 0) >= C.POTENT_MIN_RET),
-                    key=lambda s: -(liquid[s]["ret1"] or 0))[:C.POTENT_TOP]
-    leader = []
-    if session.weekday() == 0:
-        leader = sorted(liquid, key=lambda s: -(liquid[s]["ret21"] or -999))[:C.LEADER_TOP]
-    potent_hist = {k: v for k, v in _hist("potent", as_of, 4).items()}
-    potent_hist[as_of.isoformat()] = potent
-
-    # temi: solo ETF tematici (gruppi della lista di Andrea + partecipazioni) e modifiche a mano, sui titoli >= 75M$;
-    # niente industria Yahoo né cluster di correlazione: chi non è in un ETF resta senza tema [RONIN 15/10]
-    tliquid = {s: m for s, m in M.items() if s not in NON_STOCK and s not in jo and m["dv5"] >= C.THEME_DV_MIN and m["close"] >= C.PRICE_MIN}   # [JEFF] jo
-    tmap = doc.get("theme_map") or TM.refresh()          # cache di prima della mappa: si usa quella salvata
-    if "theme_etfs" not in tmap:                         # cache con la vecchia mappa a basket: si rilegge
-        tmap = TM.refresh()
-    mapped = TM.groups_from_map(tmap, set(tliquid))
-    map_groups = {k: v for k, v in mapped.items() if len(v) >= C.MAP_THEME_MIN_MEMBERS}
-    in_map = {s for v in mapped.values() for s in v}
-    groups: dict[str, list[str]] = dict(map_groups)
-    # ETF senza azioni (GLD, IBIT, USO, TLT...): l'ETF stesso è membro del tema; un tema fatto solo di questi ETF
-    # entra in classifica anche con un solo ETF [RONIN 15/10, Andrea]
-    tmetrics = dict(tliquid)
-    for th, es in (tmap.get("proxy_etfs") or {}).items():
-        px = [e for e in es if e in M and M[e]["dv5"] >= C.THEME_DV_MIN]
-        if not px:
-            continue
-        tmetrics.update({e: M[e] for e in px})
-        groups[th] = mapped.get(th, []) + px
-    theme_etfs = tmap.get("theme_etfs") or {}
-    esc = doc.get("etf_scores")
-    if C.THEME_SOURCE == "lst" and tmap.get("baskets"):
-        # basket LST [RONIN 21/10, Andrea]: classifica = media equal-weight del Final_Score a 7 fattori di tutti i
-        # titoli del basket (nessun filtro di liquidità), d5 sul punteggio di 5 sedute fa
-        groups = {b: [t for t in dict.fromkeys(mem) if t in M] for b, mem in tmap["baskets"].items()}
-        tmetrics = {t: M[t] for v in groups.values() for t in v}
-        bsc = doc.get("basket_scores")
-        rows = T.score_groups(groups, tmetrics, doc["closes"], doc["qqq_close"], potent_hist, min_members=C.LST_MIN_SCORED,
-                              bscores=bsc, bscores_prev=doc.get("basket_scores_prev"))
-        rows = [r for r in rows if (r.get("n_scored") or 0) >= C.LST_MIN_SCORED]
-        for i, r in enumerate(rows):
-            r["rank"] = i + 1
-        T.add_rs(rows)
-    elif C.THEME_RANKING in ("etf", "etf_perf") and esc is not None and len(esc):
-        # il tema si misura direttamente sui suoi ETF [RONIN 16/10, Andrea]; i titoli restano membri (tema del titolo)
-        emet = dict(tmetrics)
-        emet.update({e: M[e] for es in theme_etfs.values() for e in es if e in M})
-        rows = T.score_groups(groups, emet, doc["closes"], doc["qqq_close"], potent_hist, bscores=esc,
-                              etfs={th: es for th, es in theme_etfs.items()}, bscores_prev=doc.get("etf_scores_prev"))
-    else:                      # cache senza punteggi ETF, o altro metodo scelto in config
-        bsc = doc.get("basket_scores") if C.THEME_RANKING in ("basket", "etf") else None
-        rows = T.score_groups(groups, tmetrics, doc["closes"], doc["qqq_close"], potent_hist, min_members=1, bscores=bsc)
-    rows = T.add_phase(rows, T.load_prev_ranks(C.HISTORY, as_of))
-    origin = tmap.get("themes") or {}
-    for r in rows:
-        r["source"] = origin.get(r["theme"], "etf")
-    t_of = T.ticker_theme(rows, exclude=frozenset(TM.GENERIC_GROUPS))   # i generici non sono mai il tema di un titolo
-    ranked = {r["theme"] for r in rows}
-    for s, info in (tmap.get("tickers") or {}).items():         # tema principale della mappa, se è in classifica
-        if s in M and s not in NON_STOCK and info["primary"] in ranked:     # anche sotto i 75M$ dei temi [16/10]
-            t_of[s] = info["primary"]
-    try:                                                         # pari merito tra temi: decide l'andamento
-        ties = {s: [th for th in info["tied"] if th in ranked] for s, info in (tmap.get("tickers") or {}).items()
-                if s in tliquid and info.get("tied")}
-        t_of.update(T.break_ties(doc["closes"], map_groups, {s: v for s, v in ties.items() if len(v) > 1},
-                                 min_members=C.MAP_THEME_MIN_MEMBERS))
+        log.warning("Market Monitor non disponibile: %s", e)
+    own = []
+    try:                                  # ogni giorno, come Martin: archivio e calibrazione restano aggiornati
+        own = B.update(B.own_rows(stocks), B.nel_archive())
     except Exception as e:
-        log.warning("pari merito temi: %s", e)
-    try:
-        theme_props = T.proposals(doc["closes"], map_groups, [s for s in tliquid if s not in in_map],
-                                  min_corr=C.THEME_PROPOSAL_CORR, min_members=C.MAP_THEME_MIN_MEMBERS)[:40]
-    except Exception as e:
-        log.warning("proposte temi: %s", e)
-        theme_props = []
-    try:                       # breadth alla Martin per la card [RONIN 17/10]
-        potent_raw = [x for x, m in liquid.items() if m["close"] > m["e50"] and (m["ret1"] or 0) >= C.POTENT_MIN_RET]
-        mbreadth = E.martin_breadth(M, liquid, lists, next(iter(prev_lists.values())) if prev_lists else None,
-                                    potent_raw, t_of, list(prev_lists.values()))
-    except Exception as e:
-        log.warning("breadth alla Martin: %s", e)
-        mbreadth = None
-    t_pct = T.theme_rank_pct(rows)
-    t_phase = {r["theme"]: r["phase"] for r in rows}
-    t_stage = {r["theme"]: r["stage"] for r in rows if r.get("stage")}
-
-    # regime
-    idx = {k: E.index_state(M.get(k)) for k in C.INDICES}
-    fb = J.feedback()
-    mm_rows = doc.get("mm")
-    if mm_rows is None:                             # cache di prima del Market Monitor
-        mm_rows = D.fetch_market_monitor()[:60]
-    full_rows = B.full_backup()                     # replica nostra: qui c'è lo studio 20% (Stockbee non lo pubblica)
-    up20 = {r["date"]: {"up20w": r.get("up20w"), "down20w": r.get("down20w")} for r in full_rows if r.get("up20w") is not None}
-    mm = E.market_monitor(mm_rows, as_of, up20)
-    if mm is None:      # Stockbee/NEL senza la riga del giorno: replica nostra (universo completo, calcolata la
-        #                 sera prima), poi il calcolo sui titoli della lista; entrambi calibrati su Stockbee [RONIN 15/10]
-        for mrows in (full_rows, doc.get("mm_own") or []):     # mrows: "rows" sono i temi [fix 19/10]
-            mm = E.market_monitor(mrows, as_of, up20)
+        log.warning("Market Monitor nostro: %s", e)
+    full_rows = B.full_backup()            # replica nostra: qui c'è lo studio 20% (Stockbee non lo pubblica)
+    up20 = {r["date"]: {"up20w": r.get("up20w"), "down20w": r.get("down20w")} for r in full_rows
+            if r.get("up20w") is not None}
+    mm = RG.market_monitor(mm_rows, as_of, up20)
+    if mm:
+        mm["source"] = "Stockbee"
+    else:
+        for rows in (full_rows, own):
+            mm = RG.market_monitor(rows, as_of, up20)
             if mm:
                 mm["source"] = "own"
                 break
-    else:
-        mm["source"] = "Stockbee"
-    reg = E.regime(idx, share, share_prev, fb, mm)
-    if C.BIAS_SOURCE == "pool" and doc.get("pool"):  # liste del pool di Martin + feedback [RONIN 17/10o]
-        reg = E.regime_pool(doc["pool"], J.signal_feedback())
-    elif C.BIAS_SOURCE in ("martin", "pool"):        # liste dell'universo + feedback [RONIN 17/10j]
-        reg = E.regime_martin(mbreadth, J.signal_feedback())
-    try:                                            # parte del regime della card: ±4% a 20 giorni, grafico 20% e T2108
-        mm_hist = BC.mm_history(list(mm_rows) + B.nel_archive(), full_rows, as_of)
+    pool = None
+    try:                                   # pool monitorato e sue liste [ANDREA 20/10, come il bot di Martin]
+        from . import pool as PL
+        ix = daily.get(C.REGIME_INDICES[0])
+        pool = PL.pool_breadth(daily, list(stocks), ix.index) if ix is not None else None
+    except Exception as e:
+        log.warning("pool monitorato: %s", e)
+    idxs = {k: RG.index_state(daily.get(k)) for k in C.REGIME_INDICES}
+    reg = RG.regime_pool(pool, idxs, mm) if C.BIAS_SOURCE == "pool" else RG.regime(idxs, mm)
+    # studio 20% di Pradeep [ANDREA 20/10, dal bot di Martin]: oltre U20_LONG_MAX titoli +20% in 5 giorni il mercato è
+    # surriscaldato e i breakout non tengono, quindi oggi niente nuovi long (la lista resta pubblicata, senza Focus)
+    s20 = up20.get(as_of.isoformat() if hasattr(as_of, "isoformat") else str(as_of)) or {}
+    if C.U20_FILTER and (s20.get("up20w") or 0) > C.U20_LONG_MAX:
+        reg["u20_block"] = True
+        reg["why"].insert(1, f"20% study: {s20['up20w']:.0f} stocks up 20% in 5 days (max {C.U20_LONG_MAX}): no new longs")
+    if C.U20_FILTER and (s20.get("down20w") or 0) > C.D20_SHORT_MAX:     # lato short: vendita già esaurita
+        reg["d20_block"] = True
+        reg["why"].insert(1, f"20% study: {s20['down20w']:.0f} stocks down 20% in 5 days (max {C.D20_SHORT_MAX}): no new shorts")
+    if mm and mm.get("source") == "own":
+        reg["why"].insert(0, "Market Monitor: own calculation (Stockbee unavailable)")
+    from . import breadth_chart as BC
+    try:                                   # parte del regime della card: ±4% a 20 giorni, grafico 20% e T2108
+        reg["mm_hist"] = BC.mm_history(list(mm_rows) + B.nel_archive(), full_rows, as_of)
     except Exception as e:
         log.warning("storico Market Monitor per la card: %s", e)
-        mm_hist = []
-    rev = E.flow_reversal(mm_hist) if (mm_hist and C.STOCKBEE_IN_CARD) else None   # potential trend reversal [16/10; tolto 19/10a]
+        reg["mm_hist"] = []
+    rev = RG.flow_reversal(reg["mm_hist"]) if reg["mm_hist"] else None      # potential trend reversal
+    reg["reversal"] = rev
     if rev:
         reg["why"].insert(0, f"potential trend reversal: ±4% flow turned to {rev['direction']} on {rev['date']} "
                              f"(day {rev['day']} of {C.REVERSAL_DAYS})")
-    if mm and mm.get("source") == "own":
-        if C.STOCKBEE_IN_CARD:
-            reg["why"].insert(0, "Market Monitor: own calculation (Stockbee unavailable)")
-
-    # candidati
-    earn = doc.get("earnings") or {}
-    block_days = {d.isoformat() for d in sessions_from(session, C.EARNINGS_BLOCK_SESSIONS)}
-    win = sorted(d for d in up20 if d <= as_of.isoformat())[-C.PB_UP20_WINDOW:]
-    up20_hi = max([up20[d].get("up20w") or 0 for d in win] or [0])
-    down20_hi = max([up20[d].get("down20w") or 0 for d in win] or [0])
-    ok_stage = {"long": set(C.STAGE_LONG) | ({"FADING"} if down20_hi >= C.STAGE_FADING_LONG_DOWN20 else set()),
-                "short": set(C.STAGE_SHORT)}            # FADING sempre aperto agli short [RONIN 16/10]
-
-    def stage_ok(side: str, th: Optional[str]) -> bool:
-        """Stadio del tema adatto al lato [RONIN 16/10, Andrea]: long LEADING/BUILDING, short SLIPPING/WEAK, FADING
-        agli short con +20% >= 200 e ai long con -20% >= 200. Senza tema o senza stadio: nessun filtro."""
-        st = t_stage.get(th) if th else None
-        if st is None:
-            return not C.STAGE_REQUIRE_THEME
-        return st in ok_stage[side]
-
-    def strong_sector(s: str) -> Optional[str]:
-        """Mai shortare il settore forte né il suo titolo più debole [ML; RONIN 14/10]: stadio del tema non adatto
-        agli short (dal 16/10; prima: tema nella metà alta della classifica), o ETF di settore del tema sopra la EMA9
-        weekly in salita."""
-        th = t_of.get(s)
-        if t_stage:
-            if not stage_ok("short", th):
-                return "theme_stage"
-        elif C.SHORT_BLOCK_STRONG_THEME and th in t_pct and t_pct[th] >= C.SHORT_BLOCK_THEME_PCT:   # tolto 19/10e
-            return "strong_theme"
-        etf = next((e for e in theme_etfs.get(th, []) if e in M), None) if th else None   # ETF del tema (lista di Andrea)
-        em = M.get(etf) if etf else None
-        if C.SHORT_BLOCK_ETF_W9_RISING and em and em["w_close"] > em["ew9"] and em["ew9_slope"] > 0:
-            return "strong_sector_etf"
-        return None
-
-    cands, near = [], []
-    pool = {s: m for s, m in M.items() if s not in NON_STOCK and m["close"] >= C.PRICE_MIN
-            and m["dv5"] >= min(C.LONG_DV_MIN, C.SHORT_DV_MIN)}          # 50M$ per i due lati [RONIN 16/10]
-    jeff_earn_out: dict[str, str] = {}
-    if jd is not None:         # [JEFF] idee di trade solo dall'universo di Jeff (liquidità, ATR%, esclusioni, mcap)
-        pool = {s: M[s] for s in jd["universe"] if s in M and s not in NON_STOCK}
-    for s, m in pool.items():
-        if jd is not None and s in jd["earnings"]["out"]:   # [JEFF] utili nelle prossime 5 sedute: fuori da tutto
-            jeff_earn_out[s] = jd["earnings"]["out"][s]
-            continue
-        for side, fn in (("long", E.long_candidate), ("short", E.short_candidate)):
-            if jd is not None and side == "short" and C.JEFF_LONG_ONLY:      # [JEFF] solo long
-                continue
-            if side == "long" and m["dv5"] < C.LONG_DV_MIN and jd is None:    # [JEFF] con Jeff vale la sua liquidità
-                continue
-            ok, info = fn(s, m)
-            if side == "long" and t_stage:
-                info["checks"]["theme_stage"] = stage_ok("long", t_of.get(s))
-                ok = all(info["checks"].values())
-            if side == "short":
-                blocked = strong_sector(s)
-                if blocked and blocked != "theme_stage" and info.get("short_type") == "top ex-leader" \
-                        and C.EXLEADER_IGNORES_STRONG_SECTOR:
-                    blocked = None              # SNDK, MU: ex-leader in un tema ancora forte [RONIN 14/10]; lo stadio
-                    #                             del tema vale anche per loro (FADING solo con +20% >= 200) [16/10]
-                info["checks"]["weak_sector"] = blocked is None
-                # la sola EMA9 come ingresso secondario se gli short stanno funzionando [ML, thread "Shorting"]
-                sec = (C.SHORT_EMA9_IF_FEEDBACK and (fb.get("short_r") or 0) >= C.FEEDBACK_GOOD_R
-                       and not info["checks"]["strong_level"] and info["checks"]["confluence"])
-                if sec:
-                    info["checks"]["strong_level"] = True
-                ok = all(info["checks"].values())
-            lv = info["level"]
-            row = dict(ticker=s, side=side, setup=f"pullback {side}", list=m["list"], level=E._r(lv["price"]) if lv else None,
-                       level_members=lv["members"] if lv else [], confluence=lv["count"] if lv else 0,
-                       dist_pct=E._r(lv["dist_pct"]) if lv else None, adr=E._r(m["adr"]), dv5=E._r(m["dv5"], 0),
-                       e9d=E._r(m["e9"]), atr_d=E._r(m.get("atr")),
-                       rs21=m.get("rs21"), rs63=m.get("rs63"), ext50_atr=E._r(m.get("ext50_atr")), theme=t_of.get(s), theme_phase=t_phase.get(t_of.get(s)),
-                       theme_stage=t_stage.get(t_of.get(s)),
-                       exch=uni.get(s, {}).get("exchange"), earnings=earn.get(s), open=E.open_checks(info),
-                       zone_levels=info.get("zone_levels", 0))
-            if side == "long" and m.get("hi_bo") and m["hi_bo"] > m["close"] \
-                    and (m["hi_bo"] / m["close"] - 1) * 100 <= C.BREAKOUT_MAX_DIST_ADR * (m["adr"] or 0):
-                row["breakout_level"] = E._r(m["hi_bo"])           # resistenza sopra per il breakout [RONIN 14/10]
-            if side == "short":
-                row.update(short_type=info.get("short_type"), weekly_healthy=info.get("weekly_healthy"),
-                           ema_spread_adr=E._r(info.get("ema_spread_adr")), secondary_ema9=bool(sec))
-                if sec:
-                    row["setup"] = "pullback short (EMA9, ingresso secondario)"
-                elif info.get("short_type") == "top ex-leader":
-                    row["setup"] = "short top ex-leader (metà rischio)"
-                elif info.get("short_type") == "trend che gira":
-                    row["setup"] = "short trend che gira"
-            if ok:
-                if row["earnings"] and row["earnings"] in block_days:
-                    row["open"] = ["earnings"]
-                    near.append(row)
-                else:
-                    cands.append(row)
-            elif len(row["open"]) == 1 and row["open"][0] in ("confluence", "not_extended", "below_ema9", "strong_level"):
-                near.append(row)
-    if jd is not None:         # [JEFF] misure di Jeff sulle righe (liquidità per l'ingresso, RS e VCP per card e giornale)
-        for r in cands + near:
-            r.update(adv50=E._r(M[r["ticker"]].get("j_adv"), 0), jeff_rs=M[r["ticker"]].get("j_rs"))
-    peg = peg_rows(jd, M, uni, t_of, t_phase, t_stage, earn) if jd is not None else []   # [JEFF] PEG delayed reaction
-
-    map_themes = {k: v.get("themes", []) for k, v in (tmap.get("tickers") or {}).items()}
-
-    def in_play(r) -> bool:
-        names = [r.get("theme") or ""] + list(map_themes.get(r["ticker"], []))
-        for n in names:
-            low = n.lower()
-            if any(re.search(r"(?<![a-z])" + re.escape(w) + r"(?![a-z])", low) for w in C.INPLAY_THEME_WORDS):
-                return True
-        return False
-
-    # consonanza dei timeframe [RONIN 16/10, Andrea]: weekly dal daily già scaricato, 60m dalle barre orarie
-    try:
-        hb = D.download_intraday([r["ticker"] for r in cands + near[:60] + peg], period="1mo", interval="60m")   # [JEFF] + PEG
-        hb = {k: v[v.index.date <= as_of] for k, v in hb.items()}       # solo barre chiuse fino ad as_of
+    try:                                   # parte del regime come la card di Martin [ANDREA 21/10]
+        from . import martin_breadth as MB
+        tof = {s: i.get("primary") for s, i in (tmap.get("tickers") or {}).items() if i.get("primary")}
+        reg["martin_breadth"] = MB.compute(daily, list(stocks), tof)
+        reg["pool_card"] = MB.pool_card(pool)
     except Exception as e:
-        log.warning("barre 60m per la consonanza: %s", e)
-        hb = {}
-    for r in cands + near + peg:                                       # [JEFF] + PEG
-        r["tf_w"] = E.weekly_align(M[r["ticker"]], r["side"])
-        r["tf_h"] = E.hourly_align(hb.get(r["ticker"]), r["side"])
-        r["tf_ok"] = 1 + (r["tf_w"] == 1) + (r["tf_h"] == 1)            # timeframe concordi su 3 (il daily c'è sempre)
-    # multi-edge [RONIN 22/10, Andrea; J Law METS]: M&T, S&R, PA/VOL, MTF, RS per ogni candidato (edges.py); la rotazione
-    # usa il quadrante del gruppo del titolo nel grafico RS settimana/mese dei basket
-    quad_of = {r["theme"]: r.get("quadrant") for r in rows if r.get("quadrant")}
-    if C.META_EDGES:
-        for r in cands + near + peg:                                   # [JEFF] + PEG
-            m = M[r["ticker"]]
-            try:
-                r.update(EDG.evaluate(r, m, quad_of.get(r.get("theme")),
-                                      EDG.hourly_levels(hb.get(r["ticker"]), r["side"], m["close"])))
-            except Exception as e:
-                log.warning("edge %s: %s", r["ticker"], e)
-                continue
-            L = (m.get("tl") or {}).get("up" if r["side"] == "long" else "down")
-            if L:              # trendline nel verso del trade: valore di ieri, tocchi, canale
-                r["tl"] = dict(value=E._r(L["value"]), touches=L["touches"], dist_pct=E._r(L["dist_pct"], 1),
-                               channel=bool(L.get("channel")))
-            z = HZM.near(m.get("hz") or [], r["level"], m["adr"]) if r.get("level") else None
-            if z:              # orizzontale (linea o area) entro 1 ADR dal livello d'ingresso [RONIN 23/10]
-                r["hz"] = dict(kind=z["kind"], price=E._r(z["price"]), lo=E._r(z["lo"]), hi=E._r(z["hi"]),
-                               touches=z["touches"])
-
-    def score(r):
-        # forza relativa: 3 mesi pesa più del mese [RONIN 20/10b, Andrea]
-        rs = (C.RS63_WEIGHT * max(-1.0, min(1.0, (r.get("rs63") or 0) / 40.0))
-              + C.RS21_WEIGHT * max(-1.0, min(1.0, (r["rs21"] or 0) / 20.0))) * (1 if r["side"] == "long" else -1)
-        if r["side"] == "long" and r.get("ext50_atr") is not None and r["ext50_atr"] <= C.LONG_EXT50_BONUS_ATR:
-            rs += C.LONG_EXT50_BONUS            # entro 4 ATR dalla SMA50: meglio [RONIN 20/10b, Andrea]
-        ema50 = C.SHORT_EMA50_BONUS if (r["side"] == "short" and "EMA50" in (r["level_members"] or [])) else 0  # [RONIN 14/10]
-        tight = 0.0
-        if r["side"] == "short" and r.get("ema_spread_adr") is not None:      # EMA strette = più rigetti [ML]
-            tight = C.SHORT_TIGHT_BONUS * max(0.0, 1 - r["ema_spread_adr"] / C.SHORT_EMA_TIGHT_ADR)
-        inplay = 0.0
-        if r["side"] == "short" and in_play(r):                          # temi in play prima dei difensivi [RONIN 14/10]
-            inplay = C.SHORT_INPLAY_BONUS
-        tw = C.THEME_WEIGHT_LONG if r["side"] == "long" else C.THEME_WEIGHT_SHORT   # [RONIN 14/10]
-        if not C.THEME_IN_SELECTION:       # [20/10, prova di Andrea] solo il setup: il tema non entra nel punteggio
-            tw, inplay = 0.0, 0.0
-        tf = (C.TF_WEEKLY_AGAINST if r.get("tf_w") == -1 else 0) + (C.TF_FULL_BONUS if r.get("tf_ok") == 3 else 0)
-        zone = C.ZONE_LEVEL_WEIGHT * max(0, (r.get("zone_levels") or 0) - (r["confluence"] or 0))   # più livelli [16/10]
-        return tw * t_pct.get(r["theme"], 0) + 0.5 * r["confluence"] + (1 if (r["dv5"] or 0) >= C.DV_TIER else 0) + rs + ema50 + tight + inplay + tf + zone
-    for r in cands:
-        r["score"] = round(score(r), 3)
-        rv = review.get(r["ticker"]) or {}
-        r["grade"] = rv.get("grade", "")
-        r["note"] = rv.get("note", "")
-        r["demoted"] = rv.get("demote")
-    for r in near:                                # anche i "a un passo" hanno il punteggio: servono all'ordine
-        r["score"] = round(score(r), 3)
-        r["grade"] = (review.get(r["ticker"]) or {}).get("grade", "")
-    for r in peg:                                 # [JEFF] PEG: stesso punteggio e stessa revisione dei candidati
-        r["score"] = round(score(r), 3)
-        rv = review.get(r["ticker"]) or {}
-        r["grade"], r["note"], r["demoted"] = rv.get("grade", ""), rv.get("note", ""), rv.get("demote")
-    # watchlist in ordine di qualità del setup [RONIN 16/10, Andrea]: punteggio del setup (tema, confluenza, liquidità,
-    # forza relativa, livello forte...); il voto della revisione solo a parità (Andrea: HUM C meglio di XP)
-    pool_m = (doc.get("pool") or {}).get("members") or {}
-    grp = doc.get("gruppo") if C.GROUP_ETF else None
-    if grp:
-        from . import gruppo as GR
-    for r in cands + near + peg:                                       # [JEFF] + PEG
-        r["in_pool"] = r["ticker"] in pool_m
-        if grp:                    # gruppo e ETF del gruppo [RONIN 28/10a]
-            r.update(GR.row_fields(r["ticker"], r["side"], grp))
-    if jd is not None:         # [JEFF] gli 8 gate del Focus di Jeff sui candidati long (chi non li chiude resta in tracking)
-        for r in cands:
-            if r["side"] == "long":
-                r.update(JF.gate_fields(M[r["ticker"]], (jd.get("ma1h") or {}).get(r["ticker"])))
-    jeff_ok = lambda r: (not C.JEFF) or bool(r.get("jeff_ok"))       # [JEFF] Focus solo con i gate di Jeff chiusi
-    # con POOL_PRIORITY prima i titoli del pool di Martin: lui fa trade dalla sua watchlist [RONIN 17/10p]
-    # multi-edge [RONIN 22/10]: con META_RANK a parità di pool prima i setup con più edge (tutti, o solo quelli del lato
-    # con META_RANK_MODE "side"), poi il punteggio
-    def edge_rank(r) -> int:
-        if not C.META_RANK:
-            return 0
-        if C.META_RANK_MODE == "side":
-            return -sum(k in (r.get("edges") or []) for k in C.META_SIDE_EDGES.get(r["side"], ()))
-        return -(r.get("n_edges") or 0)
-    # [RONIN 28/10a] a parità di pool ed edge prima i titoli più forti (long) / più deboli (short) della media del gruppo
-    gfav = lambda r: -(r.get("group_fav") or 0) if (C.GROUP_ETF and C.GROUP_PREFER_RS) else 0
-    quality = lambda r: (0 if (not C.POOL_PRIORITY or r.get("in_pool")) else 1, edge_rank(r), gfav(r), -r["score"],
-                         {"A": 0, "B": 1, "": 2, "C": 3}.get(r.get("grade") or "", 2))
-    cands.sort(key=quality)
-    near.sort(key=quality)
-    sides = {"LONG": ("long",), "SHORT": ("short",), "MISTO": ("long", "short")}.get(reg["bias"], ())
-    # studio 20% [RONIN 20/10e, Andrea]: niente long se ieri più di U20_LONG_MAX titoli +20% in 5 giorni (mercato
-    # surriscaldato), niente short se più di D20_SHORT_MAX titoli -20%
-    s20 = up20.get(as_of.isoformat()) or {}
-    if C.U20_FILTER and (s20.get("up20w") or 0) > C.U20_LONG_MAX:
-        sides = tuple(x for x in sides if x != "long")
-        reg["why"].append(f"20% study up {s20['up20w']:.0f} > {C.U20_LONG_MAX}: no longs")
-    if C.U20_FILTER and (s20.get("down20w") or 0) > C.D20_SHORT_MAX:
-        sides = tuple(x for x in sides if x != "short")
-        reg["why"].append(f"20% study down {s20['down20w']:.0f} > {C.D20_SHORT_MAX}: no shorts")
-    cap = (C.MIXED_MAX_FOCUS if reg["bias"] == "MISTO" else C.LONG_MAX_FOCUS if sides == ("long",) else C.SHORT_MAX_FOCUS)
-    # [RONIN 28/10a] niente short con l'ETF del gruppo in trend su
-    gblock = lambda r: bool(C.GROUP_ETF and C.GROUP_SHORT_NOT_UP and r["side"] == "short" and r.get("group_up"))
-    for r in cands:
-        if gblock(r):
-            r["group_block"] = f"group ETF {r.get('group_etf')} in uptrend"
-    elig = [r for r in cands if r["side"] in sides and not r["demoted"] and (r.get("in_pool") or not C.POOL_FOCUS_ONLY)
-            and (not C.META_FILTER or (r.get("n_edges") or 0) >= C.META_MIN_EDGES) and not gblock(r)  # [RONIN 22/10, multi-edge]
-            and jeff_ok(r)]                                                                           # [JEFF]
-    focus = elig[:cap]                                                                # i migliori per punteggio
-    if reg["bias"] == "MISTO":       # [RONIN 19/10e, Andrea] MISTO: i migliori MIXED_FOCUS_PER_SIDE per lato (prima 3 in
-        #                              tutto: i long hanno punteggi più alti e prendevano tutti i posti, SNDK 8-9/10)
-        focus = ([r for r in elig if r["side"] == "long"][:C.MIXED_FOCUS_PER_SIDE]
-                 + [r for r in elig if r["side"] == "short"][:C.MIXED_FOCUS_PER_SIDE])
-    if rev and C.REVERSAL_SKIP_DAY1 and rev.get("day") == 1:      # giorno dell'inversione: si sta fuori
-        sides, focus = (), []
-    elif rev:                  # potential trend reversal: Focus pieni per i due lati [RONIN 16/10, Andrea]
-        sides = ("long", "short")
-        elig = [r for r in cands if not r["demoted"] and (not C.META_FILTER or (r.get("n_edges") or 0) >= C.META_MIN_EDGES)
-                and not gblock(r) and jeff_ok(r)]                                                     # [JEFF]
-        focus = ([r for r in elig if r["side"] == "long"][:C.LONG_MAX_FOCUS]
-                 + [r for r in elig if r["side"] == "short"][:C.SHORT_MAX_FOCUS])
-    if reg["bias"] == "SHORT" and not rev:           # altri short ad alto punteggio oltre gli 8 [RONIN 14/10]
-        focus += [r for r in elig[cap:] if r["score"] >= C.SHORT_FOCUS_EXTRA_MIN_SCORE][:C.SHORT_FOCUS_MAX - len(focus)]
-    for r in focus:
-        r["in_play"] = in_play(r) if r["side"] == "short" else None
-    # sincronia con QQQ ed ETF del tema all'ingresso [RONIN 17/10; ML: "titolo e mercato sulla stessa resistenza",
-    # 26/02; ALAB "da evitare" con l'ETF sulla sua 50, 05/08]: l'alert mostra dove stanno rispetto a 9/21 daily
-    sync_levels = {}
-    for k in ("QQQ",):
-        if k in M:
-            sync_levels[k] = {"e9": E._r(M[k]["e9"]), "e21": E._r(M[k]["e21"]), "e50": E._r(M[k]["e50"])}
-    for r in cands + peg:                                              # [JEFF] + PEG
-        es = [e for e in theme_etfs.get(r.get("theme") or "", []) if e in M]
-        if es:
-            e = max(es, key=lambda x: M[x].get("dv20") or 0)
-            r["sync_etf"] = e
-            sync_levels[e] = {"e9": E._r(M[e]["e9"]), "e21": E._r(M[e]["e21"]), "e50": E._r(M[e]["e50"])}
-    # lato opposto al regime: sempre i migliori (qualità), max 3, tracciati come ombra [RONIN 13/10]
-    counter = [dict(r, counter=True) for r in cands
-               if sides and r["side"] not in sides and not r["demoted"] and r.get("grade") != "C"
-               and (r.get("in_pool") or not C.POOL_FOCUS_ONLY)
-               and r["confluence"] >= C.COUNTER_MIN_CONFLUENCE
-               and (not C.META_FILTER or (r.get("n_edges") or 0) >= C.META_MIN_EDGES)
-               and jeff_ok(r)                                                                         # [JEFF]
-               and ((not C.THEME_IN_SELECTION or r["theme"] in t_pct and ((t_stage.get(r["theme"]) in ok_stage[r["side"]]) if t_stage   # stadio [16/10]
-                     else t_pct[r["theme"]] >= C.COUNTER_MIN_THEME_PCT))                # long: tema nella metà alta
-                    if r["side"] == "long" else
-                    (not C.SHORT_BLOCK_STRONG_THEME or (r["theme"] in t_pct and t_pct[r["theme"]] < C.SHORT_BLOCK_THEME_PCT)))
-               ][:C.COUNTER_MAX]        # short: niente requisito di tema debole dal 19/10e [Andrea]
-    fset = {r["ticker"] for r in focus} | {r["ticker"] for r in counter}
-    for r in peg:              # [JEFF] PEG: con il lato long chiuso dal regime gli alert sono solo informativi (trade ombra)
-        r["also_focus"] = r["ticker"] in fset
-        r["counter"] = "long" not in sides
-    # fakeout: gli altri candidati dal lato del regime, sotto controllo per il solo falso breakout/breakdown [16/10]
-    fake = [dict(r, fakeout=True, setup="failed breakdown long" if r["side"] == "long" else "failed breakout short") for r in cands
-            if C.FAKEOUT_WATCH and r["side"] in sides and r["ticker"] not in fset and not r["demoted"]][:C.FAKEOUT_MAX]
-    tracking = []
-    for r in cands:
-        if r["ticker"] not in fset and r["ticker"] not in tracking:
-            tracking.append(r["ticker"])
-    for r in near[:60]:                          # a un passo: anche loro solo nel file [RONIN 13/10]
-        if r["ticker"] not in fset and r["ticker"] not in tracking:
-            tracking.append(r["ticker"])
-    pot = potent if jd is None else [s for s in potent if s in set(jd["universe"]) and s not in jeff_earn_out]  # [JEFF]
-    for s in pot[:10]:                           # potent senza setup: in coda (qualità del setup sconosciuta)
-        if s not in fset and s not in tracking:
-            tracking.append(s)
-    side_of = {}
-    for r in cands + near[:60]:
-        side_of.setdefault(r["ticker"], r["side"])
-    tracking_long = [t for t in tracking if side_of.get(t, "long") == "long"]     # potent: lato long
-    stalk = []
-    if C.JEFF and C.JEFF_STALK:  # [JEFF 29/10] Stalk a voto alto: i candidati long fermati dai gate di Jeff, con più edge
-        stalk = [dict(r, stalk=True) for r in cands if r["side"] == "long" and r["ticker"] not in fset   # [JEFF]
-                 and not r["demoted"] and not r.get("jeff_ok")                                         # [JEFF]
-                 and (r.get("n_edges") or 0) >= C.JEFF_STALK_MIN_EDGES][:C.JEFF_STALK_MAX]             # [JEFF]
-        sset = {r["ticker"] for r in stalk}                                                            # [JEFF]
-        tracking_long = [t for t in tracking_long if t not in sset]                                    # [JEFF] niente doppioni
-    tracking_short = [t for t in tracking if side_of.get(t) == "short"]
-
-    # messaggio dei temi sotto la card [RONIN 14/10]
-    spy21 = (M.get("SPY") or {}).get("ret21")
-    sscore = doc.get("stock_perf_scores") if C.THEME_RANKING == "etf_perf" else None   # stesso ordine degli ETF [17/10]
-    if sscore is None or not len(sscore):
-        sscore = doc.get("basket_scores")
-    fs = sscore["Final_Score"].to_dict() if sscore is not None and len(sscore) else {}
-
-    def etf_label(r: dict) -> Optional[str]:
-        """Livelli dell'ETF più liquido del tema (EMA 9/21/50 daily, 9 weekly): ">" sopra, "<" sotto [RONIN 17/10]."""
-        if esc is None or not len(esc) or "lv" not in esc.columns or not r.get("etfs"):
-            return None
-        e = max((x for x in r["etfs"] if x in esc.index), key=lambda x: M.get(x, {}).get("dv20") or 0, default=None)
-        if e is None:
-            return None
-        lv = esc.loc[e, "lv"]
-        return f"{e} " + " ".join((">" if lv[k] else "<") + n for k, n in (("9", "9"), ("21", "21"), ("50", "50"), ("w9", "w9")))
-
-    def msg_tickers(r: dict, mem: list[str], src: dict) -> list[str]:
-        """Tra parentesi i titoli del tema in ordine di punteggio a 7 fattori, dal più alto [RONIN 16/10, Andrea];
-        senza punteggio in coda per liquidità. Tema senza titoli (oro, petrolio, bitcoin spot...): i suoi ETF."""
-        st = [x for x in r.get("members", []) if x in tmetrics]
-        if not st:
-            return sorted(mem, key=lambda x: -src[x]["dv5"])[:C.THEME_MSG_TICKERS]
-        return sorted(st, key=lambda x: (x not in fs, -fs.get(x, 0), -tmetrics[x]["dv5"]))[:C.THEME_MSG_TICKERS]
-    tstats = []
-    for r in rows:
-        if r.get("etfs"):      # tema misurato sui suoi ETF: 1M, Leading/Lagging e nomi tra parentesi sono degli ETF
-            mem, src = r["etfs"], M
-        else:
-            mem, src = [x for x in r.get("members", []) if x in tmetrics], tmetrics
-        if not mem:
-            continue
-        rets = sorted(src[x]["ret21"] for x in mem if src[x].get("ret21") is not None)
-        med = (rets[len(rets) // 2] if not r.get("etfs") else sum(rets) / len(rets)) if rets else None
-        if C.THEME_SOURCE == "lst" and r.get("ret1m") is not None:   # basket LST: 1M = media equal-weight, come la classifica
-            med = r["ret1m"]
-        tstats.append(dict(theme=r["theme"], score=round(r["score"]), stage=r.get("stage"), d5=r.get("d5"), ret21=E._r(med, 1),
-                           vs_spy=E._r(med - spy21, 1) if (med is not None and spy21 is not None) else None,
-                           lead=r["lead"], lagging=round(sum(src[x]["list"] == "Lagging" for x in mem) / len(mem), 2),
-                           tickers=msg_tickers(r, mem, src), etf_lv=etf_label(r)))
-    t_lead = sorted((x for x in tstats if x["lead"] >= C.THEME_LEADING_MIN_LEAD and (x["ret21"] or 0) > 0), key=lambda x: -x["score"])
-    t_brk = sorted((x for x in tstats if x["lagging"] >= C.THEME_BREAKING_MIN_LAG and (x["ret21"] or 0) < 0), key=lambda x: x["ret21"])
-    themes_msg = dict(total=len(tstats), leading_n=len(t_lead), leading=t_lead[:C.THEME_MSG_ROWS],
-                      breaking_n=len(t_brk), breaking=t_brk[:C.THEME_MSG_ROWS])
-    if C.THEME_SOURCE == "lst" and tmap.get("baskets"):    # classifica complessiva e grafico RS dei basket LST [RONIN 21/10]
-        by = {x["theme"]: x for x in tstats}
-        rk = []
-        for r in rows:
-            if r.get("rs_w") is None:
-                continue
-            x = by.get(r["theme"]) or {}
-            rk.append(dict(theme=r["theme"], rank=r["rank"], score=round(r["score"]), d5=r.get("d5"),
-                           rs_w=r["rs_w"], rs_m=r["rs_m"], rs_q=r.get("rs_q"), quadrant=r["quadrant"], ret1w=E._r(r.get("ret1w"), 1),
-                           ret1m=E._r(r.get("ret1m"), 1), n=r.get("n_scored"), tickers=(x.get("tickers") or [])[:5]))
-        themes_msg.update(source="lst", ranking=rk[:C.THEME_RANK_ROWS], bottom=rk[-5:] if len(rk) > C.THEME_RANK_ROWS + 5 else [],
-                          ranked_n=len(rk), points=[{k: x.get(k) for k in ("theme", "rs_w", "rs_m", "rs_q", "score")} for x in rk],
-                          baskets_fetched=(tmap.get("baskets_fetched_utc") or "")[:10])
-
-    top = [r for r in rows if r["rank"] <= 3]
-    rising = [r for r in rows if r["phase"] == "preparazione"][:3]
-    tl = ", ".join(f"{r['theme']} ({C.PHASE_EN.get(r['phase'], r['phase'])})" for r in top)
-    if rising:
-        tl += " · rising: " + ", ".join(r["theme"] for r in rising)
-    return dict(mm_hist=mm_hist[-20:], mm_hist_full=mm_hist, reversal=rev, martin_breadth=mbreadth, martin_pool=doc.get("pool"), sync_levels=sync_levels,
-        signal_feedback=J.signal_feedback(),
-        session=session.isoformat(), as_of=as_of.isoformat(), rules_version=C.RULES_VERSION,
-        bias=reg["bias"], bias_score=reg["score"], score_bias=reg.get("score_bias"), risk_pct=reg.get("risk_pct", C.RISK_PCT), bias_why="; ".join(reg["why"]), market_monitor=mm, indices=idx,
-        qqq_prev_close=E._r(M["QQQ"]["close"]) if "QQQ" in M else None, feedback=fb, qqq_ctx=E.qqq_context(M.get("QQQ")),
-        breadth=dict(leading=nL, lagging=nG, mediocre=len(lists) - nL - nG, share=E._r(share, 3),
-                     share_prev=E._r(share_prev, 3), upgrades=upgrades[:40], downgrades=downgrades[:40]),
-        theme_proposals=theme_props, theme_map_built=tmap.get("built_utc"), theme_map_changes=tmap.get("changes"),
-        focus=focus, counter_focus=counter, fakeout_watch=fake, tracking=tracking, tracking_long=tracking_long, tracking_short=tracking_short, candidates=cands, near_misses=near[:60], potent=potent, leader=leader,
-        themes=[{k: (E._r(v, 3) if isinstance(v, float) else v) for k, v in r.items()} for r in rows[:40]],
-        themes_line=tl, themes_msg=themes_msg, lists=lists, stale=len(doc["stale"]), stale_names=sorted(doc["stale"])[:50],
-        **({"peg_watch": peg, "stalk": stalk, "jeff": jeff_summary(jd, cands, focus, jeff_earn_out)} if C.JEFF else {}),   # [JEFF]
-    )
+        log.warning("breadth alla Martin: %s", e)
+    win = sorted(d for d in up20 if d <= as_of.isoformat())[-C.PB_UP20_WINDOW:]
+    reg["down20_hi"] = max([up20[d].get("down20w") or 0 for d in win] or [0])
+    reg["up20_hi"] = max([up20[d].get("up20w") or 0 for d in win] or [0])
+    return themes, reg
 
 
-def peg_rows(jd: dict, M: dict, uni: dict, t_of: dict, t_phase: dict, t_stage: dict, earn: dict) -> list[dict]:
-    """[JEFF 28/10] Lista PEG delayed reaction (regole di Jeff, peg.py) con il livello del sistema: la confluenza di
-    supporti di Martin entro LEVEL_MAX_DIST_ADR ADR con almeno CONFLUENCE_MIN livelli. Con il livello il PEG va negli
-    alert e nel giornale come i Focus (setup "PEG delayed reaction"); senza, resta solo in card e txt. Il gap deve essere
-    confermato da una data degli utili; fuori chi ha gli utili nelle prossime 5 sedute. I più recenti prima."""
+def add_channel(m: dict, df) -> None:
+    try:
+        m.update(CH.read_channel(df, m["atr"]))
+    except Exception as e:                      # un canale illeggibile non toglie il titolo dai calcoli
+        log.warning("canale: %s", e)
+        m["d_ok_data"] = False
+    ok, why, _ = CH.reading_d(m)
+    m["pattern_d_ok"], m["pattern_d_why"] = ok, why
+    ln = m.pop("d_lines", None)
+    if ln:                                       # linee del canale in date, per il grafico dell'alert [RONIN 09/10]
+        i0, u0, l0, i1, u1, l1 = ln
+        try:
+            m["d_line_pts"] = dict(start=str(df.index[i0].date()), end=str(df.index[i1].date()),
+                                   up0=round(u0, 4), lo0=round(l0, 4), up1=round(u1, 4), lo1=round(l1, 4),
+                                   slope=round((u1 - u0) / max(i1 - i0, 1), 6))
+        except Exception:
+            pass
+
+
+def channel_watch(rows: dict, s65: dict) -> list[dict]:
+    """Nomi nella parte bassa di un canale rialzista (lettura D) [RONIN 08/10]. Per ognuno: SMA30 65m e EMA9.
+    "Recupero SMA30 65m" = close sopra la SMA30 65m anche se ancora sotto la EMA9: si segnala lo stesso.
+    Chi ha chiuso SOTTO la SMA30 65m resta in osservazione: Sydney avvisa durante la seduta se la recupera."""
     out = []
-    raw = jd.get("earnings_raw") or {}
-    for s in jd.get("peg") or []:
-        if s in jd["earnings"]["out"] or s not in M:
+    for t, r in rows.items():
+        m = r.m
+        hard_out = r.out_reason and not r.out_reason.startswith("stale")     # utili / universo: fuori anche qui
+        if not m.get("pattern_d_ok") or hard_out or (m.get("rs") or 0) < C.CHANNEL_RS_MIN:
             continue
-        m = M[s]
-        e = raw.get(s) or {}
-        if not PG.confirm_earnings(m, (e.get("past_dates") or []) + (e.get("calendar") or [])):
+        s30 = (s65.get(t) or {}).get("ma65")
+        above = None if s30 is None else m["close"] > s30
+        out.append(dict(ticker=t, list=r.list, state=m["d_state"], rs=m["rs"], close=_r(m["close"]),
+                        lower_line_next=_r(m["d_lower_next"]), upper_line_next=_r(m["d_upper_next"]),
+                        pos=_r(m["d_pos"]), width_atr=_r(m["d_width_atr"], 1), ma65=_r(s30), sma30_65m=_r(s30),       # ma65: EMA50 dal 20/10 (sma30_65m resta come alias)
+                        above_ma65=above, above_sma30_65m=above, ema9=_r(m["ema9"]), under_ema9=m["close"] <= m["ema9"],
+                        atr=_r(m["atr"]), industry=m.get("industry"), group_pctl=m.get("group_pctl"),
+                        lines=m.get("d_line_pts")))
+    return sorted(out, key=lambda x: (-(x["rs"] or 0), x["ticker"]))
+
+
+def dtl_watch(names, metrics, rows, earn_out, out_universe, grp) -> list[dict]:
+    """Trendline discendente [RONIN 09/10]. kind:
+      break    = rotta in chiusura con volume >= 1,5x la media (va nella card del giorno dopo);
+      near     = close sotto la linea entro 1,5 ATR (Sydney avvisa se la rompe in seduta con RVOL alto);
+      pullback = rotta nelle ultime 15 sedute (Sydney avvisa sul crossback: recupero della SMA30 65m sopra la EMA9).
+    Rotture in chiusura senza volume non vanno nella card ma restano seguite come pullback dal giorno dopo."""
+    from . import dtl as DT
+    out = []
+    for s in names:
+        if s in earn_out or s in out_universe:
+            continue
+        m = metrics[s]
+        kind = DT.state(m)
+        bv = m.get("dt_confirm_vol") if m.get("dt_confirm_ago") == 0 else m.get("dt_break_vol")
+        if kind == "break" and (bv or 0) < C.DTL["break_vol_min"]:
+            continue
+        r = rows.get(s)
+        out.append(dict(
+            ticker=s, kind=kind, list=(r.list if r else "Out"), rs=m.get("rs"), close=_r(m["close"]),
+            line_next=_r(m["dt_line_next"]), dist_atr=_r(m["dt_dist_atr"]), touches=m["dt_touches"],
+            start=m["dt_start"], start_high=_r(m["dt_start_high"]), slope=round(m["dt_slope"], 6),
+            break_date=m.get("dt_break_date"), break_vol=_r(m.get("dt_break_vol")), break_ago=m.get("dt_break_ago"),
+            confirm_date=m.get("dt_confirm_date"), confirm_vol=_r(m.get("dt_confirm_vol")),
+            ema9=_r(m["ema9"]), ema21=_r(m["ema21"]), atr=_r(m["atr"]), vcp=_r(m.get("vcp"), 1),
+            on_emas=bool(min(m["low"] - m["ema9"], m["low"] - m["ema21"]) <= C.DTL["ema_touch_atr"] * m["atr"]),
+            sma5=_r(m.get("sma5_dist_pct")), atr_ext=_r(m.get("ext")), above_sma200=m.get("above_sma200"),
+            sector=(grp.get(s) or {}).get("sector"), industry=(grp.get(s) or {}).get("industry"),
+            lines=dict(start=m["dt_start"], end=m["dt_start"], up0=m["dt_start_high"], up1=m["dt_start_high"],
+                       slope=m["dt_slope"]),
+        ))
+    order = {"break": 0, "pullback": 1, "near": 2}
+    return sorted(out, key=lambda x: (order.get(x["kind"], 9), -(x["rs"] or 0), x["ticker"]))
+
+
+def peg_watch(names, metrics, rows, earn, earn_out, out_universe, grp) -> list[dict]:
+    """Reazione ritardata agli utili [RONIN 08/10]: gap confermato dalla data degli utili, prezzo tornato nel range
+    del PEG, base stretta, sopra la SMA200. Fuori chi ha gli utili nella finestra o non passa l'universo."""
+    out = []
+    for s in names:
+        if s in earn_out or s in out_universe:
+            continue
+        m = metrics[s]
+        e = earn.get(s, {})
+        conf = PG.confirm_earnings(m, (e.get("past_dates") or []) + (e.get("calendar") or []))
+        if not conf:
             continue
         m["peg_earnings"] = True
-        cl = E.best_cluster(m["supports"], m["close"])
-        reach = bool(cl and cl["dist_pct"] <= C.LEVEL_MAX_DIST_ADR * m["adr"])
-        tradable = bool(C.PEG_ALERTS and reach and cl["count"] >= C.CONFLUENCE_MIN)
-        out.append(dict(
-            ticker=s, side="long", setup="PEG delayed reaction", list=m["list"],
-            level=E._r(cl["price"]) if tradable else None, level_members=cl["members"] if tradable else [],
-            confluence=cl["count"] if cl else 0, dist_pct=E._r(cl["dist_pct"]) if cl else None, adr=E._r(m["adr"]),
-            dv5=E._r(m["dv5"], 0), e9d=E._r(m["e9"]), atr_d=E._r(m.get("atr")), rs21=m.get("rs21"), rs63=m.get("rs63"),
-            ext50_atr=E._r(m.get("ext50_atr")), theme=t_of.get(s), theme_phase=t_phase.get(t_of.get(s)),
-            theme_stage=t_stage.get(t_of.get(s)), exch=uni.get(s, {}).get("exchange"), earnings=earn.get(s),
-            open=[] if tradable else ["confluence"], zone_levels=E.zone_levels(m["supports"], cl, m["adr"]) if tradable else 0,
-            peg=True, tradable=tradable,
-            peg_level_note=None if tradable else (f"best support {cl['count']} level{'s' if cl['count'] != 1 else ''} "
-                                                  f"{cl['dist_pct']:.1f}% away" if cl else "no support level"),
-            peg_date=m["peg_date"], peg_gap_pct=E._r(m["peg_gap_pct"], 1), peg_vol_mult=E._r(m["peg_vol_mult"], 1),
-            peg_low=E._r(m["peg_day_low"]), peg_high=E._r(m["peg_day_high"]), peg_pivot=E._r(m["peg_pivot"]),
-            peg_pos=E._r(m.get("peg_pos")), peg_higher_low=m.get("peg_higher_low"), peg_range5_atr=E._r(m["peg_range5_atr"], 1),
-            peg_text=PG.describe_peg(m), jeff_rs=m.get("j_rs"), adv50=E._r(m.get("j_adv"), 0),
-        ))
-    return sorted(out, key=lambda x: (x["peg_date"], x.get("jeff_rs") or 0), reverse=True)
+        r = rows.get(s)
+        out.append(dict(ticker=s, list=r.list if r else "Out", rs=m.get("rs"), close=_r(m["close"]),
+                        peg_date=m["peg_date"], gap_pct=_r(m["peg_gap_pct"], 1), pre_gap_close=_r(m["peg_day_low"]),
+                        gap_day_high=_r(m["peg_day_high"]), pivot=_r(m["peg_pivot"]), pos=_r(m.get("peg_pos")),
+                        higher_low=m.get("peg_higher_low"), range5_atr=_r(m["peg_range5_atr"], 1),
+                        industry=(grp.get(s) or {}).get("industry"), group_pctl=(grp.get(s) or {}).get("group_pctl"),
+                        text=PG.describe_peg(m)))
+    return sorted(out, key=lambda x: (x["peg_date"], x["rs"] or 0), reverse=True)     # i più recenti prima
 
 
-def jeff_summary(jd: Optional[dict], cands: list[dict], focus: list[dict], earn_out: dict) -> Optional[dict]:
-    """[JEFF] Numeri di Jeff per il dettaglio e il riepilogo: universo, esclusi per utili, candidati fermati dai gate."""
-    if jd is None:
-        return None
-    held = {r["ticker"]: r.get("jeff_why") for r in cands if r["side"] == "long" and not r.get("jeff_ok")}
-    from collections import Counter
-    gates = Counter(c for r in cands if r["side"] == "long" for c in (r.get("jeff_open") or []))
-    return dict(universe=len(jd["universe"]), out_universe=len(jd["out_universe"]),
-                out_universe_why=dict(Counter(w.split(" ")[0] for w in jd["out_universe"].values())),
-                earnings_window=jd["earnings"]["window"], earnings_out=earn_out,
-                earnings_missing=jd["earnings"]["missing"][:40], candidates_long=sum(r["side"] == "long" for r in cands),
-                gates_closed=sum(bool(r.get("jeff_ok")) for r in cands), held_by_gates=held, gates_open_count=dict(gates),
-                ma1h_missing=sorted(jd.get("ma1h_err") or {}), focus=[r["ticker"] for r in focus])
+def group_strength(doc: dict) -> tuple[dict, dict]:
+    """Forza di ogni industria (e settore): mediana dell'RS dei titoli dell'universo, in percentile tra i gruppi.
+    Ritorna (per titolo: industria, settore, percentile, n, leader) e la classifica dei gruppi."""
+    import numpy as np
+    ind = doc.get("industry") or {}
+    metrics, meta = doc["metrics"], doc["meta"]
+    uni = [s for s in metrics if s in meta and metrics[s].get("rs") is not None and s in ind]
+    by_ind, by_sec = {}, {}
+    for s in uni:
+        by_ind.setdefault(ind[s]["industry"], []).append(s)
+        by_sec.setdefault(ind[s]["sector"], []).append(s)
+
+    def pctl(groups: dict) -> dict:
+        med = {g: float(np.median([metrics[s]["rs"] for s in v])) for g, v in groups.items() if len(v) >= C.GROUP_MIN_MEMBERS}
+        order = sorted(med, key=lambda g: med[g])
+        k = max(1, len(order) - 1)
+        return {g: dict(pctl=round(i / k * 100), median_rs=round(med[g]), n=len(groups[g]),
+                        strong=sum(1 for s in groups[g] if metrics[s]["rs"] >= 90)) for i, g in enumerate(order)}
+    gi, gs = pctl(by_ind), pctl(by_sec)
+    lead = {}
+    for key, lab in (("ret21_pct", "1m"), ("ret63_pct", "3m"), ("ret126_pct", "6m")):
+        vals = sorted((metrics[s][key] for s in uni if metrics[s].get(key) is not None), reverse=True)
+        if vals:
+            cut = vals[max(0, int(len(vals) * C.LEADER_TOP_PCT / 100) - 1)]
+            for s in uni:
+                if (metrics[s].get(key) or -1e9) >= cut:
+                    lead.setdefault(s, []).append(lab)
+    per = {}
+    for s in metrics:
+        if s not in ind:
+            continue
+        i_, se = ind[s]["industry"], ind[s]["sector"]
+        g = gi.get(i_) or gs.get(se)
+        per[s] = dict(industry=i_, sector=se, group_pctl=(g or {}).get("pctl"), group_n=len(by_ind.get(i_, [])),
+                      group_level="industry" if i_ in gi else "sector", leader=lead.get(s, []))
+    return per, dict(industries=gi, sectors=gs)
 
 
-# ------------------------------------------------------------------ testi
-def summary_it(res: dict) -> str:
-    fo = ", ".join(r["ticker"] + (f" ({r['n_edges']} edge)" if r.get("n_edges") is not None else "")
-                   for r in res["focus"]) or "nessuno"
-    lines = [f"**Lista {res['session']}** (close {res['as_of']})",
-             f"Bias: {res['bias']} (rischio {res.get('risk_pct', C.RISK_PCT):.2f}%) — {res['bias_why']}",
-             f"Focus: {fo}",
-             f"Tracking long ({len(res['tracking_long'])}): " + ", ".join(res["tracking_long"][:25]),
-             f"Tracking short ({len(res['tracking_short'])}): " + (", ".join(res["tracking_short"][:25]) or "-"),
-             f"Temi: {res['themes_line']}",
-             (f"Proposte di tema ({len(res['theme_proposals'])}, da approvare): "
-              + ", ".join(f"{p['ticker']}→{p['theme']} {p['corr']:.2f}" for p in res['theme_proposals'][:8]))
-             if res.get("theme_proposals") else "Proposte di tema: nessuna",
-             f"Breadth: Leading {res['breadth']['leading']}, Lagging {res['breadth']['lagging']}; "
-             f"saliti in Leading: {', '.join(res['breadth']['upgrades'][:10]) or '-'}"]
-    dem = [r["ticker"] + f" ({r['demoted']})" for r in res["candidates"] if r.get("demoted")]
-    if dem:
-        lines.append("Declassati in revisione: " + ", ".join(dem))
-    ex = [r["ticker"] for r in res["near_misses"] if r["open"] == ["earnings"]]
-    if ex:
-        lines.append("Esclusi per utili: " + ", ".join(ex))
-    jf = res.get("jeff")
-    if jf:                     # [JEFF] universo, gate e PEG di Jeff
-        lines.append(f"Jeff: universo {jf['universe']} titoli (fuori {jf['out_universe']}); candidati long di Martin "
-                     f"{jf['candidates_long']}, con gli 8 gate chiusi {jf['gates_closed']}")
-        if jf.get("held_by_gates"):
-            lines.append("Fermati dai gate di Jeff (Stalk o tracking): " + "; ".join(
-                f"{t} ({w})" for t, w in list(jf["held_by_gates"].items())[:20]))
-        if jf.get("earnings_out"):
-            lo, hi = jf["earnings_window"]
-            lines.append(f"Fuori per utili {lo}..{hi}: " + ", ".join(f"{t} {d}" for t, d in sorted(jf["earnings_out"].items())))
-        if jf.get("ma1h_missing"):
-            lines.append("EMA50 a 1 ora non calcolata (gate 5 aperto): " + ", ".join(jf["ma1h_missing"][:20]))
-    st = res.get("stalk") or []
-    if st:                     # [JEFF 29/10] Stalk a voto alto
-        lines.append(f"Stalk ({len(st)}, almeno {C.JEFF_STALK_MIN_EDGES} edge su 5, gate di Jeff aperti): " + "; ".join(
-            f"{r['ticker']} ({r.get('n_edges')} edge: {r.get('jeff_why')})" for r in st))
-    pw = res.get("peg_watch") or []
+def rs_week_ago(doc: dict) -> dict:
+    """RS di ogni titolo dell'universo alla chiusura della settimana precedente. Dai metrics se c'è (liste nuove),
+    altrimenti si scarica una volta e resta nel compute.pkl (doc["rs_wk"]) [RONIN 09/10]."""
+    metrics = doc["metrics"]
+    if all("rs_w1" in m for m in metrics.values()):
+        return {s: m["rs_w1"] for s, m in metrics.items()}
+    if doc.get("rs_wk") is None:
+        out = {}
+        try:
+            syms = [s for s, m in metrics.items() if m.get("rs") is not None]
+            daily = D.download_daily(syms + ["^GSPC"], (doc["as_of"] - timedelta(days=420)).isoformat(), doc["as_of"])
+            spx = daily.get("^GSPC")
+            for s in syms:
+                df = daily.get(s)
+                if df is None or spx is None or len(df) < 262:
+                    continue
+                ref = spx.Close.reindex(df.index).ffill()
+                k = E.prev_week_cut(df.index)
+                if k and ref.notna().all():
+                    out[s] = I.rs_rating(I.rs_raw(list(df.Close.values[:k]), list(ref.values[:k])))
+        except Exception as e:
+            log.warning("RS di una settimana fa non disponibile: %s", e)
+        doc["rs_wk"] = out
+    return doc["rs_wk"]
+
+
+def sector_strong_w1(doc: dict) -> dict:
+    """Per settore: quanti titoli dell'universo avevano RS >= 90 alla chiusura della settimana precedente."""
+    ind, metrics, meta = doc.get("industry") or {}, doc["metrics"], doc["meta"]
+    w1 = rs_week_ago(doc)
+    out: dict = {}
+    for s, m in metrics.items():
+        if s in meta and m.get("rs") is not None and s in ind and w1.get(s) is not None:
+            sec = ind[s]["sector"]
+            out[sec] = out.get(sec, 0) + (1 if w1[s] >= 90 else 0)
+    return out
+
+
+def sector_etf_stats(doc: dict) -> dict:
+    """Per la card: RS, VCP, SMA5 e Atr Ext dell'ETF di ogni settore, con le stesse formule dei titoli [RONIN 09/10].
+    I dati si scaricano una volta e restano nel compute.pkl del giorno (doc["sector_etf"])."""
+    if doc.get("sector_etf") is None:
+        out = {}
+        try:
+            etfs = list(C.SECTOR_ETF.values())
+            daily = D.download_daily(etfs + ["^GSPC"], (doc["as_of"] - timedelta(days=800)).isoformat(), doc["as_of"])
+            spx = daily.get("^GSPC")
+            for sec, etf in C.SECTOR_ETF.items():
+                df = daily.get(etf)
+                m = E.compute_metrics(df, spx.Close) if df is not None and spx is not None else None
+                if m:
+                    out[sec] = dict(etf=etf, rs=m.get("rs"), vcp=_r(m.get("vcp"), 1), sma5=_r(m.get("sma5_dist_pct")),
+                                    atr_ext=_r(m.get("ext")))
+        except Exception as e:
+            log.warning("ETF di settore non disponibili: %s", e)
+        doc["sector_etf"] = out
+    return doc["sector_etf"]
+
+
+def build(doc: dict, prev: dict | None, earn: dict | None) -> dict:
+    session, as_of, metrics, info, s65, meta = (doc[k] for k in ("session", "as_of", "metrics", "info", "sma65", "meta"))
+    rows: dict[str, E.Row] = {}
+    out_universe = {}
+    prev_listed = set((prev or {}).get("focus", [])) | set((prev or {}).get("stalk", []))
+    prev_carry = {t["ticker"]: int(t.get("carry_days") or 0) for t in (prev or {}).get("tickers", [])}
+    if not doc.get("industry"):
+        try:
+            doc["industry"] = D.build_industry_map()
+        except Exception as e:
+            log.warning("mappa industrie non disponibile: %s", e)
+    grp, groups = group_strength(doc)
+    stale_stalk = {}
+    for s in doc["cand"]:
+        m = dict(metrics[s])
+        m.update(grp.get(s, {}))
+        gates = E.focus_gates(m, s65.get(s))
+        lst = E.classify(m, gates, s in prev_listed)
+        # scadenza: Stalk tenuto solo dalla regola "già in lista" (non passerebbe come nuovo ingresso)
+        m["carry_days"] = 0
+        if lst == "Stalk" and E.classify(m, gates, False) == "Out":
+            m["carry_days"] = prev_carry.get(s, 0) + 1
+            if m["carry_days"] > C.STALK_CARRY_MAX_SESSIONS:
+                lst = "Out"
+                stale_stalk[s] = m["carry_days"] - 1
+        rows[s] = E.Row(s, lst, m, gates)
+        if s in stale_stalk:
+            rows[s].out_reason = f"stale Stalk: {stale_stalk[s]} sessions without tightening"
+
+    # universo con info fresche (tipo, market cap, industria) sui soli nomi che entrerebbero in lista
+    def _near(r):   # numeri tutti ok ma nessun pattern: si mostrano a Ronin, non entrano in lista
+        return (r.list == "Out" and r.m["above_sma200"] and (r.m["rs"] or 0) >= C.RS_FOCUS_MIN
+                and not [g for g in r.fails if g.code not in E.SOFT_GATES])
+    def _chan(r):   # lettura D: nome nella parte bassa di un canale (lista a parte, controllata come le altre)
+        return r.m.get("pattern_d_ok") and (r.m.get("rs") or 0) >= C.CHANNEL_RS_MIN
+    peg_names = [s for s in doc["num_ok"] if metrics[s].get("peg_ok") and (metrics[s].get("rs") or 0) >= C.PEG["rs_min"]]
+    pre = [s for s, r in rows.items() if r.list != "Out" or _near(r) or _chan(r)]
+    pre += [s for s in peg_names if s not in pre]
+    from . import dtl as DT                      # trendline discendente / wedge pop [RONIN 09/10]
+    dtl_names = [s for s in doc["num_ok"] if DT.state(metrics[s]) and (metrics[s].get("rs") or 0) >= C.DTL["rs_min"]]
+    pre += [s for s in dtl_names if s not in pre]
+    need = [s for s in pre if s not in info or "err" in info[s]]
+    if need:
+        info.update(D.fetch_info(need))
+    info_missing = []
+    for s in pre:
+        if "err" in info.get(s, {}):
+            info_missing.append(s)
+        inf = dict(info.get(s, {}))
+        if not inf.get("industry") and (doc.get("industry") or {}).get(s):
+            # Yahoo non ha risposto (es. "Invalid Crumb"): l'industria viene dalla mappa settimanale salvata,
+            # così un biotech non passa per un errore di rete [09/10: CORT, EXEL, KOD]
+            inf["industry"] = doc["industry"][s].get("industry")
+        why = E.universe_check(rows[s].m if s in rows else metrics[s], inf, s)
+        if why:
+            out_universe[s] = why
+            if s in rows:
+                rows[s].list = "Out"
+                rows[s].out_reason = why
+
+    # utili: tutti i nomi che finirebbero in lista
+    listed = [s for s, r in rows.items() if r.list != "Out" or (_chan(r) and s not in out_universe)]
+    listed += [s for s in peg_names if s not in listed and s not in out_universe]
+    listed += [s for s in dtl_names if s not in listed and s not in out_universe]
+    window = sessions_from(session, C.EARNINGS_SESSIONS)
+    lo, hi = window[0].isoformat(), window[-1].isoformat()
+    earn = dict(earn or {})
+    missing = [s for s in listed if s not in earn or (s in peg_names and "past_dates" not in earn[s])]
+    if missing:
+        earn.update(D.fetch_earnings(missing, since=as_of))
+    earn_out, earn_next, earn_missing, earn_on_ref = {}, {}, [], []
+    for s in listed:
+        e = earn.get(s, {})
+        dates = set(e.get("calendar", [])) | set(e.get("earnings_dates", []))
+        if meta.get(s, {}).get("earnings"):
+            dates.add(meta[s]["earnings"])
+        fut = sorted(d for d in dates if d >= lo)
+        earn_next[s] = fut[0] if fut else None
+        inside = [d for d in dates if lo <= d <= hi]
+        if inside:
+            earn_out[s] = min(inside)                 # una fonte nella finestra basta per toglierlo [METODOLOGIA §1]
+        if not fut:
+            earn_missing.append(s)
+        if as_of.isoformat() in dates:
+            earn_on_ref.append(s)
+    for s in earn_out:
+        if s in rows:
+            rows[s].list = "Out"
+            rows[s].out_reason = f"earnings {earn_out[s]}"
+    pegw = peg_watch(peg_names, metrics, rows, earn, earn_out, out_universe, grp)
+    chan = channel_watch(rows, s65)
+    dtlw = dtl_watch(dtl_names, metrics, rows, earn_out, out_universe, grp)
+
+    # temi e regime [RONIN 13/10, 16/10]: fuori solo i titoli con tema WEAK o BEARISH (senza tema nessun filtro);
+    # prima LEADING, poi BUILDING, poi gli altri, poi RS.
+    # Regime: MIXED al massimo 3 Focus; DEFENSIVE solo Focus con tema LEADING/BUILDING, al massimo 3, segnati
+    # "against the regime"; potential trend reversal verso gli acquisti: nessun limite. Gli altri Focus restano Stalk.
+    th = doc.get("themes") or {"rows": [], "ticker": {}}
+    trow = {r["theme"]: r for r in th["rows"]}
+    reg = doc.get("regime") or {"bias": "LONG", "why": ["regime non calcolato"], "score": None}
+    theme_out = {}
+    for s, r in rows.items():
+        t = trow.get(th["ticker"].get(s))
+        r.m["theme"] = t["theme"] if t else None
+        r.m["theme_trend"] = t["trend"] if t else None
+        r.m["theme_stage"] = t.get("stage") if t else None
+        r.m["theme_leading"] = bool(t and t.get("stage") == "LEADING")
+        r.m["theme_rank"] = t["rank"] if t else None
+        if t and t.get("stage") in C.STAGE_LONG_EXCLUDE and r.list != "Out":
+            theme_out[s] = f"{t['theme']} {t['stage']}"
+            r.list = "Out"
+            r.out_reason = f"theme {t['stage']}: {t['theme']}"
+    from .themes import STAGE_ORDER
+    rank_key = lambda r: (STAGE_ORDER.get(r.m.get("theme_stage"), 2), -(r.m["rs"] or 0), r.ticker)
+    regime_held = {}
+    cap = {"MIXED": C.REGIME_MIXED_MAX_FOCUS, "SHORT": C.REGIME_DEFENSIVE_MAX_FOCUS}.get(reg["bias"])
+    if (reg.get("reversal") or {}).get("direction") == "buying":
+        cap = None                         # potential trend reversal verso gli acquisti: Focus pieni [Martin 16/10]
+    if reg.get("u20_block"):               # studio 20%: mercato surriscaldato, niente Focus oggi [ANDREA 20/10]
+        cap = 0
+    if cap is not None:
+        fl = sorted([r for r in rows.values() if r.list == "Focus"], key=rank_key)
+        ok = [] if cap == 0 else (fl if reg["bias"] == "MIXED" else [r for r in fl if r.m.get("theme_stage") in C.STAGE_LONG])
+        keep = {r.ticker for r in ok[:cap]}
+        for r in fl:
+            if r.ticker in keep:
+                r.m["against_regime"] = reg["bias"] == "SHORT"
+                continue
+            r.list = "Stalk"
+            why = (f"20% study: market overheated, no new longs today" if cap == 0 else
+                   f"regime {reg['bias']}: max {cap} Focus" if reg["bias"] == "MIXED"
+                   else f"regime DEFENSIVE: Focus only with a LEADING/BUILDING theme (max {cap})")
+            r.gates.append(E.Gate("regime", False, why))
+            regime_held[r.ticker] = why
+
+    short = None
+    if reg.get("d20_block"):               # studio 20%: troppi titoli già -20%, niente nuovi short [ANDREA 20/10]
+        pass
+    elif C.SHORT["enabled"] and doc.get("short_metrics") is not None:
+        from . import short as SH
+        short = SH.build_short(doc, prev, info, earn, (lo, hi), D.fetch_info, D.fetch_earnings)
+
+    def pub(r: E.Row) -> dict:
+        m = r.m
+        return dict(
+            ticker=r.ticker, list=r.list, rs=m["rs"], vcp=_r(m["vcp"]), sma5=_r(m["sma5_dist_pct"]),
+            atr_ext=_r(m["ext"]), reason_en=E.reason_en(r, s65.get(r.ticker)),
+            pattern=m.get("pattern_state"), pattern_shape=m.get("c_shape"),
+            open_gates=[g.code for g in r.fails], extreme_rvol_ok=False, prior_day_high=_r(m["high"]),
+            trendline_next=_r(m.get("c_upper_next")), industry=m.get("industry"), sector=m.get("sector"),
+            group_pctl=m.get("group_pctl"),
+            leader=m.get("leader") or [], carry_days=m.get("carry_days", 0),
+            channel=m.get("d_state") if m.get("d_found") else None, channel_buy_zone=bool(m.get("pattern_d_ok")),
+            channel_lower_next=_r(m.get("d_lower_next")),
+            gap_to_fill=_r(m.get("gap_top")) if C.GAP_GATE_ON and m.get("gap_open") else None,
+            triangle_top=_r(m.get("t_top")) if m.get("t_ok") else None,
+            theme=m.get("theme"), theme_trend=m.get("theme_trend"), theme_leading=bool(m.get("theme_leading")),
+            theme_stage=m.get("theme_stage"),
+            theme_rank=m.get("theme_rank"), against_regime=bool(m.get("against_regime")),
+        )
+
+    focus = sorted([r for r in rows.values() if r.list == "Focus"], key=rank_key)     # tema leading prima, poi RS
+    stalk = sorted([r for r in rows.values() if r.list == "Stalk"], key=rank_key)
+    fpub, spub = [pub(r) for r in focus], [pub(r) for r in stalk]
+
+    prev_f = set((prev or {}).get("focus", []))
+    prev_all = prev_f | set((prev or {}).get("stalk", []))
+    fset, sset = {r.ticker for r in focus}, {r.ticker for r in stalk}
+    changes = dict(focus_before=sorted(prev_f), focus_after=[r.ticker for r in focus],
+                   left_focus=sorted(prev_f - fset), joined_focus=sorted(fset - prev_f),
+                   left_list=sorted(prev_all - fset - sset), joined_list=sorted((fset | sset) - prev_all))
+    left_why = {}
+    for t in changes["left_focus"] + changes["left_list"]:
+        if t in rows:
+            r = rows[t]
+            left_why[t] = r.out_reason or E.reason_en(E.Row(r.ticker, "Stalk", r.m, r.gates)) or r.list
+        elif t in out_universe:
+            left_why[t] = out_universe[t]
+        elif t in metrics and not metrics[t]["above_sma200"]:
+            left_why[t] = "under the SMA200"
+        elif t in metrics and (metrics[t]["rs"] or 0) < C.STALK_RS_THEME_MIN:
+            left_why[t] = f"RS {metrics[t]['rs']}"
+        else:
+            left_why[t] = "outside the universe gates (ATR%/adv$/mcap) or no data"
+    changes["why_left"] = left_why
+
+    now = datetime.now(ROME).strftime("%Y-%m-%d %H:%M %Z")
+    agreed = dict(
+        session_date=session.isoformat(), as_of_close=as_of.isoformat(), ranking_bar=as_of.isoformat(),
+        ranking_bar_status="completed_rth_daily", timezone="Europe/Rome", asof_rome=now,
+        focus=[r.ticker for r in focus], stalk=[r.ticker for r in stalk], tickers=fpub + spub,
+        notes=("Single deterministic engine. Focus = every closed gate passes and the pattern reading calls it tight; "
+               "Stalk = universe + earnings + RS>=80, above the SMA200, new names with at most "
+               f"{C.STALK_NEW_MAX_NUMERIC_OPEN} numeric gate open and an admitted pattern (tight or forming), names already listed "
+               f"while at most {C.STALK_CARRY_MAX_NUMERIC_OPEN} numeric gates are open (or RS 70-79 with everything else closed). "
+               "Alerts: entries on Focus only."),
+        earnings_check=dict(window=f"{lo}..{hi}", excluded=earn_out, missing_dates=sorted(earn_missing),
+                            reported_on_reference_day=sorted(earn_on_ref)),
+        info_not_verified=sorted(info_missing),
+        changes_vs_previous=changes, stale_stalk=stale_stalk,
+        top_groups=top_groups(groups, rows),
+        channel_watch=chan,
+        peg_watch=pegw,
+        dtl_watch=dtlw,
+        triangles=[dict(ticker=t, list=r.list, top=_r(r.m["t_top"]), support_next=_r(r.m["t_support_next"]),
+                        touches_top=r.m["t_touch_top"], length=r.m["t_len"], rs=r.m.get("rs"))
+                   for t, r in sorted(rows.items()) if r.m.get("t_ok") and not r.out_reason
+                   and (r.m.get("rs") or 0) >= C.RS_FOCUS_MIN],
+        regime=dict(bias=reg["bias"], score=reg.get("score"), score_bias=reg.get("score_bias"), why=reg["why"],
+                    market_monitor=reg.get("market_monitor"), focus_held_by_regime=regime_held,
+                    mm_hist=(reg.get("mm_hist") or [])[-20:], reversal=reg.get("reversal"),
+                    up20_hi=reg.get("up20_hi"), down20_hi=reg.get("down20_hi"),
+                    martin_breadth=reg.get("martin_breadth"), pool_card=reg.get("pool_card")),   # card come Martin [ANDREA 21/10]
+        themes=dict(leading=[dict(theme=r["theme"], score=round(r["score"]), stage=r.get("stage"), d5=r.get("d5"),
+                                  n=r["n"], ret21=_r(r["ret21"], 1), rs21=_r(r["rs21"], 1), etfs=r.get("etfs"),
+                                  tickers=r["members"][:5])
+                             for r in th["rows"] if r.get("stage") in C.STAGE_LONG],
+                    downtrend=[f"{r['theme']} ({r['stage']})" for r in th["rows"]
+                               if r.get("stage") in C.STAGE_LONG_EXCLUDE],
+                    excluded=theme_out, n_themes=len(th["rows"]), map_built=th.get("map_built"),
+                    line=themes_line(th["rows"], as_of), **lst_ranking(th)),
+        gap_to_fill={t: _r(r.m["gap_top"]) for t, r in rows.items()
+                     if r.list != "Out" and any(g.code == "gap" and not g.ok for g in r.gates)},
+    )
+    if short is not None:                     # sezione short, separata e parallela [RONIN 12/10]
+        agreed.update(short_focus=[r["ticker"] for r in short["focus"]], short_stalk=[r["ticker"] for r in short["stalk"]],
+                      short_tickers=short["focus"] + short["stalk"],
+                      short_check=dict(candidates=short["candidates"], out_universe=short["out_universe"],
+                                       earnings_excluded=short["earnings_excluded"], stale_stalk=short["stale"]))
+    detail = dict(agreed, theme_table=[{k: (_r(v, 3) if isinstance(v, float) else v) for k, v in r.items()}
+                                       for r in th["rows"]], funnel=dict(downloaded=doc["n_downloaded"], stale_last_bar=len(doc["stale"]),
+                                      universe_numeric=len(doc["num_ok"]), candidates=len(doc["cand"]),
+                                      out_universe=len(out_universe), focus=len(focus), stalk=len(stalk),
+                                      out_earnings=len(earn_out), out_theme_downtrend=len(theme_out)),
+                  out_universe=out_universe,
+                  near_misses={r.ticker: "; ".join(g.text for g in r.fails) for r in rows.values()
+                               if not r.out_reason and _near(r)},
+                  rows={r.ticker: dict(list=r.list, out_reason=r.out_reason,
+                                       gates={g.code: dict(ok=g.ok, why=(None if g.ok else g.text)) for g in r.gates},
+                                       metrics={k: (_r(v, 4) if isinstance(v, float) else v) for k, v in r.m.items()},
+                                       sma30_65m=s65.get(r.ticker), next_earnings=earn_next.get(r.ticker))
+                        for r in rows.values() if r.list != "Out" or r.out_reason})
+    sw1 = sector_strong_w1(doc)
+    return dict(agreed=agreed, detail=detail, focus=focus, stalk=stalk, fpub=fpub, spub=spub, earn=earn, short=short,
+                sectors={sec: {**(groups.get("sectors") or {}).get(sec, {}), **st, "strong_w1": sw1.get(sec)}
+                         for sec, st in sector_etf_stats(doc).items()})
+
+
+def lst_ranking(th: dict) -> dict:
+    """Classifica complessiva e punti del grafico RS dei basket Lone Stock Trader [RONIN 21/10]; {} con la vecchia mappa."""
+    if th.get("membership") != "lst":
+        return {}
+    rk = [dict(theme=r["theme"], rank=r["rank"], score=round(r["score"]), d5=r.get("d5"), rs_w=r["rs_w"], rs_m=r["rs_m"], rs_q=r.get("rs_q"),
+               quadrant=r["quadrant"], ret1w=_r(r.get("ret1w"), 1), ret1m=_r(r.get("ret1m"), 1), n=r.get("n"),
+               tickers=r["members"][:5]) for r in th["rows"] if r.get("rs_w") is not None]
+    return dict(ranking=rk[:C.THEME_RANK_ROWS], bottom=rk[-5:] if len(rk) > C.THEME_RANK_ROWS + 5 else [], ranked_n=len(rk),
+                points=[{k: x.get(k) for k in ("theme", "rs_w", "rs_m", "rs_q", "score")} for x in rk],
+                baskets_fetched=th.get("baskets_fetched"))
+
+
+def themes_line(rows: list[dict], as_of=None) -> str:
+    """Riga dei temi in testa alla card, come Martin-coach [RONIN 15/10, 16/10]: i primi 3 della classifica con lo
+    stadio di Ratatouille, poi i temi BUILDING/RECOVERY che salgono di più (variazione del punteggio a 5 sedute)."""
+    if not rows:
+        return ""
+    s = ", ".join(f"{r['theme']} ({(r.get('stage') or 'n/a').lower()})" for r in rows[:3])
+    rising = sorted((r for r in rows[3:] if r.get("stage") in ("BUILDING", "RECOVERY") and (r.get("d5") or 0) > 0),
+                    key=lambda r: -(r.get("d5") or 0))
+    if rising:
+        s += " · rising: " + ", ".join(r["theme"] for r in rising[:3])
+    return s
+
+
+def top_groups(groups: dict, rows: dict, n: int = 8) -> list[dict]:
+    gi = groups.get("industries") or {}
+    listed = {}
+    for t, r in rows.items():
+        if r.list in ("Focus", "Stalk") and r.m.get("industry"):
+            listed.setdefault(r.m["industry"], []).append(t)
+    best = sorted(gi.items(), key=lambda kv: -kv[1]["pctl"])[:n]
+    return [dict(industry=k, pctl=v["pctl"], median_rs=v["median_rs"], n=v["n"], strong=v["strong"],
+                 in_list=sorted(listed.get(k, []))) for k, v in best]
+
+
+def exch_of(s: str, doc: dict) -> str | None:
+    return (doc["meta"].get(s) or {}).get("exchange") or (doc["info"].get(s) or {}).get("exchange")
+
+
+def summary_it(res: dict, doc: dict) -> str:
+    a = res["agreed"]
+    ch = a["changes_vs_previous"]
+    d = date.fromisoformat(a["as_of_close"]).strftime("%d/%m")
+    L = [f"**Watchlist {a['session_date']}** (close {d})",
+         f"Focus ({len(a['focus'])}): {', '.join(a['focus']) or 'nessuno'}",
+         f"Stalk ({len(a['stalk'])}): {', '.join(a['stalk']) or 'nessuno'}", ""]
+    if ch["joined_focus"] or ch["left_focus"]:
+        L.append("Entrano in Focus: " + (", ".join(ch["joined_focus"]) or "nessuno") +
+                 " · Escono: " + (", ".join(f"{t} ({ch['why_left'].get(t, 'Stalk')})" for t in ch["left_focus"]) or "nessuno"))
+    if a.get("stale_stalk"):
+        L.append("Stalk scaduti (troppe sedute senza stringere): " +
+                 ", ".join(f"{t} ({d})" for t, d in sorted(a["stale_stalk"].items())))
+    tg = a.get("top_groups") or []
+    if tg:
+        L.append("Gruppi più forti: " + "; ".join(
+            f"{g['industry']} ({g['pctl']}" + (f": {', '.join(g['in_list'])}" if g["in_list"] else "") + ")" for g in tg[:6]))
+    fg = [f"{r['ticker']} {r['group_pctl']}" for r in res["fpub"] if r.get("group_pctl") is not None]
+    if fg:
+        L.append("Forza del gruppo dei Focus (percentile): " + ", ".join(fg))
+    cw = a.get("channel_watch") or []
+    if cw:
+        rec = [c for c in cw if c["above_sma30_65m"] and c["under_ema9"]]
+        ok = [c for c in cw if c["above_sma30_65m"] and not c["under_ema9"]]
+        wait = [c for c in cw if c["above_sma30_65m"] is False]
+        def f(c):
+            if c["state"] == "backtest of the broken line":
+                return f"{c['ticker']} (backtest della linea rotta {c['upper_line_next']})"
+            where = "bordo basso" if c["state"] == "lower part of the channel" else "sulla EMA21"
+            return f"{c['ticker']} ({where}, linea bassa {c['lower_line_next']})"
+        L.append(f"Canale rialzista, parte bassa ({len(cw)}):")
+        if rec:
+            L.append("  recuperata la EMA50 1h, ancora sotto la EMA9: " + "; ".join(f(c) for c in rec))
+        if ok:
+            L.append("  sopra EMA50 1h ed EMA9: " + "; ".join(f(c) for c in ok))
+        if wait:
+            L.append("  sotto la EMA50 1h (alert se la recupera): " + "; ".join(f(c) for c in wait))
+    dw = a.get("dtl_watch") or []
+    if dw:
+        L.append(f"Trendline discendente (wedge pop) ({len(dw)}):")
+        b = [d for d in dw if d["kind"] == "break"]
+        pb = [d for d in dw if d["kind"] == "pullback"]
+        nr = [d for d in dw if d["kind"] == "near"]
+        if b:
+            L.append("  rotta in chiusura con volume: " + "; ".join(
+                f"{d['ticker']} (vol {d['break_vol']}x, linea dal picco {d['start'][5:]} a {d['start_high']})" for d in b))
+        if pb:
+            L.append("  rotta da poco, si segue il pullback (alert sul crossback: tocco di EMA9/21 e recupero della EMA50 1h sopra la EMA9): " + "; ".join(
+                f"{d['ticker']} (rotta il {d['break_date'][5:]}, vol {d['break_vol']}x)" for d in pb))
+        if nr:
+            L.append("  sotto la linea e vicina, entro 1 ATR (alert se la rompe con RVOL >= 1,5): " + "; ".join(
+                f"{d['ticker']} (linea {d['line_next']}, {abs(d['dist_atr'])} ATR)" for d in nr))
+    pw = a.get("peg_watch") or []
     if pw:
-        lines.append(f"PEG delayed reaction ({len(pw)}): " + "; ".join(
-            f"{p['ticker']} (utili {p['peg_date'][5:]} +{p['peg_gap_pct']:.0f}%, pivot {p['peg_pivot']}"
-            + (f", livello {p['level']}" if p.get("tradable") else ", senza livello: niente alert")
-            + (", contro il regime" if p.get("counter") else "") + ")" for p in pw))
-    return "\n".join(lines) + "\n"
+        L.append(f"Reazione ritardata agli utili ({len(pw)}): " + "; ".join(
+            f"{p['ticker']} (utili {p['peg_date'][5:]} +{p['gap_pct']:.0f}%, pivot {p['pivot']}"
+            + (", minimo crescente" if p["higher_low"] else "") + ")" for p in pw))
+    tri = a.get("triangles") or []
+    if tri:
+        L.append(f"Triangoli ascendenti ({len(tri)}): " + "; ".join(
+            f"{t['ticker']} (tetto {t['top']}, {t['touches_top']} tocchi, {t['list']})" for t in tri))
+    gp = a.get("gap_to_fill") or {}
+    if gp:
+        L.append("Gap al ribasso da riempire (restano Stalk finché non lo riempiono): " +
+                 "; ".join(f"{t} {v}" for t, v in sorted(gp.items())))
+    nm = res["detail"].get("near_misses") or {}
+    if nm:
+        L.append(f"Numeri ok ma senza pattern di continuation (fuori lista): {', '.join(sorted(nm))}")
+    rg = a.get("regime") or {}
+    if rg:
+        L.append(f"Regime: {rg['bias']} — " + "; ".join(rg.get("why") or []))
+        if rg.get("focus_held_by_regime"):
+            L.append("Focus tenuti in Stalk dal regime: " + ", ".join(sorted(rg["focus_held_by_regime"])))
+    tm = a.get("themes") or {}
+    if tm.get("n_themes"):
+        L.append(f"Temi LEADING/BUILDING ({len(tm['leading'])} su {tm['n_themes']}): " +
+                 (", ".join(f"{t['theme']} ({t['stage']})" for t in tm["leading"]) or "nessuno"))
+        if tm.get("excluded"):
+            L.append("Esclusi per stadio del tema (WEAK/BEARISH): " + "; ".join(f"{t} ({v})" for t, v in sorted(tm["excluded"].items())))
+        rv = (a.get("regime") or {}).get("reversal")
+        if rv:
+            L.append(f"Potential trend reversal: flusso ±4% girato verso {rv['direction']} il {rv['date']} (giorno {rv['day']} di {C.REVERSAL_DAYS})")
+        lf = [r["ticker"] for r in res["fpub"] if r.get("theme_leading")]
+        if lf:
+            L.append("Focus con tema leading: " + ", ".join(lf))
+    elif tm.get("map_built") is None and a.get("themes") is not None:
+        L.append("Temi non disponibili oggi: nessuno escluso per il tema")
+    e = a["earnings_check"]
+    L.append(f"Utili {e['window']}: " + (", ".join(f"{t} {d}" for t, d in sorted(e["excluded"].items())) or "nessun nome escluso") +
+             (f" · senza data: {', '.join(e['missing_dates'])}" if e["missing_dates"] else ""))
+    piv = [r["ticker"] for r in res["fpub"] + res["spub"] if (r["rs"] or 0) >= C.RS_FOCUS_MIN]
+    low = [f"{r['ticker']} RS {r['rs']}" for r in res["fpub"] + res["spub"] if (r["rs"] or 0) < C.RS_FOCUS_MIN]
+    L.append(f"Remy: {len(piv)} nomi" + (f" (fuori per RS<80: {', '.join(low)})" if low else ""))
+    if a.get("info_not_verified"):
+        L.append("Settore/market cap non verificati (Yahoo non ha risposto): " + ", ".join(a["info_not_verified"]))
+    if a.get("short_tickers") is not None:
+        sc = a.get("short_check") or {}
+        L += ["", f"**Short** (stesse regole al contrario, RS e SMA200 non decidono; {sc.get('candidates', 0)} titoli controllati)",
+              f"Short Focus ({len(a['short_focus'])}): {', '.join(a['short_focus']) or 'nessuno'}",
+              f"Short Stalk ({len(a['short_stalk'])}): {', '.join(a['short_stalk']) or 'nessuno'}"]
+        if sc.get("earnings_excluded"):
+            L.append("Short esclusi per utili: " + ", ".join(f"{t} {d}" for t, d in sorted(sc["earnings_excluded"].items())))
+    return "\n".join(L)
 
 
-def themes_md(res: dict) -> str:
-    out = [f"# Temi {res['session']} (close {res['as_of']})", "",
-           "| # | Tema | Fonte | Fase | Punteggio | Var. rango 5gg | Leading | RS21 med. | Tenuta giorni rossi | Negli scan | ETF | Membri |",
-           "|---|---|---|---|---|---|---|---|---|---|---|---|"]
-    for r in res["themes"]:
-        out.append(f"| {r['rank']} | {r['theme']} | {r.get('source', '')} | {r['phase']} | {r['score']:.0f} | {r.get('rank_change') if r.get('rank_change') is not None else '-'} | "
-                   f"{r['lead']:.0%} | {r['rs21'] if r['rs21'] is not None else '-'} | {r['red_rs'] if r['red_rs'] is not None else '-'} | "
-                   f"{r['scans5']} | {', '.join(r.get('etfs') or []) or '-'} | {', '.join(r['members'][:8])} |")
-    props = res.get("theme_proposals") or []
-    if props:
-        out += ["", "## Proposte (titoli senza tema che si muovono con un tema, 60 sedute)", "",
-                "Da approvare: per accettarne una aggiungila in `data/themes/manuale.json` sotto \"aggiungi\".", "",
-                "| Titolo | Tema proposto | Correlazione |", "|---|---|---|"]
-        out += [f"| {p['ticker']} | {p['theme']} | {p['corr']:.2f} |" for p in props]
-    ch = res.get("theme_map_changes") or {}
-    if ch.get("added") or ch.get("removed"):
-        out += ["", f"## Mappa aggiornata ({(res.get('theme_map_built') or '')[:10]})", "",
-                f"Entrati: {', '.join(ch.get('added') or []) or '-'}", "", f"Usciti: {', '.join(ch.get('removed') or []) or '-'}"]
-    return "\n".join(out) + "\n"
+def focus_gallery(embeds: list[dict], res: dict, session: date, work) -> list[dict]:
+    """[ANDREA 29/10] Grafico daily di METS (scala log, EMA, linea del pattern, trendline, canali e orizzontali) di ogni
+    Focus, in gallerie da 4 sotto il riquadro FOCUS (long) e SHORT FOCUS. Un grafico che non riesce manca e basta."""
+    from .mets import chart as MC
+    sh = res.get("short") or {}
+    lg = [dict(ticker=r["ticker"], side="long", level=r.get("trendline_next")) for r in by_sector(res["fpub"])]
+    sr = [dict(ticker=r["ticker"], side="short", level=r.get("trendline_next")) for r in by_sector(sh.get("focus") or [])]
+    try:
+        charts = MC.focus_charts(lg + sr, session, date.fromisoformat(str(res["agreed"]["as_of_close"])[:10]), work)
+    except Exception as e:
+        log.warning("grafici dei Focus: %s", e)
+        return embeds
+    out = []
+    for e in embeds:
+        out.append(e)
+        d = e.get("description") or ""
+        if "**FOCUS**" in d:
+            out += MC.gallery(e, [x["ticker"] for x in lg], charts)
+        elif "SHORT FOCUS" in d:
+            out += MC.gallery(e, [x["ticker"] for x in sr], charts)
+    return out
 
 
-# ------------------------------------------------------------------ main
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--session")
-    ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--from-cache", action="store_true")
-    ap.add_argument("--skip-if-done", action="store_true")
-    a = ap.parse_args(argv)
+    ap.add_argument("--session", help="YYYY-MM-DD (default: oggi, ora di Roma)")
+    ap.add_argument("--dry-run", action="store_true", help="scrive solo in state/, non tocca coach-agreed né Remy")
+    ap.add_argument("--from-cache", action="store_true", help="riusa compute.pkl ed earnings.json del giorno")
+    ap.add_argument("--no-remy", action="store_true")
+    ap.add_argument("--skip-if-done", action="store_true", help="esce se la lista della seduta esiste già (cron doppi per l'ora legale)")
+    args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    session = date.fromisoformat(a.session) if a.session else today_rome()
+
+    session = date.fromisoformat(args.session) if args.session else today_rome()
     if not is_session(session):
-        print(json.dumps({"skipped": True, "reason": "borsa chiusa"}))
+        print(json.dumps({"skipped": True, "reason": f"{session} non è una seduta NYSE"}))
         return 0
-    if a.skip_if_done and (C.LISTS / f"{session}.json").exists():
-        print(json.dumps({"skipped": True, "reason": "lista già fatta"}))
+    if args.skip_if_done and (C.AGREED / f"{session}.json").exists():
+        print(json.dumps({"skipped": True, "reason": f"lista {session} già fatta"}))
         return 0
-    work = C.LISTS / f"work_{session}"
-    doc = compute(session, work, a.from_cache)
-    rv_p = work / "review.json"
-    review = json.loads(rv_p.read_text(encoding="utf-8")) if rv_p.exists() else {}
-    res = build(doc, review)
-    lh = (res.get("martin_pool") or {}).pop("lists_hist", None)     # liste in % nel grafico, non nel json [27/10]
-    png = BC.render(res.pop("mm_hist_full", None) or [], C.PB_UP20_CAUTION, C.PB_DOWN20_CAUTION,
-                    (C.PB_T2108_EXTREME, C.PB_T2108_OVERSOLD, C.PB_T2108_EXTENDED),
-                    lists_hist=lh if C.LISTS_CHART else None, universe=C.LISTS_CHART_UNIVERSE)
-    if png:                                         # allegato della card [RONIN 16/10]
-        work.mkdir(parents=True, exist_ok=True)
+    work = C.STATE / f"daily_{session}"
+    work.mkdir(parents=True, exist_ok=True)
+    doc = compute(session, work, args.from_cache)
+
+    earn_p = work / "earnings.json"
+    earn = json.loads(earn_p.read_text(encoding="utf-8")) if (args.from_cache and earn_p.exists()) else None
+    prev = None
+    for p in (C.AGREED / f"{prev_session(session)}.json", C.AGREED / "today.json"):
+        if p.exists():
+            j = json.loads(p.read_text(encoding="utf-8"))
+            if j.get("session_date") != session.isoformat():
+                prev = j
+                break
+    res = build(doc, prev, earn)
+    write_atomic(earn_p, res["earn"])
+    work.joinpath("compute.pkl").write_bytes(pickle.dumps(doc))      # salva anche le info scaricate
+
+    a = res["agreed"]
+    up = {r["ticker"] for r in res["spub"] if above_sma65(r)}
+    # nel txt i nomi di ogni sezione seguono lo stesso ordine per settore della card [RONIN 09/10]
+    fo = [r["ticker"] for r in by_sector(res["fpub"])]
+    so = [r["ticker"] for r in by_sector([r for r in res["spub"] if r["ticker"] in up])]
+    sb = [r["ticker"] for r in by_sector([r for r in res["spub"] if r["ticker"] not in up])]
+    txt = tv_txt([(t, exch_of(t, doc)) for t in fo], [(t, exch_of(t, doc)) for t in so],
+                 [(t, exch_of(t, doc)) for t in sb])
+    descs = card_descriptions(session.isoformat(), res["fpub"], res["spub"], res.get("sectors"),
+                              dtl_breaks=[d for d in (res["agreed"].get("dtl_watch") or []) if d["kind"] == "break"],
+                              regime=res["agreed"].get("regime"), themes=res["agreed"].get("themes"),
+                              as_of=res["agreed"]["as_of_close"])
+    embeds = [{"description": d, "color": C.CARD_COLOR} for d in descs]
+    sh = res.get("short")
+    if sh is not None:                        # short: riquadri rossi dopo quelli long, sezioni a parte nel txt
+        sdescs = short_card_descriptions(session.isoformat(), sh["focus"], sh["stalk"])
+        embeds += [{"description": d, "color": C.SHORT_COLOR} for d in sdescs]
+        descs = descs + sdescs
+        dn = {r["ticker"] for r in sh["stalk"] if above_sma65(r)}   # short: gate sma65 chiuso = sotto la SMA30 65m, lato giusto
+        ex = lambda rr: [(r["ticker"], exch_of(r["ticker"], doc)) for r in by_sector(rr)]
+        txt += "," + short_tv_txt(ex(sh["focus"]), ex([r for r in sh["stalk"] if r["ticker"] in dn]),
+                                  ex([r for r in sh["stalk"] if r["ticker"] not in dn]))
+    try:                                       # grafico studio 20% e T2108 nella parte del regime [Martin 16/10]
+        from . import breadth_chart as BC
+        png = BC.render((doc.get("regime") or {}).get("mm_hist") or [], C.PB_UP20_CAUTION, C.PB_DOWN20_CAUTION,
+                        (C.PB_T2108_EXTREME, C.PB_T2108_OVERSOLD, C.PB_T2108_EXTENDED))
+    except Exception as e:
+        log.warning("grafico breadth: %s", e)
+        png = None
+    if png:
         (work / "breadth.png").write_bytes(png)
-        res["breadth_chart"] = "breadth.png"
-    tm = res.get("themes_msg") or {}
-    if C.THEME_RS_CHART and tm.get("points"):     # mappa dei temi: RS settimana/mese e mese/trimestre [RONIN 21/10]
+        embeds[0]["image"] = {"url": "attachment://breadth.png"}
+    elif (work / "breadth.png").exists():
+        (work / "breadth.png").unlink()
+    tma = res["agreed"].get("themes") or {}
+    pngs = {}
+    if tma.get("points"):                      # mappa dei temi: RS settimana/mese e mese/trimestre [RONIN 21/10]
         try:
             from . import rs_chart as RC
-            pngs = RC.render_all(tm["points"], subtitle=f"{res['session']} · close {res['as_of']} · {len(tm['points'])} groups")
+            pngs = RC.render_all(tma["points"], subtitle=f"{session} · close {res['agreed']['as_of_close']} · {len(tma['points'])} groups")
         except Exception as e:
             log.warning("grafici RS dei temi: %s", e)
-            pngs = {}
-        work.mkdir(parents=True, exist_ok=True)
-        for fn, png in pngs.items():
-            (work / fn).write_bytes(png)
-        res["themes_charts"] = list(pngs)
-    if C.CARD_FOCUS_CHARTS:         # grafici dei Focus nella card, solo il titolo [ANDREA 28/10, multi-edge]
-        from . import chart as CH
-        work.mkdir(parents=True, exist_ok=True)
-        try:
-            pegc = [r for r in res.get("peg_watch") or [] if r.get("tradable") and not r.get("also_focus")]   # [JEFF]
-            res["focus_charts"] = CH.focus_charts(res["focus"] + (res.get("counter_focus") or []) + pegc, session,
-                                                  date.fromisoformat(str(res["as_of"])), work)
-        except Exception as e:
-            log.warning("grafici dei Focus: %s", e)
-    pm_p = work / "premarket.json"
-    pm = json.loads(pm_p.read_text(encoding="utf-8")) if pm_p.exists() else None
-    card = {"embeds": card_embeds(res, pm)}
-    pegs = res.get("peg_watch") or []                                                                 # [JEFF]
-    exch = {s: (doc["uni"].get(s) or {}).get("exchange") for s in res["tracking"] + [r["ticker"] for r in res["focus"] + res["counter_focus"] + pegs + (res.get("stalk") or [])]}   # [JEFF] + Stalk
-    fx = lambda side: [(r["ticker"], exch.get(r["ticker"])) for r in res["focus"] if r["side"] == side]
-    tx = lambda key: [(t, exch.get(t)) for t in res[key]]
-    ax = lambda side: [(r["ticker"], exch.get(r["ticker"])) for r in res["counter_focus"] if r["side"] == side]
-    txt = tv_txt([("FOCUS LONG", fx("long")), ("FOCUS SHORT", fx("short")),
-                  ("TOP QUALITY LONG", ax("long")), ("TOP QUALITY SHORT", ax("short")),
-                  ("PEG", [(r["ticker"], exch.get(r["ticker"])) for r in pegs]),                         # [JEFF]
-                  ("STALK LONG", [(r["ticker"], exch.get(r["ticker"])) for r in res.get("stalk") or []]),    # [JEFF 29/10]
-                  ("TRACKING LONG", tx("tracking_long")), ("TRACKING SHORT", tx("tracking_short"))])
-    public = {k: res[k] for k in ("session", "as_of", "rules_version", "bias", "bias_score", "score_bias", "risk_pct", "bias_why", "market_monitor", "indices",
-                                  "qqq_prev_close", "qqq_ctx", "focus", "counter_focus", "fakeout_watch", "sync_levels", "tracking", "tracking_long", "tracking_short", "themes_line", "breadth")}
-    public["session_date"] = res["session"]
-    if C.JEFF:                 # [JEFF] i PEG con il livello li segue anche il servizio degli alert
-        public["peg_watch"] = pegs
-    detail = {k: v for k, v in res.items() if k != "lists"}
-    out = work if a.dry_run else C.LISTS
-    write_atomic(work / "detail.json", detail)
+    for fn, prefix in (("themes_rs.png", "**THEMES**"), ("themes_rs_3m.png", "Month RS (x) vs Quarter RS (y)")):
+        emb = next((e for e in embeds if e["description"].startswith(prefix)), None)
+        if fn in pngs and emb is not None:
+            (work / fn).write_bytes(pngs[fn])
+            emb["image"] = {"url": f"attachment://{fn}"}
+        elif (work / fn).exists():
+            (work / fn).unlink()
+    if C.CARD_FOCUS_CHARTS:                   # [ANDREA 29/10] grafici dei Focus sotto il loro riquadro, come METS
+        embeds = focus_gallery(embeds, res, session, work)
+    card = {"embeds": embeds, "allowed_mentions": {"parse": []}}
+    summ = summary_it(res, doc)
     write_atomic(work / "card.json", card)
-    write_atomic(work / "themes_card.json", {"embeds": themes_embeds(res)})
-    write_atomic(work / "summary_it.md", summary_it(res), as_json=False)
-    write_atomic(out / f"watchlist_{session}.txt", txt, as_json=False)
-    for fn in ("today.json", f"{session}.json"):
-        write_atomic(out / fn, public)
-    if not a.dry_run and not a.from_cache and C.WRITE_HISTORY:     # [JEFF] istanza a sé: lo storico lo scrive lei (in Martin l'istanza multi-edge legge quello di Dua)
-        write_atomic(C.HISTORY / f"lists_{res['as_of']}.json", res["lists"])
-        write_atomic(C.HISTORY / f"potent_{res['as_of']}.json", res["potent"])
-        write_atomic(C.HISTORY / f"themes_{res['as_of']}.json", {r["theme"]: r["rank"] for r in res["themes"]})
-        write_atomic(C.REPORTS / f"temi_{session}.md", themes_md(res), as_json=False)
-    print(json.dumps({"session": res["session"], "bias": res["bias"], "focus": [r["ticker"] for r in res["focus"]],
-                      "tracking": len(res["tracking"]), "candidates": len(res["candidates"]),
-                      **({"peg": [r["ticker"] for r in pegs]} if C.JEFF else {})}))                          # [JEFF]
+    write_atomic(work / "summary_it.md", summ, as_json=False)
+    write_atomic(work / f"watchlist_{session}.txt", txt, as_json=False)
+    for fn in (f"focus_{session}.json", "focus_today.json"):
+        write_atomic((work if args.dry_run else C.WATCHLISTS) / fn, res["detail"])
+
+    if not args.dry_run:
+        for fn in ("today.json", f"{session}.json"):
+            write_atomic(C.AGREED / fn, a)
+        for fn in (f"watchlist_{session}.txt", "watchlist_today.txt"):
+            write_atomic(C.AGREED / fn, txt, as_json=False)
+        if not args.no_remy:
+            piv = [r["ticker"] for r in res["fpub"] + res["spub"] if (r["rs"] or 0) >= C.RS_FOCUS_MIN]
+            write_atomic(C.REMY_PIVOT_FILE, f"date: {session}\n" + "\n".join(piv) + "\n", as_json=False)
+    print(summ)
+    print(f"\ncard: {sum(len(d) for d in descs)} caratteri in {len(descs)} embed · dettaglio: {work}")
     return 0
 
 

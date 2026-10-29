@@ -1,70 +1,63 @@
 # jeff-coach
 
-**Jeff Coach multi-edge**: la base del bot di Martin Luk nella versione multi-edge (Ronin746/Martin-coach, main @062aae2,
-regole `2026-10-28b-meta`) con sopra la parte del metodo di Jeff Sun (@jfsrev) scelta da Andrea il 28/10: universo e
-filtri, gli 8 gate del Focus (compressione 2 su 3 compresa), la lista PEG delayed reaction. Solo long, su Discord come
-**Sydney**. Le regole sono in [METODOLOGIA.md](METODOLOGIA.md), i numeri in `jeffcoach/config.py`.
+Watchlist Focus/Stalk sul metodo di Jeff Sun (@jfsrev), costruita ogni giorno di borsa sulla chiusura RTH della seduta precedente, con le regole chiuse da Ronin. Il metodo completo è in [METODOLOGIA_UNIFICATA.md](METODOLOGIA_UNIFICATA.md), il motivo del motore unico in [ANALISI_ERRORI.md](ANALISI_ERRORI.md).
 
-> Non è un consiglio finanziario e non piazza ordini: prepara la lista, manda gli alert e tiene un giornale di trade
-> **simulati** (equity virtuale 100.000) per misurare le regole.
+> Non è un consiglio finanziario e non piazza ordini: è uno strumento di preparazione della watchlist.
 
-## Come gira (ora di Roma, server Oracle)
+## Come gira
 
-| Quando | Cosa |
-|---|---|
-| lun–ven 08:00 | Lista: universo di Jeff, candidati long di Martin, 8 gate di Jeff, edge, regime, temi, PEG. Commit in `data/lists/` e `data/history/`. |
-| lun–ven 10:45 | Card di Sydney su Discord con il txt TradingView (POST la prima volta, poi PATCH) e i grafici dei Focus e dei PEG. |
-| 08:50 New York | Gap-up pre-market aggiunti alla card (PATCH). |
-| in seduta USA | `jeffcoach-alert`: alert di Sydney (livello toccato, trigger a 5 minuti, uscite) e gestione intraday dei trade simulati, Focus e PEG. |
-| lun–ven 22:35 | Chiusura: regole sulla chiusura daily, equity, `data/reports/giornale_<data>.md`. |
-| lunedì 08:20 | Report di performance (mensile il primo lunedì del mese). |
-| lunedì 01:10 | Basket di Lone Stock Trader (copia della lettura di Dua in `~/.lst`). |
-| mar–sab 01:45 / 06:45 | Market Monitor nostro sull'universo completo (studio 20%, T2108, grafico della card). |
-| lun–ven 13:30 | Salvataggio dei dati, codice nuovo da GitHub, riavvio degli alert. |
+| Quando (Roma) | Dove | Cosa |
+|---|---|---|
+| lun–ven, mattino | Server (`fasi.sh lista`) | Calcola la lista: universo Yahoo, gate, lettura unica del pattern, utili. Fa commit in `data/`. |
+| lun–ven, 10:45 | Server (`fasi.sh card`) | Pubblica la card Discord con il txt TradingView (POST la prima volta, poi PATCH). GitHub `card.yml` fa da riserva alle 12:30–13:30. |
+| lunedì, ~09:00 | GitHub Actions: `weekly.yml` | Weekly sul close del venerdì, niente Discord. |
+| in seduta USA | PC di Ronin ([cartella locale](#parte-locale)) | Alert di ingresso (30m ORH) e RVOL, più lo scanner di Remy |
 
-I workflow di GitHub Actions sono gli stessi di Martin, con i cron sospesi: si lanciano a mano (Run workflow).
+I cron di GitHub sono in UTC e possono partire con qualche minuto di ritardo. Per questo ogni workflow ha due orari (ora legale e ora solare) e il secondo esce subito se il lavoro è già fatto.
 
 ## Dati
+
 ```
-data/lists/today.json, <SEDUTA>.json        lista pubblica (la leggono gli alert): Focus, lato opposto, PEG
-data/lists/watchlist_<SEDUTA>.txt           import TradingView (###FOCUS LONG, ###TOP QUALITY LONG, ###PEG, ###TRACKING LONG)
-data/lists/work_<SEDUTA>/                   detail.json, card.json, summary_it.md, review.json, premarket.json, discord_post.json, grafici
-data/history/                               liste, potent e ranghi dei temi per seduta (partito dallo storico di Martin al 27/10)
-data/journal/                               giornale: positions.json, trades.csv, events.csv, equity.csv
-data/reports/ data/alerts/ data/breadth/ data/themes/
-data/coach-agreed/ data/watchlists/ data/state/daily_*   storico del JeffCoach di prima (non si tocca)
+data/coach-agreed/today.json          lista pubblica del giorno (la leggono gli alert)
+data/coach-agreed/YYYY-MM-DD.json     storico
+data/coach-agreed/watchlist_*.txt     import TradingView (###FOCUS,...,###STALK,...)
+data/watchlists/focus_YYYY-MM-DD.json dettaglio: ogni gate di ogni nome, metriche, lettura del pattern
+data/state/daily_YYYY-MM-DD/          card.json, summary_it.md, earnings.json, discord_post.json
+data/coach-agreed/weekly_*.json       weekly
 ```
 
-## Installazione sul server (al posto del JeffCoach di prima)
-```bash
-cd ~/jeff-coach && git pull            # con questo codice su main
-bash server/installa.sh                 # la prima volta crea .env ed esce
-nano .env                               # COACH_ALERT_DISCORD_WEBHOOK_URL (Sydney) e GITHUB_TOKEN
-bash server/installa.sh                 # servizi jeffcoach-* e orari (l'alert non lancia più avvia.py)
-.venv/bin/python -m jeffcoach.discord test   # messaggio di prova nel canale di Sydney
-```
-I servizi di Martin (`martincoach-*`, `martinmeta-*`) non si toccano. Il servizio dati comune `datahub`, se c'è, si
-aggancia da solo.
+## Segreti
 
-## Comandi
-| Cosa | Comando |
-|---|---|
-| Lista senza pubblicare | `python -m jeffcoach.daily --dry-run` |
-| Card (solo se cambiata) | `python -m jeffcoach.discord card --if-changed` |
-| Un giro di alert senza invio | `python -m jeffcoach.alerts --once --dry-run --force-window` |
-| Chiusura del giornale | `python -m jeffcoach.chiusura` |
-| Report | `python -m jeffcoach.report weekly` / `monthly` |
-| Prove della parte di Jeff (configurazione vera) | `python tests/test_jeff.py` |
-| Prove della base (le stesse di Martin) | `python tests/test_offline.py` |
-| La base è ancora quella di Martin? | `python strumenti/identita_base.py /percorso/martin-coach` |
-| Prova con dati veri | crea o cambia `prova.txt` su main e fai push (risultato in `data/prove/`) |
-| Alert di prova su Discord / rifare la lista di oggi | crea o cambia `prova_alert.txt` / `rifai_oggi.txt` su main (o Run workflow) |
+Va impostato un solo segreto: **Settings → Secrets and variables → Actions → New repository secret**.
+- Card e alert usano entrambi `COACH_ALERT_DISCORD_WEBHOOK_URL` (Sydney) dal 14/10; il webhook di Dua non si usa più.
 
-I file `prova.txt`, `prova_alert.txt`, `rifai_oggi.txt` e `mm_storico.txt` non sono nel repo apposta: così il merge del
-codice nuovo su main non lancia da solo un alert di prova, la lista rifatta con la card su Discord o lo storico del
-Market Monitor. I workflow che li usano partono solo da main.
+I webhook degli alert e di Remy restano solo sul PC, nel file `.env`.
 
-## Allineamento con Martin
-Il codice della base ha gli stessi file di `martincoach/` con il nome `jeffcoach/`; ogni riga cambiata porta `[JEFF]`.
-Per portare qui una modifica della base: stessa modifica nel file con lo stesso nome, poi
-`python strumenti/identita_base.py <martin-coach>` (deve dire "BASE IDENTICA") e le due serie di prove.
+## Comandi a mano
+
+- **Rifare la lista:** Actions → "Lista Focus/Stalk del mattino" → Run workflow, con `force` spuntato.
+- **Ripubblicare la card:** Actions → "Card Discord" → Run workflow. Fa PATCH sullo stesso messaggio del giorno.
+- **In locale:** `python -m jeffcoach.daily --dry-run` (le variabili `JEFF_COACH_HOME` e simili decidono dove scrive).
+
+## Parte locale
+
+La cartella `JeffCoach-locale` (alert, scanner di Remy, sync delle watchlist) non sta in questo repo perché contiene configurazioni personali. Ha il suo `LEGGIMI.md`.
+
+## Alert in cloud (Sydney e Remy)
+
+Tre workflow fanno in cloud quello che `avvia.py` fa sul PC (alert di Sydney, scanner di Remy ogni barra da
+5 minuti, sync delle watchlist di Remy alle 15:00 di Roma), divisi in due turni che si accavallano perché un
+lavoro GitHub dura al massimo 6 ore. Il passaggio è alle 13:00 di New York (19:00 Roma):
+
+- **Turno A** (`alert-a.yml`): parte alle 08:15 di New York, manda fino alla barra delle 13:00 compresa
+  (Sydney fino alle 13:04:59), poi salva il suo stato sul ramo `stato-alert` ed esce.
+- **Turno B** (`alert-b.yml`): parte alle 12:00 di New York e resta muto (segna come fatto quello che sta
+  mandando A); alle 13:05 unisce lo stato di A e manda dalla barra delle 13:05 fino alla chiusura.
+- Ogni turno ha due o tre partenze (ora legale/solare USA e riserva se GitHub ne salta una): quelle in più
+  escono subito. Nelle chiusure anticipate A fa tutta la seduta e B non fa niente.
+- **In prova** (finché la variabile del repo `CLOUD_ALERT_LIVE` non vale `true`): i messaggi vanno a un finto
+  Discord interno (`cloud/sink.py`) e finiscono in `data/cloud/AAAA-MM-GG-A.jsonl` e `-B.jsonl`, con anche
+  quelli "muti" del turno B, così si controlla il passaggio e si confronta con il PC.
+- **Dal vivo**: secrets `COACH_ALERT_DISCORD_WEBHOOK_URL` (Sydney) e `REMY_DISCORD_WEBHOOK_URL` (Remy), variabile
+  `CLOUD_ALERT_LIVE=true`, e il PC spento (FERMA-ALERT), altrimenti ogni alert arriva due volte.
+- Un giro di prova a mercato chiuso: cambiare `cloud/prova.txt` e fare push.

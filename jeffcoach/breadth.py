@@ -50,9 +50,9 @@ def _write(p, rows: list[dict]) -> None:
 def merge(p, rows: list[dict]) -> list[dict]:
     """Unisce `rows` all'archivio per data (le nuove vincono); restituisce l'archivio dalla seduta più recente."""
     by = {r["date"]: r for r in _read(p)}
-    for r in rows or []:            # le colonne che la riga nuova non ha (o ha vuote) restano quelle dell'archivio
+    for r in rows or []:
         if r.get("date"):
-            by[r["date"]] = {**by.get(r["date"], {}), **{k: v for k, v in r.items() if v is not None}}
+            by[r["date"]] = r
     out = [by[d] for d in sorted(by, reverse=True)]
     _write(p, out)
     return out
@@ -93,16 +93,6 @@ def own_rows(daily: dict[str, pd.DataFrame], sessions: int = 300, min_price: flo
     f20 = (minv3_1 >= MIN_VOL) & (closes >= 3)
     up20w = ((r5 >= 1.2) & f20).sum(axis=1)
     down20w = ((r5 <= 0.8) & f20).sum(axis=1)
-    # nuovi massimi e minimi a 52 settimane (massimo/minimo del giorno contro le 251 sedute prima) [RONIN 16/10]
-    hasHL = all("High" in df and "Low" in df for df in daily.values())
-    highs = pd.DataFrame({s: df["High"] for s, df in daily.items() if len(df) > 70}).reindex(closes.index) if hasHL else closes
-    lows = pd.DataFrame({s: df["Low"] for s, df in daily.items() if len(df) > 70}).reindex(closes.index) if hasHL else closes
-    hmax = highs.shift(1).rolling(251, min_periods=240).max()
-    lmin = lows.shift(1).rolling(251, min_periods=240).min()
-    nh = (highs > hmax).sum(axis=1)
-    nl = (lows < lmin).sum(axis=1)
-    nh_ok = hmax.notna().sum(axis=1) >= 0.5 * closes.notna().sum(axis=1)      # abbastanza titoli con un anno di storia
-    nh, nl = nh.where(nh_ok), nl.where(nh_ok)
     sma40 = closes.rolling(40).mean()
     valid = closes.notna() & sma40.notna()
     t2108 = (closes > sma40).where(valid).sum(axis=1) / valid.sum(axis=1).replace(0, np.nan) * 100
@@ -113,17 +103,8 @@ def own_rows(daily: dict[str, pd.DataFrame], sessions: int = 300, min_price: flo
                        "up25m": (r20 >= 0.25).sum(axis=1), "down25m": (r20 <= -0.25).sum(axis=1),
                        "up50m": (r20 >= 0.50).sum(axis=1), "down50m": (r20 <= -0.50).sum(axis=1),
                        "up13d34": (d_up >= 0.13).sum(axis=1), "down13d34": (d_dn <= -0.13).sum(axis=1),
-                       "up20w": up20w, "down20w": down20w, "nh": nh, "nl": nl,
+                       "up20w": up20w, "down20w": down20w,
                        "t2108": t2108, "universe": closes.notna().sum(axis=1)}).iloc[65:].tail(sessions)
-    # seduta con i dati a metà (Yahoo non ha ancora tutte le barre): la riga del 26/10/2026 è stata scritta con 409
-    # titoli su 5.594 (+4% 1, -4% 1, studio 20% a zero). Una seduta con meno dell'80% dei titoli delle 20 prima non si
-    # scrive: resta la riga dell'archivio e la rifà il calcolo successivo [27/10]
-    med = df["universe"].rolling(20, min_periods=5).median().shift(1)
-    partial = df["universe"] < 0.8 * med
-    if partial.any():
-        log.warning("Market Monitor: sedute con i dati a metà saltate: %s",
-                    ", ".join(f"{d.date()} ({int(u)} titoli)" for d, u in df.loc[partial, "universe"].items()))
-        df = df[~partial]
     out = []
     for d, r in df.iloc[::-1].iterrows():
         if any(pd.isna(r[k]) for k in ("ratio5", "ratio10", "t2108")):
@@ -134,7 +115,6 @@ def own_rows(daily: dict[str, pd.DataFrame], sessions: int = 300, min_price: flo
                     "down25m": float(r.down25m), "up50m": float(r.up50m), "down50m": float(r.down50m),
                     "up13d34": float(r.up13d34), "down13d34": float(r.down13d34), "up20w": float(r.up20w),
                     "down20w": float(r.down20w), "t2108": round(float(r.t2108), 2),
-                    "nh": None if pd.isna(r.nh) else float(r.nh), "nl": None if pd.isna(r.nl) else float(r.nl),
                     "universe": float(r.universe)})
     return out
 
@@ -174,7 +154,7 @@ def calibrate(own: list[dict], nel: list[dict], window: int = CAL_WINDOW) -> Opt
            "k": k, "ratio5_fit": [round(float(v), 4) for v in fits["ratio5"]],
            "ratio10_fit": [round(float(v), 4) for v in fits["ratio10"]],
            "t2108_slope": round(float(slope), 4), "t2108_intercept": round(float(icpt), 4)}
-    from .engine import mm_state
+    from .regime import mm_state
     cal["state_agreement"] = round(float(np.mean([mm_state(apply(a, cal)) == mm_state(b) for a, b in pairs])), 3)
     cal["state_agreement_raw"] = round(float(np.mean([mm_state(a) == mm_state(b) for a, b in pairs])), 3)
     return cal
@@ -219,7 +199,6 @@ def update(own: list[dict], nel: list[dict]) -> list[dict]:
 # ~5.700 titoli. Verificato sul foglio di Stockbee: up4/down4 quasi identici (77 contro 78, 784 contro 799 il 14/10);
 # su 10 anni stato uguale nell'83% delle sedute senza calibrazione, 90,6% con la calibrazione a 120 sedute (sopra).
 # Gira ogni notte alle 00:00 di Roma (workflow "Market Monitor nostro") e scrive data/breadth/market_monitor_full.json.
-# Dal 27/10 il cron di GitHub è sospeso [Andrea]: sul server la fase "breadth" (server/fasi.sh) alle 01:30 e alle 06:30.
 FULL_FILE = DIR / "market_monitor_full.json"
 CAL_FULL_FILE = DIR / "calibrazione_completa.json"
 UNIVERSE_MM_FILE = DIR / "universo_mm.json"
@@ -260,8 +239,7 @@ def mm_universe() -> list[str]:
         raise
 
 
-def full_rows(end, days: int = 420) -> list[dict]:
-    # 420 giorni: servono 52 settimane di storia per i nuovi massimi/minimi [RONIN 16/10]
+def full_rows(end, days: int = 200) -> list[dict]:
     """Market Monitor sull'universo completo fino alla seduta `end` (date)."""
     from datetime import timedelta
     from . import data as D
@@ -297,7 +275,7 @@ def run_full(end=None) -> dict:
 def walk_forward(window: int = CAL_WINDOW, gap: int = 0, start: str = "2017-01-01", step: int = 20) -> dict:
     """Prova a ritroso della replica: ogni seduta dal `start` usa una calibrazione fatta solo con le sedute
     precedenti (ricalcolata ogni `step`, vecchia di `gap` sedute). Quota di stati uguali a Stockbee."""
-    from .engine import mm_state
+    from .regime import mm_state
     nel = {r["date"]: r for r in nel_archive()}
     P = sorted(((o, nel[o["date"]]) for o in _read(FULL_FILE) if o["date"] in nel and nel[o["date"]].get("ratio10")
                 is not None), key=lambda p: p[0]["date"])
@@ -327,17 +305,6 @@ if __name__ == "__main__":
         d = now_et().date()
         done = any(r.get("date") == d.isoformat() for r in _read(FULL_FILE)[:5])
         ok = datetime.now(ROME).hour < 3 and is_session(d) and not done
-        print("si" if ok else "no")
-        sys.exit(0)
-    if len(sys.argv) > 1 and sys.argv[1] == "fatto":
-        # si = la riga dell'ultima seduta chiusa c'è già e ha l'universo intero (fase "breadth" del server, 27/10)
-        from .calendar_us import close_et, is_session, now_et, prev_session
-        now = now_et()
-        d = now.date() if is_session(now.date()) and now >= close_et(now.date()) else prev_session(now.date())
-        rows = _read(FULL_FILE)
-        last = next((r for r in rows[:5] if r.get("date") == d.isoformat()), None)
-        prev = [r.get("universe") or 0 for r in rows if r.get("date", "") < d.isoformat()][:20]
-        ok = bool(last and prev and (last.get("universe") or 0) >= 0.8 * sorted(prev)[len(prev) // 2])
         print("si" if ok else "no")
         sys.exit(0)
     if len(sys.argv) > 1 and sys.argv[1] == "completo":

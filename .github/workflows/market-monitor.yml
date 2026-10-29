@@ -1,6 +1,6 @@
 name: Market Monitor nostro
 
-# Replica del Market Monitor di Stockbee sull'universo completo (~5.700 azioni USA) [RONIN 15/10].
+# Copia del workflow di Martin-coach. Replica del Market Monitor di Stockbee sull'universo completo (~5.700 azioni USA) [RONIN 15/10].
 # Ogni notte alle 00:00 di Roma dopo una seduta USA (Andrea: chiusura giornaliera sicuramente completa).
 # GitHub ragiona in UTC: due orari (22:00 UTC = mezzanotte con l'ora legale, 23:00 UTC = mezzanotte con l'ora
 # solare); parte il primo che cade tra le 00:00 e le 03:00 di Roma, solo dopo una seduta e una volta sola.

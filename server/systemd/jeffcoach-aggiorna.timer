@@ -1,5 +1,5 @@
 [Unit]
-Description=Jeff Coach - orario: aggiornamento prima dell'apertura USA (13:30, come prima)
+Description=Jeff Coach - orario: aggiornamento del codice
 
 [Timer]
 OnCalendar=Mon..Fri 13:30 Europe/Rome

@@ -1,5 +1,5 @@
 [Unit]
-Description=Jeff Coach - basket di Lone Stock Trader (temi), copia della lettura comune
+Description=Jeff Coach - basket di Lone Stock Trader (temi)
 After=network-online.target
 Wants=network-online.target
 

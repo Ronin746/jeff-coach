@@ -2,12 +2,11 @@
 
 Il titolo fa un gap al rialzo forte e con volume sugli utili (power earnings gap, PEG). Nelle settimane dopo non
 scappa subito: torna dentro il range del giorno del gap, e lì costruisce una base stretta sopra le medie (ANF, SNOW,
-ESTC, FROG, ACN, MGNI, CRSR).
+ESTC, FROG, ACN, MGNI, CRSR). Si guarda per un ingresso sopra il massimo dei primi 30 minuti con RVOL.
 
-Il gap si riconosce dai prezzi (apertura >= 4% o 1 ATR sopra il close prima, volume >= 1,5x la media) e vale solo se
-una data degli utili cade il giorno del gap o il giorno prima (utili dopo la chiusura).
-Lettura identica a quella di jeff-coach [RONIN 08/10]. Dal 28/10 [ANDREA] i PEG sono nella card, nel txt e nei trade
-del sistema multi-edge (livello di confluenza, trigger e giornale di Martin): vedi daily.peg_rows.
+Qui il gap si riconosce dai prezzi (apertura >= 4% o 1 ATR sopra il close prima, volume >= 2x la media);
+se le date degli utili sono note, si segna se il gap è proprio il giorno (o il giorno dopo) degli utili.
+Non cambia Focus/Stalk: è una lista a parte nel riepilogo [RONIN 08/10].
 """
 from __future__ import annotations
 
@@ -17,7 +16,7 @@ import numpy as np
 import pandas as pd
 
 from . import config as C
-from . import jeff as JF
+from . import indicators as I
 
 
 def read_peg(df: pd.DataFrame, atr: float) -> dict:
@@ -27,12 +26,11 @@ def read_peg(df: pd.DataFrame, atr: float) -> dict:
     out: dict = {"peg_found": False}
     if n < 120 or not atr:
         return out
-    atr_s = JF.atr(df).to_numpy()
-    sma200 = JF.sma(df.Close, 200).to_numpy()
-    sma50 = JF.sma(df.Close, 50).to_numpy()
+    atr_s = I.atr(df).to_numpy()
+    sma200 = I.sma(df.Close, 200).to_numpy()
+    sma50 = I.sma(df.Close, 50).to_numpy()
     g = None
-    # il più recente prima; da min_bars_ago a max_bars_ago sedute fa, estremi compresi [29/10: prima l'ultimo era escluso]
-    for i in range(n - 1 - p["min_bars_ago"], max(50, n - 2 - p["max_bars_ago"]), -1):
+    for i in range(n - 1 - p["min_bars_ago"], max(51, n - 1 - p["max_bars_ago"]), -1):    # il più recente prima
         a = atr_s[i - 1] if not np.isnan(atr_s[i - 1]) else atr
         gap = o[i] - c[i - 1]
         avg = v[i - 50:i].mean()
@@ -46,7 +44,7 @@ def read_peg(df: pd.DataFrame, atr: float) -> dict:
     gl, gh = c[g - 1], h[g]          # range del PEG: dal close prima del gap al massimo del giorno del gap
     after_high = float(h[g:].max())
     range5 = (h[-5:].max() - l[-5:].min()) / atr
-    atr5_20 = float(JF.atr(df, 5).iloc[-1] / JF.atr(df, 20).iloc[-1])
+    atr5_20 = float(I.atr(df, 5).iloc[-1] / I.atr(df, 20).iloc[-1])
     hl = l[-1] > l[-6:-1].min() or l[-2] > l[-7:-2].min()          # un minimo crescente negli ultimi giorni
     out.update(
         peg_found=True, peg_date=str(df.index[g].date()), peg_bars_ago=int(n - 1 - g),
@@ -72,15 +70,8 @@ def read_peg(df: pd.DataFrame, atr: float) -> dict:
     return out
 
 
-def candidate(m: dict) -> bool:
-    """Chi merita la lettura del PEG (come prima): RS >= rs_min e non sotto la SMA200 di oltre sma200_tol_atr ATR."""
-    p = C.PEG
-    return bool((m.get("j_rs") or 0) >= p["rs_min"] and m.get("j_sma200") and m.get("j_atr")
-                and m["j_close"] >= m["j_sma200"] - p["sma200_tol_atr"] * m["j_atr"])
-
-
 def confirm_earnings(m: dict, dates: Iterable[str]) -> Optional[bool]:
-    """True se una data degli utili cade il giorno del gap o nei 2 giorni prima (utili dopo la chiusura)."""
+    """True se una data degli utili cade il giorno del gap o il giorno prima (utili dopo la chiusura)."""
     if not m.get("peg_found"):
         return None
     ds = set(dates or [])

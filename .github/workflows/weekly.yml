@@ -1,11 +1,16 @@
-name: Performance del lunedì
+name: Weekly del lunedì
 
-# Lunedì 06:50 / 07:50 UTC. Settimanale ogni lunedì, mensile il primo lunedì del mese. Niente Discord.
+# Lunedì 07:08 e 08:08 UTC = 09:08/10:08 Roma (ora legale), 08:08/09:08 (ora solare). Niente Discord.
 on:
   # [sospeso 27/10, Andrea] cron su GitHub fermo: lo fa il server Oracle. Si lancia ancora a mano (Run workflow).
   # schedule:
-  #   - cron: "50 9 * * 1"
+  #   - cron: "8 6 * * 1"
+  #   - cron: "8 7 * * 1"
   workflow_dispatch:
+    inputs:
+      monday:
+        description: "Lunedì YYYY-MM-DD (vuoto = oggi)"
+        required: false
 
 permissions:
   contents: write
@@ -16,11 +21,11 @@ concurrency:
 
 env:
   JEFF_COACH_HOME: ${{ github.workspace }}/data
-  COACH_ALERT_DISCORD_WEBHOOK_URL: ${{ secrets.COACH_ALERT_DISCORD_WEBHOOK_URL }}
+  JEFF_COACH_AGREED: ${{ github.workspace }}/data/coach-agreed
   PYTHONUTF8: "1"
 
 jobs:
-  run:
+  weekly:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -31,15 +36,14 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: |
-          python -m jeffcoach.report weekly
-          if [ "$(date +%d)" -le 7 ]; then python -m jeffcoach.report monthly; fi
+          ARGS="--skip-if-done"
+          if [ -n "${{ github.event.inputs.monday }}" ]; then ARGS="--monday ${{ github.event.inputs.monday }}"; fi
+          python -m jeffcoach.weekly $ARGS
       - name: Commit
-        if: always()
         run: |
           git config user.name "jeff-coach-bot"
           git config user.email "jeff-coach-bot@users.noreply.github.com"
           git add -A data
           git diff --cached --quiet && exit 0
-          git commit -m "Performance"
-          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 10; done
-          exit 1
+          git commit -m "Weekly"
+          git pull --rebase && git push

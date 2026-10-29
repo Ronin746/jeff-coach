@@ -8,3 +8,4 @@ Type=oneshot
 User=@USER@
 WorkingDirectory=@DIR@
 ExecStart=@DIR@/server/fasi.sh lista
+

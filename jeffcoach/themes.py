@@ -1,150 +1,36 @@
-"""Temi: gruppi di titoli e loro punteggio (design_modulo_temi.md).
+"""Analisi dei temi, come Martin-coach [RONIN 13/10, 15/10, 16/10].
 
-Versione 1 (prototipo):
-  - gruppi base = industria Yahoo (la mappa automatica da filing/ETF/notizie arriverà nel passo successivo);
-  - gruppi emergenti = titoli che si muovono insieme (correlazione delle variazioni % giornaliere su 40 e 60
-    sedute, QQQ escluso dal calcolo [RONIN 12/10]) e che appartengono a industrie diverse;
-  - punteggio per tema e variazione del rango rispetto a 5 sedute prima.
+Mappa (themes_map.py, copiata da Martin): solo gruppi degli ETF tematici della lista di Andrea, partecipazioni complete
+SEC N-PORT; un titolo resta in un tema solo se l'ETF lo sovrappesa rispetto al mercato; tema principale = gruppo con
+più ETF che lo tengono, mai un gruppo generico; a parità decide la correlazione a 60 sedute.
+
+Classifica (dal 16/10, come Martin): il tema si misura direttamente sui suoi ETF.
+  - ogni ETF dei temi (almeno 250k$ al giorno) riceve il punteggio a 7 fattori di Ratatouille (basket_score.py:
+    prezzo 25%, candele 15%, medie 15%, regolarità del trend 15%, volatilità 10%, volume 10%, forza contro SPY 10%;
+    percentili tra gli ETF dei temi, ultimi 3 mesi);
+  - punteggio del tema = media dei suoi ETF; d5 = variazione rispetto allo stesso calcolo di 5 sedute prima;
+  - stadio come Ratatouille (stage()): LEADING, FADING, BUILDING, SLIPPING, HOLDING, RECOVERY, WEAK, BEARISH.
+Uso nella lista (daily.build): long solo con tema LEADING o BUILDING (FADING se lo studio 20% ha -20% >= 200 nelle
+ultime 10 sedute); titoli senza tema in classifica: nessun filtro; prima i temi LEADING, poi BUILDING.
 """
 from __future__ import annotations
 
-import json
-from datetime import date
-
+import logging
 from typing import Optional
 
 import numpy as np
 import pandas as pd
 
+from . import basket_score as BS
 from . import config as C
 
+log = logging.getLogger("jeffcoach.themes")
 
-def _clusters(returns: pd.DataFrame, threshold: float) -> list[list[str]]:
-    """Gruppi a legame medio: si uniscono i gruppi finché la correlazione media tra loro supera la soglia."""
-    cols = list(returns.columns)
-    if len(cols) < 2:
-        return []
-    corr = np.nan_to_num(returns.corr().to_numpy(), nan=0.0)
-    n = len(cols)
-    S = corr.copy()                       # somma delle correlazioni tra gruppi
-    size = np.ones(n)
-    alive = np.ones(n, dtype=bool)
-    groups = {i: [i] for i in range(n)}
-    while True:
-        avg = S / np.outer(size, size)
-        np.fill_diagonal(avg, -np.inf)
-        avg[~alive, :] = -np.inf
-        avg[:, ~alive] = -np.inf
-        a, b = np.unravel_index(np.argmax(avg), avg.shape)
-        if avg[a, b] <= threshold:
-            break
-        S[a, :] += S[b, :]
-        S[:, a] += S[:, b]
-        S[a, a] = 0.0
-        size[a] += size[b]
-        alive[b] = False
-        groups[a] += groups.pop(b)
-    return [[cols[i] for i in g] for g in groups.values() if len(g) >= C.THEME_MIN_MEMBERS]
-
-
-def correlation_groups(closes: pd.DataFrame) -> list[list[str]]:
-    """Gruppi stabili: presenti (con almeno il 75% dei membri in comune) sia a 40 sia a 60 sedute."""
-    rets = closes.pct_change().iloc[1:]
-    res = {}
-    for w in C.CORR_WINDOWS:
-        sub = rets.iloc[-w:].dropna(axis=1, how="any")
-        res[w] = _clusters(sub, C.CORR_THRESHOLD)
-    a, b = res[C.CORR_WINDOWS[0]], res[C.CORR_WINDOWS[1]]
-    out = []
-    for g in a:
-        for h in b:
-            common = set(g) & set(h)
-            if len(common) >= C.THEME_MIN_MEMBERS and len(common) >= 0.75 * min(len(g), len(h)):
-                out.append(sorted(common))
-                break
-    return out
-
-
-def score_groups(groups: dict[str, list[str]], metrics: dict[str, dict], closes: pd.DataFrame,
-                 qqq_close: pd.Series, potent_hist: dict[str, list[str]], min_members: Optional[int] = None,
-                 bscores: Optional[pd.DataFrame] = None, etfs: Optional[dict[str, list[str]]] = None,
-                 bscores_prev: Optional[pd.DataFrame] = None) -> list[dict]:
-    """Componenti del tema (breadth, forza nei giorni rossi, scan... servono a fasi e messaggi) e classifica.
-    - Con `etfs` ({tema: [ETF]}) e `bscores` = punteggi a 7 fattori degli ETF: il tema si misura direttamente sui suoi
-      ETF [RONIN 16/10, Andrea: "usa direttamente l'ETF al posto dei singoli titoli"]. Punteggio = media del
-      Final_Score dei suoi ETF (percentili calcolati tra gli ETF dei temi); anche breadth, RS e tenuta nei giorni rossi
-      sono quelli degli ETF. I titoli (`groups`) restano solo come membri: tema di ogni titolo e conteggio negli scan.
-    - Con `bscores` dei titoli e senza `etfs`: basket di Ratatouille, media del Final_Score dei titoli del tema.
-    - Senza `bscores`: vecchio metodo, media dei ranghi delle 7 misure del tema.
-    Con `bscores_prev` (stessi punteggi calcolati 5 sedute fa): d5 = variazione del punteggio e stadio di Ratatouille
-    (stage(): LEADING, FADING, BUILDING, SLIPPING, HOLDING, RECOVERY, WEAK, BEARISH)."""
-    from . import basket_score as BS
-    rets = closes.pct_change()
-    q = qqq_close.reindex(closes.index).pct_change()
-    red = q.iloc[-C.RED_DAY_LOOKBACK:]
-    red_days = red[red < 0].index
-    scan_count: dict[str, int] = {}
-    for d, names in potent_hist.items():
-        for n in names:
-            scan_count[n] = scan_count.get(n, 0) + 1
-    use_bs = bscores is not None and len(bscores)
-    rows = []
-    names = list(etfs) if etfs is not None else list(groups)
-    for name in names:
-        mem = [t for t in groups.get(name, []) if t in metrics]
-        if etfs is not None:
-            basis = [e for e in etfs[name] if e in metrics and (not use_bs or e in bscores.index)]
-            if not basis:
-                continue
-        else:
-            basis = mem
-            if len(mem) < (min_members or C.THEME_MIN_MEMBERS):
-                continue
-        ms = [metrics[t] for t in basis]
-        lead = np.mean([m["list"] == "Leading" for m in ms])
-        above21 = np.mean([m["close"] > m["e21"] for m in ms])
-        rs = np.nanmedian([m.get("rs21") if m.get("rs21") is not None else np.nan for m in ms])
-        cols = [t for t in basis if t in rets.columns]
-        if len(red_days) and cols:
-            redrs = float(np.nanmean(rets.loc[red_days, cols].mean(axis=1) - q.loc[red_days]) * 100)
-        else:
-            redrs = np.nan
-        scans = sum(1 for t in mem if scan_count.get(t))
-        liq = np.nanmedian([m["dv20"] / m["dv60"] if m["dv60"] else np.nan for m in ms])
-        struct = np.mean([m["e9"] > m["e21"] for m in ms])
-        top = sorted(ms, key=lambda m: m.get("ret21") or -999, reverse=True)[:3]
-        ext50_top = float(np.mean([m["ext50"] or 0 for m in top]))
-        row = dict(theme=name, n=len(mem), members=mem, lead=lead, above21=above21, rs21=rs, red_rs=redrs,
-                   scans5=scans, liq=liq, struct=struct, ext50_top=ext50_top)
-        if etfs is not None:
-            row["etfs"] = basis
-        if use_bs:
-            st = BS.basket_stats(basis, bscores)
-            if st is None:          # nessun titolo/ETF con storia sufficiente (es. IPO, ETF nuovo): fuori classifica
-                continue
-            row.update(st)
-            if bscores_prev is not None and len(bscores_prev):
-                pv = BS.basket_stats(basis, bscores_prev)
-                if pv is not None:
-                    row["score_prev"] = pv["score"]
-                    row["d5"] = round(st["score"] - pv["score"], 1)
-                    if C.THEME_STAGES:
-                        row["stage"] = stage(st["score"], row["d5"])
-        rows.append(row)
-    if not rows:
-        return []
-    df = pd.DataFrame(rows)
-    if not use_bs:
-        comps = ["lead", "above21", "rs21", "red_rs", "scans5", "liq", "struct"]
-        df["score"] = sum(df[c].rank(pct=True, na_option="bottom") for c in comps) / len(comps) * 100
-    df = df.sort_values("score", ascending=False).reset_index(drop=True)
-    df["rank"] = np.arange(1, len(df) + 1)
-    return df.to_dict("records")
+STAGE_ORDER = {"LEADING": 0, "BUILDING": 1}
 
 
 def stage(score: float, d5: float) -> str:
-    """Stadio del tema come `_sector_signal` di Ratatouille (Screener/update_archive.py): punteggio e sua variazione
-    a 5 sedute."""
+    """Stadio del tema come `_sector_signal` di Ratatouille (copia di Martin-coach)."""
     if score >= 70:
         return "LEADING" if d5 >= 0 else "FADING"
     if score >= 55:
@@ -154,74 +40,11 @@ def stage(score: float, d5: float) -> str:
     return "WEAK" if score >= 40 else "BEARISH"
 
 
-def add_phase(rows: list[dict], prev_ranks: dict[str, int]) -> list[dict]:
-    """Fase del tema: maturità, accensione, preparazione (risale la classifica), attivo, neutro."""
-    n = len(rows)
-    for r in rows:
-        pr = prev_ranks.get(r["theme"])
-        r["rank_prev"] = pr
-        r["rank_change"] = (pr - r["rank"]) if pr else None
-        if r["ext50_top"] >= 40:
-            r["phase"] = "maturità"
-        elif r["scans5"] >= 3:
-            r["phase"] = "accensione"
-        elif r["rank_change"] is not None and r["rank_change"] >= max(3, n // 10) and (r["red_rs"] or 0) > 0:
-            r["phase"] = "preparazione"
-        elif r["rank"] <= max(3, n // 10):
-            r["phase"] = "attivo"
-        else:
-            r["phase"] = "neutro"
-    return rows
-
-
-def ticker_theme(rows: list[dict], exclude: frozenset = frozenset()) -> dict[str, str]:
-    """Per ogni titolo, il tema col punteggio più alto a cui appartiene (esclusi i temi in `exclude`)."""
-    out: dict[str, str] = {}
-    for r in sorted(rows, key=lambda x: x["score"], reverse=True):
-        if r["theme"] in exclude:
-            continue
-        for t in r["members"]:
-            out.setdefault(t, r["theme"])
-    return out
-
-
-def theme_rank_pct(rows: list[dict]) -> dict[str, float]:
-    n = len(rows)
-    return {r["theme"]: 1 - (r["rank"] - 1) / max(1, n - 1) for r in rows}
-
-
-def load_prev_ranks(hist_dir, before: date, sessions_back: int = 5) -> dict[str, int]:
-    files = sorted(p for p in hist_dir.glob("themes_*.json") if p.stem[7:] < before.isoformat())
-    if len(files) < sessions_back:
-        return {} if not files else json.loads(files[0].read_text(encoding="utf-8"))
-    return json.loads(files[-sessions_back].read_text(encoding="utf-8"))
-
-
-def proposals(closes: pd.DataFrame, theme_groups: dict[str, list[str]], unmapped: list[str], window: int = 60,
-              min_corr: float = 0.60, min_members: int = 3) -> list[dict]:
-    """Titoli senza tema che si muovono con un tema (correlazione delle variazioni % con la mediana del tema)."""
-    rets = closes.pct_change().iloc[-window:]
-    med = {}
-    for th, mem in theme_groups.items():
-        cols = [t for t in mem if t in rets.columns]
-        if len(cols) >= min_members:
-            med[th] = rets[cols].median(axis=1)
-    out = []
-    for t in unmapped:
-        if t not in rets.columns or rets[t].isna().sum() > window // 4:
-            continue
-        best = max(((th, float(rets[t].corr(m))) for th, m in med.items()), key=lambda x: (x[1] if x[1] == x[1] else -1),
-                   default=None)
-        if best and best[1] == best[1] and best[1] >= min_corr:
-            out.append({"ticker": t, "theme": best[0], "corr": round(best[1], 2)})
-    return sorted(out, key=lambda r: -r["corr"])
-
-
 def break_ties(closes: pd.DataFrame, theme_groups: dict[str, list[str]], ties: dict[str, list[str]],
                window: int = 60, min_members: int = 3) -> dict[str, str]:
-    """Titolo in pari merito tra più temi (stesso numero di ETF): vince il tema con cui si muove di più
-    (correlazione delle variazioni % con la mediana degli altri membri del tema) [RONIN 15/10]."""
-    rets = closes.pct_change().iloc[-window:]
+    """Copia di Martin-coach: titolo in pari merito tra più temi (stesso numero di ETF), vince il tema con cui si
+    muove di più (correlazione delle variazioni % con la mediana degli altri membri del tema)."""
+    rets = closes.pct_change(fill_method=None).iloc[-window:]
     out = {}
     for t, cand in ties.items():
         if t not in rets.columns or rets[t].isna().sum() > window // 4:
@@ -239,5 +62,156 @@ def break_ties(closes: pd.DataFrame, theme_groups: dict[str, list[str]], ties: d
     return out
 
 
+def _dv(df: Optional[pd.DataFrame], n: int = 20) -> float:
+    if df is None or not len(df):
+        return 0.0
+    d = df.iloc[-n:]
+    return float((d.Close * d.Volume).mean())
 
-from .rs_chart import add_rs, quadrant  # noqa: E402,F401  (RS settimana / mese dei basket, 21/10)
+
+def _ret(df: pd.DataFrame, n: int = 21) -> Optional[float]:
+    c = df.Close.dropna()
+    return float((c.iloc[-1] / c.iloc[-1 - n] - 1) * 100) if len(c) > n else None
+
+
+def build_lst(daily: dict[str, pd.DataFrame], universe: set[str], metrics: dict[str, dict], tmap: dict) -> dict:
+    """Temi = basket di Lone Stock Trader [RONIN 21/10, Andrea, come Martin]: punteggio del basket = media equal-weight
+    del Final_Score a 7 fattori di TUTTI i suoi titoli (percentili su tutti i titoli dei basket, nessun filtro di
+    liquidità), d5 sui punteggi di 5 sedute fa, stadio come prima; RS settimanale e mensile = rendimento equal-weight
+    a 5 e 21 sedute in percentile tra i basket (grafico in testa alla sezione temi della card)."""
+    from . import rs_chart as RC
+    bench = daily.get(C.BASKET_BENCHMARK)
+    if bench is None:
+        raise RuntimeError(f"manca {C.BASKET_BENCHMARK}")
+    last = bench.index[-1]
+    baskets = {b: [t for t in dict.fromkeys(v) if t in daily and daily[t].index[-1] == last] for b, v in tmap["baskets"].items()}
+    allm = sorted({t for v in baskets.values() for t in v})
+    sc = BS.universe_scores(daily, allm, bench)
+    cut = {t: daily[t].iloc[:-5] for t in allm + [C.BASKET_BENCHMARK] if t in daily}
+    sc_prev = BS.universe_scores(cut, allm, cut.get(C.BASKET_BENCHMARK))
+    if sc is None or not len(sc):
+        raise RuntimeError("nessun titolo dei basket con dati sufficienti")
+    fs = sc["Final_Score"].to_dict()
+    spy21 = _ret(bench)
+    rows = []
+    for b, mem in baskets.items():
+        st = BS.basket_stats(mem, sc)
+        if st is None or st["n_scored"] < C.LST_MIN_SCORED:
+            continue
+        pv = BS.basket_stats(mem, sc_prev) if sc_prev is not None and len(sc_prev) else None
+        d5 = round(st["score"] - pv["score"], 1) if pv else 0.0
+        mem_s = sorted(mem, key=lambda x: (x not in fs, -fs.get(x, 0)))
+        rows.append(dict(theme=b, etfs=None, n=st["n_scored"], members=mem_s, score=st["score"], ret21=st["ret1m"],
+                         rs21=(st["ret1m"] - spy21) if spy21 is not None else None, ret1w=st["ret1w"], ret1m=st["ret1m"],
+                         ret3m=st["ret3m"], d5=d5, stage=stage(st["score"], d5), source="lst"))
+    rows.sort(key=lambda r: -r["score"])
+    RC.add_rs(rows)
+    for k, r in enumerate(rows, 1):
+        r["rank"] = k
+        r["leading"] = r["stage"] == "LEADING"
+        r["trend"] = {"LEADING": "up", "BUILDING": "up", "SLIPPING": "down", "WEAK": "down", "BEARISH": "down"}.get(r["stage"], "neutral")
+    ranked = {r["theme"] for r in rows}
+    liquid = {s for s in universe if (metrics.get(s) or {}).get("adv") and metrics[s]["adv"] >= C.THEME_DV_MIN}
+    tick: dict[str, str] = {}
+    for r in rows:                         # il basket col punteggio più alto che contiene il titolo...
+        for t in r["members"]:
+            if t in liquid:
+                tick.setdefault(t, r["theme"])
+    tinfo = tmap.get("tickers") or {}
+    for s, info in tinfo.items():          # ...poi il principale della mappa (basket più piccolo) se è in classifica
+        if s in liquid and info.get("primary") in ranked:
+            tick[s] = info["primary"]
+    try:
+        ties = {s: [th for th in info["tied"] if th in ranked] for s, info in tinfo.items() if s in liquid and info.get("tied")}
+        ties = {s: v for s, v in ties.items() if len(v) > 1}
+        groups = {r["theme"]: r["members"] for r in rows}
+        cols = sorted(({s for s in ties} | {x for v in groups.values() for x in v}) & set(daily))
+        closes = pd.DataFrame({s: daily[s].Close for s in cols}).iloc[-62:]
+        tick.update(break_ties(closes, groups, ties, min_members=C.THEME_MIN_MEMBERS))
+    except Exception as e:
+        log.warning("pari merito temi: %s", e)
+    for r in rows:
+        r["members"] = r["members"][:10]
+        for k, v in list(r.items()):
+            if isinstance(v, (np.floating,)):
+                r[k] = float(v)
+    return {"rows": rows, "ticker": tick, "map_built": tmap.get("built_utc"), "membership": "lst",
+            "baskets_fetched": (tmap.get("baskets_fetched_utc") or "")[:10]}
+
+
+def build(daily: dict[str, pd.DataFrame], spx: pd.Series, universe: set[str], metrics: dict[str, dict], tmap: dict) -> dict:
+    """Ritorna {"rows": [...], "ticker": {titolo: tema}, "map_built"}. Righe in ordine di punteggio."""
+    from . import themes_map as TM
+    if C.THEME_SOURCE == "lst" and tmap.get("baskets"):
+        return build_lst(daily, universe, metrics, tmap)
+    bench = daily.get(C.BASKET_BENCHMARK)
+    theme_etfs = tmap.get("theme_etfs") or {}
+    all_etfs = sorted({e for v in theme_etfs.values() for e in v})
+    tetfs = [e for e in all_etfs if e in daily and _dv(daily[e]) >= C.THEME_ETF_DV_MIN]
+    esc = BS.universe_scores(daily, tetfs, bench)
+    cut = {e: daily[e].iloc[:-5] for e in tetfs + [C.BASKET_BENCHMARK] if e in daily}
+    esc_prev = BS.universe_scores(cut, tetfs, cut.get(C.BASKET_BENCHMARK))
+    if esc is None or not len(esc):
+        raise RuntimeError("nessun ETF dei temi con dati sufficienti")
+
+    liquid = {s for s in universe if (metrics.get(s) or {}).get("adv") and metrics[s]["adv"] >= C.THEME_DV_MIN}
+    mapped = TM.groups_from_map(tmap, liquid)
+    try:                                   # punteggio a 7 fattori dei titoli: ordine dei nomi tra parentesi (Martin)
+        ssc = BS.universe_scores(daily, sorted(liquid), bench)
+        fs = ssc["Final_Score"].to_dict() if len(ssc) else {}
+    except Exception as e:
+        log.warning("punteggi a 7 fattori dei titoli: %s", e)
+        fs = {}
+    spy21 = _ret(bench) if bench is not None else None
+    rows = []
+    for th, es in theme_etfs.items():
+        basis = [e for e in es if e in esc.index]
+        st = BS.basket_stats(basis, esc) if basis else None
+        if st is None:
+            continue
+        mem = sorted(mapped.get(th, []), key=lambda x: (x not in fs, -fs.get(x, 0), -(metrics[x].get("adv") or 0)))
+        r21 = [x for x in (_ret(daily[e]) for e in basis) if x is not None]
+        ret21 = sum(r21) / len(r21) if r21 else None
+        row = dict(theme=th, etfs=basis, n=len(mem), members=mem, score=st["score"], ret21=ret21,
+                   rs21=(ret21 - spy21) if (ret21 is not None and spy21 is not None) else None,
+                   ret3m=st["ret3m"], source=(tmap.get("themes") or {}).get(th, "etf"))
+        pv = BS.basket_stats(basis, esc_prev) if esc_prev is not None and len(esc_prev) else None
+        row["d5"] = round(st["score"] - pv["score"], 1) if pv else 0.0
+        row["stage"] = stage(st["score"], row["d5"])
+        rows.append(row)
+    rows.sort(key=lambda r: -r["score"])
+    for k, r in enumerate(rows, 1):
+        r["rank"] = k
+        r["leading"] = r["stage"] == "LEADING"
+        r["trend"] = {"LEADING": "up", "BUILDING": "up", "SLIPPING": "down", "WEAK": "down", "BEARISH": "down"}.get(r["stage"], "neutral")
+
+    # tema di ogni titolo (come Martin): il tema col punteggio più alto che lo contiene, mai un generico; poi il
+    # principale della mappa se è in classifica; pari merito tra temi: decide l'andamento
+    ranked = {r["theme"] for r in rows}
+    generic = frozenset(TM.GENERIC_GROUPS)
+    tick: dict[str, str] = {}
+    for r in rows:
+        if r["theme"] in generic:
+            continue
+        for t in r["members"]:
+            tick.setdefault(t, r["theme"])
+    tinfo = tmap.get("tickers") or {}
+    for s, info in tinfo.items():
+        if s in liquid and info.get("primary") in ranked:
+            tick[s] = info["primary"]
+    try:
+        ties = {s: [th for th in info["tied"] if th in ranked] for s, info in tinfo.items()
+                if s in liquid and info.get("tied")}
+        ties = {s: v for s, v in ties.items() if len(v) > 1}
+        map_groups = {k: v for k, v in mapped.items() if len(v) >= C.THEME_MIN_MEMBERS}
+        cols = sorted(({s for s in ties} | {x for v in map_groups.values() for x in v}) & set(daily))
+        closes = pd.DataFrame({s: daily[s].Close for s in cols}).iloc[-62:]
+        tick.update(break_ties(closes, map_groups, ties, min_members=C.THEME_MIN_MEMBERS))
+    except Exception as e:
+        log.warning("pari merito temi: %s", e)
+    for r in rows:
+        r["members"] = r["members"][:10]
+        for k, v in list(r.items()):
+            if isinstance(v, (np.floating,)):
+                r[k] = float(v)
+    return {"rows": rows, "ticker": tick, "map_built": tmap.get("built_utc"), "membership": tmap.get("membership")}

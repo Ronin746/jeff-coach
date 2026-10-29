@@ -1,5 +1,5 @@
 [Unit]
-Description=Jeff Coach - orario: lunedi 08:20
+Description=Jeff Coach - orario: riepilogo del lunedi
 
 [Timer]
 OnCalendar=Mon 08:20 Europe/Rome
