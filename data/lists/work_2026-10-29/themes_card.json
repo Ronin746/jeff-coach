@@ -1,0 +1,18 @@
+{
+  "embeds": [
+    {
+      "description": "**THEMES — 2026-10-29** · groups as of 2026-10-22\nWeek RS (x) vs Month RS (y) · percentile among all groups",
+      "color": 3447003,
+      "image": {
+        "url": "attachment://themes_rs.png"
+      }
+    },
+    {
+      "description": "Month RS (x) vs Quarter RS (y) · percentile among all groups",
+      "color": 3447003,
+      "image": {
+        "url": "attachment://themes_rs_3m.png"
+      }
+    }
+  ]
+}

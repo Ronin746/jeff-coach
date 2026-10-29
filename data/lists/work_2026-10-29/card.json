@@ -1,0 +1,23 @@
+{
+  "embeds": [
+    {
+      "description": "**WATCHLIST — 2026-10-29** (close 2026-10-28)\nBias **MIXED** · risk `0.15%` per trade — Martin bias (pool lists): score +0 → MIXED; Martin pool (138): Leading 43% of Leading+Lagging; pool flow 5d -2.2% (15 up, 18 down); pool flow trend up (+3.7% -5.9% +5.9% +2.2%)\n**Breadth (Martin)** · Martin pool `138` names · above EMA21 (universe) `58%`\n- Leading `42` (+0 1d, +6 5d)\n- Mediocre `40` (+0 1d, -9 5d)\n- Lagging `56` (+1 1d, +6 5d)\nPool flow 5d `-2.2%` (15 up, 18 down) · daily `-9.6%` `+3.7%` `-5.9%` `+5.9%` `+2.2%`\nUniverse lists L `327` (+10 1d, +21 5d) · M `289` (-2 1d, +2 5d) · G `278` (+11 1d, +13 5d)\nIWM vs QQQ 1M `+2.5` pts · IWM >9 >21 · mega caps above 9 `5/10` · leaders below 9 `1/20` below 21 `1/20`\nScan +4%: `33` names · together: LIFE SCIENCE TOOLS & SERVICES 4, RESTAURANTS 3\nThemes: CRM (active), LIFE SCIENCE TOOLS & SERVICES (ignition), OIL AND GAS UPSTREAM (ignition) · rising: OIL AND GAS DRILLING, TELEHEALTH, LNG",
+      "color": 15844367,
+      "image": {
+        "url": "attachment://breadth.png"
+      }
+    },
+    {
+      "description": "**FOCUS LONG — mixed market, best only**\n• **GLBE** — Leading · RS +6.8 · ADR 3.8% · sup `40.67` 3.6% away · 2× AVWAP SL + EMA21 + 2× SH · edges 4/5 (S&R PA/VOL MTF RS) · Jeff RS 85 · VCP 2\n\nTracking: 84 long — in the attached TradingView file",
+      "color": 3066993,
+      "url": "https://www.tradingview.com/symbols/GLBE/",
+      "image": {
+        "url": "attachment://focus_GLBE.png"
+      }
+    },
+    {
+      "description": "**PEG — delayed reaction to earnings** (alerts at the level, like the Focus)\n• **CLF** — PEG 10-19 +17% (5.7x vol) · gap range 12.12-14.58 · pivot 14.58 · no alert level (best support 4 levels 7.4% away) · Jeff RS 85 · STEEL\n• **IOT** — PEG 09-04 +16% (4.6x vol) · gap range 38.75-45.12 · pivot 45.32 · no alert level (best support 2 levels 2.1% away) · Jeff RS 90 · SOFTWARE\n• **SNOW** — PEG 09-03 +23% (4.2x vol) · gap range 305.84-384.56 · pivot 343.88 · no alert level (best support 3 levels 2.6% away) · Jeff RS 98 · SOFTWARE\n• **DELL** — PEG 09-02 +9% (5.6x vol) · gap range 425.00-497.99 · pivot 507.39 · no alert level (best support 1 level 1.7% away) · Jeff RS 99 · EDGE CLOUD\n• **CRM** — PEG 08-27 +12% (3.9x vol) · gap range 205.62-254.48 · pivot 252.42 · no alert level (best support 3 levels 0.9% away) · Jeff RS 87 · CRM",
+      "color": 3066993
+    }
+  ]
+}
