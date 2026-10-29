@@ -1,7 +1,7 @@
 {
   "session": "2026-10-29",
   "as_of": "2026-10-28",
-  "rules_version": "2026-10-28b-meta+jeff-2026-10-28",
+  "rules_version": "2026-10-28b-meta+jeff-2026-10-29",
   "bias": "MISTO",
   "bias_score": 0,
   "score_bias": "MISTO",
@@ -10,13 +10,13 @@
   "market_monitor": {
     "date": "2026-10-28",
     "state": "Expansion",
-    "up4": 349.0,
-    "down4": 141.0,
+    "up4": 350.0,
+    "down4": 142.0,
     "ratio5": 1.28,
     "ratio10": 1.3,
-    "t2108": 41.61,
-    "t2108_d5": 5.32,
-    "up25q": 814.0,
+    "t2108": 41.71,
+    "t2108_d5": 5.42,
+    "up25q": 813.0,
     "down25q": 1329.0,
     "read": "pradeep",
     "label": "Breakouts work",
@@ -101,14 +101,14 @@
         "swing high 2026-10-12"
       ],
       "confluence": 5,
-      "dist_pct": 3.59,
+      "dist_pct": 3.55,
       "adr": 3.76,
-      "dv5": 64134237.0,
+      "dv5": 64152008.0,
       "e9d": 41.2,
-      "atr_d": 1.53,
-      "rs21": 6.84,
-      "rs63": -0.48,
-      "ext50_atr": 1.77,
+      "atr_d": 1.54,
+      "rs21": 6.79,
+      "rs63": -0.53,
+      "ext50_atr": 1.76,
       "theme": null,
       "theme_phase": null,
       "theme_stage": null,
@@ -129,7 +129,7 @@
         "MTF",
         "RS"
       ],
-      "edge_score": 4.14,
+      "edge_score": 4.13,
       "edge_detail": {
         "MT": {
           "ok": false,
@@ -179,10 +179,10 @@
         },
         "RS": {
           "ok": true,
-          "score": 0.79,
+          "score": 0.78,
           "why": {
-            "rs5": 2.35,
-            "rs21": 6.84,
+            "rs5": 2.3,
+            "rs21": 6.79,
             "quad": null,
             "rotation": false
           }
@@ -201,7 +201,7 @@
         "hi": 42.51,
         "touches": 7
       },
-      "score": 4.077,
+      "score": 4.075,
       "grade": "",
       "note": "",
       "demoted": null,
@@ -210,7 +210,7 @@
       "group_etf": "IBUY",
       "group_up": true,
       "group_dn": false,
-      "rs_group": 1.32,
+      "rs_group": 1.22,
       "group_fav": 1,
       "group_adr": 1.069,
       "group_sup": [
@@ -228,10 +228,10 @@
       "jeff_ok": true,
       "jeff_open": [],
       "jeff_why": "",
-      "jeff_vcp": 1.5,
+      "jeff_vcp": 1.2,
       "jeff_comp": 2,
-      "jeff_ext": 1.94,
-      "jeff_ema9_atr": 0.62,
+      "jeff_ext": 1.92,
+      "jeff_ema9_atr": 0.61,
       "jeff_ma1h": 41.3393,
       "in_play": null
     }
@@ -256,9 +256,7 @@
     "TMO",
     "RGEN",
     "NTNX",
-    "MORN",
     "WIX",
-    "WEX",
     "M",
     "HRB",
     "S",
@@ -274,9 +272,10 @@
     "TEAM",
     "NTAP",
     "NOW",
-    "BB",
+    "AI",
     "MTN",
     "HAE",
+    "PVH",
     "CACI",
     "IQV",
     "HCA",
@@ -290,14 +289,13 @@
     "GKOS",
     "RNG",
     "WK",
+    "BB",
     "FIVN",
     "SAIC",
-    "AI",
     "DLTR",
     "BTE",
     "AXGN",
     "BSY",
-    "PVH",
     "LECO",
     "TEL",
     "SUNB",
@@ -306,6 +304,7 @@
     "SIG",
     "RHI",
     "HHH",
+    "WEX",
     "FRO",
     "STNG",
     "QLYS",
@@ -314,37 +313,26 @@
     "DHT",
     "GTLB",
     "HTFL",
+    "MORN",
     "ASAN",
     "ETSY",
     "BIIB",
     "DOCS",
-    "MANH",
     "DOCU",
-    "BRZE",
     "ICLR",
     "VRT",
-    "WING",
-    "EAT",
     "EVR",
+    "EAT",
+    "WING",
     "VSAT",
     "JLL",
     "ORCL",
     "TXG"
   ],
   "tracking_long": [
-    "PATH",
-    "MDB",
-    "PANW",
     "HPQ",
-    "VSXY",
-    "DHR",
-    "TDW",
-    "TMO",
-    "RGEN",
     "NTNX",
-    "MORN",
     "WIX",
-    "WEX",
     "M",
     "HRB",
     "S",
@@ -360,9 +348,10 @@
     "TEAM",
     "NTAP",
     "NOW",
-    "BB",
+    "AI",
     "MTN",
     "HAE",
+    "PVH",
     "CACI",
     "IQV",
     "HCA",
@@ -376,14 +365,13 @@
     "GKOS",
     "RNG",
     "WK",
+    "BB",
     "FIVN",
     "SAIC",
-    "AI",
     "DLTR",
     "BTE",
     "AXGN",
     "BSY",
-    "PVH",
     "LECO",
     "TEL",
     "SUNB",
@@ -392,6 +380,7 @@
     "SIG",
     "RHI",
     "HHH",
+    "WEX",
     "FRO",
     "STNG",
     "QLYS",
@@ -400,18 +389,17 @@
     "DHT",
     "GTLB",
     "HTFL",
+    "MORN",
     "ASAN",
     "ETSY",
     "BIIB",
     "DOCS",
-    "MANH",
     "DOCU",
-    "BRZE",
     "ICLR",
     "VRT",
-    "WING",
-    "EAT",
     "EVR",
+    "EAT",
+    "WING",
     "VSAT",
     "JLL",
     "ORCL",
@@ -420,15 +408,14 @@
   "tracking_short": [],
   "themes_line": "CRM (active), LIFE SCIENCE TOOLS & SERVICES (ignition), OIL AND GAS UPSTREAM (ignition) · rising: OIL AND GAS DRILLING, TELEHEALTH, LNG",
   "breadth": {
-    "leading": 328,
-    "lagging": 278,
-    "mediocre": 289,
-    "share": 0.541,
+    "leading": 325,
+    "lagging": 279,
+    "mediocre": 294,
+    "share": 0.538,
     "share_prev": 0.536,
     "upgrades": [
       "AFRM",
       "AMZN",
-      "APH",
       "CVE",
       "EAT",
       "EPD",
@@ -458,7 +445,6 @@
       "FND",
       "GSK",
       "HIG",
-      "IBN",
       "NKE",
       "NU",
       "ON",
@@ -480,7 +466,7 @@
       "confluence": 4,
       "dist_pct": 7.37,
       "adr": 6.59,
-      "dv5": 342759544.0,
+      "dv5": 342758738.0,
       "e9d": 13.51,
       "atr_d": 0.99,
       "rs21": 28.28,
@@ -577,7 +563,7 @@
       "group_etf": "SLX",
       "group_up": false,
       "group_dn": true,
-      "rs_group": 14.52,
+      "rs_group": 14.6,
       "group_fav": 1,
       "group_adr": 1.255,
       "group_sup": [
@@ -585,492 +571,6 @@
           99.9844,
           101.3971,
           2
-        ]
-      ],
-      "also_focus": false,
-      "counter": false
-    },
-    {
-      "ticker": "IOT",
-      "side": "long",
-      "setup": "PEG delayed reaction",
-      "list": "Leading",
-      "level": null,
-      "level_members": [],
-      "confluence": 2,
-      "dist_pct": 2.06,
-      "adr": 4.65,
-      "dv5": 160475727.0,
-      "e9d": 43.08,
-      "atr_d": 1.98,
-      "rs21": 14.92,
-      "rs63": 13.96,
-      "ext50_atr": 1.28,
-      "theme": "SOFTWARE",
-      "theme_phase": "accensione",
-      "theme_stage": null,
-      "exch": "NYQ",
-      "earnings": "2026-12-03",
-      "open": [
-        "confluence"
-      ],
-      "zone_levels": 0,
-      "peg": true,
-      "tradable": false,
-      "peg_level_note": "best support 2 levels 2.1% away",
-      "peg_date": "2026-09-04",
-      "peg_gap_pct": 15.9,
-      "peg_vol_mult": 4.6,
-      "peg_low": 38.75,
-      "peg_high": 45.12,
-      "peg_pivot": 45.32,
-      "peg_pos": 0.67,
-      "peg_higher_low": true,
-      "peg_range5_atr": 1.5,
-      "peg_text": "PEG 2026-09-04 +16% (4.6x vol), back in the PEG range 38.75-45.12, pivot 45.32",
-      "jeff_rs": 90,
-      "adv50": 230859172.0,
-      "tf_w": 1,
-      "tf_h": -1,
-      "tf_ok": 2,
-      "n_edges": 0,
-      "edges": [],
-      "edge_score": 2.21,
-      "edge_detail": {
-        "MT": {
-          "ok": false,
-          "score": 0.45,
-          "why": [
-            "mas",
-            "trendline",
-            "candles",
-            "holds_21"
-          ]
-        },
-        "SR": {
-          "ok": false,
-          "score": 0.0,
-          "why": {}
-        },
-        "PV": {
-          "ok": false,
-          "score": 0.25,
-          "why": []
-        },
-        "MTF": {
-          "ok": false,
-          "score": 0.67,
-          "why": {
-            "W": true,
-            "D": true,
-            "H": false
-          }
-        },
-        "RS": {
-          "ok": false,
-          "score": 0.84,
-          "why": {
-            "rs5": -0.61,
-            "rs21": 14.92,
-            "quad": "Weakening",
-            "rotation": false
-          }
-        }
-      },
-      "tl": {
-        "value": 39.42,
-        "touches": 5,
-        "dist_pct": 9.1,
-        "channel": false
-      },
-      "score": 1.948,
-      "grade": "",
-      "note": "",
-      "demoted": null,
-      "in_pool": false,
-      "group": "Software",
-      "group_etf": "IGV",
-      "group_up": true,
-      "group_dn": false,
-      "rs_group": -1.85,
-      "group_fav": -1,
-      "group_adr": 2.255,
-      "group_sup": [
-        [
-          98.4775,
-          101.8609,
-          2
-        ],
-        [
-          102.1104,
-          105.7178,
-          3
-        ],
-        [
-          105.7476,
-          112.8539,
-          11
-        ]
-      ],
-      "also_focus": false,
-      "counter": false
-    },
-    {
-      "ticker": "SNOW",
-      "side": "long",
-      "setup": "PEG delayed reaction",
-      "list": "Leading",
-      "level": null,
-      "level_members": [],
-      "confluence": 3,
-      "dist_pct": 2.64,
-      "adr": 4.61,
-      "dv5": 954131578.0,
-      "e9d": 331.51,
-      "atr_d": 17.29,
-      "rs21": 4.58,
-      "rs63": 7.88,
-      "ext50_atr": 0.45,
-      "theme": "SOFTWARE",
-      "theme_phase": "accensione",
-      "theme_stage": null,
-      "exch": "NYQ",
-      "earnings": "2026-12-02",
-      "open": [
-        "confluence"
-      ],
-      "zone_levels": 0,
-      "peg": true,
-      "tradable": false,
-      "peg_level_note": "best support 3 levels 2.6% away",
-      "peg_date": "2026-09-03",
-      "peg_gap_pct": 23.3,
-      "peg_vol_mult": 4.2,
-      "peg_low": 305.84,
-      "peg_high": 384.56,
-      "peg_pivot": 343.88,
-      "peg_pos": 0.43,
-      "peg_higher_low": true,
-      "peg_range5_atr": 2.4,
-      "peg_text": "PEG 2026-09-03 +23% (4.2x vol), back in the PEG range 305.84-384.56, pivot 343.88",
-      "jeff_rs": 98,
-      "adv50": 1571048147.0,
-      "tf_w": 1,
-      "tf_h": 1,
-      "tf_ok": 3,
-      "n_edges": 1,
-      "edges": [
-        "RS"
-      ],
-      "edge_score": 2.05,
-      "edge_detail": {
-        "MT": {
-          "ok": false,
-          "score": 0.25,
-          "why": [
-            "structure",
-            "trendline"
-          ]
-        },
-        "SR": {
-          "ok": false,
-          "score": 0.0,
-          "why": {}
-        },
-        "PV": {
-          "ok": false,
-          "score": 0.25,
-          "why": [
-            "tight",
-            "distribution"
-          ]
-        },
-        "MTF": {
-          "ok": false,
-          "score": 0.67,
-          "why": {
-            "W": true,
-            "D": false,
-            "H": true
-          }
-        },
-        "RS": {
-          "ok": true,
-          "score": 0.88,
-          "why": {
-            "rs5": 5.27,
-            "rs21": 4.58,
-            "quad": "Weakening",
-            "rotation": false
-          }
-        }
-      },
-      "tl": {
-        "value": 311.98,
-        "touches": 3,
-        "dist_pct": 9.0,
-        "channel": false
-      },
-      "score": 3.705,
-      "grade": "",
-      "note": "",
-      "demoted": null,
-      "in_pool": true,
-      "group": "Cloud",
-      "group_etf": "SKYY",
-      "group_up": true,
-      "group_dn": false,
-      "rs_group": -4.13,
-      "group_fav": -1,
-      "group_adr": 2.325,
-      "group_sup": [
-        [
-          153.5523,
-          158.9186,
-          3
-        ],
-        [
-          162.1483,
-          170.3947,
-          11
-        ]
-      ],
-      "also_focus": false,
-      "counter": false
-    },
-    {
-      "ticker": "DELL",
-      "side": "long",
-      "setup": "PEG delayed reaction",
-      "list": "Mediocre",
-      "level": null,
-      "level_members": [],
-      "confluence": 1,
-      "dist_pct": 1.72,
-      "adr": 5.12,
-      "dv5": 2484891460.0,
-      "e9d": 485.59,
-      "atr_d": 32.91,
-      "rs21": -6.79,
-      "rs63": 15.87,
-      "ext50_atr": -0.59,
-      "theme": "EDGE CLOUD",
-      "theme_phase": "accensione",
-      "theme_stage": null,
-      "exch": "NYQ",
-      "earnings": "2026-11-27",
-      "open": [
-        "confluence"
-      ],
-      "zone_levels": 0,
-      "peg": true,
-      "tradable": false,
-      "peg_level_note": "best support 1 level 1.7% away",
-      "peg_date": "2026-09-02",
-      "peg_gap_pct": 8.7,
-      "peg_vol_mult": 5.6,
-      "peg_low": 425.0,
-      "peg_high": 497.99,
-      "peg_pivot": 507.39,
-      "peg_pos": 0.94,
-      "peg_higher_low": true,
-      "peg_range5_atr": 2.0,
-      "peg_text": "PEG 2026-09-02 +9% (5.6x vol), back in the PEG range 425.00-497.99, pivot 507.39",
-      "jeff_rs": 99,
-      "adv50": 4169440872.0,
-      "tf_w": -1,
-      "tf_h": 1,
-      "tf_ok": 2,
-      "n_edges": 1,
-      "edges": [
-        "PV"
-      ],
-      "edge_score": 1.82,
-      "edge_detail": {
-        "MT": {
-          "ok": false,
-          "score": 0.33,
-          "why": [
-            "trendline",
-            "candles",
-            "volume_contrast"
-          ]
-        },
-        "SR": {
-          "ok": false,
-          "score": 0.0,
-          "why": {}
-        },
-        "PV": {
-          "ok": true,
-          "score": 0.75,
-          "why": [
-            "tight",
-            "inside day"
-          ]
-        },
-        "MTF": {
-          "ok": false,
-          "score": 0.33,
-          "why": {
-            "W": false,
-            "D": false,
-            "H": true
-          }
-        },
-        "RS": {
-          "ok": false,
-          "score": 0.41,
-          "why": {
-            "rs5": 1.61,
-            "rs21": -6.79,
-            "quad": "Improving",
-            "rotation": false
-          }
-        }
-      },
-      "tl": {
-        "value": 442.31,
-        "touches": 4,
-        "dist_pct": 11.7,
-        "channel": false
-      },
-      "score": 1.713,
-      "grade": "",
-      "note": "",
-      "demoted": null,
-      "in_pool": true,
-      "group": "Blockchain",
-      "group_etf": "BLOK",
-      "group_up": false,
-      "group_dn": true,
-      "rs_group": 2.72,
-      "group_fav": 1,
-      "group_adr": 2.677,
-      "group_sup": [],
-      "also_focus": false,
-      "counter": false
-    },
-    {
-      "ticker": "CRM",
-      "side": "long",
-      "setup": "PEG delayed reaction",
-      "list": "Leading",
-      "level": null,
-      "level_members": [],
-      "confluence": 3,
-      "dist_pct": 0.94,
-      "adr": 3.41,
-      "dv5": 1742952738.0,
-      "e9d": 243.07,
-      "atr_d": 8.73,
-      "rs21": 9.2,
-      "rs63": 27.92,
-      "ext50_atr": 0.5,
-      "theme": "CRM",
-      "theme_phase": "attivo",
-      "theme_stage": null,
-      "exch": "NYQ",
-      "earnings": "2026-12-02",
-      "open": [
-        "confluence"
-      ],
-      "zone_levels": 0,
-      "peg": true,
-      "tradable": false,
-      "peg_level_note": "best support 3 levels 0.9% away",
-      "peg_date": "2026-08-27",
-      "peg_gap_pct": 11.9,
-      "peg_vol_mult": 3.9,
-      "peg_low": 205.62,
-      "peg_high": 254.48,
-      "peg_pivot": 252.42,
-      "peg_pos": 0.75,
-      "peg_higher_low": true,
-      "peg_range5_atr": 1.8,
-      "peg_text": "PEG 2026-08-27 +12% (3.9x vol), back in the PEG range 205.62-254.48, pivot 252.42",
-      "jeff_rs": 87,
-      "adv50": 2912263272.0,
-      "tf_w": 1,
-      "tf_h": -1,
-      "tf_ok": 2,
-      "n_edges": 1,
-      "edges": [
-        "RS"
-      ],
-      "edge_score": 2.51,
-      "edge_detail": {
-        "MT": {
-          "ok": false,
-          "score": 0.6,
-          "why": [
-            "structure",
-            "mas",
-            "trendline",
-            "channel",
-            "gaps"
-          ]
-        },
-        "SR": {
-          "ok": false,
-          "score": 0.0,
-          "why": {}
-        },
-        "PV": {
-          "ok": false,
-          "score": 0.5,
-          "why": [
-            "undercut & reclaim"
-          ]
-        },
-        "MTF": {
-          "ok": false,
-          "score": 0.67,
-          "why": {
-            "W": true,
-            "D": true,
-            "H": false
-          }
-        },
-        "RS": {
-          "ok": true,
-          "score": 0.74,
-          "why": {
-            "rs5": 0.15,
-            "rs21": 9.2,
-            "quad": "Weakening",
-            "rotation": false
-          }
-        }
-      },
-      "tl": {
-        "value": 233.68,
-        "touches": 3,
-        "dist_pct": 3.7,
-        "channel": true
-      },
-      "score": 3.639,
-      "grade": "",
-      "note": "",
-      "demoted": null,
-      "in_pool": false,
-      "group": "Cloud",
-      "group_etf": "SKYY",
-      "group_up": true,
-      "group_dn": false,
-      "rs_group": -4.38,
-      "group_fav": -1,
-      "group_adr": 2.325,
-      "group_sup": [
-        [
-          153.5523,
-          158.9186,
-          3
-        ],
-        [
-          162.1483,
-          170.3947,
-          11
         ]
       ],
       "also_focus": false,

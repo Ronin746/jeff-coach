@@ -2,7 +2,7 @@
   "ok": true,
   "status": 200,
   "message_id": "1565300464072007680",
-  "method": "POST",
+  "method": "PATCH",
   "session": "2026-10-29",
-  "card_hash": "144de7941be1274e"
+  "card_hash": "a0d6245e8b008bcc"
 }
